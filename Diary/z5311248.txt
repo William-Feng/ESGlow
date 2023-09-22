@@ -1,0 +1,7 @@
+Week 1
+Formed group, selected Scrum Master and Team Lead. Created Jira board. 
+Decided on project 8: ESG Management System (Web Application) for FinTech Industry
+
+Week 2
+Created GitHub classroom. Split up the work for the proposal. 
+I am working on making storyboards.
