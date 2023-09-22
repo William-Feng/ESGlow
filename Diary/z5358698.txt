@@ -1,0 +1,13 @@
+Week 1:
+
+This week we determined our group project (P8), Scrum Master and Team Lead. We determined our Team Name, set up our Atlassian Jira Board, as well as emailing all of this to our tutor to confirm our preferences, confirming that all our members had successfully located our group and joined on Moodle/Jira. We decided to set-up our first in-person meeting where all members were present next week Friday, during our Lab times for COMP3900.
+
+
+Week 2:
+
+This week we:
+    - Set up our team roles for what part of the project each member felt most comfortable doing (Frontend, Backend, Database)
+    - Determined our prospective technologies/languages/systems for our actual project.
+    - Set up and participated in our first whole team meeting with both other Project 8 Teams and the Project Client, where we asked and answered our questions we had all posed as a team.
+    - Split up our Project Proposal tasks for each member so each person had work to do by the submission due date next Friday 3pm.
+    - Personally began writing up User Stories with Acceptance Criteria, as well as begin uploading all user stories/acceptance criteria for Sprint 1 to our Jira Board.
