@@ -1,0 +1,15 @@
+Week 1:
+
+COMP3900 group formed and named (everyone joined Moodle Team Allocation Group).
+We decided to choose Project 8 as it sounded interesting and aligned with our skills.
+I was overseas but informed my group that I was happy to be the Scrum Master.
+
+
+Week 2:
+
+A series of emails were sent out to organise a client meeting, and we all tried to give our inputs to our Team Lead, Carly.
+I created our group's repository within the GitHub classroom.
+I researched about ESG and brainstormed some key concepts regarding its importance for stakeholders.
+During the lab session, we decided on our roles for the upcoming project proposal and discussed the tech stack to be used.
+Our group all attended an initial meeting with the client to clarify the project requirements.
+For the proposal, I will be in charge of creating the System Architecture Diagram and the Jira tickets once the user stories are ready.
