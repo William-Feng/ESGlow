@@ -9,4 +9,10 @@ Met with client to discuss and clarify requirements.
 Wrote user stories and acceptance criteria with Richard.
 Researched existing similar technologies/apps.
 
+Week 3
+Continued research on existing technologies.
+Expanded user stories and acceptance criteria.
+Formulated novel features with group members.
+Discussed database implementataion with group members.
+Finalised project proposal.
 
