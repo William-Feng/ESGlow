@@ -1,0 +1,12 @@
+Week 1
+Formed group, then chose Scrum Master and Team Lead. Created Jira board. 
+Decided on topic after discussion with group members.
+
+Week 2
+Background research on topic. 
+Joined GitHub classroom and decided preliminary tech stack.
+Met with client to discuss and clarify requirements.
+Wrote user stories and acceptance criteria with Richard.
+Researched existing similar technologies/apps.
+
+
