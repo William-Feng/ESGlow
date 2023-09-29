@@ -13,3 +13,13 @@ I researched about ESG and brainstormed some key concepts regarding its importan
 During the lab session, we decided on our roles for the upcoming project proposal and discussed the tech stack to be used.
 Our group all attended an initial meeting with the client to clarify the project requirements.
 For the proposal, I will be in charge of creating the System Architecture Diagram and the Jira tickets once the user stories are ready.
+
+
+Week 3:
+
+Everyone contributed, gave suggestions and worked diligently on the project proposal, which was due at the end of Week 3.
+Our 5 team members had meaningful discussions, both consistently in a Messenger group chat and also a check-up in a Discord voice call.
+I completed the System Architecture Diagram and provided descriptions, and also populated the Jira backlog as planned last week.
+I watched the Lecture recording on behalf of my team, noted down the key points that we had to investigate and led the administrative tasks.
+I was also heavily involved with the creation and modification of user stories & epics such that all requirements and novelty features were satisfied.
+Being the Scrum Master, I also ensured that the product and sprint backlogs were appropriate, feasible and optimal for this project.
