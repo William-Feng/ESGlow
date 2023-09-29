@@ -11,3 +11,10 @@ This week we:
     - Set up and participated in our first whole team meeting with both other Project 8 Teams and the Project Client, where we asked and answered our questions we had all posed as a team.
     - Split up our Project Proposal tasks for each member so each person had work to do by the submission due date next Friday 3pm.
     - Personally began writing up User Stories with Acceptance Criteria, as well as begin uploading all user stories/acceptance criteria for Sprint 1 to our Jira Board.
+
+
+Week 3:
+
+This week we all worked together to finish, finalize and submit our project proposal, which was due this Friday.
+For my part, I helped work on the User Stories for each sprint/epic, writing both the primary User Story as well as all of the acceptance criteria.
+I also worked together to write up the novel features justification, as well as link our project outcomes with each of our user stories, to justify our project requirements are all being met.
