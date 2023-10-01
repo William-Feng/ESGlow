@@ -5,3 +5,9 @@ Decided on project 8: ESG Management System (Web Application) for FinTech Indust
 Week 2
 Created GitHub classroom. Split up the work for the proposal. 
 I am working on making storyboards.
+
+Week 3
+Worked on the storyboard, designing the login/register pages and the 
+main screen for data selection and visualisation. 
+Attended a meeting with the client and team leads on Friday to finalise 
+the proposal before submitting.
