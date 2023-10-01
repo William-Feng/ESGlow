@@ -6,3 +6,9 @@ Week 2
 Emails were sent between other P8 team leads to organize our first meeting with our client, Mingqin Yu.
 In our week 2 tutorial class, our group gave roles of who completes which part of the report.
 I was assigned researching for the Background part of the report.
+
+Week 3
+Sent emails between Ming and other team leads to better understand project requirements.
+Contributed in designing the project UI / UX and its storyboard by looking at other sites.
+Researched and wrote about current problems in ESG data usage and what our app aims to solve.
+Attended in a last meeting before proposal due date with Ming to understand sample dataset structure.
