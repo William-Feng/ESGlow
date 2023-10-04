@@ -15,3 +15,12 @@
 `pip install -r 'path-to-requirements.txt'`
 
 <p> The requirements for Python version are 3.8.0 and above. </p>
+
+
+<h2> Running the Python3 Flask Backend Server </h2>
+
+<p> From the terminal, run </p>
+
+`flask --app backend/src/server run`
+
+<p> To run the server. </p>
