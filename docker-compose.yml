@@ -6,7 +6,8 @@ services:
     container_name: postgres
     restart: unless-stopped
     volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/1_create_tables.sql:/docker-entrypoint-initdb.d/1_create_tables.sql
+      - ./database/2_insert_data.sql:/docker-entrypoint-initdb.d/2_insert_data.sql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
