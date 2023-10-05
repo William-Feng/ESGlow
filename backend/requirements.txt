@@ -1,3 +1,5 @@
 flask
+flask-bcrypt
 Flask-cors
+flask-restplus
 pytest
