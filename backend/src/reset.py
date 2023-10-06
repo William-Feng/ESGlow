@@ -4,7 +4,8 @@ send_email_password = "gbwv aczd mejn xmvb"
 
 
 def generateCode(email):
-    """_summary_
+    """
+    Summary:
         Given an email, generate a verification code that allows for the email to be reset.
         Add the email and verification code to the database to allow for verification.
         If the email already has a verification code, overwrite the previous verification code.
@@ -21,13 +22,23 @@ def generateCode(email):
     """
     pass
 
-def verifyCode(code):
+def verifyCode(email, code):
+    """
+    Summary:
+        Given a code and an email, verify the code correlates to the code for each email. 
+        If the email's code does not match, or the email does not exist, throw an error.
+        Otherwise, return a boolean.
+    Args:
+        email (string): Email for whom the code is for.
+        code (string): Verification code for the given email.
+    Error:
+    """
     pass
     
 
 async def sendEmail(receiver_email, code):
     """
-    Summary
+    Summary:
         Given an email address, email the email address the most recent verification code assigned to the email.
         After 5 minutes, the verification code will expire and be replaced by null. TODO
     Args:
