@@ -1,9 +1,11 @@
 import smtplib, ssl, asyncio
+
+
 send_email_address = "xuerichard1@gmail.com"
 send_email_password = "gbwv aczd mejn xmvb"
 
 
-def generateCode(email):
+def generate_code(email):
     """
     Summary:
         Given an email, generate a verification code that allows for the email to be reset.
@@ -21,7 +23,9 @@ def generateCode(email):
         
     """
     pass
-def verifyCode(email, code):
+
+
+def verify_code(email, code):
     """
     Summary:
         Given a code and an email, verify the code correlates to the code for each email. 
@@ -34,7 +38,7 @@ def verifyCode(email, code):
     """
     
 
-async def sendEmail(receiver_email, code):
+async def send_email(receiver_email, code):
     """
     Summary
         Given an email address, email the email address the most recent verification code assigned to the email.
@@ -72,5 +76,5 @@ async def sendEmail(receiver_email, code):
     
     
 if __name__ == "__main__":
-    sendEmail(send_email_address, "000000")
+    send_email(send_email_address, "000000")
     print("Hello!")
