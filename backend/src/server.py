@@ -1,15 +1,17 @@
 from flask import Flask, request
-from flask_bcrypt import Bcrypt
 from flask_restx import Api, Resource, fields
-from flask_sqlalchemy import SQLAlchemy
 import uuid
+
+from database import db, bcrypt, User
+import config
 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URI
+
 api = Api(app)
-bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:54321/esglow'
-db = SQLAlchemy(app)
+bcrypt.init_app(app)
+db.init_app(app)
 
 
 @api.route("/")
@@ -21,14 +23,6 @@ user_model = api.model('User', {
     'email': fields.String(required=True, description='Email Address', example="william.feng@gmail.com"),
     'password': fields.String(required=True, description='Password')
 })
-
-
-class User(db.Model):
-    __tablename__ = 'users'
-
-    user_id = db.Column(db.String, primary_key=True)
-    email = db.Column(db.String, unique=True, nullable=False)
-    password_hash = db.Column(db.String, nullable=False)
 
 
 @api.route("/register")
