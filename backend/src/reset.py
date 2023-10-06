@@ -37,6 +37,25 @@ def verify_code(email, code):
     Error:
     """
     
+    
+def reset_password(email, new_password):
+    """
+    NOTE: This is a temporary function and does not work as some variable names/packages are missing.
+    
+    Need to restructure and abstract out the database functions.
+    """
+    
+    user = User.query.filter_by(email=email).first()
+
+    if user:
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        user.password_hash = hashed_password
+
+        db.session.commit()
+        return True
+
+    return False
+    
 
 async def send_email(receiver_email, code):
     """
