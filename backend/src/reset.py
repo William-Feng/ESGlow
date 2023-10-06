@@ -1,5 +1,7 @@
 import smtplib, ssl, asyncio
 
+from database import db, bcrypt, User
+
 
 send_email_address = "xuerichard1@gmail.com"
 send_email_password = "gbwv aczd mejn xmvb"
@@ -40,9 +42,17 @@ def verify_code(email, code):
     
 def reset_password(email, new_password):
     """
-    NOTE: This is a temporary function and does not work as some variable names/packages are missing.
-    
-    Need to restructure and abstract out the database functions.
+    Summary:
+        Resets the password of a given user identified by their email address.
+    Args:
+        email (string): Email address of the user whose password needs to be reset.
+        new_password (string): New password for the user.
+        
+    Returns:
+        bool: True if the password was successfully reset, False otherwise (e.g., user not found).
+        
+    Error:
+        SQLAlchemyError: If there is any error while updating the database. 
     """
     
     user = User.query.filter_by(email=email).first()
@@ -74,7 +84,7 @@ async def send_email(receiver_email, code):
         body = f"""
         Hello {receiver_email},
 
-        You've recently requested to reset your password for ESGlow. Your verification code is:
+        You have recently requested to reset your password for ESGlow. Your verification code is:
 
         {code}
 
