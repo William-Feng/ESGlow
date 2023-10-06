@@ -21,7 +21,6 @@ def generateCode(email):
         
     """
     pass
-
 def verifyCode(email, code):
     """
     Summary:
@@ -33,12 +32,11 @@ def verifyCode(email, code):
         code (string): Verification code for the given email.
     Error:
     """
-    pass
     
 
 async def sendEmail(receiver_email, code):
     """
-    Summary:
+    Summary
         Given an email address, email the email address the most recent verification code assigned to the email.
         After 5 minutes, the verification code will expire and be replaced by null. TODO
     Args:
