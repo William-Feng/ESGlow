@@ -1,6 +1,5 @@
-from flask import Flask, request
+from flask import Flask
 from flask_restx import Api, Resource, fields
-import uuid
 
 from database import db, bcrypt, User
 import config
@@ -18,6 +17,7 @@ db.init_app(app)
 class Hello(Resource):
     def get(self):
         return "Hello, World!"
+
 
 user_model = api.model('User', {
     'email': fields.String(required=True, description='Email Address', example="william.feng@gmail.com"),
@@ -40,17 +40,16 @@ class RegisterUser(Resource):
         if existing_user:
             return {"message": "Email already exists."}, 400
 
-        # Generate password hash and uuid
-        password_hash = bcrypt.generate_password_hash(password).decode('utf-8') 
-        uid = uuid.uuid4()
+        # Generate password hash
+        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         
         # Store new user in database
-        new_user = User(user_id=uid, email=email, password_hash=password_hash)
+        new_user = User(email=email, password=password_hash)
         db.session.add(new_user)
         db.session.commit()
 
         return {"message": "User successfully registered."}, 201
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-
