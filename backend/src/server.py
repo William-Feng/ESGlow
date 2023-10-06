@@ -17,7 +17,6 @@ user_model = api.model('User', {
 })
 
 @api.route("/register")
-@api.doc(params={'email': 'An email address', 'password': 'A valid password'})
 class RegisterUser(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User created successfully.')
@@ -35,6 +34,22 @@ class RegisterUser(Resource):
         # TODO: store new user in database
 
         return {"message": "User successfully registered."}, 201
+
+@api.route("/login")
+class Login(Resource):
+    @api.expect(user_model, validate=True)
+    @api.response(201, 'User created successfully.')
+    @api.response(400, 'Validation error or user already exists.')
+    def post(self):
+        data = api.payload
+        email = data['email']
+        password = data['password']
+
+        # TODO: check if user exists and is in database
+        # return {"message": "Login successful!"}, 201
+
+        # TODO: return user ID
+        return {"message": "Invalid credentials."}, 400 
 
 if __name__ == "__main__":
     app.run(debug=True)
