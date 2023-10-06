@@ -18,3 +18,8 @@ Week 3:
 This week we all worked together to finish, finalize and submit our project proposal, which was due this Friday.
 For my part, I helped work on the User Stories for each sprint/epic, writing both the primary User Story as well as all of the acceptance criteria.
 I also worked together to write up the novel features justification, as well as link our project outcomes with each of our user stories, to justify our project requirements are all being met.
+
+
+Week 4:
+
+This week is the week where we all started designing and coding up our individual sections, having worked beforehand to determine where each of us felt most comfortable starting. I settled on being backend with Sean, and in our first week of Sprint 1, began tackling setting up the Python flask backend and building the first initial set of endpoints and functionalities. I started the ticket and user story for resetting user passwords in case of forgotten password, finishing off the email send feature while still working on generating valid verification codes/verifying the codes sent out.
