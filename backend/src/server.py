@@ -1,16 +1,19 @@
 from flask import Flask
 from flask_restx import Api, Resource, fields
+import re
 
+# User-defined module imports
 from database import db, bcrypt, User
 import config
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URI
-
 api = Api(app)
 bcrypt.init_app(app)
 db.init_app(app)
+
+EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 @api.route("/")
@@ -34,6 +37,10 @@ class RegisterUser(Resource):
         data = api.payload
         email = data['email']
         password = data['password']
+
+        # Validate email format
+        if not re.match(EMAIL_REGEX, email):
+            return {"message": "Invalid email format."}, 400
 
         # Check if user exists
         existing_user = User.query.filter_by(email=email).first()
