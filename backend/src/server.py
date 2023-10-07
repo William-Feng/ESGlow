@@ -49,7 +49,7 @@ class RegisterUser(Resource):
 
         # Generate password hash
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-        
+
         # Store new user in database
         new_user = User(email=email, password=password_hash)
         db.session.add(new_user)

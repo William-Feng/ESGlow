@@ -1,4 +1,6 @@
-import smtplib, ssl, asyncio
+import asyncio
+import smtplib
+import ssl
 
 from database import db, bcrypt, User
 
@@ -13,8 +15,8 @@ def generate_code(email):
         Given an email, generate a verification code that allows for the email to be reset.
         Add the email and verification code to the database to allow for verification.
         If the email already has a verification code, overwrite the previous verification code.
-        
-        
+
+
         If the email does not exist in the user database, throw an error.
     Args:
         email (string): Email for whom the code is being generated for.
@@ -22,7 +24,7 @@ def generate_code(email):
         code (string): Verification code for the email.
     Errors:
         NO EMAIL IN TABLE:
-        
+
     """
     pass
 
@@ -38,8 +40,8 @@ def verify_code(email, code):
         code (string): Verification code for the given email.
     Error:
     """
-    
-    
+
+
 def reset_password(email, new_password):
     """
     Summary:
@@ -47,25 +49,26 @@ def reset_password(email, new_password):
     Args:
         email (string): Email address of the user whose password needs to be reset.
         new_password (string): New password for the user.
-        
+
     Returns:
         bool: True if the password was successfully reset, False otherwise (e.g., user not found).
-        
+
     Error:
         SQLAlchemyError: If there is any error while updating the database. 
     """
-    
+
     user = User.query.filter_by(email=email).first()
 
     if user:
-        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash(
+            new_password).decode('utf-8')
         user.password_hash = hashed_password
 
         db.session.commit()
         return True
 
     return False
-    
+
 
 async def send_email(receiver_email, code):
     """
@@ -76,7 +79,7 @@ async def send_email(receiver_email, code):
         receiver_email (string): Email for whom the code is being sent to.
         code (string): Verification code for the given email address.
     """
-    
+
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(send_email_address, send_email_password)
@@ -96,14 +99,14 @@ async def send_email(receiver_email, code):
         """
         # Formatting message with headers.
         message = f"Subject: {subject}\nFrom: {send_email_address}\nTo: {receiver_email}\n\n{body}"
-        
+
         server.sendmail(send_email_address, receiver_email, message)
-    
+
         await asyncio.sleep(300)
-        
+
         # TODO: Reset verification code for receiver_email to NULL.
-    
-    
+
+
 if __name__ == "__main__":
     send_email(send_email_address, "000000")
     print("Hello!")
