@@ -1,7 +1,20 @@
+from flask import Flask
 import pytest
 
-from src import create_app, config
-from src.database import db
+from src import config, server
+from src.database import db, bcrypt
+
+
+def create_test_app():
+    app = Flask(__name__)
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = config.TEST_DATABASE_URI
+
+    bcrypt.init_app(app)
+    db.init_app(app)
+    server.api.init_app(app)
+
+    return app
 
 
 @pytest.fixture
@@ -17,14 +30,12 @@ def client():
         FlaskClient: An instance of the Flask test client.
     """
 
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = config.TEST_DATABASE_URI
+    app = create_test_app()
 
-    # Establish an application context before running the tests.
     with app.app_context():
         db.create_all()
         yield app.test_client()
+        db.session.remove()
         db.drop_all()
 
 
@@ -33,6 +44,7 @@ def test_register_endpoint(client):
         "email": "test@example.com",
         "password": "password123"
     }
+
     response = client.post('/register', json=data)
     assert response.status_code == 201
     assert b"User successfully registered." in response.data
