@@ -82,11 +82,6 @@ function Register () {
                 id="confirmPassword"
                 autoComplete="current-password"
               />
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot your password?
-                </Link>
-              </Grid>
               <Button
                 type="submit"
                 fullWidth
@@ -96,7 +91,7 @@ function Register () {
                 Sign Up
               </Button>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/" variant="body2">
                   Already have an account? Log in here
                 </Link>
               </Grid>
