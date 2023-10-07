@@ -2,7 +2,7 @@ import asyncio
 import smtplib
 import ssl
 
-from database import db, bcrypt, User
+from .database import db, bcrypt, User
 
 
 send_email_address = "xuerichard1@gmail.com"

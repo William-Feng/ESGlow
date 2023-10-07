@@ -1,17 +1,10 @@
-from flask import Flask
 from flask_restx import Api, Resource, fields
 import re
 
 # User-defined module imports
-from database import db, bcrypt, User
-import config
+from .database import db, bcrypt, User
 
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URI
-api = Api(app)
-bcrypt.init_app(app)
-db.init_app(app)
+api = Api()
 
 EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
@@ -23,7 +16,7 @@ class Hello(Resource):
 
 
 user_model = api.model('User', {
-    'email': fields.String(required=True, description='Email Address', example="william.feng@gmail.com"),
+    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
     'password': fields.String(required=True, description='Password')
 })
 
@@ -56,7 +49,3 @@ class RegisterUser(Resource):
         db.session.commit()
 
         return {"message": "User successfully registered."}, 201
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
