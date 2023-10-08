@@ -13,6 +13,7 @@ function App() {
         <Route exact path="/" element={<StartPage page={ 'login' }/>} />
         <Route path="/register" element={<StartPage page={ 'register' }/>} />
         <Route path="/resetPassword" element={<StartPage page={ 'reset' }/>} />
+        <Route path="/resetPassword/verify" element={<StartPage page={ 'verify' }/>} />
       </Routes>
     </BrowserRouter>
   );

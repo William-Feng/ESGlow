@@ -1,18 +1,10 @@
 import React from 'react'
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-
-export default function ResetPassword() {
-  const navigate = useNavigate();
-  const [email, setEmail] = React.useState('');
 
 
-  function submitEmail () {
-    navigate('/resetPassword/verify');
-  }
-
+export default function VerifyCode() {
   return (
-  <Box
+    <Box
     sx={{
     my: 8,
     mx: 4,
@@ -26,7 +18,7 @@ export default function ResetPassword() {
       Forgot Password?
       </Typography>
       <Typography component="subtitle2" >
-        Enter the email associated with your account, and we'll send you a code to reset your password.
+        Put in the verification code sent to you at [insert email].
       </Typography>
     </Box>
     <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -46,7 +38,6 @@ export default function ResetPassword() {
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
-        onClick={ submitEmail(email) }
       >
         Next
       </Button>

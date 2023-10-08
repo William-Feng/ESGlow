@@ -55,7 +55,7 @@ function Login () {
           autoComplete="current-password"
         />
         <Grid item xs>
-          <Link href="/resetpassword" variant="body2">
+          <Link href="/resetPassword" variant="body2">
             Forgot your password?
           </Link>
         </Grid>

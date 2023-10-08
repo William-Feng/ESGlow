@@ -3,6 +3,7 @@ import React from 'react'
 import Login from './Login'
 import Register from './Register';
 import ResetPassword from './ResetPassword';
+import VerifyCode from './VerifyCode';
 
 
 export default function StartPage({ page }) {
@@ -31,6 +32,7 @@ export default function StartPage({ page }) {
           { page === 'login' && <Login/>  }
           { page === 'register' && <Register/>}
           { page === 'reset' && <ResetPassword/> }
+          { page === 'verify' && <VerifyCode/> }
         </Grid>
       </Grid>
     </ThemeProvider>
