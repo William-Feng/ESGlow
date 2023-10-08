@@ -1,9 +1,12 @@
 import asyncio
 import smtplib
 import ssl
+import string
+import secrets
 
+
+from .config import VERIFICATION_CODE_LENGTH
 from .database import db, bcrypt, User
-
 
 send_email_address = "xuerichard1@gmail.com"
 send_email_password = "gbwv aczd mejn xmvb"
@@ -13,53 +16,24 @@ def reset_wrapper(email):
     """
     Summary: 
         Wrapper for resetting an email.
-        Called by Frontend on resetting a password.
+        Called by Frontend upon attempting to reset a password.
+        Will generate a verification code, and send an email with code.
     Args:
         email (string): email to be reset
     """
     user = User.query.filter_by(email=email).first()
     if user:
-        send_email(email)
+        send_email(email, user)
     
-    
-def generate_code(email):
+def reset_password(email, code, new_password):
     """
     Summary:
-        Given an email, generate a verification code that allows for the email to be reset.
-        Add the email and verification code to the database to allow for verification.
-        If the email already has a verification code, overwrite the previous verification code.
-
-
-        If the email does not exist in the user database, throw an error.
-    Args:
-        email (string): Email for whom the code is being generated for.
-    Returns:
-        code (string): Verification code for the email.
-    Errors:
-        NO EMAIL IN TABLE:
-    """
-    pass
-
-
-def verify_code(email, code):
-    """
-    Summary:
-        Given a code and an email, verify the code correlates to the code for each email. 
-        If the email's code does not match, or the email does not exist, throw an error.
-        Otherwise, return a boolean.
-    Args:
-        email (string): Email for whom the code is for.
-        code (string): Verification code for the given email.
-    Error:
-    """
-
-
-def reset_password(email, new_password):
-    """
-    Summary:
-        Resets the password of a given user identified by their email address.
+        Called by Frontend to verify an entered code for a given email.
+        Resets the password of a given user identified by their email address,
+        if the given code is the same as the User's verification code.
     Args:
         email (string): Email address of the user whose password needs to be reset.
+        code (string): verification Code for the User
         new_password (string): New password for the user.
 
     Returns:
@@ -71,7 +45,7 @@ def reset_password(email, new_password):
 
     user = User.query.filter_by(email=email).first()
 
-    if user:
+    if user and user.verification_code == code:
         hashed_password = bcrypt.generate_password_hash(
             new_password).decode('utf-8')
         user.password_hash = hashed_password
@@ -80,17 +54,38 @@ def reset_password(email, new_password):
         return True
 
     return False
+    
+def generate_code(user):
+    """
+    Summary:
+        Given an User, generate a verification code of length LENGTH that allows for the email to be reset.
+        Add verification code to the database to allow for verification.
+        If the user already has a verification code, overwrite the previous verification code.
+    Args:
+        user (User): User for whom the code is being generated for.
+    Returns:
+        code (string): Verification code for the email.
+    """
+    alphabet = string.ascii_uppercase + string.digits
+    code = ''.join(secrets.choice(alphabet) for _ in range(VERIFICATION_CODE_LENGTH))
+    user.verification_code = code
+    db.session.commit()
+    return code
 
 
-async def send_email(receiver_email):
+
+
+
+async def send_email(receiver_email, user):
     """
     Summary
         Given an email address, email the email address the most recent verification code assigned to the email.
-        After 5 minutes, the verification code will expire and be replaced by null. TODO
+        After 5 minutes, the verification code will expire and be replaced by null. 
+        TODO
     Args:
         receiver_email (string): Email for whom the code is being sent to.
     """
-    code = generate_code(receiver_email)
+    code = generate_code(user)
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(send_email_address, send_email_password)
@@ -116,9 +111,3 @@ async def send_email(receiver_email):
         await asyncio.sleep(300)
 
         # TODO: Reset verification code for receiver_email to NULL.
-
-
-# TODO: Starter Code to Test!
-if __name__ == "__main__":
-    reset_wrapper("xuerichard1@gmail.com")
-    print("Hello!")
