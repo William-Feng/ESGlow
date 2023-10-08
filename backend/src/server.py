@@ -1,12 +1,8 @@
 from flask_restx import Api, Resource, fields
 
-# User-defined module imports
-from .database import db, bcrypt, User
 from .user import register_user
 
 api = Api()
-
-EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 @api.route("/")
@@ -25,7 +21,7 @@ user_model = api.model('User', {
 class RegisterUser(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User created successfully.')
-    @api.response(400, 'Validation error or user already exists.')
+    @api.response(400, 'Error: user already exists.')
     def post(self):
         data = api.payload
         email = data['email']

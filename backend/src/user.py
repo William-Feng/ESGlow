@@ -1,15 +1,7 @@
-import re
-
 from .database import db, bcrypt, User
-
-EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 def register_user(email, password):
-    # Validate email format
-    if not re.match(EMAIL_REGEX, email):
-        return {"message": "Invalid email format."}, 400
-
     # Check if user exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
