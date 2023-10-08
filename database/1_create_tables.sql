@@ -1,9 +1,12 @@
-create database esglow;
+CREATE DATABASE esglow;
 \c esglow;
 
-create table users (
-    user_id         serial,
-    email           text unique not null,
-    password_hash   text not null,
-    primary key (user_id)
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE users (
+    user_id             UUID DEFAULT uuid_generate_v4(),
+    email               TEXT UNIQUE NOT NULL,
+    password            TEXT NOT NULL,
+    verification_code   CHAR(6),
+    PRIMARY KEY (user_id)
 );

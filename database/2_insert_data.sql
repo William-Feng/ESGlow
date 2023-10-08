@@ -1,8 +1,8 @@
 \c esglow;
 
-insert into users
-    (email, password_hash)
-values
+INSERT INTO users
+    (email, password)
+VALUES
     ('carly.lim@gmail.com', 'password1'),
     ('mel.wu@gmail.com', 'password2'),
     ('richard.xue@gmail.com', 'password3'),
