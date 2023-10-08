@@ -1,45 +1,24 @@
-import { Alert, Box, Button, CssBaseline, Grid, Link, Paper, Snackbar, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Box, Button, CssBaseline, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react'
 
-function Register () {
+function Login () {
+  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
 
   const defaultTheme = createTheme();
-
-  const handleCloseSnackbar = () => {
-    setErrorMessage("");
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (email.length === 0 || !emailRegExp.test(email)) {
-      setErrorMessage('Invalid email address');
-    } else if (password.length < 3) {
-      setErrorMessage('Password is too short');
-    } else if (password.length > 50) {
-      setErrorMessage('Password is too long');
-    } else if (confirmPass !== password) {
-      setErrorMessage('Passwords do not match');
-    } else {
-      // Call register route
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={!!errorMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -70,7 +49,7 @@ function Register () {
               Welcome
             </Typography>
             <Typography component="h1" variant="h2">
-              Register
+              Login
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -82,7 +61,6 @@ function Register () {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                onChange={e => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -93,30 +71,23 @@ function Register () {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={e => setPassword(e.target.value)}
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="confirmPassword"
-                label="Confirm Password"
-                type="password"
-                id="confirmPassword"
-                autoComplete="current-password"
-                onChange={e => setConfirmPass(e.target.value)}
-              />
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot your password?
+                </Link>
+              </Grid>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign Up
+                Log In
               </Button>
               <Grid item>
-                <Link href="/" variant="body2">
-                  Already have an account? Log in here
+                <Link href="/register" variant="body2">
+                  Don't have an account? Register here
                 </Link>
               </Grid>
             </Box>
@@ -127,4 +98,4 @@ function Register () {
   );
 }
 
-export default Register;
+export default Login;
