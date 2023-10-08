@@ -11,3 +11,8 @@ Worked on the storyboard, designing the login/register pages and the
 main screen for data selection and visualisation. 
 Attended a meeting with the client and team leads on Friday to finalise 
 the proposal before submitting.
+
+Week 4
+Worked on setting up the frontend React app, and created the basic UI 
+framework for the registration page. Also got more familiar with using 
+Jira and GitHub.
