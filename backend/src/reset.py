@@ -9,6 +9,19 @@ send_email_address = "xuerichard1@gmail.com"
 send_email_password = "gbwv aczd mejn xmvb"
 
 
+def reset_wrapper(email):
+    """
+    Summary: 
+        Wrapper for resetting an email.
+        Called by Frontend on resetting a password.
+    Args:
+        email (string): email to be reset
+    """
+    user = User.query.filter_by(email=email).first()
+    if user:
+        send_email(email)
+    
+    
 def generate_code(email):
     """
     Summary:
@@ -24,7 +37,6 @@ def generate_code(email):
         code (string): Verification code for the email.
     Errors:
         NO EMAIL IN TABLE:
-
     """
     pass
 
@@ -70,16 +82,15 @@ def reset_password(email, new_password):
     return False
 
 
-async def send_email(receiver_email, code):
+async def send_email(receiver_email):
     """
     Summary
         Given an email address, email the email address the most recent verification code assigned to the email.
         After 5 minutes, the verification code will expire and be replaced by null. TODO
     Args:
         receiver_email (string): Email for whom the code is being sent to.
-        code (string): Verification code for the given email address.
     """
-
+    code = generate_code(receiver_email)
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(send_email_address, send_email_password)
@@ -107,6 +118,7 @@ async def send_email(receiver_email, code):
         # TODO: Reset verification code for receiver_email to NULL.
 
 
+# TODO: Starter Code to Test!
 if __name__ == "__main__":
-    send_email(send_email_address, "000000")
+    reset_wrapper("xuerichard1@gmail.com")
     print("Hello!")
