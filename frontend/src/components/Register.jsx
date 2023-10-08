@@ -155,11 +155,6 @@ function Register () {
                 autoComplete="current-password"
                 onChange={e => setConfirmPass(e.target.value)}
               />
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot your password?
-                </Link>
-              </Grid>
               <Button
                 type="submit"
                 fullWidth
