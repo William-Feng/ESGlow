@@ -1,5 +1,6 @@
 import { Alert, Box, Button, CssBaseline, Grid, Link, Paper, Snackbar, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react'
+import logoBlack from '../assets/logo-black.png'
 
 function Register () {
   const [email, setEmail] = React.useState("");
