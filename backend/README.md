@@ -1,6 +1,18 @@
-# ESGlow Backend Setup
+# ESGlow Backend
 
-This provides a brief guide on how to set up the ESGlow Python Flask backend.
+## Code Structure
+
+- `run.py`: Entry point for the Python Flask application.
+- `src/`: Contains the main application logic.
+  - `__init__.py`: Initialises the Flask application and its components.
+  - `config.py`: Configuration settings for the application, primarily the database URL.
+  - `database.py`: Sets up the database, ORM configurations, and user model.
+  - `server.py`: Defines the main routes or endpoints for the application.
+  - `user.py`: Contains all types of user functionality.
+  - `reset.py`: Contains functionality for password reset and email verification.
+- `tests/`: Contains pytests for the backend.
+
+## Setup
 
 ### Prerequisites
 
