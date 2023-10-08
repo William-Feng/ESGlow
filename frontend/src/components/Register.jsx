@@ -5,35 +5,12 @@ function Register () {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
-  const [openEmailError, setOpenEmailError] = React.useState("");
-  const [openShortPassError, setOpenShortPassError] = React.useState("");
-  const [openLongPassError, setOpenLongPassError] = React.useState("");
-  const [openMismatchPassError, setOpenMismatchPassError] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const defaultTheme = createTheme();
-  const handleEmailErrOpen = () => {
-    setOpenEmailError(true);
-  }
-  const handleEmailErrClose = () => {
-    setOpenEmailError(false);
-  };
-  const handleShortPassErrOpen = () => {
-    setOpenShortPassError(true);
-  }
-  const handleShortPassErrClose = () => {
-    setOpenShortPassError(false);
-  };
-  const handleLongPassErrOpen = () => {
-    setOpenLongPassError(true);
-  }
-  const handleLongPassErrClose = () => {
-    setOpenLongPassError(false);
-  };
-  const handleMismatchPassErrOpen = () => {
-    setOpenMismatchPassError(true);
-  }
-  const handleMismatchPassErrClose = () => {
-    setOpenMismatchPassError(false);
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
   };
 
   const handleSubmit = (e) => {
@@ -41,53 +18,27 @@ function Register () {
 
     const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (email.length === 0 || !emailRegExp.test(email)) {
-      return handleEmailErrOpen();
+      setErrorMessage('Invalid email address');
     } else if (password.length < 3) {
-      return handleShortPassErrOpen();
+      setErrorMessage('Password is too short');
     } else if (password.length > 50) {
-      return handleLongPassErrOpen();
+      setErrorMessage('Password is too long');
     } else if (confirmPass !== password) {
-      return handleMismatchPassErrOpen();
+      setErrorMessage('Passwords do not match');
+    } else {
+      // Call register route
     }
-    console.log({
-      email: email,
-      password: password,
-    });
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Snackbar 
-        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
-        open={openEmailError} 
-        autoHideDuration={6000} 
-        onClose={handleEmailErrClose}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
       >
-        <Alert severity="error">Invalid email address</Alert>
-      </Snackbar>
-      <Snackbar 
-        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
-        open={openShortPassError} 
-        autoHideDuration={6000} 
-        onClose={handleShortPassErrClose}
-      >
-        <Alert severity="error">Password is too short</Alert>
-      </Snackbar>
-      <Snackbar 
-        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
-        open={openLongPassError} 
-        autoHideDuration={6000} 
-        onClose={handleLongPassErrClose}
-      >
-        <Alert severity="error">Password is too long</Alert>
-      </Snackbar>
-      <Snackbar 
-        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
-        open={openMismatchPassError} 
-        autoHideDuration={6000} 
-        onClose={handleMismatchPassErrClose}
-      >
-        <Alert severity="error">Passwords do not match</Alert>
+        <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
