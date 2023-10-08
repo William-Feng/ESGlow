@@ -56,7 +56,7 @@ password_reset_request_model = api.model('Password Reset Request', {
 
 @api.route("/password-reset-request")
 class PasswordResetRequest(Resource):
-    @api.expect(user_model, validate=True)
+    @api.expect(password_reset_request_model, validate=True)
     @api.response(201, 'Password Reset Request Successful!')
     @api.response(400, 'Email does not exist!')
     def post(self):
@@ -79,7 +79,7 @@ password_reset_verify_model = api.model('Password Reset Verify', {
 
 @api.route("/password-reset-verify")
 class PasswordResetVerify(Resource):
-    @api.expect(user_model, validate=True)
+    @api.expect(password_reset_verify_model, validate=True)
     @api.response(201, 'Password Successfully Reset!')
     @api.response(400, 'Verification Code is incorrect!')
     @api.response(400, 'Email does not exist!')
