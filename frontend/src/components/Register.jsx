@@ -1,24 +1,94 @@
-import { Box, Button, CssBaseline, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Grid, Link, Paper, Snackbar, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react'
 
 function Register () {
-  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
+  const [openEmailError, setOpenEmailError] = React.useState("");
+  const [openShortPassError, setOpenShortPassError] = React.useState("");
+  const [openLongPassError, setOpenLongPassError] = React.useState("");
+  const [openMismatchPassError, setOpenMismatchPassError] = React.useState("");
 
   const defaultTheme = createTheme();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const handleEmailErrOpen = () => {
+    setOpenEmailError(true);
+  }
+  const handleEmailErrClose = () => {
+    setOpenEmailError(false);
+  };
+  const handleShortPassErrOpen = () => {
+    setOpenShortPassError(true);
+  }
+  const handleShortPassErrClose = () => {
+    setOpenShortPassError(false);
+  };
+  const handleLongPassErrOpen = () => {
+    setOpenLongPassError(true);
+  }
+  const handleLongPassErrClose = () => {
+    setOpenLongPassError(false);
+  };
+  const handleMismatchPassErrOpen = () => {
+    setOpenMismatchPassError(true);
+  }
+  const handleMismatchPassErrClose = () => {
+    setOpenMismatchPassError(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (email.length === 0 || !emailRegExp.test(email)) {
+      return handleEmailErrOpen();
+    } else if (password.length < 3) {
+      return handleShortPassErrOpen();
+    } else if (password.length > 50) {
+      return handleLongPassErrOpen();
+    } else if (confirmPass !== password) {
+      return handleMismatchPassErrOpen();
+    }
     console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+      email: email,
+      password: password,
     });
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Snackbar 
+        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
+        open={openEmailError} 
+        autoHideDuration={6000} 
+        onClose={handleEmailErrClose}
+      >
+        <Alert severity="error">Invalid email address</Alert>
+      </Snackbar>
+      <Snackbar 
+        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
+        open={openShortPassError} 
+        autoHideDuration={6000} 
+        onClose={handleShortPassErrClose}
+      >
+        <Alert severity="error">Password is too short</Alert>
+      </Snackbar>
+      <Snackbar 
+        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
+        open={openLongPassError} 
+        autoHideDuration={6000} 
+        onClose={handleLongPassErrClose}
+      >
+        <Alert severity="error">Password is too long</Alert>
+      </Snackbar>
+      <Snackbar 
+        anchorOrigin={{ vertical:"top", horizontal:"center" }} 
+        open={openMismatchPassError} 
+        autoHideDuration={6000} 
+        onClose={handleMismatchPassErrClose}
+      >
+        <Alert severity="error">Passwords do not match</Alert>
+      </Snackbar>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -61,6 +131,7 @@ function Register () {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={e => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -71,6 +142,7 @@ function Register () {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={e => setPassword(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -81,6 +153,7 @@ function Register () {
                 type="password"
                 id="confirmPassword"
                 autoComplete="current-password"
+                onChange={e => setConfirmPass(e.target.value)}
               />
               <Grid item xs>
                 <Link href="#" variant="body2">
