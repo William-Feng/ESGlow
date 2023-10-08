@@ -12,7 +12,7 @@ send_email_address = "xuerichard1@gmail.com"
 send_email_password = "gbwv aczd mejn xmvb"
 
 
-def reset_wrapper(email):
+def reset_password_request(email):
     """
     Summary: 
         Wrapper for resetting an email.
@@ -25,7 +25,7 @@ def reset_wrapper(email):
     if user:
         send_email(email, user)
     
-def reset_password(email, code, new_password):
+def reset_password_verify(email, code, new_password):
     """
     Summary:
         Called by Frontend to verify an entered code for a given email.
