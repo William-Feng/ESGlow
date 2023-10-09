@@ -16,3 +16,21 @@ def register_user(email, password):
     db.session.commit()
 
     return {"message": "User successfully registered."}, 201
+
+
+def login(email, password):
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return {"message": "User doesn't exist."}, 400
+    
+    # Check password
+    password_hash = user.password
+    if bcrypt.check_password_hash(password_hash, password):
+        return {
+            "message": "Login successful.",
+            "user_id": str(user.user_id)
+        }, 201
+    else:
+        return {"message": "Invalid password."}, 400
+    
