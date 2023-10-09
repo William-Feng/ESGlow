@@ -5,7 +5,7 @@ import Register from './Register';
 import ResetPassword from './ResetPassword';
 
 
-export default function StartPage({ page }) {
+export default function StartPage({ page, onSuccess }) {
   const defaultTheme = createTheme();
 
   return (
@@ -28,9 +28,9 @@ export default function StartPage({ page }) {
         />
         
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          { page === 'login' && <Login/>  }
-          { page === 'register' && <Register/>}
-          { page === 'reset' && <ResetPassword/> }
+          { page === 'login' && <Login onSuccess/>  }
+          { page === 'register' && <Register onSuccess/>}
+          { page === 'reset' && <ResetPassword onSuccess/> }
         </Grid>
       </Grid>
     </ThemeProvider>

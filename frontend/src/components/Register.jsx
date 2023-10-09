@@ -2,7 +2,7 @@ import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from 
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-function Register () {
+function Register ({ onSuccess }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
@@ -35,11 +35,12 @@ function Register () {
         password
       })
     });
-    
+
+    const data = await response.json();
     if (response.status === 201) {
+      onSuccess(data.token);
       navigate('/dashboard');
     } else {
-      const data = await response.json();
       setErrorMessage(data.message);
     }
   };
