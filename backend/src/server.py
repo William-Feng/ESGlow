@@ -12,7 +12,7 @@ EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 @api.route("/")
 class Hello(Resource):
     def get(self):
-        return "Hello, World!"
+        return {"message" : "Hello, World!"}, 200
 
 
 user_model = api.model('User', {
@@ -62,11 +62,14 @@ class PasswordResetRequest(Resource):
     def post(self):
         data = api.payload
         email = data['email']
+        
+        
+        # Verify email exists.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
             return {"message": "Email does not exist!"}, 400
         
-        
+        # Send email, generate code in backend.
         reset_password_request(email)
         return {"message": "Password Reset Request Successful!"}, 201
 
@@ -88,12 +91,14 @@ class PasswordResetVerify(Resource):
         email = data['email']
         code = data['code']
         new_password = data['new_password']
+        
+        
+        # Verify user exists in backend.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
             return {"message": "Email does not exist!"}, 400
         
-        
-        reset_password_request(email)
+        # Request a password reset.
         if reset_password_verify(email, code, new_password):
             return {"message": "Password Request Successful!"}, 201
         else:
