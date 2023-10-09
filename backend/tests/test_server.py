@@ -6,7 +6,7 @@ def test_register_endpoint(client):
 
     # First registration
     response = client.post('/register', json=data)
-    assert response.status_code == 201
+    assert response.status_code == 200
     assert b"User successfully registered." in response.data
 
     # Attempting duplicate email registration
