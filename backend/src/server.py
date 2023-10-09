@@ -1,12 +1,8 @@
 from flask_restx import Api, Resource, fields
-import re
 
-# User-defined module imports
-from .database import db, bcrypt, User
+from .user import register_user, login
 
 api = Api()
-
-EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 @api.route("/")
@@ -16,36 +12,38 @@ class Hello(Resource):
 
 
 user_model = api.model('User', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'password': fields.String(required=True, description='Password')
+    'email': fields.String(required=True, description='Email Address', example='example@gmail.com'),
+    'password': fields.String(required=True, description='Password', example='Password123')
 })
-
 
 @api.route("/register")
 class RegisterUser(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User created successfully.')
-    @api.response(400, 'Validation error or user already exists.')
+    @api.response(400, 'Error: user already exists.')
     def post(self):
         data = api.payload
         email = data['email']
         password = data['password']
 
-        # Validate email format
-        if not re.match(EMAIL_REGEX, email):
-            return {"message": "Invalid email format."}, 400
+        response, status_code = register_user(email, password)
+        return response, status_code
 
-        # Check if user exists
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return {"message": "Email already exists."}, 400
 
-        # Generate password hash
-        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+login_response_model = api.model('LoginResponse', {
+    'message': fields.String(description='Status message', example='Login successful.'),
+    'user_id': fields.String(description='User ID in UUID format', example='fa73dc42-8475-44d8-bd3d-89f7fa288974')
+})
 
-        # Store new user in database
-        new_user = User(email=email, password=password_hash)
-        db.session.add(new_user)
-        db.session.commit()
+@api.route("/login")
+class Login(Resource):
+    @api.expect(user_model, validate=True)
+    @api.response(201, 'Login successful.', model=login_response_model)
+    @api.response(400, 'Invalid email or password.')
+    def post(self):
+        data = api.payload
+        email = data['email']
+        password = data['password']
 
-        return {"message": "User successfully registered."}, 201
+        response, status_code = login(email, password)
+        return response, status_code

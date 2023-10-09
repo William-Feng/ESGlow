@@ -13,14 +13,3 @@ def test_register_endpoint(client):
     response = client.post('/register', json=data)
     assert response.status_code == 400
     assert b"Email already exists." in response.data
-
-
-def test_invalid_email_registration(client):
-    data = {
-        "email": "invalid_email",
-        "password": "password123"
-    }
-
-    response = client.post('/register', json=data)
-    assert response.status_code == 400
-    assert b"Invalid email format." in response.data
