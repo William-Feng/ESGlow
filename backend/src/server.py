@@ -8,11 +8,11 @@ api = Api()
 
 EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
-
+    
 @api.route("/")
 class Hello(Resource):
     def get(self):
-        return "Hello, World!"
+        return {"message" : "Hello, World!"}, 200
 
 
 user_model = api.model('User', {
@@ -56,17 +56,20 @@ password_reset_request_model = api.model('Password Reset Request', {
 
 @api.route("/password-reset-request")
 class PasswordResetRequest(Resource):
-    @api.expect(user_model, validate=True)
+    @api.expect(password_reset_request_model, validate=True)
     @api.response(201, 'Password Reset Request Successful!')
     @api.response(400, 'Email does not exist!')
     def post(self):
         data = api.payload
         email = data['email']
+        
+        
+        # Verify email exists.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
             return {"message": "Email does not exist!"}, 400
         
-        
+        # Send email, generate code in backend.
         reset_password_request(email)
         return {"message": "Password Reset Request Successful!"}, 201
 
@@ -79,7 +82,7 @@ password_reset_verify_model = api.model('Password Reset Verify', {
 
 @api.route("/password-reset-verify")
 class PasswordResetVerify(Resource):
-    @api.expect(user_model, validate=True)
+    @api.expect(password_reset_verify_model, validate=True)
     @api.response(201, 'Password Successfully Reset!')
     @api.response(400, 'Verification Code is incorrect!')
     @api.response(400, 'Email does not exist!')
@@ -88,12 +91,14 @@ class PasswordResetVerify(Resource):
         email = data['email']
         code = data['code']
         new_password = data['new_password']
+        
+        
+        # Verify user exists in backend.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
             return {"message": "Email does not exist!"}, 400
         
-        
-        reset_password_request(email)
+        # Request a password reset.
         if reset_password_verify(email, code, new_password):
             return {"message": "Password Request Successful!"}, 201
         else:
