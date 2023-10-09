@@ -1,24 +1,46 @@
-import { Box, Button, CssBaseline, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Alert, Box, Button, CssBaseline, Grid, Link, Paper, Snackbar, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react'
+import logoBlack from '../assets/logo-black.png'
 
 function Register () {
-  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const defaultTheme = createTheme();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (email.length === 0 || !emailRegExp.test(email)) {
+      setErrorMessage('Invalid email address');
+    } else if (password.length < 3) {
+      setErrorMessage('Password is too short');
+    } else if (password.length > 50) {
+      setErrorMessage('Password is too long');
+    } else if (confirmPass !== password) {
+      setErrorMessage('Passwords do not match');
+    } else {
+      // Call register route
+    }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -61,6 +83,7 @@ function Register () {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={e => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -71,6 +94,7 @@ function Register () {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={e => setPassword(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -81,12 +105,8 @@ function Register () {
                 type="password"
                 id="confirmPassword"
                 autoComplete="current-password"
+                onChange={e => setConfirmPass(e.target.value)}
               />
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot your password?
-                </Link>
-              </Grid>
               <Button
                 type="submit"
                 fullWidth
