@@ -19,11 +19,11 @@ function Register ({ onSuccess }) {
 
     const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (email.length === 0 || !emailRegExp.test(email)) {
-      setErrorMessage('Invalid email address');
+      return setErrorMessage('Invalid email address');
     } else if (password.length < 3 || password.length > 50) {
-      setErrorMessage('Password must be between 3 and 50 characters');
+      return setErrorMessage('Password must be between 3 and 50 characters');
     } else if (confirmPass !== password) {
-      setErrorMessage('Passwords do not match');
+      return setErrorMessage('Passwords do not match');
     }
 
     const response = await fetch('/api/register', {
@@ -41,7 +41,7 @@ function Register ({ onSuccess }) {
       onSuccess(data.token);
       navigate('/dashboard');
     } else {
-      setErrorMessage(data.message);
+      return setErrorMessage(data.message);
     }
   };
 
