@@ -13,7 +13,7 @@ def create_app():
 
     bcrypt.init_app(app)
     db.init_app(app)
-    JWTManager.init_app(app)
+    JWTManager(app)
     server.api.init_app(app)
 
     return app

@@ -17,11 +17,12 @@ def register(email, password):
     db.session.add(new_user)
     db.session.commit()
 
-    access_token = create_access_token(identity=email)
+    # Return a JWT access token to immediately login the new user
+    token = create_access_token(identity=email)
 
     return {
         "message": "User successfully registered.",
-        "access_token": access_token
+        "token": token
     }, 200
 
 
@@ -36,9 +37,9 @@ def login(email, password):
     if not bcrypt.check_password_hash(password_hash, password):
         return {"message": "Invalid password."}, 400
 
-    access_token = create_access_token(identity=email)
+    token = create_access_token(identity=email)
 
     return {
         "message": "Login successful.",
-        "access_token": access_token
+        "token": token
     }, 200

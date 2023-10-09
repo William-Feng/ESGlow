@@ -1,5 +1,6 @@
 from flask_restx import Api, fields, Resource
 
+from .config import JWT_EXAMPLE
 from .user import login, register
 
 
@@ -18,10 +19,16 @@ user_model = api.model('User', {
 })
 
 
+register_response_model = api.model('LoginResponse', {
+    'message': fields.String(description='Status message', example='User successfully registered.'),
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
+})
+
+
 @api.route("/register")
 class Register(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'User created successfully.')
+    @api.response(200, 'User created successfully.', model=register_response_model)
     @api.response(400, 'Error: user already exists.')
     def post(self):
         data = api.payload
@@ -34,7 +41,7 @@ class Register(Resource):
 
 login_response_model = api.model('LoginResponse', {
     'message': fields.String(description='Status message', example='Login successful.'),
-    'user_id': fields.String(description='User ID in UUID format', example='fa73dc42-8475-44d8-bd3d-89f7fa288974')
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
 })
 
 
