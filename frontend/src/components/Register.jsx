@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
+import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
 
 function Register () {
@@ -6,8 +6,6 @@ function Register () {
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-
-  const defaultTheme = createTheme();
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
@@ -38,6 +36,14 @@ function Register () {
         alignItems: 'center',
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal:  'center' }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
       <Typography component="h1" variant="h5">
         Welcome
       </Typography>

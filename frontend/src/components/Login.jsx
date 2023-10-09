@@ -1,12 +1,10 @@
-import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography, createTheme } from '@mui/material';
+import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
 
 function Login () {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-
-  const defaultTheme = createTheme();
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
@@ -53,6 +51,7 @@ function Login () {
           name="email"
           autoComplete="email"
           autoFocus
+          onChange={e => setEmail(e.target.value)}
         />
         <TextField
           margin="normal"
@@ -63,6 +62,7 @@ function Login () {
           type="password"
           id="password"
           autoComplete="current-password"
+          onChange={e => setPassword(e.target.value)}
         />
         <Grid item xs>
           <Link href="/resetpassword" variant="body2">
