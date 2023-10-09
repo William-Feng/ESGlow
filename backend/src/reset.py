@@ -24,34 +24,42 @@ def reset_password_request(email):
     if user:
         send_email(email, user)
     
-def reset_password_verify(email, code, new_password):
+def reset_password_verify(token, code):
     """
     Summary:
-        Called by Frontend to verify an entered code for a given email.
-        Resets the password of a given user identified by their email address,
-        if the given code is the same as the User's verification code.
+        Called by Frontend to verify an entered code for a given user.
+        Checks if the given code is the same as the User's verification code.
     Args:
-        email (string): Email address of the user whose password needs to be reset.
+        token (Token): Token associated with user
         code (string): verification Code for the User
-        new_password (string): New password for the user.
-
     Returns:
-        bool: True if the password was successfully reset, False otherwise (e.g., user not found).
-
+        ({boolean}, status_code)
     Error:
         SQLAlchemyError: If there is any error while updating the database. 
     """
-
+    # TODO Fix
     user = User.query.filter_by(email=email).first()
 
     if user and user.verification_code == code:
+        return {'verified': True}, 200
+
+    return {'verified': False}, 400
+
+def reset_password_change(token, new_password):
+    """
+    TODO
+    Given a token and new_password, change associated user's password.
+    Args:
+        token (Token): Token associated with user
+        new_password (string): New password for user
+    """
+    
+    """
         user.password = bcrypt.generate_password_hash(
             new_password).decode('utf-8')
         user.verification_code = None
         db.session.commit()
-        return True
-
-    return False
+    """
     
 def generate_code(user):
     """

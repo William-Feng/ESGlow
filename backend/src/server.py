@@ -3,7 +3,7 @@ import re
 
 # User-defined module imports
 from .database import db, bcrypt, User
-from .reset import reset_password_request, reset_password_verify
+from .reset import reset_password_request, reset_password_verify, reset_password_change
 api = Api()
 
 EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -75,9 +75,8 @@ class PasswordResetRequest(Resource):
 
 # NOTE: Email needs to passed in again from the frontend for this to work; Could we change this?
 password_reset_verify_model = api.model('Password Reset Verify', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'code': fields.String(required=True, description='Verification Code', example="5A03BX"),
-    'new_password': fields.String(required=True, description='New Password', example="password123")
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}'),
+    'code': fields.String(required=True, description='Verification Code', example="5A03BX")
 })
 
 @api.route("/password-reset-verify")
@@ -87,12 +86,10 @@ class PasswordResetVerify(Resource):
     @api.response(400, 'Verification Code is incorrect!')
     @api.response(400, 'Email does not exist!')
     def post(self):
-        data = api.payload
-        email = data['email']
+    
+        token = data['token']
         code = data['code']
-        new_password = data['new_password']
-        
-        
+        # TODO CHANGE TO WORK
         # Verify user exists in backend.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
@@ -104,3 +101,19 @@ class PasswordResetVerify(Resource):
         else:
             return {"message": 'Verification Code is incorrect!'}, 400
 
+password_reset_change_model = api.model('Password Reset Change', {
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}'),
+    'new_password': fields.String(required=True, description='New Password', example="password123")
+})
+
+@api.route("/password-reset-verify")
+class PasswordResetVerify(Resource):
+    @api.expect(password_reset_change_model, validate=True)
+    @api.response(201, 'Password Successfully Reset!')
+    @api.response(400, 'Token is incorrect!')
+    def post(self):
+        data = api.payload
+        token = data['token']
+        new_password = data['new_password']
+        return reset_password_change(token, new_password)
+        
