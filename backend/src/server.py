@@ -1,3 +1,4 @@
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
 
 from .config import JWT_EXAMPLE
@@ -25,7 +26,7 @@ register_response_model = api.model('LoginResponse', {
 
 
 @api.route("/api/register")
-class RegisterUser(Resource):
+class Register(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User created successfully.', model=register_response_model)
     @api.response(400, 'Error: user already exists.')
@@ -56,3 +57,19 @@ class Login(Resource):
 
         response, status_code = login(email, password)
         return response, status_code
+
+
+@api.route("/api/user")
+class User(Resource):
+
+    @jwt_required()
+    def get(self):
+        # Decode the JWT token to retrieve the identity
+        user_email = get_jwt_identity()
+
+        response = {
+            'email': user_email,
+            # If we have other user data we want to return in future, add it here
+        }
+
+        return response, 200
