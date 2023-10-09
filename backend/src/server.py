@@ -3,7 +3,7 @@ import re
 
 # User-defined module imports
 from .database import db, bcrypt, User
-from .reset import reset_password_request, reset_password_verify
+from .reset import reset_password_request, reset_password_verify, reset_password_change
 api = Api()
 
 EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -77,7 +77,6 @@ class PasswordResetRequest(Resource):
 password_reset_verify_model = api.model('Password Reset Verify', {
     'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
     'code': fields.String(required=True, description='Verification Code', example="5A03BX"),
-    'new_password': fields.String(required=True, description='New Password', example="password123")
 })
 
 @api.route("/password-reset-verify")
@@ -99,8 +98,23 @@ class PasswordResetVerify(Resource):
             return {"message": "Email does not exist!"}, 400
         
         # Request a password reset.
-        if reset_password_verify(email, code, new_password):
+        if reset_password_verify(email, code):
             return {"message": "Password Request Successful!"}, 201
         else:
             return {"message": 'Verification Code is incorrect!'}, 400
 
+password_reset_change_model = api.model('Password Reset Change', {
+    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
+    'new_password': fields.String(required=True, description='New Password', example="password123")
+})
+
+@api.route("/password-reset-verify")
+class PasswordResetVerify(Resource):
+    @api.expect(password_reset_change_model, validate=True)
+    @api.response(201, 'Password Successfully Reset!')
+    @api.response(400, 'Email is incorrect!')
+    def post(self):
+        data = api.payload
+        email = data['email']
+        new_password = data['new_password']
+        return reset_password_change(email, new_password)
