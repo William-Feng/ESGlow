@@ -1,6 +1,7 @@
 import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import logoBlack from '../assets/logo-black.png'
 
 function Register ({ onSuccess }) {
   const [email, setEmail] = React.useState("");
