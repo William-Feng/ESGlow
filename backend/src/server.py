@@ -1,3 +1,8 @@
+from flask_restx import Api, fields, Resource
+
+from .config import JWT_EXAMPLE
+from .user import login, register
+
 from flask_restx import Api, Resource, fields
 import re
 
@@ -5,8 +10,6 @@ import re
 from .database import db, bcrypt, User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 api = Api()
-
-EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
     
 @api.route("/")
@@ -16,44 +19,37 @@ class Hello(Resource):
 
 
 user_model = api.model('User', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'password': fields.String(required=True, description='Password')
+    'email': fields.String(required=True, description='Email Address', example='example@gmail.com'),
+    'password': fields.String(required=True, description='Password', example='Password123')
 })
 
 
-@api.route("/register")
+register_response_model = api.model('LoginResponse', {
+    'message': fields.String(description='Status message', example='User successfully registered.'),
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
+})
+
+
+@api.route("/api/register")
 class RegisterUser(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(201, 'User created successfully.')
-    @api.response(400, 'Validation error or user already exists.')
+    @api.response(200, 'User created successfully.', model=register_response_model)
+    @api.response(400, 'Error: user already exists.')
     def post(self):
         data = api.payload
         email = data['email']
         password = data['password']
 
-        # Validate email format
-        if not re.match(EMAIL_REGEX, email):
-            return {"message": "Invalid email format."}, 400
+        response, status_code = register(email, password)
+        return response, status_code
 
-        # Check if user exists
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return {"message": "Email already exists."}, 400
 
-        # Generate password hash
-        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        # Store new user in database
-        new_user = User(email=email, password=password_hash)
-        db.session.add(new_user)
-        db.session.commit()
-
-        return {"message": "User successfully registered."}, 201
-
-password_reset_request_model = api.model('Password Reset Request', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
+login_response_model = api.model('LoginResponse', {
+    'message': fields.String(description='Status message', example='Login successful.'),
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
 })
 
+<<<<<<< HEAD
 @api.route("/password-reset-request")
 class PasswordResetRequest(Resource):
     @api.expect(password_reset_request_model, validate=True)
