@@ -1,4 +1,3 @@
-import asyncio
 import smtplib
 import ssl
 import string
@@ -46,10 +45,9 @@ def reset_password_verify(email, code, new_password):
     user = User.query.filter_by(email=email).first()
 
     if user and user.verification_code == code:
-        hashed_password = bcrypt.generate_password_hash(
+        user.password = bcrypt.generate_password_hash(
             new_password).decode('utf-8')
-        user.password_hash = hashed_password
-
+        user.verification_code = None
         db.session.commit()
         return True
 
