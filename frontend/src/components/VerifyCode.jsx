@@ -26,10 +26,9 @@ export default function VerifyCode() {
         margin="normal"
         required
         fullWidth
-        id="code"
+        id="vcode"
         label="Verification Code"
-        name="code"
-        autoComplete="code"
+        name="vcode"
         autoFocus
       />
 

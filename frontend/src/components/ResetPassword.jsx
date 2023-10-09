@@ -4,6 +4,13 @@ import { useNavigate } from 'react-router-dom';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
+  // const [email, setEmail] = React.useState('');
+
+
+  // function submitEmail () {
+  //   navigate('/resetPassword/verify');
+  // }
+
   return (
   <Box
     sx={{
@@ -35,6 +42,7 @@ export default function ResetPassword() {
       />
 
       <Button
+        // type="submit"
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}

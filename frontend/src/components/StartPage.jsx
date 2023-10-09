@@ -6,7 +6,7 @@ import ResetPassword from './ResetPassword';
 import VerifyCode from './VerifyCode';
 
 
-export default function StartPage({ page, onSuccess }) {
+export default function StartPage({ page }) {
   const defaultTheme = createTheme();
 
   return (
@@ -29,10 +29,10 @@ export default function StartPage({ page, onSuccess }) {
         />
         
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          { page === 'login' && <Login onSuccess={onSuccess} />  }
-          { page === 'register' && <Register onSuccess={onSuccess} />}
-          { page === 'reset' && <ResetPassword onSuccess={onSuccess} /> }
-          { page === 'verify' && <VerifyCode onSuccess={onSuccess} />}
+          { page === 'login' && <Login/>  }
+          { page === 'register' && <Register/>}
+          { page === 'reset' && <ResetPassword/> }
+          { page === 'verify' && <VerifyCode/> }
         </Grid>
       </Grid>
     </ThemeProvider>
