@@ -1,32 +1,47 @@
-import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
+import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import logoBlack from '../assets/logo-black.png'
 
-function Register () {
+function Register ({ onSuccess }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-
-  const defaultTheme = createTheme();
+  const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (email.length === 0 || !emailRegExp.test(email)) {
       setErrorMessage('Invalid email address');
-    } else if (password.length < 3) {
-      setErrorMessage('Password is too short');
-    } else if (password.length > 50) {
-      setErrorMessage('Password is too long');
+    } else if (password.length < 3 || password.length > 50) {
+      setErrorMessage('Password must be between 3 and 50 characters');
     } else if (confirmPass !== password) {
       setErrorMessage('Passwords do not match');
+    }
+
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      onSuccess(data.token);
+      navigate('/dashboard');
     } else {
-      // Call register route
+      setErrorMessage(data.message);
     }
   };
 
@@ -40,6 +55,14 @@ function Register () {
         alignItems: 'center',
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal:  'center' }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
       <Typography component="h1" variant="h5">
         Welcome
       </Typography>
