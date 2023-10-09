@@ -1,5 +1,4 @@
 from flask_restx import Api, Resource, fields
-import asyncio
 import re
 
 # User-defined module imports
@@ -9,7 +8,7 @@ api = Api()
 
 EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
-
+    
 @api.route("/")
 class Hello(Resource):
     def get(self):
@@ -71,7 +70,7 @@ class PasswordResetRequest(Resource):
             return {"message": "Email does not exist!"}, 400
         
         # Send email, generate code in backend.
-        asyncio.create_task(reset_password_request(email))
+        reset_password_request(email)
         return {"message": "Password Reset Request Successful!"}, 201
 
 # NOTE: Email needs to passed in again from the frontend for this to work; Could we change this?
