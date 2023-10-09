@@ -1,17 +1,19 @@
 import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function Register () {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
+  const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -21,8 +23,24 @@ function Register () {
       setErrorMessage('Password must be between 3 and 50 characters');
     } else if (confirmPass !== password) {
       setErrorMessage('Passwords do not match');
+    }
+
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
+    
+    if (response.status === 201) {
+      navigate('/dashboard');
     } else {
-      // Call register route
+      const data = await response.json();
+      setErrorMessage(data.message);
     }
   };
 

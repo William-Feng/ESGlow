@@ -21,7 +21,7 @@ user_model = api.model('User', {
 })
 
 
-@api.route("/register")
+@api.route("/api/register")
 class RegisterUser(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User created successfully.')
