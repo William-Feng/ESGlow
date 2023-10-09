@@ -1,4 +1,5 @@
 from flask_restx import Api, Resource, fields
+import asyncio
 import re
 
 # User-defined module imports
@@ -70,7 +71,7 @@ class PasswordResetRequest(Resource):
             return {"message": "Email does not exist!"}, 400
         
         # Send email, generate code in backend.
-        reset_password_request(email)
+        asyncio.create_task(reset_password_request(email))
         return {"message": "Password Reset Request Successful!"}, 201
 
 # NOTE: Email needs to passed in again from the frontend for this to work; Could we change this?
