@@ -28,9 +28,9 @@ export default function StartPage({ page, onSuccess }) {
         />
         
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          { page === 'login' && <Login onSuccess/>  }
-          { page === 'register' && <Register onSuccess/>}
-          { page === 'reset' && <ResetPassword onSuccess/> }
+          { page === 'login' && <Login onSuccess={onSuccess} />  }
+          { page === 'register' && <Register onSuccess={onSuccess} />}
+          { page === 'reset' && <ResetPassword onSuccess={onSuccess} /> }
         </Grid>
       </Grid>
     </ThemeProvider>
