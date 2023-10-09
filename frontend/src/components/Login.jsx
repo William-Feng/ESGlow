@@ -1,47 +1,19 @@
 import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
-import logoBlack from '../assets/logo-black.png'
 
-function Register ({ onSuccess }) {
+function Login () {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (email.length === 0 || !emailRegExp.test(email)) {
-      setErrorMessage('Invalid email address');
-    } else if (password.length < 3 || password.length > 50) {
-      setErrorMessage('Password must be between 3 and 50 characters');
-    } else if (confirmPass !== password) {
-      setErrorMessage('Passwords do not match');
-    }
-
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      onSuccess(data.token);
-      navigate('/dashboard');
-    } else {
-      setErrorMessage(data.message);
+    if (email.length === 0 || password.length === 0) {
+      setErrorMessage('Please enter your details')
     }
   };
 
@@ -67,7 +39,7 @@ function Register ({ onSuccess }) {
         Welcome
       </Typography>
       <Typography component="h1" variant="h2">
-        Register
+        Login
       </Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
         <TextField
@@ -92,28 +64,22 @@ function Register ({ onSuccess }) {
           autoComplete="current-password"
           onChange={e => setPassword(e.target.value)}
         />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          name="confirmPassword"
-          label="Confirm Password"
-          type="password"
-          id="confirmPassword"
-          autoComplete="current-password"
-          onChange={e => setConfirmPass(e.target.value)}
-        />
+        <Grid item xs>
+          <Link href="/resetpassword" variant="body2">
+            Forgot your password?
+          </Link>
+        </Grid>
         <Button
           type="submit"
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
         >
-          Sign Up
+          Log In
         </Button>
         <Grid item>
-          <Link href="/" variant="body2">
-            Already have an account? Log in here
+          <Link href="/register" variant="body2">
+            Don't have an account? Register here
           </Link>
         </Grid>
       </Box>
@@ -121,4 +87,4 @@ function Register ({ onSuccess }) {
   );
 }
 
-export default Register;
+export default Login;
