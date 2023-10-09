@@ -12,7 +12,7 @@ send_email_address = "xuerichard1@gmail.com"
 send_email_password = "gbwv aczd mejn xmvb"
 
 
-def reset_password_request(email):
+async def reset_password_request(email):
     """
     Summary: 
         Wrapper for resetting an email.
@@ -23,7 +23,7 @@ def reset_password_request(email):
     """
     user = User.query.filter_by(email=email).first()
     if user:
-        send_email(email, user)
+        await send_email(email, user)
     
 def reset_password_verify(email, code, new_password):
     """
@@ -73,17 +73,14 @@ def generate_code(user):
     return code
 
 
-
-
-
 async def send_email(receiver_email, user):
     """
     Summary
         Given an email address, email the email address the most recent verification code assigned to the email.
         After 5 minutes, the verification code will expire and be replaced by null. 
-        TODO
     Args:
         receiver_email (string): Email for whom the code is being sent to.
+        user (User): User for whom the code is for.
     """
     code = generate_code(user)
     context = ssl.create_default_context()
@@ -107,7 +104,9 @@ async def send_email(receiver_email, user):
         message = f"Subject: {subject}\nFrom: {send_email_address}\nTo: {receiver_email}\n\n{body}"
 
         server.sendmail(send_email_address, receiver_email, message)
-
+        # Wait 300 seconds to clear.
         await asyncio.sleep(300)
-
-        # TODO: Reset verification code for receiver_email to NULL.
+        user.verification_code = None
+        db.session.commit()
+    
+        
