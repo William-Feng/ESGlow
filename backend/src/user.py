@@ -1,7 +1,9 @@
+from flask_jwt_extended import create_access_token
+
 from .database import db, bcrypt, User
 
 
-def register_user(email, password):
+def register(email, password):
     # Check if user exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
@@ -15,7 +17,12 @@ def register_user(email, password):
     db.session.add(new_user)
     db.session.commit()
 
-    return {"message": "User successfully registered."}, 201
+    access_token = create_access_token(identity=email)
+
+    return {
+        "message": "User successfully registered.",
+        "access_token": access_token
+    }, 200
 
 
 def login(email, password):
@@ -23,14 +30,15 @@ def login(email, password):
     user = User.query.filter_by(email=email).first()
     if not user:
         return {"message": "User doesn't exist."}, 400
-    
-    # Check password
+
+    # Check invalid password
     password_hash = user.password
-    if bcrypt.check_password_hash(password_hash, password):
-        return {
-            "message": "Login successful.",
-            "user_id": str(user.user_id)
-        }, 201
-    else:
+    if not bcrypt.check_password_hash(password_hash, password):
         return {"message": "Invalid password."}, 400
-    
+
+    access_token = create_access_token(identity=email)
+
+    return {
+        "message": "Login successful.",
+        "access_token": access_token
+    }, 200
