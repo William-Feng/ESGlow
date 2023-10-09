@@ -19,10 +19,8 @@ function Register () {
     const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (email.length === 0 || !emailRegExp.test(email)) {
       setErrorMessage('Invalid email address');
-    } else if (password.length < 3) {
-      setErrorMessage('Password is too short');
-    } else if (password.length > 50) {
-      setErrorMessage('Password is too long');
+    } else if (password.length < 3 || password.length > 50) {
+      setErrorMessage('Password must be between 3 and 50 characters');
     } else if (confirmPass !== password) {
       setErrorMessage('Passwords do not match');
     } else {
