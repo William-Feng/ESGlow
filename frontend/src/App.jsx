@@ -2,19 +2,28 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Register from './components/Register'
-import Login from './components/Login';
 import CssBaseLine from '@mui/material/CssBaseline'
+import StartPage from './components/StartPage';
+import Dashboard from './components/Dashboard';
 
 function App() {
-  	return (
-		<BrowserRouter >
-		<CssBaseLine />
-			<Routes>
-				<Route exact path="/" element={<Login />} /> {/* change to login */}
-				<Route path="/register" element={<Register />} />
-			</Routes>
-		</BrowserRouter>
+  const [token, setToken] = React.useState(localStorage.getItem('token'))
+  
+  function manageTokenSet (token) {
+    setToken(token);
+    localStorage.setItem('token', token);
+  }
+
+  return (
+    <BrowserRouter >
+    <CssBaseLine />
+      <Routes>
+        <Route exact path="/" element={<StartPage page={ 'login' } onSuccess={ manageTokenSet } />} />
+        <Route path="/register" element={<StartPage page={ 'register' } onSuccess={ manageTokenSet } />} />
+        <Route path="/resetPassword" element={<StartPage page={ 'reset' }/>} />
+        <Route path="/dashboard" element={<Dashboard token={ token } />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
