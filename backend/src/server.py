@@ -44,7 +44,7 @@ login_response_model = api.model('LoginResponse', {
 })
 
 
-@api.route("/login")
+@api.route("/api/login")
 class Login(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'Login successful.', model=login_response_model)
