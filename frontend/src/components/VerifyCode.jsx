@@ -26,10 +26,9 @@ export default function VerifyCode() {
         margin="normal"
         required
         fullWidth
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete="email"
+        id="vcode"
+        label="Verification Code"
+        name="vcode"
         autoFocus
       />
 
