@@ -57,3 +57,16 @@ class Login(Resource):
 
         response, status_code = login(email, password)
         return response, status_code
+
+logout_request_model = api.model('LogoutRequest', {
+    'token': fields.String(description='JWT token', example=f'{JWT_EXAMPLE}')
+})
+
+@api.route("/logout")
+class Logout(Resource):
+    @api.response(200, 'Logout successful')
+    @api.response(400, 'Invalid token')
+    def post(self):
+        pass
+
+
