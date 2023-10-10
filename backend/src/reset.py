@@ -73,14 +73,13 @@ def reset_password_change(email, new_password):
         ({message: string}, status_code)
     """
 
-    user = User.query.filter_by(email=get_jwt_identity()).first()
+    user = User.query.filter_by(email=email).first()
     user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
     user.verification_code = None
     db.session.commit()
     return {
         "message": "Password Successfully Reset!",
     }, 200
-
 
 def generate_code(user):
     """
