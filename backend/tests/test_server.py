@@ -8,11 +8,7 @@ def test_register_endpoint(client):
     }
 
     # First registration
-<<<<<<< HEAD
-    response = client.post('/register', json=data)
-=======
     response = client.post('/api/register', json=data)
->>>>>>> main
     assert response.status_code == 200
     assert b"User successfully registered." in response.data
 
@@ -20,8 +16,6 @@ def test_register_endpoint(client):
     response = client.post('/api/register', json=data)
     assert response.status_code == 400
     assert b"Email already exists." in response.data
-<<<<<<< HEAD
-=======
 
 
 def test_login_endpoint(client_with_user):
@@ -57,4 +51,3 @@ def test_login_endpoint(client_with_user):
     response = client_with_user.post('/api/login', json=invalid_password)
     assert response.status_code == 400
     assert response.json["message"] == "Invalid password."
->>>>>>> main

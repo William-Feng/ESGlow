@@ -61,7 +61,7 @@ export default function ResetPassword ({ email }) {
       <Typography variant="h3">
       Set New Password
       </Typography>
-      <Typography variant="subtitle2" >
+      <Typography variant="subtitle1" >
         Enter the new password.
       </Typography>
     </Box>

@@ -24,38 +24,24 @@ def reset_password_request(email):
     """
     user = User.query.filter_by(email=email).first()
     if user:
-<<<<<<< HEAD
-        send_email(email, user)
-    
-def reset_password_verify(token, code):
-=======
         return send_email(email, user)
     else:
         return ({"message": "Email does not exist!"}, 400)
 
 
 def reset_password_verify(email, code):
->>>>>>> main
     """
     Summary:
         Called by Frontend to verify an entered code for a given user.
         Checks if the given code is the same as the User's verification code.
     Args:
-        token (Token): Token associated with user
+        email (string): Email address of the user whose password needs to be reset.
         code (string): verification Code for the User
     Returns:
-<<<<<<< HEAD
-        ({boolean}, status_code)
-    Error:
-        SQLAlchemyError: If there is any error while updating the database. 
-    """
-    # TODO Fix
-=======
         ({verified: boolean, message: string}, status_code)
     Error:
         SQLAlchemyError: If there is any error while updating the database. 
     """
->>>>>>> main
     user = User.query.filter_by(email=email).first()
     if user:
         if user.verification_code == code:
@@ -95,31 +81,7 @@ def reset_password_change(email, new_password):
         "message": "Password Successfully Reset!",
     }, 200
 
-<<<<<<< HEAD
-    if user and user.verification_code == code:
-        return {'verified': True}, 200
 
-    return {'verified': False}, 400
-
-def reset_password_change(token, new_password):
-    """
-    TODO
-    Given a token and new_password, change associated user's password.
-    Args:
-        token (Token): Token associated with user
-        new_password (string): New password for user
-    """
-    
-    """
-        user.password = bcrypt.generate_password_hash(
-            new_password).decode('utf-8')
-        user.verification_code = None
-        db.session.commit()
-    """
-    
-=======
-
->>>>>>> main
 def generate_code(user):
     """
     Summary:

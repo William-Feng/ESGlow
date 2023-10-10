@@ -6,16 +6,7 @@ from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
 
-<<<<<<< HEAD
-from flask_restx import Api, Resource, fields
-import re
 
-# User-defined module imports
-from .database import db, bcrypt, User
-from .reset import reset_password_request, reset_password_verify, reset_password_change
-=======
-
->>>>>>> main
 api = Api()
 
 
@@ -56,9 +47,6 @@ login_response_model = api.model('LoginResponse', {
     'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
 })
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
 @api.route("/api/login")
 class Login(Resource):
@@ -94,7 +82,6 @@ password_reset_request_model = api.model('Password Reset Request', {
 })
 
 
->>>>>>> main
 @api.route("/password-reset-request")
 class PasswordResetRequest(Resource):
     @api.expect(password_reset_request_model, validate=True)
@@ -110,13 +97,8 @@ class PasswordResetRequest(Resource):
 
 # NOTE: Email needs to passed in again from the frontend for this to work; Could we change this?
 password_reset_verify_model = api.model('Password Reset Verify', {
-<<<<<<< HEAD
-    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}'),
-    'code': fields.String(required=True, description='Verification Code', example="5A03BX")
-=======
     'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
     'code': fields.String(required=True, description='Verification Code', example="5A03BX"),
->>>>>>> main
 })
 
 
@@ -127,43 +109,16 @@ class PasswordResetVerify(Resource):
     @api.response(400, 'Verification Code is incorrect!')
     @api.response(400, 'Email does not exist!')
     def post(self):
-    
-        token = data['token']
+        data = api.payload
+        email = data['email']
         code = data['code']
-<<<<<<< HEAD
-        # TODO CHANGE TO WORK
-=======
 
->>>>>>> main
         # Verify user exists in backend.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
             return {"message": "Email does not exist!"}, 400
 
         # Request a password reset.
-<<<<<<< HEAD
-        if reset_password_verify(email, code, new_password):
-            return {"message": "Password Request Successful!"}, 201
-        else:
-            return {"message": 'Verification Code is incorrect!'}, 400
-
-password_reset_change_model = api.model('Password Reset Change', {
-    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}'),
-    'new_password': fields.String(required=True, description='New Password', example="password123")
-})
-
-@api.route("/password-reset-verify")
-class PasswordResetVerify(Resource):
-    @api.expect(password_reset_change_model, validate=True)
-    @api.response(201, 'Password Successfully Reset!')
-    @api.response(400, 'Token is incorrect!')
-    def post(self):
-        data = api.payload
-        token = data['token']
-        new_password = data['new_password']
-        return reset_password_change(token, new_password)
-        
-=======
         return reset_password_verify(email, code)
 
 
@@ -183,4 +138,3 @@ class PasswordResetChange(Resource):
         email = data['email']
         new_password = data['new_password']
         return reset_password_change(email, new_password)
->>>>>>> main
