@@ -1,6 +1,8 @@
 import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
+<<<<<<< HEAD
 function Login () {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -15,6 +17,45 @@ function Login () {
       email: data.get('email'),
       password: data.get('password'),
     });
+=======
+function Login ({ onSuccess }) {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const navigate = useNavigate();
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (email.length === 0 || password.length === 0) {
+      return setErrorMessage('Please enter your details');
+    }
+
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
+    console.log(response);
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 200) {
+      onSuccess(data.token);
+      navigate('/dashboard');
+    } else {
+      return setErrorMessage(data.message);
+    }
+>>>>>>> main
   };
 
   return (
