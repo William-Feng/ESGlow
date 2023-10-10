@@ -35,7 +35,7 @@ def reset_password_verify(email, code):
         Called by Frontend to verify an entered code for a given user.
         Checks if the given code is the same as the User's verification code.
     Args:
-        token (Token): Token associated with user
+        email (string): Email address of the user whose password needs to be reset.
         code (string): verification Code for the User
     Returns:
         ({verified: boolean, message: string}, status_code)
@@ -73,7 +73,7 @@ def reset_password_change(email, new_password):
         ({message: string}, status_code)
     """
 
-    user = User.query.filter_by(email=get_jwt_identity()).first()
+    user = User.query.filter_by(email=email).first()
     user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
     user.verification_code = None
     db.session.commit()

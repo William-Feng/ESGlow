@@ -2,23 +2,7 @@ import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mu
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-<<<<<<< HEAD
-function Login () {
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
-
-  const defaultTheme = createTheme();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-=======
-function Login ({ onSuccess }) {
+function Login({ onSuccess }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -55,7 +39,6 @@ function Login ({ onSuccess }) {
     } else {
       return setErrorMessage(data.message);
     }
->>>>>>> main
   };
 
   return (
