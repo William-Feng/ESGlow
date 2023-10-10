@@ -8,7 +8,9 @@ export default function ResetPassword ({ email }) {
   const navigate = useNavigate();
 
   function submitNewPassword () {
+    // async to backend to set new password
     // navigate to success page
+    navigate('/resetPassword/success');
   }
 
   return (
