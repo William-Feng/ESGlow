@@ -2,9 +2,8 @@ import React from 'react'
 import { Alert, Box, Button, Snackbar, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-export default function ResetPassword ({ email }) {
-  const [newPassword, setNewPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
+export default function ResetVerify({ email }) {
+  const [code, setCode] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState("");
   const navigate = useNavigate();
 
@@ -12,14 +11,12 @@ export default function ResetPassword ({ email }) {
     setErrorMessage("");
   };
 
-  const submitNewPassword = async () => {
-    if (newPassword !== confirmPassword) {
-      return setErrorMessage('Passwords do not match');
-    } else if (newPassword.length < 3 || newPassword.length > 50) {
-      return setErrorMessage("Password must be between 3 and 50 characters");
+  const submitVerificationCode = async () => {
+    if (code.length === 0) {
+      return setErrorMessage('Please enter verification code');
     }
 
-    const response = await fetch('/api/password-reset/change', {
+    const response = await fetch('/api/password-reset/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,20 +24,20 @@ export default function ResetPassword ({ email }) {
       },
       body: JSON.stringify({
         email,
-        'new_password': newPassword
+        code
       })
     });
 
     const data = await response.json();
     if (response.status === 200) {
-      navigate('/resetPassword/success')
+      navigate('/resetPassword/setNewPassword')
     } else {
       return setErrorMessage(data.message);
     }
   }
 
   return (
-  <Box
+    <Box
     sx={{
     my: 8,
     mx: 4,
@@ -58,11 +55,11 @@ export default function ResetPassword ({ email }) {
         >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography variant="h3">
-      Set New Password
+      <Typography variant="h2">
+      Forgot Password?
       </Typography>
       <Typography variant="subtitle1" >
-        Enter the new password.
+        Put in the verification code sent to you at {email}.
       </Typography>
     </Box>
     <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -70,28 +67,19 @@ export default function ResetPassword ({ email }) {
         margin="normal"
         required
         fullWidth
-        id="password"
-        label="New Password"
-        name="password"
-        autoComplete="password"
+        id="code"
+        label="Verification Code"
+        name="code"
+        autoComplete="code"
         autoFocus
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="confirm-password"
-        label="Confirm New Password"
-        name="confirm password"
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        onChange={(e) => setCode(e.target.value)}
       />
 
       <Button
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
-        onClick={() => submitNewPassword()}
+        onClick={(e) => (submitVerificationCode(e.target.value))}
       >
         Next
       </Button>
