@@ -1,11 +1,14 @@
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
-from .config import VERIFICATION_CODE_LENGTH
 import uuid
+
+from .config import VERIFICATION_CODE_LENGTH
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+
 
 class User(db.Model):
     __tablename__ = 'users'
