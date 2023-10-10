@@ -3,6 +3,8 @@ import ssl
 import string
 import secrets
 
+from flask_jwt_extended import create_access_token, get_jwt_identity
+
 
 from .config import VERIFICATION_CODE_LENGTH
 from .database import db, bcrypt, User
@@ -19,39 +21,68 @@ def reset_password_request(email):
         Will generate a verification code, and send an email with code.
     Args:
         email (string): email to be reset
+    Return:
+        ({message: string}, status_code)
     """
     user = User.query.filter_by(email=email).first()
     if user:
-        send_email(email, user)
-    
-def reset_password_verify(email, code, new_password):
+        return send_email(email, user)
+    else:
+        return ({"message": "Email does not exist!"}, 400)
+def reset_password_verify(email, code):
     """
     Summary:
-        Called by Frontend to verify an entered code for a given email.
-        Resets the password of a given user identified by their email address,
-        if the given code is the same as the User's verification code.
+        Called by Frontend to verify an entered code for a given user.
+        Checks if the given code is the same as the User's verification code.
     Args:
         email (string): Email address of the user whose password needs to be reset.
         code (string): verification Code for the User
-        new_password (string): New password for the user.
-
     Returns:
-        bool: True if the password was successfully reset, False otherwise (e.g., user not found).
-
+        ({verified: boolean, message: string}, status_code)
     Error:
         SQLAlchemyError: If there is any error while updating the database. 
     """
-
     user = User.query.filter_by(email=email).first()
+    if user:
+        if user.verification_code == code:
+            return {
+                'verified': True,
+                "message": "Password Successfully Reset!",
+            }, 200
+        else:
+            return {
+                'verified': False,
+                "message": "Verification Code is incorrect!"
+            }, 400
+    else:
+        return {
+            'verified': False,
+            "message": "Email does not exist!"
+        }, 400
 
-    if user and user.verification_code == code:
-        user.password = bcrypt.generate_password_hash(
-            new_password).decode('utf-8')
-        user.verification_code = None
-        db.session.commit()
-        return True
-
-    return False
+def reset_password_change(email, new_password):
+    """
+    Summary:
+        Called by Frontend to change a password.
+        Given a email and new_password, change associated user's password.
+    Args:
+        email (string): Email address of the user whose password needs to be reset.
+        new_password (string): New password for user
+    Return:
+        ({token: token, message: string}, status_code)
+    """
+  
+    user = User.query.filter_by(email=get_jwt_identity()).first()
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    user.verification_code = None
+    db.session.commit()
+    
+    token = create_access_token(identity=email)
+    
+    return {
+        "message": "Password Successfully Reset!",
+        "token": token
+    }, 200
     
 def generate_code(user):
     """
@@ -75,10 +106,11 @@ def send_email(receiver_email, user):
     """
     Summary
         Given an email address, email the email address the most recent verification code assigned to the email.
-
     Args:
         receiver_email (string): Email for whom the code is being sent to.
         user (User): User for whom the code is for.
+    Return: 
+        None
     """
     code = generate_code(user)
     context = ssl.create_default_context()
@@ -103,4 +135,4 @@ def send_email(receiver_email, user):
 
         server.sendmail(send_email_address, receiver_email, message)
     
-        
+    return {"message": "Password Reset Request Successful!"}, 200
