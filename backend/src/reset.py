@@ -1,10 +1,8 @@
+from flask_jwt_extended import create_access_token, get_jwt_identity
+import secrets
 import smtplib
 import ssl
 import string
-import secrets
-
-from flask_jwt_extended import create_access_token, get_jwt_identity
-
 
 from .config import VERIFICATION_CODE_LENGTH
 from .database import db, bcrypt, User
@@ -29,6 +27,8 @@ def reset_password_request(email):
         return send_email(email, user)
     else:
         return ({"message": "Email does not exist!"}, 400)
+
+
 def reset_password_verify(email, code):
     """
     Summary:
@@ -60,6 +60,7 @@ def reset_password_verify(email, code):
             "message": "Email does not exist!"
         }, 400
 
+
 def reset_password_change(email, new_password):
     """
     Summary:
@@ -71,17 +72,16 @@ def reset_password_change(email, new_password):
     Return:
         ({message: string}, status_code)
     """
-  
+
     user = User.query.filter_by(email=get_jwt_identity()).first()
     user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
     user.verification_code = None
     db.session.commit()
-    
-    
     return {
         "message": "Password Successfully Reset!",
     }, 200
-    
+
+
 def generate_code(user):
     """
     Summary:
@@ -94,7 +94,8 @@ def generate_code(user):
         code (string): Verification code for the email.
     """
     alphabet = string.ascii_uppercase + string.digits
-    code = ''.join(secrets.choice(alphabet) for _ in range(VERIFICATION_CODE_LENGTH))
+    code = ''.join(secrets.choice(alphabet)
+                   for _ in range(VERIFICATION_CODE_LENGTH))
     user.verification_code = code
     db.session.commit()
     return code
@@ -132,5 +133,5 @@ def send_email(receiver_email, user):
         message = f"Subject: {subject}\nFrom: {send_email_address}\nTo: {receiver_email}\n\n{body}"
 
         server.sendmail(send_email_address, receiver_email, message)
-    
+
     return {"message": "Password Reset Request Successful!"}, 200
