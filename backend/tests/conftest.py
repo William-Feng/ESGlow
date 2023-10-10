@@ -64,6 +64,7 @@ def client():
         db.session.remove()
         db.drop_all()
 
+
 @pytest.fixture
 def client_with_user(client):
     data = {
@@ -74,6 +75,7 @@ def client_with_user(client):
     # Register one user
     client.post('/api/register', json=data)
     yield client
+
 
 def create_test_app():
     app = Flask(__name__)

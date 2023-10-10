@@ -1,5 +1,6 @@
 from flask_jwt_extended import decode_token
 
+
 def test_register_endpoint(client):
     data = {
         "email": "test@example.com",
@@ -15,6 +16,7 @@ def test_register_endpoint(client):
     response = client.post('/api/register', json=data)
     assert response.status_code == 400
     assert b"Email already exists." in response.data
+
 
 def test_login_endpoint(client_with_user):
     valid_details = {
@@ -49,5 +51,3 @@ def test_login_endpoint(client_with_user):
     response = client_with_user.post('/api/login', json=invalid_password)
     assert response.status_code == 400
     assert response.json["message"] == "Invalid password."
-
-
