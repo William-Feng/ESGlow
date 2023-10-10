@@ -1,20 +1,20 @@
-import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
 import React from 'react'
 
 function Login () {
+  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [confirmPass, setConfirmPass] = React.useState("");
 
-  const handleCloseSnackbar = () => {
-    setErrorMessage("");
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email.length === 0 || password.length === 0) {
-      setErrorMessage('Please enter your details')
-    }
+  const defaultTheme = createTheme();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
   };
 
   return (
@@ -27,14 +27,6 @@ function Login () {
         alignItems: 'center',
       }}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal:  'center' }}
-        open={!!errorMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
       <Typography component="h1" variant="h5">
         Welcome
       </Typography>
@@ -51,7 +43,6 @@ function Login () {
           name="email"
           autoComplete="email"
           autoFocus
-          onChange={e => setEmail(e.target.value)}
         />
         <TextField
           margin="normal"
@@ -62,7 +53,6 @@ function Login () {
           type="password"
           id="password"
           autoComplete="current-password"
-          onChange={e => setPassword(e.target.value)}
         />
         <Grid item xs>
           <Link href="/resetPassword" variant="body2">
