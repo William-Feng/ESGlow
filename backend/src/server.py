@@ -27,7 +27,7 @@ register_response_model = api.model('LoginResponse', {
 
 
 @api.route("/api/register")
-class RegisterUser(Resource):
+class Register(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User created successfully.', model=register_response_model)
     @api.response(400, 'Error: user already exists.')
@@ -40,13 +40,9 @@ class RegisterUser(Resource):
         return response, status_code
 
 
-# =====================================================================================
-#
-# Password Reset Endpoints, 3x
-#
-# =====================================================================================
-password_reset_request_model = api.model('Password Reset Request', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
+login_response_model = api.model('LoginResponse', {
+    'message': fields.String(description='Status message', example='Login successful.'),
+    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
 })
 
 
@@ -59,6 +55,18 @@ class Login(Resource):
         data = api.payload
         email = data['email']
         password = data['password']
+        response, status_code = login(email, password)
+        return response, status_code
+
+
+# =====================================================================================
+#
+# Password Reset Endpoints, 3x
+#
+# =====================================================================================
+password_reset_request_model = api.model('Password Reset Request', {
+    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
+})
 
 
 @api.route("/password-reset-request")
