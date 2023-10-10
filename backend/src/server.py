@@ -116,7 +116,7 @@ password_reset_change_model = api.model('Password Reset Change', {
 
 
 @api.route("/password-reset-change")
-class PasswordResetVerify(Resource):
+class PasswordResetChange(Resource):
     @api.expect(password_reset_change_model, validate=True)
     @api.response(200, 'Password Successfully Reset!')
     @api.response(400, 'Email is incorrect!')
