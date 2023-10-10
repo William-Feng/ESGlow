@@ -17,7 +17,7 @@ export default function ResetInputEmail({ setter }) {
       return setErrorMessage('Please enter your email');
     }
 
-    const response = await fetch('/api/password-reset-request', {
+    const response = await fetch('/api/password-reset/request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

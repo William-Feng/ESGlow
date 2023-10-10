@@ -16,7 +16,7 @@ export default function ResetVerify({ email }) {
       return setErrorMessage('Please enter verification code');
     }
 
-    const response = await fetch('/api/password-reset-verify', {
+    const response = await fetch('/api/password-reset/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

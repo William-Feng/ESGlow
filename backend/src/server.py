@@ -88,7 +88,7 @@ password_reset_request_model = api.model('Password Reset Request', {
 })
 
 
-@api.route("/password-reset/request")
+@api.route("/api/password-reset/request")
 class PasswordResetRequest(Resource):
     @api.expect(password_reset_request_model, validate=True)
     @api.response(200, 'Password Reset Request Successful!')
@@ -108,7 +108,7 @@ password_reset_verify_model = api.model('Password Reset Verify', {
 })
 
 
-@api.route("/password-reset/verify")
+@api.route("/api/password-reset/verify")
 class PasswordResetVerify(Resource):
     @api.expect(password_reset_verify_model, validate=True)
     @api.response(200, 'Password Successfully Reset!')
@@ -134,7 +134,7 @@ password_reset_change_model = api.model('Password Reset Change', {
 })
 
 
-@api.route("/password-reset/change")
+@api.route("/api/password-reset/change")
 class PasswordResetChange(Resource):
     @api.expect(password_reset_change_model, validate=True)
     @api.response(200, 'Password Successfully Reset!')

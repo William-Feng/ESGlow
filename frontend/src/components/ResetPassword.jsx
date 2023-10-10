@@ -19,7 +19,7 @@ export default function ResetPassword ({ email }) {
       return setErrorMessage("Password must be between 3 and 50 characters");
     }
 
-    const response = await fetch('/api/password-reset-change', {
+    const response = await fetch('/api/password-reset/change', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
