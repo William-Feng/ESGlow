@@ -2,12 +2,20 @@ import { CssBaseline, Grid, Paper, ThemeProvider, createTheme } from '@mui/mater
 import React from 'react'
 import Login from './Login'
 import Register from './Register';
-import ResetPassword from './ResetPassword';
-import VerifyCode from './VerifyCode';
-
+import ResetInputEmail from './ResetInputEmail';
 
 export default function StartPage({ page }) {
   const defaultTheme = createTheme();
+
+  const [email, setEmail] = React.useState(localStorage.getItem('email'))
+  
+  function setUserEmail (email) {
+    setEmail(email);
+    localStorage.setItem('email', email);
+  }
+  function removeUserEmail () {
+    localStorage.removeItem('email');
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -31,8 +39,6 @@ export default function StartPage({ page }) {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           { page === 'login' && <Login/>  }
           { page === 'register' && <Register/>}
-          { page === 'reset' && <ResetPassword/> }
-          { page === 'verify' && <VerifyCode/> }
         </Grid>
       </Grid>
     </ThemeProvider>

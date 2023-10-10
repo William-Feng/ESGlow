@@ -1,14 +1,16 @@
 import React from 'react'
 import { Box, Button, TextField, Typography } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
-import ResetVerify from './ResetVerify';
+import { useNavigate } from 'react-router-dom';
 
-export default function ResetPassword() {
-  const [email, setEmail] = React.useState("");
-  const [isRequested, setIsRequested] = React.useState(false);
+export default function ResetPassword ({ email }) {
+  const [newPassword, setNewPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const navigate = useNavigate();
 
+  function submitNewPassword () {
+    // navigate to success page
+  }
 
-  // const navigate = useNavigate();
   return (
   <Box
     sx={{
@@ -19,42 +21,45 @@ export default function ResetPassword() {
     alignItems: 'center',
     }}
   >
-    {isRequested ? 
-      <ResetVerify email={ email }/>
-      :
-      <>
-        <Box sx={{ margin: 5, textAlign: 'center' }}>
-          <Typography component="h1" variant="h3">
-          Forgot Password?
-          </Typography>
-          <Typography component="subtitle2" >
-            Enter the email associated with your account, and we'll send you a code to reset your password.
-          </Typography>
-        </Box>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            onChange={e => setEmail(e.target.value)}
-          />
+    <Box sx={{ margin: 5, textAlign: 'center' }}>
+      <Typography component="h1" variant="h3">
+      Set New Password
+      </Typography>
+      <Typography component="subtitle2" >
+        Enter the new password.
+      </Typography>
+    </Box>
+    <Box component="form" noValidate sx={{ mt: 1 }}>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="password"
+        label="New Password"
+        name="password"
+        autoComplete="password"
+        autoFocus
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="confirm-password"
+        label="Confirm New Password"
+        name="confirm password"
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
 
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={ () => setIsRequested(true) }
-          >
-            Next
-          </Button>
-        </Box>
-      </>
-      }
+      <Button
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={() => submitNewPassword()}
+      >
+        Next
+      </Button>
+    </Box>
   </Box>
   )
 }
