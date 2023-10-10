@@ -1,6 +1,7 @@
 from flask import Flask
 import pytest
 from sqlalchemy import create_engine, text
+from flask_jwt_extended import JWTManager
 
 from tests.test_config import DEFAULT_DATABASE_URL, TEST_DATABASE_URL, TEST_DATABASE_NAME
 from src import server
@@ -55,6 +56,7 @@ def client():
     """
 
     app = create_test_app()
+    JWTManager(app)
 
     with app.app_context():
         db.create_all()
@@ -62,11 +64,22 @@ def client():
         db.session.remove()
         db.drop_all()
 
+@pytest.fixture
+def client_with_user(client):
+    data = {
+        "email": "user1@example.com",
+        "password": "password123"
+    }
+
+    # Register one user
+    client.post('/api/register', json=data)
+    yield client
 
 def create_test_app():
     app = Flask(__name__)
     app.config['TESTING'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = TEST_DATABASE_URL
+    app.config['JWT_SECRET_KEY'] = 'test-secret-key'
 
     bcrypt.init_app(app)
     db.init_app(app)
