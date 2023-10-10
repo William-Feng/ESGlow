@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 \c esglow;
 
 INSERT INTO users
@@ -8,3 +9,6 @@ VALUES
     ('richard.xue@gmail.com', 'password3'),
     ('sean.wibi@gmail.com', 'password4'),
     ('will.feng@gmail.com', 'password5');
+=======
+\c esglow;
+>>>>>>> main

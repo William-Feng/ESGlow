@@ -24,10 +24,10 @@ export default function ResetPassword ({ email }) {
     }}
   >
     <Box sx={{ margin: 5, textAlign: 'center' }}>
-      <Typography component="h1" variant="h3">
+      <Typography variant="h1" variant="h3">
       Set New Password
       </Typography>
-      <Typography component="subtitle2" >
+      <Typography variant="subtitle2" >
         Enter the new password.
       </Typography>
     </Box>
