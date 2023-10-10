@@ -15,6 +15,8 @@ export default function ResetPassword ({ email }) {
   const submitNewPassword = async () => {
     if (newPassword !== confirmPassword) {
       return setErrorMessage('Passwords do not match');
+    } else if (newPassword.length < 3 || newPassword.length > 50) {
+      return setErrorMessage("Password must be between 3 and 50 characters");
     }
 
     const response = await fetch('/api/password-reset-change', {
@@ -25,7 +27,7 @@ export default function ResetPassword ({ email }) {
       },
       body: JSON.stringify({
         email,
-        newPassword
+        'new_password': newPassword
       })
     });
 
