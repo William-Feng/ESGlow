@@ -59,10 +59,10 @@ function Login ({ onSuccess }) {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography variant="h1" variant="h5">
+      <Typography variant="h5">
         Welcome
       </Typography>
-      <Typography variant="h1" variant="h2">
+      <Typography variant="h2">
         Login
       </Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>

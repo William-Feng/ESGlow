@@ -1,16 +1,40 @@
 import React from 'react'
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Snackbar, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export default function ResetPassword ({ email }) {
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState("");
   const navigate = useNavigate();
 
-  function submitNewPassword () {
-    // async to backend to set new password
-    // navigate to success page
-    navigate('/resetPassword/success');
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
+  };
+
+  const submitNewPassword = async () => {
+    if (newPassword !== confirmPassword) {
+      return setErrorMessage('Passwords do not match');
+    }
+
+    const response = await fetch('/api/password-reset-change', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        newPassword
+      })
+    });
+
+    const data = await response.json();
+    if (response.status === 200) {
+      navigate('/resetPassword/success')
+    } else {
+      return setErrorMessage(data.message);
+    }
   }
 
   return (
@@ -24,7 +48,15 @@ export default function ResetPassword ({ email }) {
     }}
   >
     <Box sx={{ margin: 5, textAlign: 'center' }}>
-      <Typography variant="h1" variant="h3">
+      <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal:  'center' }}
+          open={!!errorMessage}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
+      <Typography variant="h3">
       Set New Password
       </Typography>
       <Typography variant="subtitle2" >
