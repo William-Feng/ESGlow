@@ -9,8 +9,4 @@ CREATE TABLE users (
     password            TEXT NOT NULL,
     verification_code   CHAR(6),
     PRIMARY KEY (user_id)
-<<<<<<< HEAD
 );
-=======
-);
->>>>>>> main

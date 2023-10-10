@@ -4,7 +4,7 @@ import Login from './Login'
 import Register from './Register';
 import ResetInputEmail from './ResetInputEmail';
 
-export default function StartPage({ page }) {
+export default function StartPage({ page, onSuccess }) {
   const defaultTheme = createTheme();
 
   const [email, setEmail] = React.useState(localStorage.getItem('email'))
@@ -37,8 +37,8 @@ export default function StartPage({ page }) {
         />
         
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          { page === 'login' && <Login/>  }
-          { page === 'register' && <Register/>}
+          { page === 'login' && <Login onSuccess={onSuccess} />  }
+          { page === 'register' && <Register onSuccess={onSuccess} />}
         </Grid>
       </Grid>
     </ThemeProvider>

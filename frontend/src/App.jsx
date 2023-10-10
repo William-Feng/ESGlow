@@ -1,11 +1,11 @@
-
-import ResetMain from './components/ResetMain';
+// import logo from './logo.svg';
 import "./App.css";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CssBaseLine from "@mui/material/CssBaseline";
 import StartPage from "./components/StartPage";
 import Dashboard from "./components/Dashboard";
+import ResetMain from './components/ResetMain';
 
 function App() {
   const [token, setToken] = React.useState(localStorage.getItem("token"));
@@ -33,7 +33,6 @@ function App() {
         <Route path="/resetPassword/setNewPassword" element={<ResetMain page={ 'resetNewPW' }/>} />
         <Route path="/resetPassword/success" element={<ResetMain page={ 'resetSuccess' }/>} />
         <Route path="/dashboard" element={<Dashboard token={token} />} />
-        
       </Routes>
     </BrowserRouter>
   );
