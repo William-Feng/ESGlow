@@ -1,4 +1,4 @@
-from flask_jwt_extended import create_access_token, get_jwt_identity
+from flask_jwt_extended import get_jwt_identity
 import secrets
 import smtplib
 import ssl

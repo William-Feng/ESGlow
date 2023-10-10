@@ -1,9 +1,11 @@
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
 from .config import JWT_EXAMPLE
 
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
+
 
 api = Api()
 
@@ -46,7 +48,7 @@ login_response_model = api.model('LoginResponse', {
 })
 
 
-@api.route("/login")
+@api.route("/api/login")
 class Login(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'Login successful.', model=login_response_model)
@@ -59,11 +61,22 @@ class Login(Resource):
         return response, status_code
 
 
-# =====================================================================================
-#
-# Password Reset Endpoints, 3x
-#
-# =====================================================================================
+@api.route("/api/user")
+class User(Resource):
+
+    @jwt_required()
+    def get(self):
+        # Decode the JWT token to retrieve the identity
+        user_email = get_jwt_identity()
+
+        response = {
+            'email': user_email,
+            # If we have other user data we want to return in future, add it here
+        }
+
+        return response, 200
+
+
 password_reset_request_model = api.model('Password Reset Request', {
     'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
 })
