@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
-import React from 'react'
-=======
 import {
   Alert,
   Box,
@@ -15,7 +11,6 @@ import {
 import React from "react";
 import { useNavigate } from "react-router-dom";
 // import logoBlack from '../assets/logo-black.png'
->>>>>>> main
 
 function Register({ onSuccess }) {
   const [email, setEmail] = React.useState("");
@@ -65,13 +60,6 @@ function Register({ onSuccess }) {
       sx={{
         my: 8,
         mx: 4,
-<<<<<<< HEAD
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-=======
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -85,7 +73,6 @@ function Register({ onSuccess }) {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
->>>>>>> main
       <Typography component="h1" variant="h5">
         Welcome
       </Typography>
@@ -102,11 +89,7 @@ function Register({ onSuccess }) {
           name="email"
           autoComplete="email"
           autoFocus
-<<<<<<< HEAD
-          onChange={e => setEmail(e.target.value)}
-=======
           onChange={(e) => setEmail(e.target.value)}
->>>>>>> main
         />
         <TextField
           margin="normal"
@@ -117,11 +100,7 @@ function Register({ onSuccess }) {
           type="password"
           id="password"
           autoComplete="current-password"
-<<<<<<< HEAD
-          onChange={e => setPassword(e.target.value)}
-=======
           onChange={(e) => setPassword(e.target.value)}
->>>>>>> main
         />
         <TextField
           margin="normal"
@@ -132,11 +111,7 @@ function Register({ onSuccess }) {
           type="password"
           id="confirmPassword"
           autoComplete="current-password"
-<<<<<<< HEAD
-          onChange={e => setConfirmPass(e.target.value)}
-=======
           onChange={(e) => setConfirmPass(e.target.value)}
->>>>>>> main
         />
         <Button
           type="submit"

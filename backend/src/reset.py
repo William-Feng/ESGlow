@@ -35,7 +35,7 @@ def reset_password_verify(email, code):
         Called by Frontend to verify an entered code for a given user.
         Checks if the given code is the same as the User's verification code.
     Args:
-        token (Token): Token associated with user
+        email (string): Email address of the user whose password needs to be reset.
         code (string): verification Code for the User
     Returns:
         ({verified: boolean, message: string}, status_code)
