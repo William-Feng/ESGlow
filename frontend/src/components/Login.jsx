@@ -1,8 +1,8 @@
-import { Box, Button, Grid, Link, TextField, Typography, createTheme } from '@mui/material';
+import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-function Login({ onSuccess }) {
+function Login ({ onSuccess }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -51,10 +51,18 @@ function Login({ onSuccess }) {
         alignItems: 'center',
       }}
     >
-      <Typography component="h1" variant="h5">
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal:  'center' }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
+      <Typography variant="h5">
         Welcome
       </Typography>
-      <Typography component="h1" variant="h2">
+      <Typography variant="h2">
         Login
       </Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -67,6 +75,7 @@ function Login({ onSuccess }) {
           name="email"
           autoComplete="email"
           autoFocus
+          onChange={e => setEmail(e.target.value)}
         />
         <TextField
           margin="normal"
@@ -77,9 +86,10 @@ function Login({ onSuccess }) {
           type="password"
           id="password"
           autoComplete="current-password"
+          onChange={e => setPassword(e.target.value)}
         />
         <Grid item xs>
-          <Link href="/resetPassword" variant="body2">
+          <Link href="/resetpassword" variant="body2">
             Forgot your password?
           </Link>
         </Grid>
