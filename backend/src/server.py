@@ -1,10 +1,12 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
+from flask import request
 from .config import JWT_EXAMPLE
 
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
+from .frameworks import frameworks_all
 
 
 api = Api()
@@ -77,12 +79,11 @@ class GetUser(Resource):
         return response, 200
 
 
-# ======================================================================================
+# ===================================================================
 #
 # Password-Reset Endpoints
+# ===================================================================
 #
-# ======================================================================================
-
 password_reset_request_model = api.model('Password Reset Request', {
     'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
 })
@@ -101,7 +102,6 @@ class PasswordResetRequest(Resource):
         return reset_password_request(email)
 
 
-# NOTE: Email needs to passed in again from the frontend for this to work; Could we change this?
 password_reset_verify_model = api.model('Password Reset Verify', {
     'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
     'code': fields.String(required=True, description='Verification Code', example="5A03BX"),
@@ -144,3 +144,20 @@ class PasswordResetChange(Resource):
         email = data['email']
         new_password = data['new_password']
         return reset_password_change(email, new_password)
+
+# ===================================================================
+#
+# Framework/Metric Selection
+# ===================================================================
+#
+
+
+@api.route("/frameworks/get-all")
+class getFrameworksAll(Resource):
+    @api.response(200, 'Frameworks all retrieved!')
+    @api.response(401, 'Unauthorised Token')
+    
+    @jwt_required()
+    def get(self):
+        token = get_jwt_identity()
+        return frameworks_all(token)
