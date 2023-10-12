@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormControl, RadioGroup, Radio, Typography, FormControlLabel, Accordion,
+import { Box, FormControl, RadioGroup, Radio, Typography, FormControlLabel, Accordion,
   AccordionDetails, AccordionSummary, Checkbox } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -15,7 +15,8 @@ export default function SelectionSidebar() {
   };
 
   return (
-    <div>
+    <Box>
+      {/* <AccordionDetails sx={{ maxHeight: "300px", overflowY: "scroll" }}></AccordionDetails> */}
       <Accordion
         expanded={expanded === 'panel1'}
         onChange={handleChange('panel1')}
@@ -58,8 +59,8 @@ export default function SelectionSidebar() {
             {/* below is the list of frameworks */}
             {metrics.map((m) => (
               <>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} key={m}>
+                <Accordion key={m}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <FormControlLabel control={<Checkbox />} label={m} />
                   </AccordionSummary>
 
@@ -135,6 +136,6 @@ export default function SelectionSidebar() {
           </Typography>
         </AccordionDetails>
       </Accordion>
-    </div>
+    </Box>
   );
 }

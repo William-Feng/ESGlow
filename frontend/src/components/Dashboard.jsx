@@ -49,6 +49,8 @@ function Dashboard ({ token }) {
                   width: 240,
                   top: '328px',
                   boxSizing: 'border-box',
+                  overflowY: 'scroll',
+                  maxHeight: 'calc(100vh - 328px)',
                 },
               }}
               variant="permanent"
