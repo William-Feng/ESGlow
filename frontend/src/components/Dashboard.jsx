@@ -19,7 +19,8 @@ function Dashboard ({ token }) {
           sx={{
             bgcolor: 'primary.main',
             height: 128,
-            margin: ''
+            margin: '',
+            zIndex: (theme) => theme.zIndex.drawer + 1
           }}
         >
           <Toolbar>
@@ -41,12 +42,12 @@ function Dashboard ({ token }) {
           <Box>
             <Drawer
               sx={{
-                position: 'static',
+                position: 'relative',
                 width: 240,
                 flexShrink: 0,
-                top: '328px',
                 '& .MuiDrawer-paper': {
                   width: 240,
+                  top: '328px',
                   boxSizing: 'border-box',
                 },
               }}

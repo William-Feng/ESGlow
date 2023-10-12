@@ -1,7 +1,11 @@
 import React from 'react'
-import { Typography, Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { FormControl, RadioGroup, Radio, Typography, FormControlLabel, Accordion,
+  AccordionDetails, AccordionSummary, Checkbox } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+const metrics = ['metric A', 'metric B', 'metric C'] 
+const indicators = ['indicator X', 'indicator Y', 'indicator Z']
+const years = [2021, 2022, 2023]
 
 export default function SelectionSidebar() {
   const [expanded, setExpanded] = React.useState(false);
@@ -22,15 +26,23 @@ export default function SelectionSidebar() {
           id="panel1bh-header"
         >
           <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            General settings
+            Framework
           </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-            Aliquam eget maximus est, id dignissim quam.
-          </Typography>
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              // value={value}
+              // onChange={handleChange}
+            >
+              {/* placeholder values for framework */}
+              <FormControlLabel value="frameworkA" control={<Radio />} label="Framework A" />
+              <FormControlLabel value="frameworkB" control={<Radio />} label="Framework B" />
+            
+            </RadioGroup>
+          </FormControl>
         </AccordionDetails>
       </Accordion>
       <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
@@ -39,14 +51,41 @@ export default function SelectionSidebar() {
           aria-controls="panel2bh-content"
           id="panel2bh-header"
         >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>Users</Typography>
+          <Typography sx={{ width: '33%', flexShrink: 0 }}>Metrics</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
-            varius pulvinar diam eros in elit. Pellentesque convallis laoreet
-            laoreet.
-          </Typography>
+          <FormControl>
+            {/* below is the list of frameworks */}
+            {metrics.map((m) => (
+              <>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} key={m}>
+                    <FormControlLabel control={<Checkbox />} label={m} />
+                  </AccordionSummary>
+
+                  {/* below is the list of indicator */}
+                  <AccordionDetails>
+                    <FormControl>
+                      <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        // value={value}
+                        // onChange={handleChange}
+                      >
+                        {/* placeholder values for indicators */}
+                        {indicators.map((i) => (
+                          <>
+                            <FormControlLabel value={i} control={<Checkbox />} label={i} />
+                          </>
+                        ))}
+
+                      </RadioGroup>
+                    </FormControl>
+                  </AccordionDetails>
+                </Accordion>
+              </>
+            ))}
+          </FormControl>
         </AccordionDetails>
       </Accordion>
       <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -56,28 +95,43 @@ export default function SelectionSidebar() {
           id="panel3bh-header"
         >
           <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            Advanced settings
+            Years
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-            amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </Typography>
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              // value={value}
+              // onChange={handleChange}
+            >
+              {/* placeholder values for years */}
+              {years.map((y) => (
+                <>
+                  <FormControlLabel value={y} control={<Checkbox />} label={y} />
+                </>
+              ))}
+            
+            </RadioGroup>
+          </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+      <Accordion
+        expanded={expanded === 'panel4'}
+        onChange={handleChange('panel4')}
+        sx={{ mt: '20px' }}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel4bh-content"
           id="panel4bh-header"
         >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>Personal data</Typography>
+          <Typography sx={{ width: '33%', flexShrink: 0 }}>Weightings</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-            amet egestas eros, vitae egestas augue. Duis vel est augue.
+            Users will be able to customize indicator and metric weights.
           </Typography>
         </AccordionDetails>
       </Accordion>
