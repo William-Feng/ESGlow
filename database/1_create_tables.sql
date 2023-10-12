@@ -52,14 +52,14 @@ CREATE TABLE data_values (
 CREATE TABLE framework_metrics (
     framework_id        INT REFERENCES frameworks(framework_id),
     metric_id           INT REFERENCES metrics(metric_id),
-    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1);
+    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1),
     PRIMARY KEY (framework_id, metric_id)
 );
 
 CREATE TABLE metric_indicators (
     metric_id           INT REFERENCES metrics(metric_id),
     indicator_id        INT REFERENCES indicators(indicator_id),
-    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1);
+    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1),
     PRIMARY KEY (metric_id, indicator_id)
 );
 
