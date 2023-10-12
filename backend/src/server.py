@@ -6,7 +6,7 @@ from .config import JWT_EXAMPLE
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import frameworks_all
+from .frameworks import frameworks_all, frameworks_company
 
 
 api = Api()
@@ -152,12 +152,27 @@ class PasswordResetChange(Resource):
 #
 
 
-@api.route("/frameworks/get-all")
+@api.route("/api/frameworks/get-all")
 class getFrameworksAll(Resource):
     @api.response(200, 'Frameworks all retrieved!')
     @api.response(401, 'Unauthorised Token')
-    
     @jwt_required()
     def get(self):
-        token = get_jwt_identity()
-        return frameworks_all(token)
+        token_identity = get_jwt_identity()
+        return frameworks_all(token_identity)
+
+
+frameworks_get_company = api.model('Framework thru Company', {
+    'company': fields.String(required=True, description='Company Name', example="John Street Capital"),
+})
+
+
+@api.route("/api/frameworks/get-company")
+class getFrameworksAll(Resource):
+    @api.response(200, 'Frameworks for company retrieved!')
+    @api.response(401, 'Unauthorised Token')
+    @jwt_required()
+    def get(self):
+        company = request.args.get('company')
+        token_identity = get_jwt_identity()
+        return frameworks_company(token_identity, company)
