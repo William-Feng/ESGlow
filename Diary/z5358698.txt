@@ -23,3 +23,10 @@ I also worked together to write up the novel features justification, as well as 
 Week 4:
 
 This week is the week where we all started designing and coding up our individual sections, having worked beforehand to determine where each of us felt most comfortable starting. I settled on being backend with Sean, and in our first week of Sprint 1, began tackling setting up the Python flask backend and building the first initial set of endpoints and functionalities. I started the ticket and user story for resetting user passwords in case of forgotten password, finishing off the email send feature while still working on generating valid verification codes/verifying the codes sent out.
+
+
+Week 5:
+
+This week we presented together our first demo to the substitute tutor, as well as worked on the retrospective together which is due on saturday. In the presentation, I talked primarily about how the backend endpoints functioned, with JWT for authentication/authorisation, as well as how password resetting with verification codes worked.
+
+For work done on user stories, the password user stories were all fully finished, while metrics being sent off to the frontend, along with custom queries w/ company names are still being worked on.
