@@ -40,18 +40,18 @@ function Dashboard ({ token }) {
           >
             <Overview />
           </Box>
-          <Box sx={{ height: '900px', overflowY: 'scroll' }}>
+          <Box sx={{ height: '900px', overflowY: 'scroll', display: 'flex', flexDirection: 'row' }}>
             <Drawer
               sx={{
-                position: 'relative',
+                // position: 'relative',
                 width: 240,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
+                  position: 'static',
                   width: 240,
-                  top: '540px',
                   boxSizing: 'border-box',
                   overflowY: 'scroll',
-                  maxHeight: 'calc(100vh - 570px)',
+                  maxHeight: '100%',
                 },
               }}
               variant="permanent"

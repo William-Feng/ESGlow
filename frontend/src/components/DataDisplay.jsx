@@ -1,4 +1,4 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 
 function createData(metric, year1, year2, year3) {
@@ -21,7 +21,7 @@ const rows = [
 export default function DataDisplay() {
   return (
     <React.Fragment>
-      <Box sx={{ml: '260px', mt: '20px', overflowX: 'auto'}}>
+      <Box sx={{ mt: '20px', ml: '20px', mr: '20px', overflowX: 'auto', width: '100%' }}>
         <Table size='small'>
           <TableHead>
             <TableRow>
