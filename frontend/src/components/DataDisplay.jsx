@@ -21,7 +21,7 @@ const rows = [
 export default function DataDisplay() {
   return (
     <React.Fragment>
-      <Box sx={{ml: '260px', mt: '20px'}}>
+      <Box sx={{ml: '260px', mt: '20px', overflowX: 'auto'}}>
         <Table size='small'>
           <TableHead>
             <TableRow>
