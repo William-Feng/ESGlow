@@ -4,6 +4,7 @@ import Header from './Header';
 import Searchbar from './Searchbar';
 import Overview from './Overview';
 import SelectionSidebar from './SelectionSidebar';
+import DataDisplay from './DataDisplay';
 
 function Dashboard ({ token }) {
   const defaultTheme = createTheme();
@@ -32,7 +33,7 @@ function Dashboard ({ token }) {
           </Toolbar>
         </AppBar>
         <Box
-          sx={{ position: 'fixed', top: '128px', width: '100%', minHeight: '100vh', maxHeight: '600px' }}
+          sx={{ position: 'fixed', top: '128px', width: '100%', minHeight: '100vh', maxHeight: '600px', overflowY: 'scroll' }}
         >
           <Box
             sx={{ border: 'dotted', margin: '0', textAlign: 'center', maxHeight: '450px' }}
@@ -58,8 +59,7 @@ function Dashboard ({ token }) {
             >
              <SelectionSidebar />
             </Drawer>
-            
-            {/* table */}
+            <DataDisplay />
           </Box>
         </Box>
       </Box>
