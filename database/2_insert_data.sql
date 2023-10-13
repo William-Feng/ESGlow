@@ -30,37 +30,39 @@ INSERT INTO indicators (name, description, source) VALUES
 ('Stakeholder Communication', 'Regular and clear communication with stakeholders.', 'CorpComm Reports');
 
 -- Indicator data Values for each company
-INSERT INTO data_values (indicator_id, company_id, year, value) VALUES 
+INSERT INTO data_values (indicator_id, company_id, year, score) VALUES 
 -- Emission Standards
-(1, 1, 2023, 0.98),
-(1, 2, 2023, 0.93),
-(1, 3, 2023, 0.96),
-(2, 1, 2023, 0.75),
-(2, 2, 2023, 0.50),
-(2, 3, 2023, 0.60),
+(1, 1, 2023, 0.92),
+(1, 2, 2023, 0.88),
+(1, 3, 2023, 0.89),
+(2, 1, 2023, 0.76),
+(2, 2, 2023, 0.68),
+(2, 3, 2023, 0.72),
 (3, 1, 2023, 0.90),
-(3, 2, 2023, 0.85),
-(3, 3, 2023, 0.88),
+(3, 2, 2023, 0.86),
+(3, 3, 2023, 0.87),
+
 -- Community Engagement
-(4, 1, 2023, 10),
-(4, 2, 2023, 8),
-(4, 3, 2023, 7),
-(5, 1, 2023, 2),
-(5, 2, 2023, 3),
-(5, 3, 2023, 1),
-(6, 1, 2023, 5),
-(6, 2, 2023, 4),
-(6, 3, 2023, 3),
+(4, 1, 2023, 0.84),
+(4, 2, 2023, 0.80),
+(4, 3, 2023, 0.79),
+(5, 1, 2023, 0.82),
+(5, 2, 2023, 0.85),
+(5, 3, 2023, 0.78),
+(6, 1, 2023, 0.88),
+(6, 2, 2023, 0.86),
+(6, 3, 2023, 0.84),
+
 -- Corporate Transparency
-(7, 1, 2023, 0.98),
-(7, 2, 2023, 0.95),
-(7, 3, 2023, 0.96),
-(8, 1, 2023, 0.99),
-(8, 2, 2023, 0.97),
-(8, 3, 2023, 0.98),
-(9, 1, 2023, 12),
-(9, 2, 2023, 10),
-(9, 3, 2023, 11);
+(7, 1, 2023, 0.94),
+(7, 2, 2023, 0.92),
+(7, 3, 2023, 0.91),
+(8, 1, 2023, 0.96),
+(8, 2, 2023, 0.95),
+(8, 3, 2023, 0.94),
+(9, 1, 2023, 0.93),
+(9, 2, 2023, 0.91),
+(9, 3, 2023, 0.90);
 
 -- Framework Metrics Relationship
 INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUES 

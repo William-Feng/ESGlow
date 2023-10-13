@@ -42,10 +42,10 @@ CREATE TABLE indicators (
 
 CREATE TABLE data_values (
     value_id            SERIAL,
-    indicator_id        INT REFERENCES Indicators(indicator_id),
     company_id          INT REFERENCES Companies(company_id),
+    indicator_id        INT REFERENCES Indicators(indicator_id),
     year                INT CHECK (year > 1900 AND year <= 2030),
-    value               FLOAT,
+    score               FLOAT,
     PRIMARY KEY (value_id)
 );
 
