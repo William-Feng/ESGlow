@@ -45,7 +45,7 @@ CREATE TABLE data_values (
     company_id          INT REFERENCES Companies(company_id),
     indicator_id        INT REFERENCES Indicators(indicator_id),
     year                INT CHECK (year > 1900 AND year <= 2030),
-    score               FLOAT,
+    rating              FLOAT CHECK (rating >= 0.0 AND rating <= 100.0),
     PRIMARY KEY (value_id)
 );
 

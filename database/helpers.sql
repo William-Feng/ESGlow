@@ -26,8 +26,8 @@ from    frameworks f
         join indicators i on mi.indicator_id = i.indicator_id;
 
 
--- Displaying each company's indicator values
-select  c.company_id, c.name as company_name, d.year, i.indicator_id, i.name as indicator_name, d.score
+-- Displaying each company's indicator rating
+select  c.company_id, c.name as company_name, d.year, i.indicator_id, i.name as indicator_name, d.rating
 from    companies c
         join data_values d on c.company_id = d.company_id
         join indicators i on d.indicator_id = i.indicator_id
@@ -49,7 +49,7 @@ order   by c.company_id;
 
 -- Displaying literally everything in the one table (links all the tables together)
 select  f.framework_id, f.name as framework_name, m.metric_id, m.name as metric_name, fm.predefined_weight as metric_weight,
-        i.indicator_id, i.name as indicator_name, mi.predefined_weight as indicator_weight, c.company_id, c.name as company_name, d.year, d.score
+        i.indicator_id, i.name as indicator_name, mi.predefined_weight as indicator_weight, c.company_id, c.name as company_name, d.year, d.rating
 from    frameworks f
         join framework_metrics fm on f.framework_id = fm.framework_id
         join metrics m on fm.metric_id = m.metric_id
