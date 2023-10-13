@@ -2,6 +2,7 @@ import { AppBar, Box, CssBaseline, ThemeProvider, Toolbar, createTheme } from '@
 import React from 'react'
 import Header from './Header';
 import Searchbar from './Searchbar';
+import Overview from './Overview';
 
 function Dashboard ({ token }) {
   const defaultTheme = createTheme();
@@ -18,7 +19,6 @@ function Dashboard ({ token }) {
           sx={{
             bgcolor: 'primary.main',
             height: 128,
-            margin: ''
           }}
         >
           <Toolbar>
@@ -28,7 +28,7 @@ function Dashboard ({ token }) {
             <Searchbar/>
           </Toolbar>
         </AppBar>
-        {/* should also have company overview */}
+        <Overview />
         {/* sidebar */}
         {/* table */}
       </Box>
