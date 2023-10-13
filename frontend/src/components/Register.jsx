@@ -73,10 +73,10 @@ function Register({ onSuccess }) {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography component="h1" variant="h5">
+      <Typography variant="h5">
         Welcome
       </Typography>
-      <Typography component="h1" variant="h2">
+      <Typography variant="h2">
         Register
       </Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
