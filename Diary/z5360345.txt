@@ -16,3 +16,8 @@ Formulated novel features with group members.
 Discussed database implementataion with group members.
 Finalised project proposal.
 
+Week 4
+Setup backend Python environment.
+Setup simple Flask server and decided to use Flask-RestX.
+Created registration endpoint.
+Started login endpoint.

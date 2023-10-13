@@ -12,3 +12,9 @@ Sent emails between Ming and other team leads to better understand project requi
 Contributed in designing the project UI / UX and its storyboard by looking at other sites.
 Researched and wrote about current problems in ESG data usage and what our app aims to solve.
 Attended in a last meeting before proposal due date with Ming to understand sample dataset structure.
+
+Week 4
+I was assigned with Melanie to work on the frontend of the project.
+We worked closely together since the register page she has created needed to be visually consistent with login page I created.
+I made the login page and linked it to the register page. I also designed the logo for our website, which is featured in starting page.
+Our group is finalizing backend end points to see the fullstack functionality soon.

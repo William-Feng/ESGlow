@@ -23,3 +23,12 @@ I completed the System Architecture Diagram and provided descriptions, and also 
 I watched the Lecture recording on behalf of my team, noted down the key points that we had to investigate and led the administrative tasks.
 I was also heavily involved with the creation and modification of user stories & epics such that all requirements and novelty features were satisfied.
 Being the Scrum Master, I also ensured that the product and sprint backlogs were appropriate, feasible and optimal for this project.
+
+
+Week 4:
+
+Over Discord, our group members came up with some subtasks or child issues, so that we could better break up the user stories and allocate work.
+I setup the PostgreSQL database and created the users table, and tweaked a few attributes together with Sean & Richard as we worked on user registration.
+I managed to get Docker to containerise the datbase as I felt it provides great benefits in a team environment, and wrote up a guide on how to get started.
+As the Scrum Master, I continually monitored the Jira board, ensuring that the tickets had the correct status and everyone was on track.
+I also came up with some Git practices for our team, including having branch protection rules for PRs and commit messages prefixed with the ticket number.
