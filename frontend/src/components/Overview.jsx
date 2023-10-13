@@ -6,7 +6,6 @@ export default function Overview() {
     <Box
       sx={{
         bgcolor: 'background.paper',
-        py: 20,
         mx: 'auto',
         width: '90%',
       }}
@@ -56,6 +55,7 @@ export default function Overview() {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            textAlign: 'center'
           }}>
             <h2>43</h2>
             <h4>Industry Mean</h4>

@@ -2,21 +2,10 @@ import { CssBaseline, Grid, Paper, ThemeProvider, createTheme } from '@mui/mater
 import React from 'react'
 import Login from './Login'
 import Register from './Register';
-import ResetInputEmail from './ResetInputEmail';
 
 export default function StartPage({ page, onSuccess }) {
   const defaultTheme = createTheme();
-
-  const [email, setEmail] = React.useState(localStorage.getItem('email'))
   
-  function setUserEmail (email) {
-    setEmail(email);
-    localStorage.setItem('email', email);
-  }
-  function removeUserEmail () {
-    localStorage.removeItem('email');
-  }
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
