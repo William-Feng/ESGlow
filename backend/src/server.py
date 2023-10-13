@@ -168,11 +168,12 @@ frameworks_get_company = api.model('Framework thru Company', {
 
 
 @api.route("/api/frameworks/get-company")
-class getFrameworksAll(Resource):
+class getFrameworksCompany(Resource):
     @api.response(200, 'Frameworks for company retrieved!')
     @api.response(401, 'Unauthorised Token')
-    @jwt_required()
+    #@jwt_required()
     def get(self):
         company = request.args.get('company')
-        token_identity = get_jwt_identity()
+        #token_identity = get_jwt_identity()
+        token_identity = ''
         return frameworks_company(token_identity, company)
