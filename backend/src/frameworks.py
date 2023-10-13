@@ -1,4 +1,6 @@
-from .database import db, bcrypt, Framework, Metric, Indicator, User
+from .database import db, bcrypt, Framework, Metric, Indicator, User, Company
+
+
 
 
 def retrieve_frameworks_from_company(company):
@@ -9,7 +11,7 @@ def retrieve_frameworks_from_company(company):
         company (string)
     Returns:
         frameworks
-    """"
+    """
     frameworks = Framework.query.filter_by(framework,)
     for framework in frameworks:
         pass
@@ -51,5 +53,21 @@ def frameworks_company(token_identity, company):
         # Access database
         frameworks = retrieve_frameworks_from_company(company)
         return {"message": 'Frameworks company retrieved!', "frameworks": frameworks}, 200
+    else:
+        return {"message": 'Unauthorised Token'}, 401
+
+
+def all_companies(token_identity):
+    """
+    Called by endpoint, returns all companies.
+
+    Args:
+        token_identity (string): 
+    """
+    
+    if User.query.filter_by(email=token_identity).first():
+        # Access database
+        companies = [company.name for company in Company.query.all()]
+        return {"message": 'All companies retrieved!', "companies": companies}, 200
     else:
         return {"message": 'Unauthorised Token'}, 401

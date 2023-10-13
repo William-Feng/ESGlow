@@ -6,7 +6,7 @@ from .config import JWT_EXAMPLE
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import frameworks_all, frameworks_company
+from .frameworks import frameworks_all, frameworks_company, all_companies
 
 
 api = Api()
@@ -168,7 +168,7 @@ frameworks_get_company = api.model('Framework thru Company', {
 
 
 @api.route("/api/frameworks/get-company")
-class getFrameworksAll(Resource):
+class getFrameworksCompany(Resource):
     @api.response(200, 'Frameworks for company retrieved!')
     @api.response(401, 'Unauthorised Token')
     @jwt_required()
@@ -176,3 +176,14 @@ class getFrameworksAll(Resource):
         company = request.args.get('company')
         token_identity = get_jwt_identity()
         return frameworks_company(token_identity, company)
+
+
+
+@api.route("/api/frameworks/all-companies")
+class getAllCompanies(Resource):
+    @api.response(200, 'All companies retrieved!')
+    @api.response(401, 'Unauthorised Token')
+    @jwt_required()
+    def get(self):
+        token_identity = get_jwt_identity()
+        return all_companies(token_identity)
