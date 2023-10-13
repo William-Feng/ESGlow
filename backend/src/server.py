@@ -1,8 +1,8 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
+from flask import request
 from .config import JWT_EXAMPLE
-
-from .database import User
+from .database import User, db, DataValue
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
 
@@ -76,6 +76,48 @@ class GetUser(Resource):
 
         return response, 200
 
+
+
+indicator_value = api.model('IndicatorValue', {
+    'indicator_id': fields.Integer(required=True, description='Indicator ID'),
+    'year': fields.Integer(required=True, description='Year of the metric'),
+    'value': fields.Float(required=True, description='Value of the metric for the year')
+})
+
+arg_parser = api.parser()
+arg_parser.add_argument('years', type=int, required=True, action='split', help='Years to get indicator values', location='args')
+arg_parser.add_argument('indicators', type=int, required=True, action='split', help='Indicator IDs', location='args')
+
+@api.route("/api/indicator-values/<int:company_id>")
+class IndicatorValues(Resource):
+
+    @jwt_required()
+    @api.expect(arg_parser)
+    @api.marshal_list_with(indicator_value, envelope='data')
+    def get(self, company_id):
+        args = arg_parser.parse_args()
+        selected_years = args.get('years', [])
+        selected_indicators = args.get('indicators', [])
+
+        # TODO: error handling?
+        # TODO: move logic to another file
+        indicator_values = db.session.query(DataValue).filter(
+            DataValue.company_id == company_id,
+            DataValue.year.in_(selected_years),
+            DataValue.indicator_id.in_(selected_indicators)
+        ).all()
+
+        # Format for response
+        response = []
+        for val in indicator_values:
+            response_item = {
+                'indicator_id': val.indicator_id,
+                'year': val.year,
+                'value': val.rating
+            }
+            response.append(response_item)
+
+        return response, 200
 
 # ======================================================================================
 #
