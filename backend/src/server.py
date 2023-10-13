@@ -5,6 +5,7 @@ from .config import JWT_EXAMPLE
 from .database import User, db, DataValue
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
+from .metrics import get_indicator_values
 
 
 api = Api()
@@ -76,8 +77,6 @@ class GetUser(Resource):
 
         return response, 200
 
-
-
 indicator_value = api.model('IndicatorValue', {
     'indicator_id': fields.Integer(required=True, description='Indicator ID'),
     'year': fields.Integer(required=True, description='Year of the metric'),
@@ -98,26 +97,9 @@ class IndicatorValues(Resource):
         args = arg_parser.parse_args()
         selected_years = args.get('years', [])
         selected_indicators = args.get('indicators', [])
-
-        # TODO: error handling?
-        # TODO: move logic to another file
-        indicator_values = db.session.query(DataValue).filter(
-            DataValue.company_id == company_id,
-            DataValue.year.in_(selected_years),
-            DataValue.indicator_id.in_(selected_indicators)
-        ).all()
-
-        # Format for response
-        response = []
-        for val in indicator_values:
-            response_item = {
-                'indicator_id': val.indicator_id,
-                'year': val.year,
-                'value': val.rating
-            }
-            response.append(response_item)
-
-        return response, 200
+        response, status_code = get_indicator_values(company_id, selected_years, selected_indicators)
+    
+        return response, status_code
 
 # ======================================================================================
 #
