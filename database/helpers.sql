@@ -2,6 +2,18 @@
 -- This simply provides helper queries to help with analysing the database for development purposes.
 
 
+-- Display all the companies in alphabetical order
+select  distinct(c.name) as company_name
+from    companies c
+order   by c.name;
+
+
+-- Display all the frameworks in alphabetical order
+select  distinct(f.name) as framework_name
+from    frameworks f
+order   by f.name;
+
+
 -- Linking the framework with the metrics
 select  f.framework_id, f.name as framework_name, m.metric_id, m.name as metric_name, fm.predefined_weight
 from    frameworks f
