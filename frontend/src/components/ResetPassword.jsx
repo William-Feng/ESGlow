@@ -3,6 +3,8 @@ import {
   Alert,
   Box,
   Button,
+  Grid,
+  Link,
   Snackbar,
   TextField,
   Typography,
@@ -66,7 +68,7 @@ export default function ResetPassword({ email }) {
           <Alert severity="error">{errorMessage}</Alert>
         </Snackbar>
         <Typography variant="h3">Set New Password</Typography>
-        <Typography variant="subtitle1">Enter the new password.</Typography>
+        <Typography variant="subtitle1">Enter your new password.</Typography>
       </Box>
       <Box component="form" noValidate sx={{ mt: 1 }}>
         <TextField
@@ -100,6 +102,12 @@ export default function ResetPassword({ email }) {
         >
           Next
         </Button>
+
+        <Grid item xs>
+          <Link href="/" variant="body2">
+            Return to home screen
+          </Link>
+        </Grid>
       </Box>
     </Box>
   );
