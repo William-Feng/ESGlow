@@ -2,6 +2,7 @@ import { AppBar, Box, CssBaseline, Drawer, ThemeProvider, Toolbar, createTheme }
 import React from 'react'
 import Header from './Header';
 import Searchbar from './Searchbar';
+import Overview from './Overview';
 import SelectionSidebar from './SelectionSidebar';
 
 function Dashboard ({ token }) {
@@ -31,15 +32,14 @@ function Dashboard ({ token }) {
           </Toolbar>
         </AppBar>
         <Box
-          sx={{ position: 'fixed', top: '128px', width: '100%' }}
+          sx={{ position: 'fixed', top: '128px', width: '100%', minHeight: '100vh', maxHeight: '600px' }}
         >
           <Box
-            sx={{ border: 'dotted', margin: '0', textAlign: 'center', height: '200px' }}
+            sx={{ border: 'dotted', margin: '0', textAlign: 'center', maxHeight: '450px' }}
           >
-            {/* should also have company overview */}
-            Company Overview is here.
+            <Overview />
           </Box>
-          <Box>
+          <Box sx={{ height: '900px', overflowY: 'scroll' }}>
             <Drawer
               sx={{
                 position: 'relative',
@@ -47,10 +47,10 @@ function Dashboard ({ token }) {
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
                   width: 240,
-                  top: '328px',
+                  top: '540px',
                   boxSizing: 'border-box',
                   overflowY: 'scroll',
-                  maxHeight: 'calc(100vh - 328px)',
+                  maxHeight: 'calc(100vh - 570px)',
                 },
               }}
               variant="permanent"
