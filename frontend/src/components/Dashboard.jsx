@@ -4,6 +4,7 @@ import Header from './Header';
 import Searchbar from './Searchbar';
 import Overview from './Overview';
 import SelectionSidebar from './SelectionSidebar';
+import DataDisplay from './DataDisplay';
 
 function Dashboard ({ token }) {
   const defaultTheme = createTheme();
@@ -32,25 +33,25 @@ function Dashboard ({ token }) {
           </Toolbar>
         </AppBar>
         <Box
-          sx={{ position: 'fixed', top: '128px', width: '100%', minHeight: '100vh', maxHeight: '600px' }}
+          sx={{ position: 'fixed', top: '128px', width: '100%', minHeight: '100vh', maxHeight: '600px', overflowY: 'scroll' }}
         >
           <Box
             sx={{ border: 'dotted', margin: '0', textAlign: 'center', maxHeight: '450px' }}
           >
             <Overview />
           </Box>
-          <Box sx={{ height: '900px', overflowY: 'scroll' }}>
+          <Box sx={{ height: '900px', overflowY: 'scroll', display: 'flex', flexDirection: 'row' }}>
             <Drawer
               sx={{
-                position: 'relative',
+                // position: 'relative',
                 width: 240,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
+                  position: 'static',
                   width: 240,
-                  top: '540px',
                   boxSizing: 'border-box',
                   overflowY: 'scroll',
-                  maxHeight: 'calc(100vh - 570px)',
+                  maxHeight: '100%',
                 },
               }}
               variant="permanent"
@@ -58,8 +59,7 @@ function Dashboard ({ token }) {
             >
              <SelectionSidebar />
             </Drawer>
-            
-            {/* table */}
+            <DataDisplay />
           </Box>
         </Box>
       </Box>
