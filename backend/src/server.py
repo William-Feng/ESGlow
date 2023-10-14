@@ -5,7 +5,7 @@ from .config import JWT_EXAMPLE
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import frameworks_all, frameworks_company, all_companies, get_company_frameworks
+from .frameworks import frameworks_all, retrieve_frameworks_from_company, all_companies, get_company_frameworks, get_indicator_values
 
 
 api = Api()
@@ -83,32 +83,7 @@ indicator_value = api.model('IndicatorValue', {
     'value': fields.Float(required=True, description='Value of the metric for the year')
 })
 
-arg_parser = api.parser()
-arg_parser.add_argument('years', type=int, required=True, action='split', help='Years to get indicator values', location='args')
-arg_parser.add_argument('indicators', type=int, required=True, action='split', help='Indicator IDs', location='args')
 
-@api.route("/api/indicator-values/<int:company_id>")
-class IndicatorValues(Resource):
-
-    @jwt_required()
-    @api.expect(arg_parser)
-    @api.marshal_list_with(indicator_value, envelope='data')
-    def get(self, company_id):
-        args = arg_parser.parse_args()
-        selected_years = args.get('years', [])
-        selected_indicators = args.get('indicators', [])
-        response, status_code = get_indicator_values(company_id, selected_years, selected_indicators)
-    
-        return response, status_code
-
-@api.route("/api/<int:company_id>/frameworks")
-class CompanyFrameworks(Resource):
-    #TODO req/res models
-    def get(self, company_id):
-        response, status_code = get_company_frameworks(company_id)
-        return response, status_code
-        
-            
 # ======================================================================================
 #
 # Password-Reset Endpoints
@@ -183,7 +158,7 @@ class PasswordResetChange(Resource):
 
 
 @api.route("/api/frameworks/get-all")
-class getFrameworksAll(Resource):
+class GetFrameworksAll(Resource):
     @api.response(200, 'Frameworks all retrieved!')
     @api.response(401, 'Unauthorised Token')
     @jwt_required()
@@ -197,23 +172,39 @@ frameworks_get_company = api.model('Framework thru Company', {
 })
 
 
-@api.route("/api/frameworks/get-company")
-class getFrameworksCompany(Resource):
+@api.route("/api/frameworks/get-company/<int:company_id>")
+class GetFrameworksCompany(Resource):
     @api.response(200, 'Frameworks for company retrieved!')
     @api.response(401, 'Unauthorised Token')
     @jwt_required()
-    def get(self):
-        company = request.args.get('company')
-        token_identity = get_jwt_identity()
-        return frameworks_company(token_identity, company)
-
+    #TODO: req/res models
+    def get(self, company_id):
+        response, status_code = retrieve_frameworks_from_company(company_id)
+        return response, status_code
 
 
 @api.route("/api/frameworks/all-companies")
-class getAllCompanies(Resource):
+class GetAllCompanies(Resource):
     @api.response(200, 'All companies retrieved!')
     @api.response(401, 'Unauthorised Token')
     @jwt_required()
     def get(self):
         token_identity = get_jwt_identity()
         return all_companies(token_identity)
+
+
+indicator_arg_parser = api.parser()
+indicator_arg_parser.add_argument('years', type=int, required=True, action='split', help='Years to get indicator values', location='args')
+indicator_arg_parser.add_argument('indicators', type=int, required=True, action='split', help='Indicator IDs', location='args')
+@api.route("/api/indicator-values/<int:company_id>")
+class IndicatorValues(Resource):
+    @jwt_required()
+    @api.expect(indicator_arg_parser)
+    @api.marshal_list_with(indicator_value, envelope='data')
+    def get(self, company_id):
+        args = indicator_arg_parser.parse_args()
+        selected_years = args.get('years', [])
+        selected_indicators = args.get('indicators', [])
+        response, status_code = get_indicator_values(company_id, selected_years, selected_indicators)
+    
+        return response, status_code
