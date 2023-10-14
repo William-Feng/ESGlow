@@ -158,8 +158,7 @@ class getFrameworksAll(Resource):
     @api.response(401, 'Unauthorised Token')
     @jwt_required()
     def get(self):
-        token_identity = get_jwt_identity()
-        return frameworks_all(token_identity)
+        return frameworks_all()
 
 
 frameworks_get_company = api.model('Framework thru Company', {
@@ -174,5 +173,4 @@ class getFrameworksAll(Resource):
     @jwt_required()
     def get(self):
         company = request.args.get('company')
-        token_identity = get_jwt_identity()
-        return frameworks_company(token_identity, company)
+        return frameworks_company(company)
