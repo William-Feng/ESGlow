@@ -1,12 +1,24 @@
 from .database import DataValue, FrameworkMetric, MetricIndicator, db, bcrypt, Framework, Metric, Indicator, User, Company
 
-
-def retrieve_frameworks_from_company(company_id):
+def frameworks_all():
     """
     Summary:
-        Given a company as input, return all frameworks associated with that framework.
-    Arguments:
-        company (string)
+        Upon validating token, return all frameworks, metrics in each framework, and each indicator in each metric.
+    Args:
+        token_identity (string): Token for user
+    Return:
+        frameworks, a dictionary of all frameworks, metrics and indicators.
+    """
+    pass
+
+
+def get_frameworks_from_company(company_id):
+    """
+    Summary:
+        Called by endpoint.
+        Given a company, return all frameworks associated w/ that company.
+    Args:
+        token_identity (string): 
     Returns:
         [
             {
@@ -94,50 +106,15 @@ def retrieve_frameworks_from_company(company_id):
     return response, 200
 
 
-def frameworks_all():
-    """
-    Summary:
-        return all frameworks, metrics in each framework, and each indicator in each metric.
-
-    Return:
-        frameworks, a dictionary of all frameworks, metrics and indicators.
-    """
-
-    frameworks = {}
-
-    # Read thru database
-
-    return {"message": 'Frameworks all retrieved!', "frameworks": frameworks}, 200
-
-
-def frameworks_company(company):
-    """
-    Summary:
-        Called by endpoint.
-        Given a company, return all frameworks associated w/ that company.
-    Args:
-        company (string): 
-    Returns:
-        frameworks:
-    """
-    frameworks = retrieve_frameworks_from_company(company)
-    return {"message": 'Frameworks company retrieved!', "frameworks": frameworks}, 200
-
-
 def all_companies():
     """
     Called by endpoint, returns all companies.
-    Return:
-        {
-            message: "Message",
-            companies: [Company Names]
-        }
+
     """
 
-    # Access database
     companies = [company.name for company in Company.query.all()]
     return {"message": 'All companies retrieved!', "companies": companies}, 200
-
+    
 
 def get_indicator_values(company_id, selected_years, selected_indicators):
     indicator_values = db.session.query(DataValue).filter(
