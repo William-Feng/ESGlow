@@ -2,11 +2,10 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
 from flask import request
 from .config import JWT_EXAMPLE
-
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import frameworks_all, frameworks_company
+from .frameworks import frameworks_all, retrieve_frameworks_from_company, all_companies, get_company_frameworks, get_indicator_values
 
 
 api = Api()
@@ -79,7 +78,14 @@ class GetUser(Resource):
         return response, 200
 
 
-# ===================================================================
+indicator_value = api.model('IndicatorValue', {
+    'indicator_id': fields.Integer(required=True, description='Indicator ID'),
+    'year': fields.Integer(required=True, description='Year of the metric'),
+    'value': fields.Float(required=True, description='Value of the metric for the year')
+})
+
+
+# ======================================================================================
 #
 # Password-Reset Endpoints
 # ===================================================================
@@ -153,9 +159,8 @@ class PasswordResetChange(Resource):
 
 
 @api.route("/api/frameworks/get-all")
-class getFrameworksAll(Resource):
+class GetFrameworksAll(Resource):
     @api.response(200, 'Frameworks all retrieved!')
-    @api.response(401, 'Unauthorised Token')
     @jwt_required()
     def get(self):
         return frameworks_all()
@@ -166,11 +171,41 @@ frameworks_get_company = api.model('Framework thru Company', {
 })
 
 
-@api.route("/api/frameworks/get-company")
-class getFrameworksAll(Resource):
+@api.route("/api/frameworks/get-company/<int:company_id>")
+class GetFrameworksCompany(Resource):
     @api.response(200, 'Frameworks for company retrieved!')
-    @api.response(401, 'Unauthorised Token')
+    @jwt_required()
+    # TODO: req/res models
+    def get(self, company_id):
+        response, status_code = retrieve_frameworks_from_company(company_id)
+        return response, status_code
+
+
+@api.route("/api/frameworks/all-companies")
+class GetAllCompanies(Resource):
+    @api.response(200, 'All companies retrieved!')
     @jwt_required()
     def get(self):
-        company = request.args.get('company')
-        return frameworks_company(company)
+        return all_companies()
+
+
+indicator_arg_parser = api.parser()
+indicator_arg_parser.add_argument('years', type=int, required=True,
+                                  action='split', help='Years to get indicator values', location='args')
+indicator_arg_parser.add_argument(
+    'indicators', type=int, required=True, action='split', help='Indicator IDs', location='args')
+
+
+@api.route("/api/indicator-values/<int:company_id>")
+class IndicatorValues(Resource):
+    @jwt_required()
+    @api.expect(indicator_arg_parser)
+    @api.marshal_list_with(indicator_value, envelope='data')
+    def get(self, company_id):
+        args = indicator_arg_parser.parse_args()
+        selected_years = args.get('years', [])
+        selected_indicators = args.get('indicators', [])
+        response, status_code = get_indicator_values(
+            company_id, selected_years, selected_indicators)
+
+        return response, status_code
