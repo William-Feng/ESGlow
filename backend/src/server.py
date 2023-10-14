@@ -2,11 +2,10 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
 from flask import request
 from .config import JWT_EXAMPLE
-
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import frameworks_all, frameworks_company, all_companies
+from .frameworks import frameworks_all, frameworks_company, all_companies, get_company_frameworks
 
 
 api = Api()
@@ -78,8 +77,39 @@ class GetUser(Resource):
 
         return response, 200
 
+indicator_value = api.model('IndicatorValue', {
+    'indicator_id': fields.Integer(required=True, description='Indicator ID'),
+    'year': fields.Integer(required=True, description='Year of the metric'),
+    'value': fields.Float(required=True, description='Value of the metric for the year')
+})
 
-# ===================================================================
+arg_parser = api.parser()
+arg_parser.add_argument('years', type=int, required=True, action='split', help='Years to get indicator values', location='args')
+arg_parser.add_argument('indicators', type=int, required=True, action='split', help='Indicator IDs', location='args')
+
+@api.route("/api/indicator-values/<int:company_id>")
+class IndicatorValues(Resource):
+
+    @jwt_required()
+    @api.expect(arg_parser)
+    @api.marshal_list_with(indicator_value, envelope='data')
+    def get(self, company_id):
+        args = arg_parser.parse_args()
+        selected_years = args.get('years', [])
+        selected_indicators = args.get('indicators', [])
+        response, status_code = get_indicator_values(company_id, selected_years, selected_indicators)
+    
+        return response, status_code
+
+@api.route("/api/<int:company_id>/frameworks")
+class CompanyFrameworks(Resource):
+    #TODO req/res models
+    def get(self, company_id):
+        response, status_code = get_company_frameworks(company_id)
+        return response, status_code
+        
+            
+# ======================================================================================
 #
 # Password-Reset Endpoints
 # ===================================================================
