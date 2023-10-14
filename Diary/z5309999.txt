@@ -32,3 +32,12 @@ I setup the PostgreSQL database and created the users table, and tweaked a few a
 I managed to get Docker to containerise the datbase as I felt it provides great benefits in a team environment, and wrote up a guide on how to get started.
 As the Scrum Master, I continually monitored the Jira board, ensuring that the tickets had the correct status and everyone was on track.
 I also came up with some Git practices for our team, including having branch protection rules for PRs and commit messages prefixed with the ticket number.
+
+
+Week 5:
+
+As a team, we presented our Demo A at the conclusion of Sprint one, recorded a demo for our client and wrote up the Retrospective A.
+We managed to finish all of the Registration Epic, and began the Metric Selection Epic (which we couldn't finish before the deadline).
+Since the environment setup took much longer than expected in the previous week, I stressed the importance of completing the Register/Login/Reset Password user stories.
+Over the past week, I created the framework for the backend pytests, JWT tokens, created the entire database schema and generated all the dummy test data.
+Effective teamwork and communication throughout, as we all worked on connecting the backend and frontend together, and reviewed each other's PRs before merging.
