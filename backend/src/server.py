@@ -1,6 +1,5 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Api, fields, Resource
-from flask import request
 from .config import JWT_EXAMPLE
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
@@ -202,9 +201,8 @@ indicator_value = api.model('IndicatorValue', {
 indicator_arg_parser = api.parser()
 indicator_arg_parser.add_argument('years', type=int, required=True,
                                   action='split', help='Years to get indicator values', location='args')
-indicator_arg_parser.add_argument(
-    'indicators', type=int, required=True, action='split', help='Indicator IDs', location='args')
-
+indicator_arg_parser.add_argument('indicators', type=int, required=True, 
+                                  action='split', help='Indicator IDs', location='args')
 
 @api.route("/api/indicator-values/<int:company_id>")
 class IndicatorValues(Resource):
