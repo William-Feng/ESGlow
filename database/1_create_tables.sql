@@ -53,7 +53,7 @@ CREATE TABLE company_frameworks (
     company_id          INT REFERENCES companies(company_id),
     framework_id        INT REFERENCES frameworks(framework_id),
     PRIMARY KEY (company_id, framework_id)
-)
+);
 
 CREATE TABLE framework_metrics (
     framework_id        INT REFERENCES frameworks(framework_id),

@@ -420,6 +420,26 @@ INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUE
 (5, 9, 0.10);
 
 
+-- Company Frameworks Relationship
+INSERT INTO company_frameworks (company_id, framework_id) VALUES
+(1, 1),
+(1, 3),
+(2, 1),
+(2, 2),
+(2, 4),
+(2, 5),
+(3, 1),
+(3, 2),
+(3, 3),
+(3, 4),
+(3, 5),
+(4, 2),
+(4, 3),
+(4, 4),
+(5, 1),
+(5, 5);
+
+
 -- Metric Indicators Relationship
 INSERT INTO metric_indicators (metric_id, indicator_id, predefined_weight) VALUES 
 (1, 1, 0.40),
