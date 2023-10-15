@@ -4,7 +4,7 @@ from .config import JWT_EXAMPLE
 from .database import User
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import frameworks_all, get_frameworks_from_company, all_companies, get_indicator_values
+from .frameworks import all_frameworks, get_framework_info_from_company, all_companies, get_indicator_values
 
 
 api = Api()
@@ -151,10 +151,18 @@ class PasswordResetChange(Resource):
 
 @api.route("/api/frameworks/all")
 class FrameworksAll(Resource):
-    @api.response(200, 'Frameworks all retrieved!')
-    @jwt_required()
+    @api.response(200, 'All frameworks retrieved!')
+    # @jwt_required()
     def get(self):
-        return frameworks_all()
+        return all_frameworks()
+
+
+@api.route("/api/companies/all")
+class AllCompanies(Resource):
+    @api.response(200, 'All companies retrieved!')
+    # @jwt_required()
+    def get(self):
+        return all_companies()
 
 
 indicator_model = api.model('Indicator', {
@@ -166,7 +174,8 @@ indicator_model = api.model('Indicator', {
 metric_model = api.model('Metric', {
     'metric_id': fields.Integer(description='The metric ID', example=6),
     'metric_name': fields.String(description='The name of the metric', example='Corporate Transparency'),
-    'predefined_weight': fields.Float(description='The predefined weight for the metric', required=False, example=0.3),  # If not always present
+    # If not always present
+    'predefined_weight': fields.Float(description='The predefined weight for the metric', required=False, example=0.3),
     'indicators': fields.List(fields.Nested(indicator_model), description='List of indicators')
 })
 
@@ -176,20 +185,13 @@ framework_model = api.model('Framework', {
     'metrics': fields.List(fields.Nested(metric_model), description='List of metrics')
 })
 
+
 @api.route("/api/frameworks/company/<int:company_id>")
 class FrameworksByCompany(Resource):
     @api.response(200, 'Frameworks for company retrieved!', framework_model)
-    @jwt_required()
+    # @jwt_required()
     def get(self, company_id):
-        return get_frameworks_from_company(company_id)
-
-
-@api.route("/api/companies/all")
-class AllCompanies(Resource):
-    @api.response(200, 'All companies retrieved!')
-    @jwt_required()
-    def get(self):
-        return all_companies()
+        return get_framework_info_from_company(company_id)
 
 
 indicator_value = api.model('IndicatorValue', {
@@ -201,14 +203,15 @@ indicator_value = api.model('IndicatorValue', {
 indicator_arg_parser = api.parser()
 indicator_arg_parser.add_argument('years', type=int, required=True,
                                   action='split', help='Years to get indicator values', location='args')
-indicator_arg_parser.add_argument('indicators', type=int, required=True, 
+indicator_arg_parser.add_argument('indicators', type=int, required=True,
                                   action='split', help='Indicator IDs', location='args')
+
 
 @api.route("/api/indicator-values/<int:company_id>")
 class IndicatorValues(Resource):
     @api.expect(indicator_arg_parser)
     @api.marshal_list_with(indicator_value, envelope='data')
-    @jwt_required()
+    # @jwt_required()
     def get(self, company_id):
         args = indicator_arg_parser.parse_args()
         selected_years = args.get('years', [])

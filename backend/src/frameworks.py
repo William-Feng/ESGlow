@@ -1,41 +1,63 @@
-from .database import DataValue, FrameworkMetric, MetricIndicator, db, Framework, Metric, Indicator, Company
+from flask import jsonify
+from .database import db, Company, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
 
-def frameworks_all():
+
+def all_frameworks():
     """
     Summary:
-        Upon validating token, return all frameworks, metrics in each framework, and each indicator in each metric.
+        Fetches all framework names from the database
     Args:
-        token_identity (string): Token for user
+        None
     Return:
-        frameworks, a dictionary of all frameworks, metrics and indicators.
+        Dictionary containing a successful message and a list of framework names
+        HTTP status code
     """
-    pass
+
+    frameworks = [framework.name for framework in Framework.query.all()]
+    return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
 
-def get_frameworks_from_company(company_id):
+def all_companies():
     """
     Summary:
-        Called by endpoint.
-        Given a company, return all frameworks associated w/ that company.
+        Fetches all company names from the database.
     Args:
-        token_identity (string): 
+        None
+    Returns:
+        Dictionary containing a successful message and a list of company names
+        HTTP status code
+    """
+
+    companies = [company.name for company in Company.query.all()]
+    return {"message": 'All companies retrieved!', "companies": companies}, 200
+
+
+def get_framework_info_from_company(company_id):
+    """
+    Summary:
+        Fetches all frameworks, metrics and indicators associated with a specified company.
+    Args:
+        company_id (int): The ID of the company.
     Returns:
         [
             {
-            'framework_id': 1,
-            'framework_name': 'Framework',
-            'metrics': [
-                'metric_id': 2,
-                'metric_name': 'Metric',
-                'predefined_weight': 40,
-                'indicators': [
-                    'indicator_id': 2,
-                    'indicator_name': 'Indicator',
-                    'predefined_weight': 30
+                'framework_id': 1,
+                'framework_name': 'Framework',
+                'metrics': [
+                    {
+                        'metric_id': 2,
+                        'metric_name': 'Metric',
+                        'predefined_weight': 0.4,
+                        'indicators': [
+                            {
+                                'indicator_id': 1,
+                                'indicator_name': 'Indicator',
+                                'predefined_weight': 0.3
+                            }
+                        ]
+                    }
                 ]
-            ]
             }
-
         ], status_code
     """
     result = (
@@ -52,15 +74,14 @@ def get_frameworks_from_company(company_id):
             Indicator.name.label("indicator_name"),
             MetricIndicator.predefined_weight.label(
                 "indicator_predefined_weight")
-        ).distinct()
+        ).select_from(Company)
+        .join(CompanyFramework, Company.company_id == CompanyFramework.company_id)
+        .join(Framework, CompanyFramework.framework_id == Framework.framework_id)
         .join(FrameworkMetric, Framework.framework_id == FrameworkMetric.framework_id)
         .join(Metric, FrameworkMetric.metric_id == Metric.metric_id)
         .join(MetricIndicator, Metric.metric_id == MetricIndicator.metric_id)
         .join(Indicator, MetricIndicator.indicator_id == Indicator.indicator_id)
-        .join(DataValue, Indicator.indicator_id == DataValue.indicator_id)
-        .join(Company, DataValue.company_id == Company.company_id)
         .filter(Company.company_id == company_id)
-        .order_by(Framework.framework_id)
         .all()
     )
 
@@ -105,16 +126,6 @@ def get_frameworks_from_company(company_id):
 
     return response, 200
 
-
-def all_companies():
-    """
-    Called by endpoint, returns all companies.
-
-    """
-
-    companies = [company.name for company in Company.query.all()]
-    return {"message": 'All companies retrieved!', "companies": companies}, 200
-    
 
 def get_indicator_values(company_id, selected_years, selected_indicators):
     indicator_values = db.session.query(DataValue).filter(
