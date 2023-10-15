@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// import logoBlack from '../assets/logo-black.png'
 
 function Register({ onSuccess }) {
   const [email, setEmail] = React.useState("");
@@ -73,12 +72,8 @@ function Register({ onSuccess }) {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography variant="h5">
-        Welcome
-      </Typography>
-      <Typography variant="h2">
-        Register
-      </Typography>
+      <Typography variant="h5">Welcome</Typography>
+      <Typography variant="h2">Register</Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
         <TextField
           margin="normal"

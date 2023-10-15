@@ -1,8 +1,17 @@
-import { Alert, Box, Button, Grid, Link, Snackbar, TextField, Typography } from '@mui/material';
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import {
+  Alert,
+  Box,
+  Button,
+  Grid,
+  Link,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-function Login ({ onSuccess }) {
+function Login({ onSuccess }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -16,26 +25,26 @@ function Login ({ onSuccess }) {
     e.preventDefault();
 
     if (email.length === 0 || password.length === 0) {
-      return setErrorMessage('Please enter your details');
+      return setErrorMessage("Please enter your details");
     }
 
-    const response = await fetch('/api/login', {
-      method: 'POST',
+    const response = await fetch("/api/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
         email,
-        password
-      })
+        password,
+      }),
     });
     console.log(response);
     const data = await response.json();
     console.log(data);
     if (response.status === 200) {
       onSuccess(data.token);
-      navigate('/dashboard');
+      navigate("/dashboard");
     } else {
       return setErrorMessage(data.message);
     }
@@ -46,25 +55,21 @@ function Login ({ onSuccess }) {
       sx={{
         my: 8,
         mx: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal:  'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={!!errorMessage}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography variant="h5">
-        Welcome
-      </Typography>
-      <Typography variant="h2">
-        Login
-      </Typography>
+      <Typography variant="h5">Welcome</Typography>
+      <Typography variant="h2">Login</Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
         <TextField
           margin="normal"
@@ -75,7 +80,7 @@ function Login ({ onSuccess }) {
           name="email"
           autoComplete="email"
           autoFocus
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           margin="normal"
@@ -86,7 +91,7 @@ function Login ({ onSuccess }) {
           type="password"
           id="password"
           autoComplete="current-password"
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <Grid item xs>
           <Link href="/resetpassword" variant="body2">
