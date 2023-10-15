@@ -123,8 +123,7 @@ class PasswordResetChange(Resource):
 #
 # ===================================================================
 
-framework_model, indicator_value_model, indicator_args = framework_metric_indicator_models(
-    api)
+framework_model, indicator_value_model = framework_metric_indicator_models(api)
 
 
 @api.route("/api/companies/all")
@@ -151,16 +150,16 @@ class FrameworksByCompany(Resource):
         return get_framework_info_from_company(company_id)
 
 
-@api.route("/api/indicator-values/<int:company_id>")
+@api.route("/api/values/<int:company_id>/<string:indicator_ids>/<string:years>")
 class IndicatorValues(Resource):
-    @api.expect(indicator_args)
-    @api.marshal_list_with(indicator_value_model, envelope='data')
+    @api.response(200, 'Indicator values for company retrieved!', indicator_value_model)
+    @api.response(404, 'An error occured.')
     @jwt_required()
-    def get(self, company_id):
-        args = indicator_args.parse_args()
-        selected_years = args.get('years', [])
-        selected_indicators = args.get('indicators', [])
-        response, status_code = get_indicator_values(
-            company_id, selected_years, selected_indicators)
+    def get(self, company_id, indicator_ids, years):
+        try:
+            selected_indicators = [int(i) for i in indicator_ids.split(',')]
+            selected_years = [int(y) for y in years.split(',')]
+        except ValueError:
+            return {"message": "Invalid indicator_ids or years provided."}, 404
 
-        return response, status_code
+        return get_indicator_values(company_id, selected_indicators, selected_years)

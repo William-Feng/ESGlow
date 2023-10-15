@@ -126,11 +126,11 @@ def get_framework_info_from_company(company_id):
     return response, 200
 
 
-def get_indicator_values(company_id, selected_years, selected_indicators):
+def get_indicator_values(company_id, selected_indicators, selected_years):
     values = db.session.query(DataValue).filter(
         DataValue.company_id == company_id,
-        DataValue.year.in_(selected_years),
-        DataValue.indicator_id.in_(selected_indicators)
+        DataValue.indicator_id.in_(selected_indicators),
+        DataValue.year.in_(selected_years)
     ).all()
 
     response = []

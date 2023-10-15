@@ -61,15 +61,9 @@ def framework_metric_indicator_models(api):
     })
 
     indicator_value_model = api.model('IndicatorValue', {
-        'indicator_id': fields.Integer(required=True, description='Indicator ID'),
-        'year': fields.Integer(required=True, description='Year of the metric'),
-        'value': fields.Float(required=True, description='Value of the metric for the year')
+        'indicator_id': fields.Integer(required=True, description='The indicator ID', example=12),
+        'year': fields.Integer(required=True, description='The year of the indicator', example=2022),
+        'value': fields.Float(required=True, description='The specific value of the indicator', example=85)
     })
 
-    indicator_args = api.parser()
-    indicator_args.add_argument('years', type=int, required=True, action='split',
-                                help='Specific year of the indicator values', location='args')
-    indicator_args.add_argument('indicators', type=int, required=True,
-                                action='split', help='Specific indicator IDs', location='args')
-
-    return framework_model, indicator_value_model, indicator_args
+    return framework_model, indicator_value_model
