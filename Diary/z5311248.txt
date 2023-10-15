@@ -16,3 +16,7 @@ Week 4
 Worked on setting up the frontend React app, and created the basic UI 
 framework for the registration page. Also got more familiar with using 
 Jira and GitHub.
+
+Week 5
+Worked on creating the basic UI framework for the dashboard page, 
+specifically the company summary and table sections.
