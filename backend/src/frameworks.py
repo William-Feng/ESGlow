@@ -48,15 +48,18 @@ def get_framework_info_from_company(company_id):
             {
                 'framework_id': 1,
                 'framework_name': 'Framework',
+                'description': 'Framework description',
                 'metrics': [
                     {
                         'metric_id': 2,
                         'metric_name': 'Metric',
+                        'description: 'Metric description',
                         'predefined_weight': 0.4,
                         'indicators': [
                             {
                                 'indicator_id': 1,
                                 'indicator_name': 'Indicator',
+                                'description': 'Indicator description',
                                 'predefined_weight': 0.3
                             }
                         ]
@@ -73,14 +76,17 @@ def get_framework_info_from_company(company_id):
         db.session.query(
             Framework.framework_id.label("framework_id"),
             Framework.name.label("framework_name"),
+            Framework.description.label("framework_description"),
             # Metrics
             Metric.metric_id.label("metric_id"),
             Metric.name.label("metric_name"),
+            Metric.description.label("metric_description"),
             FrameworkMetric.predefined_weight.label(
                 "metric_predefined_weight"),
             # Indicators
             Indicator.indicator_id.label("indicator_id"),
             Indicator.name.label("indicator_name"),
+            Indicator.description.label("indicator_description"),
             MetricIndicator.predefined_weight.label(
                 "indicator_predefined_weight")
         ).select_from(Company)
@@ -104,11 +110,13 @@ def get_framework_info_from_company(company_id):
             cur_framework = {
                 'framework_id': res.framework_id,
                 'framework_name': res.framework_name,
+                'description': res.framework_description,
                 'metrics': [],
             }
             cur_metric = {
                 'metric_id': res.metric_id,
                 'metric_name': res.metric_name,
+                'description': res.metric_description,
                 'predefined_weight': res.metric_predefined_weight,
                 'indicators': [],
             }
@@ -119,6 +127,7 @@ def get_framework_info_from_company(company_id):
             cur_metric = {
                 'metric_id': res.metric_id,
                 'metric_name': res.metric_name,
+                'description': res.metric_description,
                 'predefined_weight': res.metric_predefined_weight,
                 'indicators': []
             }
@@ -126,6 +135,7 @@ def get_framework_info_from_company(company_id):
         cur_metric['indicators'].append({
             'indicator_id': res.indicator_id,
             'indicator_name': res.indicator_name,
+            'description': res.indicator_description,
             'predefined_weight': res.indicator_predefined_weight
         })
 
