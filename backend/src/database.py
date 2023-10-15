@@ -64,6 +64,15 @@ class DataValue(db.Model):
     value = db.Column(db.Float)
 
 
+class CompanyFramework(db.Model):
+    __tablename__ = 'company_frameworks'
+
+    company_id = db.Column(db.Integer, db.ForeignKey(
+        'companies.company_id'), primary_key=True)
+    framework_id = db.Column(db.Integer, db.ForeignKey(
+        'frameworks.framework_id'), primary_key=True)
+
+
 class FrameworkMetric(db.Model):
     __tablename__ = 'framework_metrics'
 
