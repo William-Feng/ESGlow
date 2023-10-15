@@ -42,11 +42,17 @@ CREATE TABLE indicators (
 
 CREATE TABLE data_values (
     value_id            SERIAL,
-    company_id          INT REFERENCES Companies(company_id),
-    indicator_id        INT REFERENCES Indicators(indicator_id),
+    company_id          INT REFERENCES companies(company_id),
+    indicator_id        INT REFERENCES indicators(indicator_id),
     year                INT CHECK (year > 1900 AND year <= 2030),
     rating              FLOAT CHECK (rating >= 0.0 AND rating <= 100.0),
     PRIMARY KEY (value_id)
+);
+
+CREATE TABLE company_frameworks (
+    company_id          INT REFERENCES companies(company_id),
+    framework_id        INT REFERENCES frameworks(framework_id),
+    PRIMARY KEY (company_id, framework_id)
 );
 
 CREATE TABLE framework_metrics (

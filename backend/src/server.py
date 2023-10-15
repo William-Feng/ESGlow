@@ -1,8 +1,9 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask_restx import Api, fields, Resource
-from .config import JWT_EXAMPLE
+from flask_restx import Api, Resource
 
 from .database import User
+from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
+from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
 
@@ -10,29 +11,20 @@ from .user import login, register
 api = Api()
 
 
-@api.route("/")
-class Hello(Resource):
-    def get(self):
-        return {"message": "Hello, World!"}, 200
+# ===================================================================
+#
+# User Registration & Login Endpoints
+#
+# ===================================================================
 
-
-user_model = api.model('User', {
-    'email': fields.String(required=True, description='Email Address', example='example@gmail.com'),
-    'password': fields.String(required=True, description='Password', example='Password123')
-})
-
-
-register_response_model = api.model('LoginResponse', {
-    'message': fields.String(description='Status message', example='User successfully registered.'),
-    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
-})
+user_model, register_model, login_model = user_authentication_models(api)
 
 
 @api.route("/api/register")
 class Register(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'User created successfully.', model=register_response_model)
-    @api.response(400, 'Error: user already exists.')
+    @api.response(200, 'User created successfully!', model=register_model)
+    @api.response(400, 'User already exists.')
     def post(self):
         data = api.payload
         email = data['email']
@@ -42,16 +34,10 @@ class Register(Resource):
         return response, status_code
 
 
-login_response_model = api.model('LoginResponse', {
-    'message': fields.String(description='Status message', example='Login successful.'),
-    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
-})
-
-
 @api.route("/api/login")
 class Login(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'Login successful.', model=login_response_model)
+    @api.response(200, 'Login successful!', model=login_model)
     @api.response(400, 'Invalid email or password.')
     def post(self):
         data = api.payload
@@ -62,8 +48,7 @@ class Login(Resource):
 
 
 @api.route("/api/user")
-class GetUser(Resource):
-
+class DecodeUser(Resource):
     @jwt_required()
     def get(self):
         # Decode the JWT token to retrieve the identity
@@ -77,22 +62,21 @@ class GetUser(Resource):
         return response, 200
 
 
-# ======================================================================================
+# ===================================================================
 #
 # Password-Reset Endpoints
 #
-# ======================================================================================
+# ===================================================================
 
-password_reset_request_model = api.model('Password Reset Request', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-})
+password_reset_request_model, password_reset_verify_model, password_reset_change_model = password_reset_models(
+    api)
 
 
 @api.route("/api/password-reset/request")
 class PasswordResetRequest(Resource):
     @api.expect(password_reset_request_model, validate=True)
     @api.response(200, 'Password Reset Request Successful!')
-    @api.response(400, 'Email does not exist!')
+    @api.response(400, 'Email does not exist.')
     def post(self):
         data = api.payload
         email = data['email']
@@ -101,19 +85,12 @@ class PasswordResetRequest(Resource):
         return reset_password_request(email)
 
 
-# NOTE: Email needs to passed in again from the frontend for this to work; Could we change this?
-password_reset_verify_model = api.model('Password Reset Verify', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'code': fields.String(required=True, description='Verification Code', example="5A03BX"),
-})
-
-
 @api.route("/api/password-reset/verify")
 class PasswordResetVerify(Resource):
     @api.expect(password_reset_verify_model, validate=True)
     @api.response(200, 'Password Successfully Reset!')
-    @api.response(400, 'Verification Code is incorrect!')
-    @api.response(400, 'Email does not exist!')
+    @api.response(400, 'Verification Code is incorrect.')
+    @api.response(400, 'Email does not exist.')
     def post(self):
         data = api.payload
         email = data['email']
@@ -122,16 +99,10 @@ class PasswordResetVerify(Resource):
         # Verify user exists in backend.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
-            return {"message": "Email does not exist!"}, 400
+            return {"message": "Email does not exist."}, 400
 
         # Request a password reset.
         return reset_password_verify(email, code)
-
-
-password_reset_change_model = api.model('Password Reset Change', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'new_password': fields.String(required=True, description='New Password', example="password123")
-})
 
 
 @api.route("/api/password-reset/change")
@@ -144,3 +115,54 @@ class PasswordResetChange(Resource):
         email = data['email']
         new_password = data['new_password']
         return reset_password_change(email, new_password)
+
+
+# ===================================================================
+#
+# Company/Framework/Metric/Indicator Selection
+#
+# ===================================================================
+
+framework_model, indicator_value_model = framework_metric_indicator_models(api)
+
+
+@api.route("/api/companies/all")
+class CompaniesAll(Resource):
+    @api.response(200, 'All companies retrieved!')
+    @api.response(404, 'An error occured.')
+    @jwt_required()
+    def get(self):
+        return all_companies()
+
+
+@api.route("/api/frameworks/all")
+class FrameworksAll(Resource):
+    @api.response(200, 'All frameworks retrieved!')
+    @api.response(404, 'An error occured.')
+    @jwt_required()
+    def get(self):
+        return all_frameworks()
+
+
+@api.route("/api/frameworks/<int:company_id>")
+class FrameworksByCompany(Resource):
+    @api.response(200, 'Framework, metric & indicator information for company retrieved!', framework_model)
+    @api.response(404, 'An error occured.')
+    @jwt_required()
+    def get(self, company_id):
+        return get_framework_info_from_company(company_id)
+
+
+@api.route("/api/values/<int:company_id>/<string:indicator_ids>/<string:years>")
+class IndicatorValues(Resource):
+    @api.response(200, 'Indicator values for company retrieved!', indicator_value_model)
+    @api.response(404, 'An error occured.')
+    @jwt_required()
+    def get(self, company_id, indicator_ids, years):
+        try:
+            selected_indicators = [int(i) for i in indicator_ids.split(',')]
+            selected_years = [int(y) for y in years.split(',')]
+        except ValueError:
+            return {"message": "Invalid indicator_ids or years provided."}, 404
+
+        return get_indicator_values(company_id, selected_indicators, selected_years)
