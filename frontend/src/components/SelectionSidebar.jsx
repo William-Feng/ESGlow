@@ -43,6 +43,7 @@ export default function SelectionSidebar({ token }) {
   }, [token]);
 
   const [selectedFramework, setSelectedFramework] = useState(null);
+
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
@@ -52,9 +53,14 @@ export default function SelectionSidebar({ token }) {
 
   const selectedMetrics = selectedFramework ? selectedFramework.metrics : [];
 
-  const [expanded, setExpanded] = useState(false);
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  const [expanded, setExpanded] = useState({
+    panel1: false,
+    panel2: false,
+    panel3: false,
+  });
+
+  const handleChange = (panel) => (_, isExpanded) => {
+    setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
   };
 
   const [expandedMetrics, setExpandedMetrics] = useState([]);
@@ -73,16 +79,23 @@ export default function SelectionSidebar({ token }) {
 
   return (
     <Box>
-      <Accordion
-        expanded={expanded === "panel1"}
-        onChange={handleChange("panel1")}
-      >
+      <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography sx={{ width: "33%" }}>Framework</Typography>
+          <Typography
+            sx={{
+              width: "33%",
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            Framework
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -108,16 +121,23 @@ export default function SelectionSidebar({ token }) {
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion
-        expanded={expanded === "panel2"}
-        onChange={handleChange("panel2")}
-      >
+      <Accordion expanded={expanded.panel2} onChange={handleChange("panel2")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2bh-content"
           id="panel2bh-header"
         >
-          <Typography sx={{ width: "33%" }}>Metrics</Typography>
+          <Typography
+            sx={{
+              width: "33%",
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            Metrics
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box>
@@ -181,16 +201,23 @@ export default function SelectionSidebar({ token }) {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion
-        expanded={expanded === "panel3"}
-        onChange={handleChange("panel3")}
-      >
+      <Accordion expanded={expanded.panel3} onChange={handleChange("panel3")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3bh-content"
           id="panel3bh-header"
         >
-          <Typography sx={{ width: "33%" }}>Years</Typography>
+          <Typography
+            sx={{
+              width: "33%",
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            Years
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
