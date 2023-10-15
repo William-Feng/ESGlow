@@ -18,3 +18,9 @@ I was assigned with Melanie to work on the frontend of the project.
 We worked closely together since the register page she has created needed to be visually consistent with login page I created.
 I made the login page and linked it to the register page. I also designed the logo for our website, which is featured in starting page.
 Our group is finalizing backend end points to see the fullstack functionality soon.
+
+Week 5
+I continued with frontend work for password reset and its 4 stages. There was a problem
+with my macOS not being able to run backend so functionality and connecting end points was done by Mel. Meanwhile, I took over
+dashboard frontend UI within my capacity; created a skeleton of components, rearranged the header, and created the
+nested accordion for framework / metric / indicator. I also recorded demo A to send to our client Ming for feedback.
