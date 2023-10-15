@@ -1,4 +1,3 @@
-from flask import jsonify
 from .database import db, Company, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
 
 

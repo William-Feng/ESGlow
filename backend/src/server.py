@@ -1,37 +1,29 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask_restx import Api, fields, Resource
-from .config import JWT_EXAMPLE
+from flask_restx import Api, Resource
+
 from .database import User
+from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
+from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register
-from .frameworks import all_frameworks, get_framework_info_from_company, all_companies, get_indicator_values
 
 
 api = Api()
 
 
-@api.route("/")
-class Hello(Resource):
-    def get(self):
-        return {"message": "Hello, World!"}, 200
+# ===================================================================
+#
+# User Registration & Login Endpoints
+#
+# ===================================================================
 
-
-user_model = api.model('User', {
-    'email': fields.String(required=True, description='Email Address', example='example@gmail.com'),
-    'password': fields.String(required=True, description='Password', example='Password123')
-})
-
-
-register_response_model = api.model('LoginResponse', {
-    'message': fields.String(description='Status message', example='User successfully registered.'),
-    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
-})
+user_model, register_model, login_model = user_authentication_models(api)
 
 
 @api.route("/api/register")
 class Register(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'User created successfully.', model=register_response_model)
+    @api.response(200, 'User created successfully.', model=register_model)
     @api.response(400, 'Error: user already exists.')
     def post(self):
         data = api.payload
@@ -42,16 +34,10 @@ class Register(Resource):
         return response, status_code
 
 
-login_response_model = api.model('LoginResponse', {
-    'message': fields.String(description='Status message', example='Login successful.'),
-    'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
-})
-
-
 @api.route("/api/login")
 class Login(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'Login successful.', model=login_response_model)
+    @api.response(200, 'Login successful.', model=login_model)
     @api.response(400, 'Invalid email or password.')
     def post(self):
         data = api.payload
@@ -76,14 +62,14 @@ class DecodeUser(Resource):
         return response, 200
 
 
-# ======================================================================================
-#
-# Password-Reset Endpoints
 # ===================================================================
 #
-password_reset_request_model = api.model('Password Reset Request', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-})
+# Password-Reset Endpoints
+#
+# ===================================================================
+
+password_reset_request_model, password_reset_verify_model, password_reset_change_model = password_reset_models(
+    api)
 
 
 @api.route("/api/password-reset/request")
@@ -97,12 +83,6 @@ class PasswordResetRequest(Resource):
 
         # Send email, generate code in backend.
         return reset_password_request(email)
-
-
-password_reset_verify_model = api.model('Password Reset Verify', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'code': fields.String(required=True, description='Verification Code', example="5A03BX"),
-})
 
 
 @api.route("/api/password-reset/verify")
@@ -125,12 +105,6 @@ class PasswordResetVerify(Resource):
         return reset_password_verify(email, code)
 
 
-password_reset_change_model = api.model('Password Reset Change', {
-    'email': fields.String(required=True, description='Email Address', example="example@gmail.com"),
-    'new_password': fields.String(required=True, description='New Password', example="password123")
-})
-
-
 @api.route("/api/password-reset/change")
 class PasswordResetChange(Resource):
     @api.expect(password_reset_change_model, validate=True)
@@ -142,76 +116,46 @@ class PasswordResetChange(Resource):
         new_password = data['new_password']
         return reset_password_change(email, new_password)
 
+
 # ===================================================================
 #
-# Framework/Metric Selection
-# ===================================================================
+# Company/Framework/Metric/Indicator Selection
 #
+# ===================================================================
 
-
-@api.route("/api/frameworks/all")
-class FrameworksAll(Resource):
-    @api.response(200, 'All frameworks retrieved!')
-    # @jwt_required()
-    def get(self):
-        return all_frameworks()
+framework_model, indicator_value_model, indicator_arg_parser = framework_metric_indicator_models(
+    api)
 
 
 @api.route("/api/companies/all")
 class AllCompanies(Resource):
     @api.response(200, 'All companies retrieved!')
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         return all_companies()
 
 
-indicator_model = api.model('Indicator', {
-    'indicator_id': fields.Integer(description='The indicator ID', example=1),
-    'indicator_name': fields.String(description='The name of the indicator', example='Financial Disclosure Accuracy'),
-    'predefined_weight': fields.Float(description='The predefined weight for the indicator', example=0.5),
-})
-
-metric_model = api.model('Metric', {
-    'metric_id': fields.Integer(description='The metric ID', example=6),
-    'metric_name': fields.String(description='The name of the metric', example='Corporate Transparency'),
-    # If not always present
-    'predefined_weight': fields.Float(description='The predefined weight for the metric', required=False, example=0.3),
-    'indicators': fields.List(fields.Nested(indicator_model), description='List of indicators')
-})
-
-framework_model = api.model('Framework', {
-    'framework_id': fields.Integer(description='The framework ID', example=3),
-    'framework_name': fields.String(description='The name of the framework', example='ESG Global Standard'),
-    'metrics': fields.List(fields.Nested(metric_model), description='List of metrics')
-})
+@api.route("/api/frameworks/all")
+class FrameworksAll(Resource):
+    @api.response(200, 'All frameworks retrieved!')
+    @jwt_required()
+    def get(self):
+        return all_frameworks()
 
 
 @api.route("/api/frameworks/company/<int:company_id>")
 class FrameworksByCompany(Resource):
     @api.response(200, 'Frameworks for company retrieved!', framework_model)
-    # @jwt_required()
+    @jwt_required()
     def get(self, company_id):
         return get_framework_info_from_company(company_id)
-
-
-indicator_value = api.model('IndicatorValue', {
-    'indicator_id': fields.Integer(required=True, description='Indicator ID'),
-    'year': fields.Integer(required=True, description='Year of the metric'),
-    'value': fields.Float(required=True, description='Value of the metric for the year')
-})
-
-indicator_arg_parser = api.parser()
-indicator_arg_parser.add_argument('years', type=int, required=True,
-                                  action='split', help='Years to get indicator values', location='args')
-indicator_arg_parser.add_argument('indicators', type=int, required=True,
-                                  action='split', help='Indicator IDs', location='args')
 
 
 @api.route("/api/indicator-values/<int:company_id>")
 class IndicatorValues(Resource):
     @api.expect(indicator_arg_parser)
-    @api.marshal_list_with(indicator_value, envelope='data')
-    # @jwt_required()
+    @api.marshal_list_with(indicator_value_model, envelope='data')
+    @jwt_required()
     def get(self, company_id):
         args = indicator_arg_parser.parse_args()
         selected_years = args.get('years', [])
