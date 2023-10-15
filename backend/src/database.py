@@ -57,11 +57,11 @@ class DataValue(db.Model):
     __tablename__ = 'data_values'
 
     value_id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))
     indicator_id = db.Column(
         db.Integer, db.ForeignKey('indicators.indicator_id'))
-    company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))
     year = db.Column(db.Integer)
-    value = db.Column(db.Float)
+    rating = db.Column(db.Float)
 
 
 class CompanyFramework(db.Model):

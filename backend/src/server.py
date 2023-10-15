@@ -123,12 +123,12 @@ class PasswordResetChange(Resource):
 #
 # ===================================================================
 
-framework_model, indicator_value_model, indicator_arg_parser = framework_metric_indicator_models(
+framework_model, indicator_value_model, indicator_args = framework_metric_indicator_models(
     api)
 
 
 @api.route("/api/companies/all")
-class AllCompanies(Resource):
+class CompaniesAll(Resource):
     @api.response(200, 'All companies retrieved!')
     @jwt_required()
     def get(self):
@@ -143,9 +143,9 @@ class FrameworksAll(Resource):
         return all_frameworks()
 
 
-@api.route("/api/frameworks/company/<int:company_id>")
+@api.route("/api/frameworks/<int:company_id>")
 class FrameworksByCompany(Resource):
-    @api.response(200, 'Frameworks for company retrieved!', framework_model)
+    @api.response(200, 'Framework, metric & indicator information for company retrieved!', framework_model)
     @jwt_required()
     def get(self, company_id):
         return get_framework_info_from_company(company_id)
@@ -153,11 +153,11 @@ class FrameworksByCompany(Resource):
 
 @api.route("/api/indicator-values/<int:company_id>")
 class IndicatorValues(Resource):
-    @api.expect(indicator_arg_parser)
+    @api.expect(indicator_args)
     @api.marshal_list_with(indicator_value_model, envelope='data')
     @jwt_required()
     def get(self, company_id):
-        args = indicator_arg_parser.parse_args()
+        args = indicator_args.parse_args()
         selected_years = args.get('years', [])
         selected_indicators = args.get('indicators', [])
         response, status_code = get_indicator_values(

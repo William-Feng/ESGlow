@@ -50,8 +50,7 @@ def framework_metric_indicator_models(api):
     metric_model = api.model('Metric', {
         'metric_id': fields.Integer(description='The metric ID', example=6),
         'metric_name': fields.String(description='The name of the metric', example='Corporate Transparency'),
-        # If not always present
-        'predefined_weight': fields.Float(description='The predefined weight for the metric', required=False, example=0.3),
+        'predefined_weight': fields.Float(description='The predefined weight for the metric', example=0.3),
         'indicators': fields.List(fields.Nested(indicator_model), description='List of indicators')
     })
 
@@ -67,10 +66,10 @@ def framework_metric_indicator_models(api):
         'value': fields.Float(required=True, description='Value of the metric for the year')
     })
 
-    indicator_arg_parser = api.parser()
-    indicator_arg_parser.add_argument('years', type=int, required=True,
-                                      action='split', help='Years to get indicator values', location='args')
-    indicator_arg_parser.add_argument('indicators', type=int, required=True,
-                                      action='split', help='Indicator IDs', location='args')
+    indicator_args = api.parser()
+    indicator_args.add_argument('years', type=int, required=True, action='split',
+                                help='Specific year of the indicator values', location='args')
+    indicator_args.add_argument('indicators', type=int, required=True,
+                                action='split', help='Specific indicator IDs', location='args')
 
-    return framework_model, indicator_value_model, indicator_arg_parser
+    return framework_model, indicator_value_model, indicator_args
