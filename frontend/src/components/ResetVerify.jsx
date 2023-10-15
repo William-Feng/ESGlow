@@ -9,11 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ResetVerify({ email }) {
-  const [code, setCode] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [code, setCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {

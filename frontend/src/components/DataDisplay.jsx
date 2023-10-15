@@ -1,28 +1,43 @@
-import { Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import React from 'react';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { Fragment } from "react";
 
 function createData(metric, year1, year2, year3) {
   return { metric, year1, year2, year3 };
 }
 const rows = [
-  createData('Metric A', 100, 200, 300),
-  createData('Metric B', 10, 12, 10),
-  createData('Metric C', 50, 75, 100),
-  createData('Metric D', 5, 7, 10),
-  createData('Metric E', 200, 190, 100),
-  createData('Metric F', 50, 75, 100),
-  createData('Metric G', 50, 75, 100),
-  createData('Metric H', 50, 75, 100),
-  createData('Metric I', 50, 75, 100),
-  createData('Metric J', 50, 75, 100),
-  createData('Metric K', 50, 75, 100),
-]
+  createData("Metric A", 100, 200, 300),
+  createData("Metric B", 10, 12, 10),
+  createData("Metric C", 50, 75, 100),
+  createData("Metric D", 5, 7, 10),
+  createData("Metric E", 200, 190, 100),
+  createData("Metric F", 50, 75, 100),
+  createData("Metric G", 50, 75, 100),
+  createData("Metric H", 50, 75, 100),
+  createData("Metric I", 50, 75, 100),
+  createData("Metric J", 50, 75, 100),
+  createData("Metric K", 50, 75, 100),
+];
 
 export default function DataDisplay() {
   return (
-    <React.Fragment>
-      <Box sx={{ mt: '20px', ml: '20px', mr: '20px', overflowX: 'auto', width: '100%' }}>
-        <Table size='small'>
+    <Fragment>
+      <Box
+        sx={{
+          mt: "20px",
+          ml: "20px",
+          mr: "20px",
+          overflowX: "auto",
+          width: "100%",
+        }}
+      >
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>Metric</TableCell>
@@ -43,6 +58,6 @@ export default function DataDisplay() {
           </TableBody>
         </Table>
       </Box>
-    </React.Fragment>
+    </Fragment>
   );
 }
