@@ -12,15 +12,39 @@ import {
   Checkbox,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-const metrics = ["metric A", "metric B", "metric C"];
-const indicators = ["indicator X", "indicator Y", "indicator Z"];
 const years = [2021, 2022, 2023];
 
-export default function SelectionSidebar() {
-  const [expanded, setExpanded] = useState(false);
+export default function SelectionSidebar({ token }) {
+  const [frameworksData, setFrameworksData] = useState([]);
 
+  useEffect(() => {
+    // This will be hard coded until the company selection is implemented
+    const companyId = 1;
+
+    fetch(`/api/frameworks/${companyId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Data received:", JSON.stringify(data));
+        setFrameworksData(data);
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the framework, metric and indicator information!",
+          error
+        )
+      );
+  }, [token]);
+
+  const metrics = frameworksData.flatMap((framework) => framework.metrics);
+  const indicators = metrics.flatMap((metric) => metric.indicators);
+
+  const [expanded, setExpanded] = useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -79,10 +103,15 @@ export default function SelectionSidebar() {
           <FormControl>
             {/* Below is the list of frameworks */}
             {metrics.map((m) => (
-              <>
-                <Accordion key={m}>
+              <Fragment
+                key={"framework_" + m.framework_id + "_metric_" + m.metric_id}
+              >
+                <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <FormControlLabel control={<Checkbox />} label={m} />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label={m.metric_name}
+                    />
                   </AccordionSummary>
 
                   {/* Below is the list of indicators */}
@@ -95,20 +124,20 @@ export default function SelectionSidebar() {
                         // onChange={handleChange}
                       >
                         {/* Placeholder values for indicators */}
-                        {indicators.map((i) => (
-                          <>
+                        {m.indicators.map((i) => (
+                          <Fragment key={"indicator_" + i.indicator_id}>
                             <FormControlLabel
-                              value={i}
+                              value={i.indicator_id.toString()}
                               control={<Checkbox />}
-                              label={i}
+                              label={i.indicator_name}
                             />
-                          </>
+                          </Fragment>
                         ))}
                       </RadioGroup>
                     </FormControl>
                   </AccordionDetails>
                 </Accordion>
-              </>
+              </Fragment>
             ))}
           </FormControl>
         </AccordionDetails>

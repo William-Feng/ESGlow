@@ -84,7 +84,7 @@ function Dashboard({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <SelectionSidebar />
+              <SelectionSidebar token={token} />
             </Drawer>
             <DataDisplay />
           </Box>
