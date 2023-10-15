@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Chip,
   FormControl,
   RadioGroup,
   Radio,
@@ -12,7 +13,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const years = [2021, 2022, 2023];
 
@@ -56,9 +57,22 @@ export default function SelectionSidebar({ token }) {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const [expandedMetrics, setExpandedMetrics] = useState([]);
+
+  const toggleMetric = (metricId) => {
+    if (expandedMetrics.includes(metricId)) {
+      setExpandedMetrics((prev) => prev.filter((id) => id !== metricId));
+    } else {
+      setExpandedMetrics((prev) => [...prev, metricId]);
+    }
+  };
+
+  const isMetricExpanded = (metricId) => {
+    return expandedMetrics.includes(metricId);
+  };
+
   return (
     <Box>
-      {/* <AccordionDetails sx={{ maxHeight: "300px", overflowY: "scroll" }}></AccordionDetails> */}
       <Accordion
         expanded={expanded === "panel1"}
         onChange={handleChange("panel1")}
@@ -68,9 +82,7 @@ export default function SelectionSidebar({ token }) {
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Framework
-          </Typography>
+          <Typography sx={{ width: "33%" }}>Framework</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -105,44 +117,68 @@ export default function SelectionSidebar({ token }) {
           aria-controls="panel2bh-content"
           id="panel2bh-header"
         >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>Metrics</Typography>
+          <Typography sx={{ width: "33%" }}>Metrics</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <FormControl>
-            {/* Below is the list of frameworks */}
-            {selectedMetrics.map((m) => (
-              <Fragment key={"_metric_" + m.metric_id}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label={m.metric_name}
-                    />
-                  </AccordionSummary>
+          <Box>
+            {selectedFramework ? (
+              selectedMetrics.map((metric) => (
+                <Box key={"_metric_" + metric.metric_id} sx={{ mb: 2 }}>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{
+                      cursor: "pointer",
+                      p: 1,
+                      border: "1px solid",
+                      borderRadius: "4px",
+                      mb: 1,
+                    }}
+                    onClick={() => toggleMetric(metric.metric_id)}
+                  >
+                    <Typography fontWeight="bold">
+                      {metric.metric_name}
+                    </Typography>
+                    <Box display="flex" alignItems="center">
+                      <Chip
+                        label={`${metric.predefined_weight}`}
+                        color="primary"
+                      />
+                      <ExpandMoreIcon />
+                    </Box>
+                  </Box>
 
-                  {/* Below is the list of indicators */}
-                  <AccordionDetails>
-                    <FormControl>
-                      <RadioGroup
-                        aria-labelledby="demo-controlled-radio-buttons-group"
-                        name="controlled-radio-buttons-group"
-                      >
-                        {/* Placeholder values for indicators */}
-                        {m.indicators.map((i) => (
+                  {isMetricExpanded(metric.metric_id) && (
+                    <Box sx={{ mt: 1, pl: 3 }}>
+                      {metric.indicators.map((indicator) => (
+                        <Box
+                          key={indicator.indicator_id}
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          sx={{ mb: 1 }}
+                        >
                           <FormControlLabel
-                            key={"indicator_" + i.indicator_id}
-                            value={i.indicator_id.toString()}
                             control={<Checkbox />}
-                            label={i.indicator_name}
+                            label={indicator.indicator_name}
                           />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </AccordionDetails>
-                </Accordion>
-              </Fragment>
-            ))}
-          </FormControl>
+                          <Chip
+                            label={`${indicator.predefined_weight}`}
+                            color="success"
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              ))
+            ) : (
+              <Typography style={{ color: "red" }}>
+                Select a framework to see metrics
+              </Typography>
+            )}
+          </Box>
         </AccordionDetails>
       </Accordion>
       <Accordion
@@ -154,15 +190,13 @@ export default function SelectionSidebar({ token }) {
           aria-controls="panel3bh-content"
           id="panel3bh-header"
         >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>Years</Typography>
+          <Typography sx={{ width: "33%" }}>Years</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              // value={value}
-              // onChange={handleChange}
             >
               {/* Placeholder values for years */}
               {years.map((y) => (
@@ -176,26 +210,6 @@ export default function SelectionSidebar({ token }) {
               ))}
             </RadioGroup>
           </FormControl>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === "panel4"}
-        onChange={handleChange("panel4")}
-        sx={{ mt: "20px" }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel4bh-content"
-          id="panel4bh-header"
-        >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Weightings
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Users will be able to customise metric and indicator weights.
-          </Typography>
         </AccordionDetails>
       </Accordion>
     </Box>

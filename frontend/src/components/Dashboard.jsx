@@ -29,7 +29,6 @@ function Dashboard({ token }) {
           sx={{
             bgcolor: "primary.main",
             height: 128,
-            margin: "",
             zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
         >
@@ -71,11 +70,11 @@ function Dashboard({ token }) {
             <Drawer
               sx={{
                 // position: 'relative',
-                width: 240,
+                width: 360,
                 flexShrink: 0,
                 "& .MuiDrawer-paper": {
                   position: "static",
-                  width: 240,
+                  width: 360,
                   boxSizing: "border-box",
                   overflowY: "scroll",
                   maxHeight: "100%",
