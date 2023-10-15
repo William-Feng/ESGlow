@@ -75,4 +75,6 @@ from    companies c
         join metrics m on fm.metric_id = m.metric_id
         join metric_indicators mi on m.metric_id = mi.metric_id
         join indicators i on mi.indicator_id = i.indicator_id
-        join data_values d on i.indicator_id = d.indicator_id;
+        join data_values d on i.indicator_id = d.indicator_id
+where   c.company_id = d.company_id
+order   by c.company_id, f.framework_id, m.metric_id, i.indicator_id;
