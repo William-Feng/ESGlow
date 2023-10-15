@@ -44,9 +44,8 @@ function Dashboard({ token }) {
             position: "fixed",
             top: "128px",
             width: "100%",
-            minHeight: "100vh",
-            maxHeight: "600px",
-            overflowY: "scroll",
+            height: "calc(100vh - 128px)",
+            overflowY: "auto",
           }}
         >
           <Box
@@ -62,21 +61,20 @@ function Dashboard({ token }) {
           <Box
             sx={{
               height: "900px",
-              overflowY: "scroll",
+              overflowY: "auto",
               display: "flex",
               flexDirection: "row",
             }}
           >
             <Drawer
               sx={{
-                // position: 'relative',
                 width: 360,
                 flexShrink: 0,
                 "& .MuiDrawer-paper": {
                   position: "static",
                   width: 360,
                   boxSizing: "border-box",
-                  overflowY: "scroll",
+                  overflowY: "auto",
                   maxHeight: "100%",
                 },
               }}
