@@ -13,6 +13,9 @@ def all_frameworks():
     """
 
     frameworks = [framework.name for framework in Framework.query.all()]
+    if not frameworks:
+        return {"message": "No frameworks found."}, 404
+
     return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
 
@@ -28,6 +31,9 @@ def all_companies():
     """
 
     companies = [company.name for company in Company.query.all()]
+    if not companies:
+        return {"message": "No companies found."}, 404
+
     return {"message": 'All companies retrieved!', "companies": companies}, 200
 
 
@@ -59,6 +65,10 @@ def get_framework_info_from_company(company_id):
             }
         ], status_code
     """
+    company = Company.query.get(company_id)
+    if not company:
+        return {"message": f"Company with ID {company_id} not found."}, 404
+
     result = (
         db.session.query(
             Framework.framework_id.label("framework_id"),
@@ -127,11 +137,23 @@ def get_framework_info_from_company(company_id):
 
 
 def get_indicator_values(company_id, selected_indicators, selected_years):
+    company = Company.query.get(company_id)
+    if not company:
+        return {"message": f"Company with ID {company_id} not found."}, 404
+
+    existing_indicators = Indicator.query.filter(
+        Indicator.indicator_id.in_(selected_indicators)).all()
+    if len(existing_indicators) != len(selected_indicators):
+        return {"message": "One or more provided indicator_ids do not exist."}, 400
+
     values = db.session.query(DataValue).filter(
         DataValue.company_id == company_id,
         DataValue.indicator_id.in_(selected_indicators),
         DataValue.year.in_(selected_years)
     ).all()
+
+    if not values:
+        return {"message": "No data values found for the provided criteria."}, 404
 
     response = []
     for val in values:

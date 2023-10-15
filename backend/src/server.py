@@ -23,8 +23,8 @@ user_model, register_model, login_model = user_authentication_models(api)
 @api.route("/api/register")
 class Register(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'User created successfully.', model=register_model)
-    @api.response(400, 'Error: user already exists.')
+    @api.response(200, 'User created successfully!', model=register_model)
+    @api.response(400, 'User already exists.')
     def post(self):
         data = api.payload
         email = data['email']
@@ -37,7 +37,7 @@ class Register(Resource):
 @api.route("/api/login")
 class Login(Resource):
     @api.expect(user_model, validate=True)
-    @api.response(200, 'Login successful.', model=login_model)
+    @api.response(200, 'Login successful!', model=login_model)
     @api.response(400, 'Invalid email or password.')
     def post(self):
         data = api.payload
@@ -76,7 +76,7 @@ password_reset_request_model, password_reset_verify_model, password_reset_change
 class PasswordResetRequest(Resource):
     @api.expect(password_reset_request_model, validate=True)
     @api.response(200, 'Password Reset Request Successful!')
-    @api.response(400, 'Email does not exist!')
+    @api.response(400, 'Email does not exist.')
     def post(self):
         data = api.payload
         email = data['email']
@@ -89,8 +89,8 @@ class PasswordResetRequest(Resource):
 class PasswordResetVerify(Resource):
     @api.expect(password_reset_verify_model, validate=True)
     @api.response(200, 'Password Successfully Reset!')
-    @api.response(400, 'Verification Code is incorrect!')
-    @api.response(400, 'Email does not exist!')
+    @api.response(400, 'Verification Code is incorrect.')
+    @api.response(400, 'Email does not exist.')
     def post(self):
         data = api.payload
         email = data['email']
@@ -99,7 +99,7 @@ class PasswordResetVerify(Resource):
         # Verify user exists in backend.
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
-            return {"message": "Email does not exist!"}, 400
+            return {"message": "Email does not exist."}, 400
 
         # Request a password reset.
         return reset_password_verify(email, code)
@@ -129,6 +129,7 @@ framework_model, indicator_value_model = framework_metric_indicator_models(api)
 @api.route("/api/companies/all")
 class CompaniesAll(Resource):
     @api.response(200, 'All companies retrieved!')
+    @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self):
         return all_companies()
@@ -137,6 +138,7 @@ class CompaniesAll(Resource):
 @api.route("/api/frameworks/all")
 class FrameworksAll(Resource):
     @api.response(200, 'All frameworks retrieved!')
+    @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self):
         return all_frameworks()
@@ -145,6 +147,7 @@ class FrameworksAll(Resource):
 @api.route("/api/frameworks/<int:company_id>")
 class FrameworksByCompany(Resource):
     @api.response(200, 'Framework, metric & indicator information for company retrieved!', framework_model)
+    @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self, company_id):
         return get_framework_info_from_company(company_id)
