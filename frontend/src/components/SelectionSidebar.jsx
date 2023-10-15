@@ -41,8 +41,15 @@ export default function SelectionSidebar({ token }) {
       );
   }, [token]);
 
-  const metrics = frameworksData.flatMap((framework) => framework.metrics);
-  const indicators = metrics.flatMap((metric) => metric.indicators);
+  const [selectedFramework, setSelectedFramework] = useState(null);
+  const handleFrameworkChange = (event) => {
+    const frameworkId = event.target.value;
+    setSelectedFramework(
+      frameworksData.find((f) => f.framework_id === parseInt(frameworkId))
+    );
+  };
+
+  const selectedMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const [expanded, setExpanded] = useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
@@ -70,20 +77,21 @@ export default function SelectionSidebar({ token }) {
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              // value={value}
-              // onChange={handleChange}
+              value={
+                selectedFramework
+                  ? selectedFramework.framework_id.toString()
+                  : ""
+              }
+              onChange={handleFrameworkChange}
             >
-              {/* placeholder values for framework */}
-              <FormControlLabel
-                value="frameworkA"
-                control={<Radio />}
-                label="Framework A"
-              />
-              <FormControlLabel
-                value="frameworkB"
-                control={<Radio />}
-                label="Framework B"
-              />
+              {frameworksData.map((framework) => (
+                <FormControlLabel
+                  key={framework.framework_id}
+                  value={framework.framework_id.toString()}
+                  control={<Radio />}
+                  label={framework.framework_name}
+                />
+              ))}
             </RadioGroup>
           </FormControl>
         </AccordionDetails>
@@ -102,10 +110,8 @@ export default function SelectionSidebar({ token }) {
         <AccordionDetails>
           <FormControl>
             {/* Below is the list of frameworks */}
-            {metrics.map((m) => (
-              <Fragment
-                key={"framework_" + m.framework_id + "_metric_" + m.metric_id}
-              >
+            {selectedMetrics.map((m) => (
+              <Fragment key={"_metric_" + m.metric_id}>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <FormControlLabel
@@ -120,18 +126,15 @@ export default function SelectionSidebar({ token }) {
                       <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="controlled-radio-buttons-group"
-                        // value={value}
-                        // onChange={handleChange}
                       >
                         {/* Placeholder values for indicators */}
                         {m.indicators.map((i) => (
-                          <Fragment key={"indicator_" + i.indicator_id}>
-                            <FormControlLabel
-                              value={i.indicator_id.toString()}
-                              control={<Checkbox />}
-                              label={i.indicator_name}
-                            />
-                          </Fragment>
+                          <FormControlLabel
+                            key={"indicator_" + i.indicator_id}
+                            value={i.indicator_id.toString()}
+                            control={<Checkbox />}
+                            label={i.indicator_name}
+                          />
                         ))}
                       </RadioGroup>
                     </FormControl>
