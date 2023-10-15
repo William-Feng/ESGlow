@@ -7,10 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
 import React from "react";
 
 export default function Searchbar() {
-  const [view, setView] = React.useState("single");
+  const [view, setView] = useState("single");
 
   const handleView = (event, newView) => {
     setView(newView);

@@ -12,13 +12,14 @@ import {
   Checkbox,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
 
 const metrics = ["metric A", "metric B", "metric C"];
 const indicators = ["indicator X", "indicator Y", "indicator Z"];
 const years = [2021, 2022, 2023];
 
 export default function SelectionSidebar() {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);

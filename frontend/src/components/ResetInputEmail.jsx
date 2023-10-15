@@ -9,11 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ResetInputEmail({ setter }) {
-  const [email, setEmail] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {

@@ -8,14 +8,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register({ onSuccess }) {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {

@@ -1,13 +1,14 @@
 import "./App.css";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import CssBaseLine from "@mui/material/CssBaseline";
 import StartPage from "./components/StartPage";
 import Dashboard from "./components/Dashboard";
 import ResetMain from "./components/ResetMain";
 
 function App() {
-  const [token, setToken] = React.useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   function manageTokenSet(token) {
     setToken(token);

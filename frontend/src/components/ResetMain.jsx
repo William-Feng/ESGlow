@@ -5,7 +5,7 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import ResetInputEmail from "./ResetInputEmail";
 import ResetVerify from "./ResetVerify";
 import ResetPassword from "./ResetPassword";
@@ -13,7 +13,7 @@ import ResetSuccess from "./ResetSuccess";
 
 export default function ResetMain({ page }) {
   const defaultTheme = createTheme();
-  const [email, setEmail] = React.useState(localStorage.getItem("email"));
+  const [email, setEmail] = useState(localStorage.getItem("email"));
 
   function setUserEmail(email) {
     setEmail(email);

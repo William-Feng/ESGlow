@@ -7,11 +7,11 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import Logo from "../assets/logo-white.png";
 
 function Header() {
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (e) => {
     setAnchorElUser(e.currentTarget);

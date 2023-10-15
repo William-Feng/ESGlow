@@ -6,7 +6,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React from "react";
+import { Fragment } from "react";
 
 function createData(metric, year1, year2, year3) {
   return { metric, year1, year2, year3 };
@@ -27,7 +27,7 @@ const rows = [
 
 export default function DataDisplay() {
   return (
-    <React.Fragment>
+    <Fragment>
       <Box
         sx={{
           mt: "20px",
@@ -58,6 +58,6 @@ export default function DataDisplay() {
           </TableBody>
         </Table>
       </Box>
-    </React.Fragment>
+    </Fragment>
   );
 }
