@@ -11,8 +11,10 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
+  Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useEffect, useState } from "react";
 
 const years = [2021, 2022, 2023];
@@ -87,7 +89,6 @@ export default function SelectionSidebar({ token }) {
         >
           <Typography
             sx={{
-              width: "33%",
               fontSize: "1.2rem",
               fontWeight: "bold",
               letterSpacing: "0.5px",
@@ -98,8 +99,9 @@ export default function SelectionSidebar({ token }) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <FormControl>
+          <FormControl fullWidth>
             <RadioGroup
+              fullWidth
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
               value={
@@ -110,12 +112,22 @@ export default function SelectionSidebar({ token }) {
               onChange={handleFrameworkChange}
             >
               {frameworksData.map((framework) => (
-                <FormControlLabel
+                <Box
+                  display="flex"
+                  alignItems="center"
                   key={framework.framework_id}
-                  value={framework.framework_id.toString()}
-                  control={<Radio />}
-                  label={framework.framework_name}
-                />
+                  justifyContent="space-between"
+                >
+                  <Box display="flex" alignItems="center">
+                    <Radio value={framework.framework_id.toString()} />
+                    <Typography fontWeight="bold">
+                      {framework.framework_name}
+                    </Typography>
+                  </Box>
+                  <Tooltip title={framework.description}>
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
+                </Box>
               ))}
             </RadioGroup>
           </FormControl>
@@ -129,14 +141,13 @@ export default function SelectionSidebar({ token }) {
         >
           <Typography
             sx={{
-              width: "33%",
               fontSize: "1.2rem",
               fontWeight: "bold",
               letterSpacing: "0.5px",
               textTransform: "uppercase",
             }}
           >
-            Metrics
+            Metrics & Indicators
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -150,17 +161,23 @@ export default function SelectionSidebar({ token }) {
                     alignItems="center"
                     sx={{
                       cursor: "pointer",
-                      p: 1,
+                      p: 0.5,
                       border: "1px solid",
                       borderRadius: "4px",
                       mb: 1,
                     }}
                     onClick={() => toggleMetric(metric.metric_id)}
                   >
-                    <Typography fontWeight="bold">
-                      {metric.metric_name}
-                    </Typography>
                     <Box display="flex" alignItems="center">
+                      <Checkbox defaultChecked />
+                      <Typography fontWeight="bold">
+                        {metric.metric_name}
+                      </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Tooltip title={metric.description}>
+                        <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                      </Tooltip>
                       <Chip
                         label={`${metric.predefined_weight}`}
                         color="primary"
@@ -170,7 +187,7 @@ export default function SelectionSidebar({ token }) {
                   </Box>
 
                   {isMetricExpanded(metric.metric_id) && (
-                    <Box sx={{ mt: 1, pl: 3 }}>
+                    <Box sx={{ mt: 1, pl: 5 }}>
                       {metric.indicators.map((indicator) => (
                         <Box
                           key={indicator.indicator_id}
@@ -180,13 +197,18 @@ export default function SelectionSidebar({ token }) {
                           sx={{ mb: 1 }}
                         >
                           <FormControlLabel
-                            control={<Checkbox />}
+                            control={<Checkbox defaultChecked />}
                             label={indicator.indicator_name}
                           />
-                          <Chip
-                            label={`${indicator.predefined_weight}`}
-                            color="success"
-                          />
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <Tooltip title={indicator.description}>
+                              <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                            </Tooltip>
+                            <Chip
+                              label={`${indicator.predefined_weight}`}
+                              color="success"
+                            />
+                          </Box>
                         </Box>
                       ))}
                     </Box>
@@ -195,7 +217,7 @@ export default function SelectionSidebar({ token }) {
               ))
             ) : (
               <Typography style={{ color: "red" }}>
-                Select a framework to see metrics
+                Select a framework to see the associated metrics and indicators
               </Typography>
             )}
           </Box>
@@ -209,7 +231,6 @@ export default function SelectionSidebar({ token }) {
         >
           <Typography
             sx={{
-              width: "33%",
               fontSize: "1.2rem",
               fontWeight: "bold",
               letterSpacing: "0.5px",
@@ -230,7 +251,7 @@ export default function SelectionSidebar({ token }) {
                 <>
                   <FormControlLabel
                     value={y}
-                    control={<Checkbox />}
+                    control={<Checkbox defaultChecked />}
                     label={y}
                   />
                 </>
