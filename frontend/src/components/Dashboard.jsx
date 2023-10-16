@@ -36,7 +36,7 @@ function Dashboard({ token }) {
             <Header />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <Searchbar />
+            <Searchbar token={token} />
           </Toolbar>
         </AppBar>
         <Box

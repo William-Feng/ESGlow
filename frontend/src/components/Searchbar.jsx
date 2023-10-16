@@ -1,40 +1,50 @@
 import {
-  IconButton,
-  InputBase,
-  Paper,
+  Autocomplete,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import React from "react";
 
-export default function Searchbar() {
+export default function Searchbar({token}) {
   const [view, setView] = useState("single");
+  const [companyList, setCompanyList] = useState([]);
 
   const handleView = (event, newView) => {
     setView(newView);
   };
 
+  React.useEffect(() => {
+    fetch("/api/companies/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setCompanyList(data.companies);
+    })
+    .catch((error) =>
+      console.error(
+        "There was an error fetching the company information.",
+        error
+      )
+    );
+  }, [token]);
+
   return (
     <>
-      {/* <Box
-        sx={{ display: 'flex', flexDirection: 'row', textAlign: 'center' }}
-      > */}
-      <Paper
-        component="form"
-        sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 400 }}
-      >
-        <IconButton sx={{ p: "10px" }} aria-label="menu">
-          <SearchIcon />
-        </IconButton>
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="Select a company"
-          inputProps={{ "aria-label": "select a company" }}
-        />
-      </Paper>
+      <Autocomplete
+        disablePortal
+        id="combo-box-demo"
+        options={ companyList }
+        sx={{ width: 300, backgroundColor: 'white' }}
+        renderInput={(params) => <TextField
+          {...params} label="Company"
+        />}
+      />
       <ToggleButtonGroup
         value={view}
         exclusive
@@ -48,7 +58,6 @@ export default function Searchbar() {
           <Typography>Comparison View</Typography>
         </ToggleButton>
       </ToggleButtonGroup>
-      {/* </Box> */}
     </>
   );
 }
