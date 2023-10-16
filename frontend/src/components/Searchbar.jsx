@@ -1,12 +1,11 @@
 import {
-  IconButton,
-  InputBase,
-  Paper,
+  Autocomplete,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+// import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import React from "react";
 
@@ -17,24 +16,46 @@ export default function Searchbar() {
     setView(newView);
   };
 
+  // const searchCompany = async (e) => {
+  //   e.preventDefault();
+
+  //   if (email.length === 0 || password.length === 0) {
+  //     return setErrorMessage("Please enter your details");
+  //   }
+
+  //   const response = await fetch("/api/login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       email,
+  //       password,
+  //     }),
+  //   });
+  //   console.log(response);
+  //   const data = await response.json();
+  //   console.log(data);
+  //   if (response.status === 200) {
+  //     onSuccess(data.token);
+  //     navigate("/dashboard");
+  //   } else {
+  //     return setErrorMessage(data.message);
+  //   }
+  // };
+
   return (
     <>
-      {/* <Box
-        sx={{ display: 'flex', flexDirection: 'row', textAlign: 'center' }}
-      > */}
-      <Paper
-        component="form"
-        sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 400 }}
-      >
-        <IconButton sx={{ p: "10px" }} aria-label="menu">
-          <SearchIcon />
-        </IconButton>
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="Select a company"
-          inputProps={{ "aria-label": "select a company" }}
-        />
-      </Paper>
+      <Autocomplete
+        disablePortal
+        id="combo-box-demo"
+        options={ ['.'] }
+        sx={{ width: 300, backgroundColor: 'white' }}
+        renderInput={(params) => <TextField
+          {...params} label="Company"
+        />}
+      />
       <ToggleButtonGroup
         value={view}
         exclusive
@@ -48,7 +69,6 @@ export default function Searchbar() {
           <Typography>Comparison View</Typography>
         </ToggleButton>
       </ToggleButtonGroup>
-      {/* </Box> */}
     </>
   );
 }
