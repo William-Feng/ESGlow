@@ -110,6 +110,8 @@ function Dashboard({ token }) {
             width: "100%",
             height: "calc(100vh - 128px)",
             overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Box
@@ -124,10 +126,10 @@ function Dashboard({ token }) {
           </Box>
           <Box
             sx={{
-              height: "900px",
-              overflowY: "auto",
+              flex: 1,
               display: "flex",
               flexDirection: "row",
+              overflowY: "auto",
             }}
           >
             <Drawer
