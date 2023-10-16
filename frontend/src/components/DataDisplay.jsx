@@ -8,24 +8,7 @@ import {
 } from "@mui/material";
 import { Fragment } from "react";
 
-function createData(metric, year1, year2, year3) {
-  return { metric, year1, year2, year3 };
-}
-const rows = [
-  createData("Metric A", 100, 200, 300),
-  createData("Metric B", 10, 12, 10),
-  createData("Metric C", 50, 75, 100),
-  createData("Metric D", 5, 7, 10),
-  createData("Metric E", 200, 190, 100),
-  createData("Metric F", 50, 75, 100),
-  createData("Metric G", 50, 75, 100),
-  createData("Metric H", 50, 75, 100),
-  createData("Metric I", 50, 75, 100),
-  createData("Metric J", 50, 75, 100),
-  createData("Metric K", 50, 75, 100),
-];
-
-export default function DataDisplay() {
+export default function DataDisplay({ years, indicatorValues }) {
   return (
     <Fragment>
       <Box
@@ -40,19 +23,19 @@ export default function DataDisplay() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Metric</TableCell>
-              <TableCell>2023</TableCell>
-              <TableCell>2022</TableCell>
-              <TableCell>2021</TableCell>
+              <TableCell>Indicator</TableCell>
+              {years.map((year) => (
+                <TableCell key={year}>{year}</TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.metric}>
-                <TableCell>{row.metric}</TableCell>
-                <TableCell>{row.year1}</TableCell>
-                <TableCell>{row.year2}</TableCell>
-                <TableCell>{row.year3}</TableCell>
+            {indicatorValues.map((row) => (
+              <TableRow key={row.indicator_id}>
+                <TableCell>{row.indicator_name}</TableCell>
+                <TableCell>{row.year === 2023 ? row.value : null}</TableCell>
+                <TableCell>{row.year === 2022 ? row.value : null}</TableCell>
+                <TableCell>{row.year === 2021 ? row.value : null}</TableCell>
               </TableRow>
             ))}
           </TableBody>

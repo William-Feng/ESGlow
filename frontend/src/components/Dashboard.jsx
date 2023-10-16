@@ -13,9 +13,72 @@ import Searchbar from "./Searchbar";
 import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
+import { useState, useEffect } from "react";
 
 function Dashboard({ token }) {
   const defaultTheme = createTheme();
+
+  const years = [2022, 2023];
+  const [frameworksData, setFrameworksData] = useState([]);
+  const [selectedIndicators, setSelectedIndicators] = useState([]);
+  const [selectedYears, setSelectedYears] = useState(years);
+  const [indicatorValues, setIndicatorValues] = useState([]);
+
+  useEffect(() => {
+    // This will be hard coded until the company selection is implemented
+    const companyId = 1;
+
+    fetch(`/api/frameworks/${companyId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Data received:", JSON.stringify(data));
+        setFrameworksData(data);
+        const allIndicators = data.flatMap((framework) =>
+          framework.metrics.flatMap((metric) =>
+            metric.indicators.map((indicator) => indicator.indicator_id)
+          )
+        );
+        setSelectedIndicators(allIndicators);
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the framework, metric and indicator information!",
+          error
+        )
+      );
+  }, [token]);
+
+  // Fetch indicator values whenever selected indicators change
+  useEffect(() => {
+    if (selectedIndicators.length) {
+      // This is hard coded for now
+      const companyId = 1;
+      // Convert the selectedIndicators to a set to ensure there are no duplicates
+      //   This is because frameworks may encompass the same metrics and hence the same indicators
+      const indicatorIds = [...new Set(selectedIndicators)].join(",");
+      const yearsString = years.join(",");
+
+      fetch(`/api/values/${companyId}/${indicatorIds}/${yearsString}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setIndicatorValues(data))
+        .catch((error) =>
+          console.error("Error fetching indicator values:", error)
+        );
+    }
+  }, [selectedIndicators, token, years]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -81,9 +144,15 @@ function Dashboard({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <SelectionSidebar token={token} />
+              <SelectionSidebar
+                token={token}
+                frameworksData={frameworksData}
+                years={years}
+                setSelectedIndicators={setSelectedIndicators}
+                setSelectedYears={setSelectedYears}
+              />
             </Drawer>
-            <DataDisplay />
+            <DataDisplay years={years} indicatorValues={indicatorValues} />
           </Box>
         </Box>
       </Box>
