@@ -8,15 +8,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import logoBlack from '../assets/logo-black.png'
 
 function Register({ onSuccess }) {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
@@ -73,12 +72,8 @@ function Register({ onSuccess }) {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography variant="h5">
-        Welcome
-      </Typography>
-      <Typography variant="h2">
-        Register
-      </Typography>
+      <Typography variant="h5">Welcome</Typography>
+      <Typography variant="h2">Register</Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
         <TextField
           margin="normal"

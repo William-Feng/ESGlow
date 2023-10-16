@@ -42,24 +42,30 @@ CREATE TABLE indicators (
 
 CREATE TABLE data_values (
     value_id            SERIAL,
-    indicator_id        INT REFERENCES Indicators(indicator_id),
-    company_id          INT REFERENCES Companies(company_id),
+    company_id          INT REFERENCES companies(company_id),
+    indicator_id        INT REFERENCES indicators(indicator_id),
     year                INT CHECK (year > 1900 AND year <= 2030),
-    value               FLOAT,
+    rating              FLOAT CHECK (rating >= 0.0 AND rating <= 100.0),
     PRIMARY KEY (value_id)
+);
+
+CREATE TABLE company_frameworks (
+    company_id          INT REFERENCES companies(company_id),
+    framework_id        INT REFERENCES frameworks(framework_id),
+    PRIMARY KEY (company_id, framework_id)
 );
 
 CREATE TABLE framework_metrics (
     framework_id        INT REFERENCES frameworks(framework_id),
     metric_id           INT REFERENCES metrics(metric_id),
-    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1);
+    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1),
     PRIMARY KEY (framework_id, metric_id)
 );
 
 CREATE TABLE metric_indicators (
     metric_id           INT REFERENCES metrics(metric_id),
     indicator_id        INT REFERENCES indicators(indicator_id),
-    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1);
+    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1),
     PRIMARY KEY (metric_id, indicator_id)
 );
 
