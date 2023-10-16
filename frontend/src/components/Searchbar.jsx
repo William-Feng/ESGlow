@@ -5,52 +5,41 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-// import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import React from "react";
 
-export default function Searchbar() {
+export default function Searchbar({token}) {
   const [view, setView] = useState("single");
+  const [companyList, setCompanyList] = useState([]);
 
   const handleView = (event, newView) => {
     setView(newView);
   };
 
-  // const searchCompany = async (e) => {
-  //   e.preventDefault();
-
-  //   if (email.length === 0 || password.length === 0) {
-  //     return setErrorMessage("Please enter your details");
-  //   }
-
-  //   const response = await fetch("/api/login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email,
-  //       password,
-  //     }),
-  //   });
-  //   console.log(response);
-  //   const data = await response.json();
-  //   console.log(data);
-  //   if (response.status === 200) {
-  //     onSuccess(data.token);
-  //     navigate("/dashboard");
-  //   } else {
-  //     return setErrorMessage(data.message);
-  //   }
-  // };
+  React.useEffect(() => {
+    fetch("/api/companies/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setCompanyList(data.companies);
+    })
+    .catch((error) =>
+      console.error(
+        "There was an error fetching the company information.",
+        error
+      )
+    );
+  }, [token]);
 
   return (
     <>
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={ ['.'] }
+        options={ companyList }
         sx={{ width: 300, backgroundColor: 'white' }}
         renderInput={(params) => <TextField
           {...params} label="Company"
