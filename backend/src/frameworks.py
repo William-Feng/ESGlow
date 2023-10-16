@@ -162,7 +162,9 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
     if len(existing_indicators) != len(selected_indicators):
         return {"message": "One or more provided indicator_ids do not exist."}, 400
 
-    values = db.session.query(DataValue).filter(
+    values = db.session.query(DataValue, Indicator.name).join(
+        Indicator, DataValue.indicator_id == Indicator.indicator_id
+    ).filter(
         DataValue.company_id == company_id,
         DataValue.indicator_id.in_(selected_indicators),
         DataValue.year.in_(selected_years)
@@ -172,9 +174,10 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
         return {"message": "No data values found for the provided criteria."}, 404
 
     response = []
-    for val in values:
+    for val, indicator_name in values:
         response_item = {
             'indicator_id': val.indicator_id,
+            'indicator_name': indicator_name,
             'year': val.year,
             'value': val.rating
         }

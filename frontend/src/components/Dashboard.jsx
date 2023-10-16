@@ -40,7 +40,6 @@ function Dashboard({ token }) {
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", JSON.stringify(data));
         setFrameworksData(data);
         const allIndicators = data.flatMap((framework) =>
           framework.metrics.flatMap((metric) =>
@@ -63,7 +62,7 @@ function Dashboard({ token }) {
       // This is hard coded for now
       const companyId = 1;
       // Convert the selectedIndicators to a set to ensure there are no duplicates
-      //   This is because frameworks may encompass the same metrics and hence the same indicators
+      // This is because frameworks may encompass the same metrics and hence the same indicators
       const indicatorIds = [...new Set(selectedIndicators)].join(",");
       const yearsString = years.join(",");
 

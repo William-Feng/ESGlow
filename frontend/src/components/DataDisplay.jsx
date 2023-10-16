@@ -6,9 +6,22 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 
 export default function DataDisplay({ years, indicatorValues }) {
+  const structuredData = useMemo(() => {
+    const dataMap = {};
+
+    indicatorValues.forEach((row) => {
+      if (!dataMap[row.indicator_id]) {
+        dataMap[row.indicator_id] = { name: row.indicator_name };
+      }
+      dataMap[row.indicator_id][row.year] = row.value;
+    });
+
+    return Object.values(dataMap);
+  }, [indicatorValues]);
+
   return (
     <Fragment>
       <Box
@@ -30,12 +43,12 @@ export default function DataDisplay({ years, indicatorValues }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {indicatorValues.map((row) => (
-              <TableRow key={row.indicator_id}>
-                <TableCell>{row.indicator_name}</TableCell>
-                <TableCell>{row.year === 2023 ? row.value : null}</TableCell>
-                <TableCell>{row.year === 2022 ? row.value : null}</TableCell>
-                <TableCell>{row.year === 2021 ? row.value : null}</TableCell>
+            {structuredData.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell>{row.name}</TableCell>
+                {years.map((year) => (
+                  <TableCell key={year}>{row[year] || null}</TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>
