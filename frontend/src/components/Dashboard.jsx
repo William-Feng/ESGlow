@@ -13,13 +13,15 @@ import Searchbar from "./Searchbar";
 import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 function Dashboard({ token }) {
   const defaultTheme = createTheme();
 
-  const years = [2022, 2023];
+  const years = useMemo(() => [2022, 2023], []);
+
   const [frameworksData, setFrameworksData] = useState([]);
+  const [selectedFramework, setSelectedFramework] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
@@ -144,14 +146,19 @@ function Dashboard({ token }) {
               anchor="left"
             >
               <SelectionSidebar
-                token={token}
                 frameworksData={frameworksData}
                 years={years}
+                selectedFramework={selectedFramework}
+                setSelectedFramework={setSelectedFramework}
                 setSelectedIndicators={setSelectedIndicators}
                 setSelectedYears={setSelectedYears}
               />
             </Drawer>
-            <DataDisplay years={years} indicatorValues={indicatorValues} />
+            <DataDisplay
+              selectedFramework={selectedFramework}
+              selectedYears={selectedYears}
+              indicatorValues={indicatorValues}
+            />
           </Box>
         </Box>
       </Box>

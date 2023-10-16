@@ -18,14 +18,13 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useState } from "react";
 
 export default function SelectionSidebar({
-  token,
   frameworksData,
   years,
+  selectedFramework,
+  setSelectedFramework,
   setSelectedIndicators,
   setSelectedYears,
 }) {
-  const [selectedFramework, setSelectedFramework] = useState(null);
-
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(

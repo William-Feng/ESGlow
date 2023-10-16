@@ -5,14 +5,29 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 
-export default function DataDisplay({ years, indicatorValues }) {
+export default function DataDisplay({
+  selectedFramework,
+  selectedYears,
+  indicatorValues,
+}) {
+  const validIndicatorIds = selectedFramework
+    ? selectedFramework.metrics.flatMap((metric) =>
+        metric.indicators.map((indicator) => indicator.indicator_id)
+      )
+    : [];
+
+  const filteredData = indicatorValues.filter((row) =>
+    validIndicatorIds.includes(row.indicator_id)
+  );
+
   const structuredData = useMemo(() => {
     const dataMap = {};
 
-    indicatorValues.forEach((row) => {
+    filteredData.forEach((row) => {
       if (!dataMap[row.indicator_id]) {
         dataMap[row.indicator_id] = { name: row.indicator_name };
       }
@@ -20,40 +35,54 @@ export default function DataDisplay({ years, indicatorValues }) {
     });
 
     return Object.values(dataMap);
-  }, [indicatorValues]);
+  }, [filteredData]);
+
+  if (!selectedFramework) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+        width="100%"
+      >
+        <Typography variant="h6" color="textSecondary">
+          Please select a framework to see the ESG data
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Fragment>
-      <Box
-        sx={{
-          mt: "20px",
-          ml: "20px",
-          mr: "20px",
-          overflowX: "auto",
-          width: "100%",
-        }}
-      >
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Indicator</TableCell>
-              {years.map((year) => (
-                <TableCell key={year}>{year}</TableCell>
+    <Box
+      sx={{
+        mt: "20px",
+        ml: "20px",
+        mr: "20px",
+        overflowX: "auto",
+        width: "100%",
+      }}
+    >
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Indicator</TableCell>
+            {selectedYears.map((year) => (
+              <TableCell key={year}>{year}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {structuredData.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>{row.name}</TableCell>
+              {selectedYears.map((year) => (
+                <TableCell key={year}>{row[year] || null}</TableCell>
               ))}
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {structuredData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.name}</TableCell>
-                {years.map((year) => (
-                  <TableCell key={year}>{row[year] || null}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Box>
-    </Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
   );
 }
