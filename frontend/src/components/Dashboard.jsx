@@ -14,8 +14,10 @@ import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard({ token }) {
+  const navigate = useNavigate();
   const defaultTheme = createTheme();
 
   const years = useMemo(() => [2022, 2023], []);
@@ -40,6 +42,11 @@ function Dashboard({ token }) {
       },
     })
       .then((response) => {
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/");
+          return;
+        }
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -60,7 +67,7 @@ function Dashboard({ token }) {
           error
         )
       );
-  }, [token]);
+  }, [token, navigate]);
 
   // Fetch indicator values whenever selected indicators change
   useEffect(() => {
@@ -77,13 +84,23 @@ function Dashboard({ token }) {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 401) {
+            localStorage.removeItem("token");
+            navigate("/");
+            return;
+          }
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
         .then((data) => setIndicatorValues(data))
         .catch((error) =>
           console.error("Error fetching indicator values:", error)
         );
     }
-  }, [selectedIndicators, token, years]);
+  }, [selectedIndicators, token, years, navigate]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
