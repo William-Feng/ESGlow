@@ -31,7 +31,12 @@ export default function SelectionSidebar({ token }) {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Data received:", JSON.stringify(data));
         setFrameworksData(data);

@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import CssBaseLine from "@mui/material/CssBaseline";
 import StartPage from "./components/StartPage";
@@ -44,7 +44,12 @@ function App() {
           path="/resetPassword/success"
           element={<ResetMain page={"resetSuccess"} />}
         />
-        <Route path="/dashboard" element={<Dashboard token={token} />} />
+        <Route
+          path="/dashboard"
+          element={
+            token ? <Dashboard token={token} /> : <Navigate to="/" replace />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
