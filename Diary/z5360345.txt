@@ -21,3 +21,9 @@ Setup backend Python environment.
 Setup simple Flask server and decided to use Flask-RestX.
 Created registration endpoint.
 Started login endpoint.
+
+Week 5
+Implemented JWTs for authentication.
+Finished login endpoint.
+Created endpoint to retrieve indicator values based on company and years.
+Created endpoint to retried all frameworks, indicators, and metrics for a company.
