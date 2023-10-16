@@ -26,6 +26,10 @@ function Dashboard({ token }) {
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
 
+  const sortedSelectedYears = useMemo(() => {
+    return [...selectedYears].sort((a, b) => a - b);
+  }, [selectedYears]);
+
   useEffect(() => {
     // This will be hard coded until the company selection is implemented
     const companyId = 1;
@@ -158,7 +162,7 @@ function Dashboard({ token }) {
             </Drawer>
             <DataDisplay
               selectedFramework={selectedFramework}
-              selectedYears={selectedYears}
+              selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}
             />
           </Box>
