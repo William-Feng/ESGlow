@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   Link,
   Snackbar,
   TextField,
@@ -14,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 export default function ResetInputEmail({ setter }) {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
@@ -21,8 +23,11 @@ export default function ResetInputEmail({ setter }) {
   };
 
   const submitEmail = async () => {
+    setLoading(true);
     if (email.length === 0) {
-      return setErrorMessage("Please enter your email");
+      setErrorMessage("Please enter your email");
+      setLoading(false);
+      return;
     }
 
     const response = await fetch("/api/password-reset/request", {
@@ -37,11 +42,12 @@ export default function ResetInputEmail({ setter }) {
     });
 
     const data = await response.json();
+    setLoading(false);
     if (response.status === 200) {
       setter(email);
       navigate("/resetPassword/verify");
     } else {
-      return setErrorMessage(data.message);
+      setErrorMessage(data.message);
     }
   };
 
@@ -110,8 +116,9 @@ export default function ResetInputEmail({ setter }) {
           variant="contained"
           color="primary"
           sx={{ mt: 3, mb: 2 }}
+          disabled={loading}
         >
-          Next
+          {loading ? <CircularProgress size={24} /> : "Next"}
         </Button>
 
         <Box mt={2} textAlign="center">
