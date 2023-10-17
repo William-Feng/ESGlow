@@ -64,7 +64,8 @@ function Header(token) {
         <Button onClick={handleOpenUserMenu}>
           <Avatar
             sx={{
-              cursor: "pointer",
+              background: "#AAB7B8",
+              boxShadow: 2,
             }}
           >
             {name[0]}
