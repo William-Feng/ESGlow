@@ -7,8 +7,8 @@ import string
 from .config import VERIFICATION_CODE_LENGTH
 from .database import db, bcrypt, User
 
-send_email_address = "xuerichard1@gmail.com"
-send_email_password = "gbwv aczd mejn xmvb"
+sender_email_address = "xuerichard1@gmail.com"
+sender_email_password = "gbwv aczd mejn xmvb"
 
 
 def reset_password_request(email):
@@ -101,12 +101,12 @@ def generate_code(user):
     return code
 
 
-def send_email(receiver_email, user):
+def send_email(receiver_email_address, user):
     """
     Summary
-        Given an email address, email the email address the most recent verification code assigned to the email.
+        Send an email to the receiver's email address containing the most recent verification code assigned to the user.
     Args:
-        receiver_email (string): Email for whom the code is being sent to.
+        receiver_email_address (string): Email for whom the code is being sent to.
         user (User): User for whom the code is for.
     Return: 
         None
@@ -114,24 +114,24 @@ def send_email(receiver_email, user):
     code = generate_code(user)
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(send_email_address, send_email_password)
+        server.login(sender_email_address, sender_email_password)
         subject = "ESGlow Password Reset Code"
         body = f"""
-        Hello {receiver_email},
+        Hello {user.name},
 
         You have recently requested to reset your password for ESGlow. Your verification code is:
 
         {code}
 
-        If you have not recently requested to reset your password, please ignore this email!
+        If you have not requested to reset your password, please ignore this email.
 
         Kind Regards,
 
         ESGlow
         """
         # Formatting message with headers.
-        message = f"Subject: {subject}\nFrom: {send_email_address}\nTo: {receiver_email}\n\n{body}"
+        message = f"Subject: {subject}\nFrom: {sender_email_address}\nTo: {receiver_email_address}\n\n{body}"
 
-        server.sendmail(send_email_address, receiver_email, message)
+        server.sendmail(sender_email_address, receiver_email_address, message)
 
     return {"message": "Password Reset Request Successful!"}, 200
