@@ -11,9 +11,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register({ onSuccess }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -26,11 +27,14 @@ function Register({ onSuccess }) {
 
     const emailRegExp =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (email.length === 0 || !emailRegExp.test(email)) {
+
+    if (name.length < 3) {
+      return setErrorMessage("Name must be at least 3 characters");
+    } else if (email.length === 0 || !emailRegExp.test(email)) {
       return setErrorMessage("Invalid email address");
     } else if (password.length < 3 || password.length > 50) {
       return setErrorMessage("Password must be between 3 and 50 characters");
-    } else if (confirmPass !== password) {
+    } else if (confirmPassword !== password) {
       return setErrorMessage("Passwords do not match");
     }
 
@@ -40,6 +44,7 @@ function Register({ onSuccess }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        name,
         email,
         password,
       }),
@@ -91,6 +96,18 @@ function Register({ onSuccess }) {
           margin="normal"
           required
           fullWidth
+          id="name"
+          label="Name"
+          name="name"
+          autoComplete="name"
+          autoFocus
+          onChange={(e) => setName(e.target.value)}
+          variant="standard"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
           id="email"
           label="Email Address"
           name="email"
@@ -120,7 +137,7 @@ function Register({ onSuccess }) {
           type="password"
           id="confirmPassword"
           autoComplete="new-password"
-          onChange={(e) => setConfirmPass(e.target.value)}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           variant="standard"
         />
         <Button
