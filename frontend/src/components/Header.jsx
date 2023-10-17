@@ -49,18 +49,26 @@ function Header(token) {
   };
 
   return (
-    <>
-      <Box
-        component="img"
-        sx={{
-          height: 64,
-        }}
-        alt="logo"
-        src={Logo}
-      />
-      <Box sx={{ flexGrow: 0, marginLeft: "auto" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      <Box display="flex" alignItems="center">
+        <Box component="img" src={Logo} alt="logo" sx={{ height: 50 }} />
+      </Box>
+      <Box display="flex" alignItems="center">
         <Button onClick={handleOpenUserMenu}>
-          <Avatar>{name[0]}</Avatar>
+          <Avatar
+            sx={{
+              cursor: "pointer",
+            }}
+          >
+            {name[0]}
+          </Avatar>
         </Button>
         <Menu
           sx={{ mt: "45px" }}
@@ -83,7 +91,7 @@ function Header(token) {
           </MenuItem>
         </Menu>
       </Box>
-    </>
+    </Box>
   );
 }
 
