@@ -118,7 +118,7 @@ function Dashboard({ token }) {
           }}
         >
           <Toolbar>
-            <Header />
+            <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
             <Searchbar token={token} />
