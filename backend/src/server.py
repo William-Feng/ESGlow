@@ -5,7 +5,7 @@ from .database import User
 from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
 from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
-from .user import login, register
+from .user import login, register, invalid_auth
 
 
 api = Api()
@@ -30,8 +30,7 @@ class Register(Resource):
         email = data['email']
         password = data['password']
 
-        response, status_code = register(email, password)
-        return response, status_code
+        return register(email, password)
 
 
 @api.route("/api/login")
@@ -43,22 +42,26 @@ class Login(Resource):
         data = api.payload
         email = data['email']
         password = data['password']
-        response, status_code = login(email, password)
-        return response, status_code
+
+        return login(email, password)
 
 
 @api.route("/api/user")
 class DecodeUser(Resource):
+    @api.response(200, 'User authenticated!')
+    @api.response(401, 'Authentication required. Please log in.')
     @jwt_required()
     def get(self):
         # Decode the JWT token to retrieve the identity
-        user_email = get_jwt_identity()
+        token = get_jwt_identity()
+
+        if not token:
+            return invalid_auth()
 
         response = {
-            'email': user_email,
+            'email': token,
             # If we have other user data we want to return in future, add it here
         }
-
         return response, 200
 
 
@@ -129,36 +132,52 @@ framework_model, indicator_value_model = framework_metric_indicator_models(api)
 @api.route("/api/companies/all")
 class CompaniesAll(Resource):
     @api.response(200, 'All companies retrieved!')
+    @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self):
+        if not get_jwt_identity():
+            return invalid_auth()
+
         return all_companies()
 
 
 @api.route("/api/frameworks/all")
 class FrameworksAll(Resource):
     @api.response(200, 'All frameworks retrieved!')
+    @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self):
+        if not get_jwt_identity():
+            return invalid_auth()
+
         return all_frameworks()
 
 
 @api.route("/api/frameworks/<int:company_id>")
 class FrameworksByCompany(Resource):
     @api.response(200, 'Framework, metric & indicator information for company retrieved!', framework_model)
+    @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self, company_id):
+        if not get_jwt_identity():
+            return invalid_auth()
+
         return get_framework_info_from_company(company_id)
 
 
 @api.route("/api/values/<int:company_id>/<string:indicator_ids>/<string:years>")
 class IndicatorValues(Resource):
     @api.response(200, 'Indicator values for company retrieved!', indicator_value_model)
+    @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
     def get(self, company_id, indicator_ids, years):
+        if not get_jwt_identity():
+            return invalid_auth()
+
         try:
             selected_indicators = [int(i) for i in indicator_ids.split(',')]
             selected_years = [int(y) for y in years.split(',')]

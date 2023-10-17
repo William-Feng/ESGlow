@@ -15,37 +15,16 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const years = [2021, 2022, 2023];
-
-export default function SelectionSidebar({ token }) {
-  const [frameworksData, setFrameworksData] = useState([]);
-
-  useEffect(() => {
-    // This will be hard coded until the company selection is implemented
-    const companyId = 1;
-
-    fetch(`/api/frameworks/${companyId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Data received:", JSON.stringify(data));
-        setFrameworksData(data);
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the framework, metric and indicator information!",
-          error
-        )
-      );
-  }, [token]);
-
-  const [selectedFramework, setSelectedFramework] = useState(null);
-
+export default function SelectionSidebar({
+  frameworksData,
+  years,
+  selectedFramework,
+  setSelectedFramework,
+  setSelectedIndicators,
+  setSelectedYears,
+}) {
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
@@ -77,6 +56,26 @@ export default function SelectionSidebar({ token }) {
 
   const isMetricExpanded = (metricId) => {
     return expandedMetrics.includes(metricId);
+  };
+
+  const handleIndicatorChange = (indicatorId) => {
+    setSelectedIndicators((prevIndicators) => {
+      if (prevIndicators.includes(indicatorId)) {
+        return prevIndicators.filter((id) => id !== indicatorId);
+      } else {
+        return [...prevIndicators, indicatorId];
+      }
+    });
+  };
+
+  const handleYearChange = (year) => {
+    setSelectedYears((prevYears) => {
+      if (prevYears.includes(year)) {
+        return prevYears.filter((y) => y !== year);
+      } else {
+        return [...prevYears, year];
+      }
+    });
   };
 
   return (
@@ -197,7 +196,14 @@ export default function SelectionSidebar({ token }) {
                           sx={{ mb: 1 }}
                         >
                           <FormControlLabel
-                            control={<Checkbox defaultChecked />}
+                            control={
+                              <Checkbox
+                                defaultChecked
+                                onChange={() =>
+                                  handleIndicatorChange(indicator.indicator_id)
+                                }
+                              />
+                            }
                             label={indicator.indicator_name}
                           />
                           <Box display="flex" alignItems="center" gap={1}>
@@ -246,12 +252,16 @@ export default function SelectionSidebar({ token }) {
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
             >
-              {/* Placeholder values for years */}
               {years.map((y) => (
                 <>
                   <FormControlLabel
                     value={y}
-                    control={<Checkbox defaultChecked />}
+                    control={
+                      <Checkbox
+                        defaultChecked
+                        onChange={() => handleYearChange(y)}
+                      />
+                    }
                     label={y}
                   />
                 </>
