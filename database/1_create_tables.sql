@@ -5,6 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users (
     user_id             UUID DEFAULT uuid_generate_v4(),
+    name                TEXT NOT NULL,
     email               TEXT UNIQUE NOT NULL,
     password            TEXT NOT NULL,      -- Note that the password hash is stored instead
     verification_code   CHAR(6),
@@ -14,29 +15,29 @@ CREATE TABLE users (
 CREATE TABLE companies (
     company_id          SERIAL,
     name                TEXT UNIQUE NOT NULL,
-    description         TEXT,
+    description         TEXT NOT NULL,
     PRIMARY KEY (company_id)
 );
 
 CREATE TABLE frameworks (
     framework_id        SERIAL,
     name                TEXT UNIQUE NOT NULL,
-    description         TEXT,
+    description         TEXT NOT NULL,
     PRIMARY KEY (framework_id)
 );
 
 CREATE TABLE metrics (
     metric_id           SERIAL,
     name                TEXT NOT NULL,
-    description         TEXT,
+    description         TEXT NOT NULL,
     PRIMARY KEY (metric_id)
 );
 
 CREATE TABLE indicators (
     indicator_id        SERIAL,
     name                TEXT NOT NULL,
-    description         TEXT,
-    source              TEXT,
+    description         TEXT NOT NULL,
+    source              TEXT NOT NULL,
     PRIMARY KEY (indicator_id)
 );
 
