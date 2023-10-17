@@ -67,7 +67,18 @@ def client():
 
 @pytest.fixture
 def client_with_user(client):
+    """
+    Summary:
+        This fixture consumes a Flask test client instance for simulating HTTP
+        requests to the Flask application during testing. This client is then
+        registered into the system and stored in the database.
+
+    Yields:
+        FlaskClient: An instance of the Flask test client that is now registered.
+    """
+
     data = {
+        "name": "Person",
         "email": "user1@example.com",
         "password": "password123"
     }

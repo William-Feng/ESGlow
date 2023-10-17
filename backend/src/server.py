@@ -27,10 +27,11 @@ class Register(Resource):
     @api.response(400, 'User already exists.')
     def post(self):
         data = api.payload
+        name = data['name']
         email = data['email']
         password = data['password']
 
-        return register(email, password)
+        return register(name, email, password)
 
 
 @api.route("/api/login")
