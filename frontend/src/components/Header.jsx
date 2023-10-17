@@ -9,9 +9,11 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import Logo from "../assets/logo-white.png";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (e) => {
     setAnchorElUser(e.currentTarget);
@@ -19,6 +21,12 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    handleCloseUserMenu();
+    navigate("/");
   };
 
   return (
@@ -70,8 +78,8 @@ function Header() {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          <MenuItem key="Account" onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">Account</Typography>
+          <MenuItem key="Logout" onClick={handleLogout}>
+            <Typography textAlign="center">Logout</Typography>
           </MenuItem>
         </Menu>
       </Box>
