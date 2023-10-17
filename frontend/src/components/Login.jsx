@@ -2,7 +2,6 @@ import {
   Alert,
   Box,
   Button,
-  Grid,
   Link,
   Snackbar,
   TextField,
@@ -68,9 +67,22 @@ function Login({ onSuccess }) {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      <Typography variant="h5">Welcome</Typography>
-      <Typography variant="h2">Login</Typography>
-      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+      <Typography variant="h4" gutterBottom>
+        Welcome Back!
+      </Typography>
+      <Typography variant="subtitle1" color="textSecondary" mb={4}>
+        Log in to access your dashboard
+      </Typography>
+      <Box
+        component="form"
+        noValidate
+        onSubmit={handleSubmit}
+        sx={{
+          width: "90%",
+          maxWidth: "420px",
+          p: 2,
+        }}
+      >
         <TextField
           margin="normal"
           required
@@ -81,6 +93,7 @@ function Login({ onSuccess }) {
           autoComplete="email"
           autoFocus
           onChange={(e) => setEmail(e.target.value)}
+          variant="standard"
         />
         <TextField
           margin="normal"
@@ -92,25 +105,30 @@ function Login({ onSuccess }) {
           id="password"
           autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
+          variant="standard"
         />
-        <Grid item xs>
-          <Link href="/resetpassword" variant="body2">
-            Forgot your password?
+        <Box mt={2}>
+          <Link href="/resetpassword" variant="body2" color="textSecondary">
+            Forgot password?
           </Link>
-        </Grid>
+        </Box>
         <Button
           type="submit"
           fullWidth
           variant="contained"
+          color="primary"
           sx={{ mt: 3, mb: 2 }}
         >
           Log In
         </Button>
-        <Grid item>
-          <Link href="/register" variant="body2">
-            Don't have an account? Register here
-          </Link>
-        </Grid>
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="textSecondary">
+            Don't have an account?{" "}
+            <Link href="/register" color="primary" underline="hover">
+              Register here
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
