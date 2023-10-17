@@ -3,7 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Grid,
   Link,
   Snackbar,
   TextField,
@@ -38,7 +37,6 @@ export default function ResetInputEmail({ setter }) {
     });
 
     const data = await response.json();
-    console.log(data);
     if (response.status === 200) {
       setter(email);
       navigate("/resetPassword/verify");
@@ -57,22 +55,42 @@ export default function ResetInputEmail({ setter }) {
         alignItems: "center",
       }}
     >
-      <Box sx={{ margin: 5, textAlign: "center" }}>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
+
+      <Typography variant="h4" gutterBottom>
+        Forgot Password?
+      </Typography>
+
+      <Box
+        component="form"
+        noValidate
+        sx={{
+          width: "90%",
+          maxWidth: "420px",
+          p: 2,
+        }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitEmail();
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          color="textSecondary"
+          mb={2}
+          textAlign="center"
         >
-          <Alert severity="error">{errorMessage}</Alert>
-        </Snackbar>
-        <Typography variant="h2">Forgot Password?</Typography>
-        <Typography variant="subtitle1">
           Enter the email associated with your account, and we'll send you a
           code to reset your password.
         </Typography>
-      </Box>
-      <Box component="form" noValidate sx={{ mt: 1 }}>
+
         <TextField
           margin="normal"
           required
@@ -83,21 +101,27 @@ export default function ResetInputEmail({ setter }) {
           autoComplete="email"
           autoFocus
           onChange={(e) => setEmail(e.target.value)}
+          variant="standard"
         />
 
         <Button
+          type="submit"
           fullWidth
           variant="contained"
+          color="primary"
           sx={{ mt: 3, mb: 2 }}
-          onClick={(e) => submitEmail(e.target.value)}
         >
           Next
         </Button>
-        <Grid item xs>
-          <Link href="/" variant="body2">
-            Return to home screen
-          </Link>
-        </Grid>
+
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="textSecondary">
+            Remember your password?{" "}
+            <Link href="/" color="primary" underline="hover">
+              Return to login
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
