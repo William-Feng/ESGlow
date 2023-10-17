@@ -45,5 +45,17 @@ def login(email, password):
     }, 200
 
 
+def get_user(email):
+    user = User.query.filter_by(email=email).first()
+    # Check if user exists
+    if not user:
+        return {"message": "User doesn't exist."}, 400
+
+    return {
+        'name': user.name,
+        'email': user.email
+    }, 200
+
+
 def invalid_auth():
     return {'message': 'Authentication required. Please log in.'}, 401

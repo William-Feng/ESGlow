@@ -5,7 +5,7 @@ from .database import User
 from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
 from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
-from .user import login, register, invalid_auth
+from .user import login, register, get_user, invalid_auth
 
 
 api = Api()
@@ -59,11 +59,7 @@ class DecodeUser(Resource):
         if not token:
             return invalid_auth()
 
-        response = {
-            'email': token,
-            # If we have other user data we want to return in future, add it here
-        }
-        return response, 200
+        return get_user(token)
 
 
 # ===================================================================
@@ -113,11 +109,12 @@ class PasswordResetVerify(Resource):
 class PasswordResetChange(Resource):
     @api.expect(password_reset_change_model, validate=True)
     @api.response(200, 'Password Successfully Reset!')
-    @api.response(400, 'Email is incorrect!')
+    @api.response(400, 'Email is incorrect.')
     def post(self):
         data = api.payload
         email = data['email']
         new_password = data['new_password']
+
         return reset_password_change(email, new_password)
 
 

@@ -26,7 +26,7 @@ def reset_password_request(email):
     if user:
         return send_email(email, user)
     else:
-        return ({"message": "Email does not exist!"}, 400)
+        return ({"message": "Email does not exist."}, 400)
 
 
 def reset_password_verify(email, code):
@@ -52,12 +52,12 @@ def reset_password_verify(email, code):
         else:
             return {
                 'verified': False,
-                "message": "Verification Code is incorrect!"
+                "message": "Verification Code is incorrect."
             }, 400
     else:
         return {
             'verified': False,
-            "message": "Email does not exist!"
+            "message": "Email does not exist."
         }, 400
 
 
@@ -80,6 +80,7 @@ def reset_password_change(email, new_password):
     return {
         "message": "Password Successfully Reset!",
     }, 200
+
 
 def generate_code(user):
     """
@@ -114,7 +115,7 @@ def send_email(receiver_email, user):
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(send_email_address, send_email_password)
-        subject = "Your ESGlow Password Reset Code"
+        subject = "ESGlow Password Reset Code"
         body = f"""
         Hello {receiver_email},
 
