@@ -1,14 +1,11 @@
-from flask_jwt_extended import get_jwt_identity
 import secrets
 import smtplib
 import ssl
 import string
+import textwrap
 
-from .config import VERIFICATION_CODE_LENGTH
+from .config import VERIFICATION_CODE_LENGTH, SENDER_EMAIL_ADDRESS, SENDER_EMAIL_PASSWORD
 from .database import db, bcrypt, User
-
-sender_email_address = "xuerichard1@gmail.com"
-sender_email_password = "gbwv aczd mejn xmvb"
 
 
 def reset_password_request(email):
@@ -114,9 +111,9 @@ def send_email(receiver_email_address, user):
     code = generate_code(user)
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email_address, sender_email_password)
+        server.login(SENDER_EMAIL_ADDRESS, SENDER_EMAIL_PASSWORD)
         subject = "ESGlow Password Reset Code"
-        body = f"""
+        body = textwrap.dedent(f"""
         Hello {user.name},
 
         You have recently requested to reset your password for ESGlow. Your verification code is:
@@ -128,10 +125,11 @@ def send_email(receiver_email_address, user):
         Kind Regards,
 
         ESGlow
-        """
-        # Formatting message with headers.
-        message = f"Subject: {subject}\nFrom: {sender_email_address}\nTo: {receiver_email_address}\n\n{body}"
+        """)
 
-        server.sendmail(sender_email_address, receiver_email_address, message)
+        # Formatting message with headers.
+        message = f"Subject: {subject}\nFrom: {SENDER_EMAIL_ADDRESS}\nTo: {receiver_email_address}\n\n{body}"
+
+        server.sendmail(SENDER_EMAIL_ADDRESS, receiver_email_address, message)
 
     return {"message": "Password Reset Request Successful!"}, 200
