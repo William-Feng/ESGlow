@@ -80,8 +80,9 @@ export default function SelectionSidebar({
   };
 
   const [indicatorCheckedState, setIndicatorCheckedState] = useState({});
+  
   useEffect(() => {
-    // Initialize the indicatorCheckedState based on selectedIndicators
+    // Initialise the indicatorCheckedState based on selectedIndicators
     const initialCheckedState = {};
     selectedIndicators.forEach((indicatorId) => {
       initialCheckedState[indicatorId] = true;
@@ -252,7 +253,7 @@ export default function SelectionSidebar({
                             </Tooltip>
                             <Chip
                               label={`${indicator.predefined_weight}`}
-                              color="success"
+                              color={indicatorCheckedState[indicator.indicator_id] ? "success" : "warning"}
                             />
                           </Box>
                         </Box>
