@@ -151,7 +151,6 @@ function Dashboard({ token }) {
         >
           <Box
             sx={{
-              border: "dotted",
               textAlign: "center",
               maxHeight: "450px",
             }}

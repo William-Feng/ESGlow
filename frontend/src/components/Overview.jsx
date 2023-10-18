@@ -12,7 +12,7 @@ export default function Overview() {
     >
       <Typography
         component="h1"
-        variant="h2"
+        variant="h3"
         color="text.primary"
         gutterBottom
         textAlign="center"
