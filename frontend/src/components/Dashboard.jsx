@@ -32,11 +32,14 @@ function Dashboard({ token }) {
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
   }, [selectedYears]);
-  console.log(selectedCompany);
 
   useEffect(() => {
     // This will be hard coded until the company selection is implemented
-    const companyId = 1;
+    const companyId = selectedCompany ? selectedCompany.company_id : 0;
+
+    if (!companyId) {
+      return;
+    }
 
     fetch(`/api/frameworks/${companyId}`, {
       headers: {
@@ -69,7 +72,7 @@ function Dashboard({ token }) {
           error
         )
       );
-  }, [token, navigate]);
+  }, [token, navigate, selectedCompany]);
 
   // Fetch indicator values whenever selected indicators change
   useEffect(() => {
