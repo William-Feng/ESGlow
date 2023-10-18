@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import React from "react";
 
-export default function Searchbar({ token }) {
+export default function Searchbar({ token, setCompany }) {
   const [view, setView] = useState("single");
   const [companyList, setCompanyList] = useState([]);
 
@@ -47,7 +47,11 @@ export default function Searchbar({ token }) {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={companyList}
+        onChange={(_, selectedName) => {
+          selectedName ? setCompany(companyList.find(company => company.name === selectedName))
+                        : setCompany(null);
+        }}
+        options={ companyList.map(c => c.name) }
         sx={{
           width: "400px",
           backgroundColor: "#E8E8E8",
