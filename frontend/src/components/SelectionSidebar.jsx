@@ -25,6 +25,7 @@ export default function SelectionSidebar({
   setSelectedIndicators,
   setSelectedYears,
 }) {
+
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
