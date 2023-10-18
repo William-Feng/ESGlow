@@ -38,10 +38,10 @@ function Dashboard({ token }) {
     const companyId = selectedCompany ? selectedCompany.company_id : 0;
     if (!companyId) {
       setSelectedFramework(null);
+      setFrameworksData(null);
       return;
     }
 
-    console.log(companyId)
     fetch(`/api/frameworks/${companyId}`, {
       headers: {
         Authorization: `Bearer ${token}`,

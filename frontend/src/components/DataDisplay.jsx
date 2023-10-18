@@ -39,7 +39,6 @@ export default function DataDisplay({
     return Object.values(dataMap);
   }, [filteredData]);
 
-  console.log('selected', selectedFramework, selectedCompany)
 
   if (!(selectedFramework && selectedCompany)) {
     const keyword = selectedCompany ? "framework" : "company";

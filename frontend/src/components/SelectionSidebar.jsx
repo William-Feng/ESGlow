@@ -110,7 +110,8 @@ export default function SelectionSidebar({
               }
               onChange={handleFrameworkChange}
             >
-              {frameworksData.map((framework) => (
+              {frameworksData ?
+              frameworksData.map((framework) => (
                 <Box
                   display="flex"
                   alignItems="center"
@@ -127,7 +128,14 @@ export default function SelectionSidebar({
                     <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                   </Tooltip>
                 </Box>
-              ))}
+              ))
+              :
+              (
+                <Typography style={{ color: "red" }}>
+                  Select a company to see the associated frameworks
+                </Typography>
+              )
+            }
             </RadioGroup>
           </FormControl>
         </AccordionDetails>
