@@ -60,6 +60,8 @@ function Dashboard({ token }) {
       })
       .then((data) => {
         setFrameworksData(data);
+        // selection is refreshed
+        setSelectedFramework(null);
         const allIndicators = data.flatMap((framework) =>
           framework.metrics.flatMap((metric) =>
             metric.indicators.map((indicator) => indicator.indicator_id)
