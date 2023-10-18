@@ -47,7 +47,7 @@ export default function Searchbar({ token, setCompany }) {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        onChange={(event, newValue) => {
+        onChange={(_, newValue) => {
           setCompany(newValue);
         }}
         options={companyList}

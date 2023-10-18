@@ -32,6 +32,7 @@ function Dashboard({ token }) {
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
   }, [selectedYears]);
+  console.log(selectedCompany);
 
   useEffect(() => {
     // This will be hard coded until the company selection is implemented
