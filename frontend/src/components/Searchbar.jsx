@@ -50,7 +50,7 @@ export default function Searchbar({ token, setCompany }) {
         onChange={(_, newValue) => {
           setCompany(newValue);
         }}
-        options={companyList}
+        options={ companyList.map(c => c.name) }
         sx={{
           width: "400px",
           backgroundColor: "#E8E8E8",

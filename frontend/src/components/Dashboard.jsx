@@ -180,6 +180,7 @@ function Dashboard({ token }) {
               />
             </Drawer>
             <DataDisplay
+              selectedCompany={selectedCompany}
               selectedFramework={selectedFramework}
               selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}
