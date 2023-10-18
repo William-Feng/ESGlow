@@ -90,21 +90,30 @@ export default function SelectionSidebar({
   }, [selectedIndicators]);
 
   const updateMetricIndicators = (indicators, checked) => {
-    indicators.forEach((indicator) => {
-      const indicatorId = indicator.indicator_id;
-      setIndicatorCheckedState((prevCheckedState) => ({
-        ...prevCheckedState,
-        [indicatorId]: checked,
-      }));
-      setSelectedIndicators((prevIndicators) => {
-        if (checked) {
-          return [...prevIndicators, indicatorId];
-        } else {
-          return prevIndicators.filter((id) => id !== indicatorId);
-        }
+    setIndicatorCheckedState((prevCheckedState) => {
+      const updatedCheckedState = { ...prevCheckedState };
+      indicators.forEach((indicator) => {
+        updatedCheckedState[indicator.indicator_id] = checked;
       });
+      updatedCheckedState[`metric_${indicators[0].metric_id}`] = checked || indicators.some(
+        (indicator) => updatedCheckedState[indicator.indicator_id]
+      );
+      return updatedCheckedState;
+    });
+
+    setSelectedIndicators((prevIndicators) => {
+      const updatedIndicators = prevIndicators.filter(
+        (id) => !indicators.some((indicator) => indicator.indicator_id === id)
+      );
+      return checked
+        ? [...updatedIndicators, ...indicators.map((indicator) => indicator.indicator_id)]
+        : updatedIndicators;
     });
   };
+
+  const isAnyIndicatorChecked = (metric) => metric.indicators.some(
+    (indicator) => indicatorCheckedState[indicator.indicator_id]
+  );
 
   return (
     <Box>
@@ -196,7 +205,10 @@ export default function SelectionSidebar({
                     onClick={() => toggleMetric(metric.metric_id)}
                   >
                     <Box display="flex" alignItems="center">
-                      <Checkbox defaultChecked onChange={(e) => updateMetricIndicators(metric.indicators, e.target.checked)}/>
+                      <Checkbox
+                        checked={indicatorCheckedState[`metric_${metric.metric_id}`] || isAnyIndicatorChecked(metric)}
+                        onChange={(e) => updateMetricIndicators(metric.indicators, e.target.checked)}
+                      />
                       <Typography fontWeight="bold">
                         {metric.metric_name}
                       </Typography>
@@ -212,7 +224,6 @@ export default function SelectionSidebar({
                       <ExpandMoreIcon />
                     </Box>
                   </Box>
-
                   {isMetricExpanded(metric.metric_id) && (
                     <Box sx={{ mt: 1, pl: 5 }}>
                       {metric.indicators.map((indicator) => (
