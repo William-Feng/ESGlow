@@ -72,7 +72,7 @@ function Dashboard({ token }) {
       .catch((error) =>
         console.error(
           "There was an error fetching the framework, metric and indicator information!",
-          error
+          error 
         )
       );
   }, [token, navigate, selectedCompany]);
