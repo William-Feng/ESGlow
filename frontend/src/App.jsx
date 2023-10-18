@@ -1,11 +1,9 @@
-import "./App.css";
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import CssBaseLine from "@mui/material/CssBaseline";
 import StartPage from "./components/StartPage";
 import Dashboard from "./components/Dashboard";
-import ResetMain from "./components/ResetMain";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -30,19 +28,19 @@ function App() {
         />
         <Route
           path="/resetPassword"
-          element={<ResetMain page={"resetMain"} />}
+          element={<StartPage page={"resetPassword"} />}
         />
         <Route
           path="/resetPassword/verify"
-          element={<ResetMain page={"resetVerify"} />}
+          element={<StartPage page={"resetVerify"} />}
         />
         <Route
           path="/resetPassword/setNewPassword"
-          element={<ResetMain page={"resetNewPW"} />}
+          element={<StartPage page={"resetNewPW"} />}
         />
         <Route
           path="/resetPassword/success"
-          element={<ResetMain page={"resetSuccess"} />}
+          element={<StartPage page={"resetSuccess"} />}
         />
         <Route
           path="/dashboard"

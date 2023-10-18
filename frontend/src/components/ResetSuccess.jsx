@@ -20,20 +20,31 @@ export default function ResetSuccess({ remover }) {
         alignItems: "center",
       }}
     >
-      <Box sx={{ margin: 5, textAlign: "center" }}>
-        <Typography variant="h3">Successful Password Reset!</Typography>
-        <Typography variant="subtitle1">
-          You can now use your new password to log in to your account.
+      <Typography variant="h4" gutterBottom>
+        Password Reset Successful
+      </Typography>
+
+      <Box
+        component="div"
+        sx={{
+          width: "90%",
+          maxWidth: "420px",
+          p: 2,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="subtitle1" color="textSecondary" mb={2}>
+          You can now use your new password to log in.
         </Typography>
-      </Box>
-      <Box noValidate sx={{ mt: 1 }}>
+
         <Button
           fullWidth
           variant="contained"
+          color="primary"
           sx={{ mt: 3, mb: 2 }}
-          onClick={() => handleResetSuccess()}
+          onClick={handleResetSuccess}
         >
-          Login
+          Go to Login
         </Button>
       </Box>
     </Box>

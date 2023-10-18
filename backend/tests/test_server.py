@@ -3,6 +3,7 @@ from flask_jwt_extended import decode_token
 
 def test_register_endpoint(client):
     data = {
+        "name": "Person",
         "email": "test@example.com",
         "password": "password123"
     }
@@ -15,21 +16,24 @@ def test_register_endpoint(client):
     # Attempting duplicate email registration
     response = client.post('/api/register', json=data)
     assert response.status_code == 400
-    assert b"Email already exists." in response.data
+    assert b"User with email already exists." in response.data
 
 
 def test_login_endpoint(client_with_user):
     valid_details = {
+        "name": "Person",
         "email": "user1@example.com",
         "password": "password123"
     }
 
     invalid_email = {
+        "name": "Person",
         "email": "user2@example.com",
         "password": "password123"
     }
 
     invalid_password = {
+        "name": "Person",
         "email": "user1@example.com",
         "password": "password1234"
     }

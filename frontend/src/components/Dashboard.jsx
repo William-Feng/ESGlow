@@ -112,13 +112,14 @@ function Dashboard({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            bgcolor: "primary.main",
+            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
         >
           <Toolbar>
-            <Header />
+            <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
             <Searchbar token={token} />
@@ -138,7 +139,6 @@ function Dashboard({ token }) {
           <Box
             sx={{
               border: "dotted",
-              margin: "0",
               textAlign: "center",
               maxHeight: "450px",
             }}
