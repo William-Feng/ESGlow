@@ -173,6 +173,7 @@ function Dashboard({ token }) {
                 years={years}
                 selectedFramework={selectedFramework}
                 setSelectedFramework={setSelectedFramework}
+                selectedIndicators={selectedIndicators}
                 setSelectedIndicators={setSelectedIndicators}
                 setSelectedYears={setSelectedYears}
               />

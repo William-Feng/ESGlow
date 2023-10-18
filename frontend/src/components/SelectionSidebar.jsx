@@ -15,13 +15,14 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SelectionSidebar({
   frameworksData,
   years,
   selectedFramework,
   setSelectedFramework,
+  selectedIndicators,
   setSelectedIndicators,
   setSelectedYears,
 }) {
@@ -58,12 +59,12 @@ export default function SelectionSidebar({
     return expandedMetrics.includes(metricId);
   };
 
-  const handleIndicatorChange = (indicatorId) => {
+  const handleIndicatorChange = (indicatorId, checked) => {
     setSelectedIndicators((prevIndicators) => {
-      if (prevIndicators.includes(indicatorId)) {
-        return prevIndicators.filter((id) => id !== indicatorId);
-      } else {
+      if (checked) {
         return [...prevIndicators, indicatorId];
+      } else {
+        return prevIndicators.filter((id) => id !== indicatorId);
       }
     });
   };
@@ -75,6 +76,33 @@ export default function SelectionSidebar({
       } else {
         return [...prevYears, year];
       }
+    });
+  };
+
+  const [indicatorCheckedState, setIndicatorCheckedState] = useState({});
+  useEffect(() => {
+    // Initialize the indicatorCheckedState based on selectedIndicators
+    const initialCheckedState = {};
+    selectedIndicators.forEach((indicatorId) => {
+      initialCheckedState[indicatorId] = true;
+    });
+    setIndicatorCheckedState(initialCheckedState);
+  }, [selectedIndicators]);
+
+  const updateMetricIndicators = (indicators, checked) => {
+    indicators.forEach((indicator) => {
+      const indicatorId = indicator.indicator_id;
+      setIndicatorCheckedState((prevCheckedState) => ({
+        ...prevCheckedState,
+        [indicatorId]: checked,
+      }));
+      setSelectedIndicators((prevIndicators) => {
+        if (checked) {
+          return [...prevIndicators, indicatorId];
+        } else {
+          return prevIndicators.filter((id) => id !== indicatorId);
+        }
+      });
     });
   };
 
@@ -168,7 +196,7 @@ export default function SelectionSidebar({
                     onClick={() => toggleMetric(metric.metric_id)}
                   >
                     <Box display="flex" alignItems="center">
-                      <Checkbox defaultChecked />
+                      <Checkbox defaultChecked onChange={(e) => updateMetricIndicators(metric.indicators, e.target.checked)}/>
                       <Typography fontWeight="bold">
                         {metric.metric_name}
                       </Typography>
@@ -198,9 +226,10 @@ export default function SelectionSidebar({
                           <FormControlLabel
                             control={
                               <Checkbox
-                                defaultChecked
-                                onChange={() =>
-                                  handleIndicatorChange(indicator.indicator_id)
+                                key={"_checkbox_" + indicator.indicatorId}
+                                checked={indicatorCheckedState[indicator.indicator_id]}
+                                onChange={(e) =>
+                                  handleIndicatorChange(indicator.indicator_id, e.target.checked)
                                 }
                               />
                             }
