@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import React from "react";
 
-export default function Searchbar({ token }) {
+export default function Searchbar({ token, setCompany }) {
   const [view, setView] = useState("single");
   const [companyList, setCompanyList] = useState([]);
 
@@ -47,6 +47,9 @@ export default function Searchbar({ token }) {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
+        onChange={(event, newValue) => {
+          setCompany(newValue);
+        }}
         options={companyList}
         sx={{
           width: "400px",
