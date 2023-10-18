@@ -48,7 +48,8 @@ export default function Searchbar({ token, setCompany }) {
         disablePortal
         id="combo-box-demo"
         onChange={(_, selectedName) => {
-          setCompany(companyList.find(company => company.name === selectedName));
+          selectedName ? setCompany(companyList.find(company => company.name === selectedName))
+                        : setCompany(null);
         }}
         options={ companyList.map(c => c.name) }
         sx={{

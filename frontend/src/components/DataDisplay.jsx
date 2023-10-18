@@ -39,9 +39,11 @@ export default function DataDisplay({
     return Object.values(dataMap);
   }, [filteredData]);
 
-  if (!(selectedFramework || selectedCompany)) {
-    const keyword = selectedCompany ? "framework" : "company";
+  console.log('selected', selectedFramework, selectedCompany)
 
+  if (!(selectedFramework && selectedCompany)) {
+    const keyword = selectedCompany ? "framework" : "company";
+    
     return (
       <Box
         sx={{
@@ -57,6 +59,7 @@ export default function DataDisplay({
       </Box>
     );
   }
+
 
   return (
     <Box

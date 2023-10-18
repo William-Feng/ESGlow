@@ -34,13 +34,14 @@ function Dashboard({ token }) {
   }, [selectedYears]);
 
   useEffect(() => {
-    // This will be hard coded until the company selection is implemented
+    // new selection of company wipes data display to blank
     const companyId = selectedCompany ? selectedCompany.company_id : 0;
-
     if (!companyId) {
+      setSelectedFramework(null);
       return;
     }
 
+    console.log(companyId)
     fetch(`/api/frameworks/${companyId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -77,8 +78,13 @@ function Dashboard({ token }) {
   // Fetch indicator values whenever selected indicators change
   useEffect(() => {
     if (selectedIndicators.length) {
-      // This is hard coded for now
-      const companyId = 1;
+
+      // new selection of company wipes data display to blank
+      const companyId = selectedCompany ? selectedCompany.company_id : 0;
+      if (!companyId) {
+        setSelectedFramework(null);
+        return;
+      }
       // Convert the selectedIndicators to a set to ensure there are no duplicates
       // This is because frameworks may encompass the same metrics and hence the same indicators
       const indicatorIds = [...new Set(selectedIndicators)].join(",");
@@ -105,7 +111,7 @@ function Dashboard({ token }) {
           console.error("Error fetching indicator values:", error)
         );
     }
-  }, [selectedIndicators, token, years, navigate]);
+  }, [selectedIndicators, token, years, navigate, selectedCompany]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
