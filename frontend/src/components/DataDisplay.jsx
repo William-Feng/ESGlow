@@ -41,7 +41,6 @@ export default function DataDisplay({
 
   if (!(selectedFramework && selectedCompany)) {
     const keyword = selectedCompany ? "framework" : "company";
-    
     return (
       <Box
         sx={{
