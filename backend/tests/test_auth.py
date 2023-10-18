@@ -1,7 +1,7 @@
 def get_access_token(client):
     # Registering a test user will return a access token
     response = client.post(
-        '/register', json={"email": "testjwt@example.com", "password": "password123"})
+        '/register', json={"name": "Person", "email": "testjwt@example.com", "password": "password123"})
 
     return response.json['access_token']
 
