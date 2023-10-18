@@ -22,6 +22,7 @@ function Dashboard({ token }) {
 
   const years = useMemo(() => [2022, 2023], []);
 
+  const [selectedCompany, setCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
@@ -33,8 +34,13 @@ function Dashboard({ token }) {
   }, [selectedYears]);
 
   useEffect(() => {
-    // This will be hard coded until the company selection is implemented
-    const companyId = 1;
+    // new selection of company wipes data display to blank
+    const companyId = selectedCompany ? selectedCompany.company_id : 0;
+    if (!companyId) {
+      setSelectedFramework(null);
+      setFrameworksData(null);
+      return;
+    }
 
     fetch(`/api/frameworks/${companyId}`, {
       headers: {
@@ -54,6 +60,8 @@ function Dashboard({ token }) {
       })
       .then((data) => {
         setFrameworksData(data);
+        // selection is refreshed
+        setSelectedFramework(null);
         const allIndicators = data.flatMap((framework) =>
           framework.metrics.flatMap((metric) =>
             metric.indicators.map((indicator) => indicator.indicator_id)
@@ -64,16 +72,21 @@ function Dashboard({ token }) {
       .catch((error) =>
         console.error(
           "There was an error fetching the framework, metric and indicator information!",
-          error
+          error 
         )
       );
-  }, [token, navigate]);
+  }, [token, navigate, selectedCompany]);
 
   // Fetch indicator values whenever selected indicators change
   useEffect(() => {
     if (selectedIndicators.length) {
-      // This is hard coded for now
-      const companyId = 1;
+
+      // new selection of company wipes data display to blank
+      const companyId = selectedCompany ? selectedCompany.company_id : 0;
+      if (!companyId) {
+        setSelectedFramework(null);
+        return;
+      }
       // Convert the selectedIndicators to a set to ensure there are no duplicates
       // This is because frameworks may encompass the same metrics and hence the same indicators
       const indicatorIds = [...new Set(selectedIndicators)].join(",");
@@ -100,7 +113,7 @@ function Dashboard({ token }) {
           console.error("Error fetching indicator values:", error)
         );
     }
-  }, [selectedIndicators, token, years, navigate]);
+  }, [selectedIndicators, token, years, navigate, selectedCompany]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -112,16 +125,17 @@ function Dashboard({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            bgcolor: "primary.main",
+            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
         >
           <Toolbar>
-            <Header />
+            <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <Searchbar token={token} />
+            <Searchbar token={token} setCompany={setCompany} />
           </Toolbar>
         </AppBar>
         <Box
@@ -138,7 +152,6 @@ function Dashboard({ token }) {
           <Box
             sx={{
               border: "dotted",
-              margin: "0",
               textAlign: "center",
               maxHeight: "450px",
             }}
@@ -179,6 +192,7 @@ function Dashboard({ token }) {
               />
             </Drawer>
             <DataDisplay
+              selectedCompany={selectedCompany}
               selectedFramework={selectedFramework}
               selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}

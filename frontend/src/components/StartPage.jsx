@@ -6,8 +6,23 @@ import React from "react";
 import Login from "./Login";
 import Register from "./Register";
 import Logo from "../assets/logo-white.png";
+import { useState } from "react";
+import ResetInputEmail from "./ResetInputEmail";
+import ResetVerify from "./ResetVerify";
+import ResetPassword from "./ResetPassword";
+import ResetSuccess from "./ResetSuccess";
 
 export default function StartPage({ page, onSuccess }) {
+  const [email, setEmail] = useState(localStorage.getItem("email"));
+
+  function setUserEmail(email) {
+    setEmail(email);
+    localStorage.setItem("email", email);
+  }
+  function removeUserEmail() {
+    localStorage.removeItem("email");
+  }
+
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
@@ -152,6 +167,10 @@ export default function StartPage({ page, onSuccess }) {
       >
         {page === "login" && <Login onSuccess={onSuccess} />}
         {page === "register" && <Register onSuccess={onSuccess} />}
+        {page === "resetPassword" && <ResetInputEmail setter={setUserEmail} />}
+        {page === "resetVerify" && <ResetVerify email={email} />}
+        {page === "resetNewPW" && <ResetPassword email={email} />}
+        {page === "resetSuccess" && <ResetSuccess remover={removeUserEmail} />}
       </Grid>
     </Grid>
   );

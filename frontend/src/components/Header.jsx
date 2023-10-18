@@ -1,16 +1,37 @@
-import {
-  Box,
-  Typography,
-  Tooltip,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import { useState } from "react";
+import { Box, Typography, Button, Avatar, Menu, MenuItem } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo-white.png";
 
-function Header() {
+function Header(token) {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    fetch("/api/user", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/");
+          return;
+        }
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setName(data.name);
+      })
+      .catch((error) =>
+        console.error("There was an error fetching the user's name!", error)
+      );
+  }, [token, navigate]);
+
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (e) => {
@@ -21,39 +42,35 @@ function Header() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    handleCloseUserMenu();
+    navigate("/");
+  };
+
   return (
-    <>
-      <Box
-        component="img"
-        sx={{
-          height: 64,
-        }}
-        alt="logo"
-        src={Logo}
-      />
-      <Typography
-        variant="h6"
-        noWrap
-        component="a"
-        href="#app-bar-with-responsive-menu"
-        sx={{
-          mr: 3,
-          display: { xs: "none", md: "flex" },
-          fontFamily: "monospace",
-          fontWeight: 700,
-          letterSpacing: ".3rem",
-          color: "white",
-          textDecoration: "none",
-        }}
-      >
-        ESGLOW
-      </Typography>
-      <Box sx={{ flexGrow: 0, marginLeft: "auto" }}>
-        <Tooltip title="Open settings">
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-          </IconButton>
-        </Tooltip>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      <Box display="flex" alignItems="center">
+        <Box component="img" src={Logo} alt="logo" sx={{ height: 50 }} />
+      </Box>
+      <Box display="flex" alignItems="center">
+        <Button onClick={handleOpenUserMenu}>
+          <Avatar
+            sx={{
+              background: "#AAB7B8",
+              boxShadow: 2,
+            }}
+          >
+            {name[0]}
+          </Avatar>
+        </Button>
         <Menu
           sx={{ mt: "45px" }}
           id="menu-appbar"
@@ -70,12 +87,12 @@ function Header() {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          <MenuItem key="Account" onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">Account</Typography>
+          <MenuItem key="Logout" onClick={handleLogout}>
+            <Typography textAlign="center">Logout</Typography>
           </MenuItem>
         </Menu>
       </Box>
-    </>
+    </Box>
   );
 }
 

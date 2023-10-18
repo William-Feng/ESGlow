@@ -10,6 +10,7 @@ import {
 import { useMemo } from "react";
 
 export default function DataDisplay({
+  selectedCompany,
   selectedFramework,
   selectedYears,
   indicatorValues,
@@ -38,7 +39,8 @@ export default function DataDisplay({
     return Object.values(dataMap);
   }, [filteredData]);
 
-  if (!selectedFramework) {
+  if (!(selectedFramework && selectedCompany)) {
+    const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
         sx={{
@@ -49,11 +51,12 @@ export default function DataDisplay({
         }}
       >
         <Typography variant="h6" color="textSecondary">
-          Please select a framework to see the ESG data.
+          Please select a {keyword} to see the ESG data.
         </Typography>
       </Box>
     );
   }
+
 
   return (
     <Box
