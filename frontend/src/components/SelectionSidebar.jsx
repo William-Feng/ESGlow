@@ -74,15 +74,7 @@ export default function SelectionSidebar({
       } else {
         return prevIndicators.filter((id) => id !== indicatorId);
       }
-    });
-    console.log('list of ind:', selectedIndicators)
-    
-    // setIndicatorCheckedState((prevCheckedState) => {
-    //   const updatedCheckedState = { ...prevCheckedState };
-    //   updatedCheckedState[indicatorId] = checked;
-    //   return updatedCheckedState;
-    // });
-    // console.log('new', indicatorCheckedState)
+    });  
   };
 
   const handleYearChange = (year) => {
@@ -95,37 +87,13 @@ export default function SelectionSidebar({
     });
   };
 
-  
-  // useEffect(() => {
-
-  //   // Initialise the indicatorCheckedState based on selectedIndicators
-  //   const initialCheckedState = {};
-  //   selectedIndicators.forEach((indicatorId) => {
-  //     initialCheckedState[indicatorId] = true;
-  //   });
-  //   setIndicatorCheckedState(initialCheckedState);    
-  // }, [selectedIndicators]);
-
   const updateMetricIndicators = (indicators, event) => {
     const checked = event.target.checked
-    // setIndicatorCheckedState((prevCheckedState) => {
-    //   const updatedCheckedState = { ...prevCheckedState };
-    //   indicators.forEach((indicator) => {
-    //     updatedCheckedState[indicator.indicator_id] = checked;
-    //   });
-    //   updatedCheckedState[`metric_${indicators[0].metric_id}`] = checked || indicators.some(
-    //     (indicator) => updatedCheckedState[indicator.indicator_id]
-    //   );
-    //   // does not update when it 
-    //   // controlled error
-    //   return updatedCheckedState;
-    // });
 
     setSelectedIndicators((prevIndicators) => {
       const updatedIndicators = prevIndicators.filter(
         (id) => !indicators.some((indicator) => indicator.indicator_id === id)
       );
-      console.log(updatedIndicators)
 
       return checked
         ? [...updatedIndicators, ...indicators.map((indicator) => indicator.indicator_id)]
@@ -133,21 +101,12 @@ export default function SelectionSidebar({
     });
   };
 
-  // const isAnyIndicatorChecked = (metric) => metric.indicators.some(
-  //   (indicator) => indicatorCheckedState[indicator.indicator_id]
-  // );
-
-  // const isAllIndicatorChecked = (metric) => metric.indicators.every(
-  //   (indicator) => indicatorCheckedState[indicator.indicator_id]
-  // );
-
   function howManyIndicatorsChecked(metric) {
     const indicatorList = metric.indicators.map((indicator) => indicator.indicator_id);
     // check how many of the IDs in indicatorList is in selectedIndicators
     const checkedIndicators = indicatorList.filter((indicatorId) =>
       selectedIndicators.includes(indicatorId)
     );
-    console.log(checkedIndicators)
     // Return the count of checked indicators
 
     return checkedIndicators.length;
