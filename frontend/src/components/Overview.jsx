@@ -27,6 +27,8 @@ export default function Overview() {
           justifyContent: "space-between",
           alignItems: "center",
           border: 1,
+          borderRadius: 4, // Add rounded corners to the container
+          padding: 2, // Add padding to the container
         }}
       >
         <Box sx={{ flex: 1 }}>
@@ -50,8 +52,12 @@ export default function Overview() {
               alignItems: "center",
             }}
           >
-            <h1>50</h1>
-            <h3>ESG Rating</h3>
+            <Typography variant="h2" color="text.primary" paragraph>
+              50
+            </Typography>
+            <Typography variant="h6" color="text.secondary">
+              ESG Rating
+            </Typography>
           </Box>
           <Box
             sx={{
@@ -63,10 +69,18 @@ export default function Overview() {
               textAlign: "center",
             }}
           >
-            <h2>43</h2>
-            <h4>Industry Mean</h4>
-            <h2>24/185</h2>
-            <h4>Industry Ranking</h4>
+            <Typography variant="h4" color="text.primary" paragraph>
+              43
+            </Typography>
+            <Typography variant="h6" color="text.secondary">
+              Industry Mean
+            </Typography>
+            <Typography variant="h5" color="text.primary" sx={{ margin: '24px 0px' }} paragraph>
+              24/185
+            </Typography>
+            <Typography variant="h6" color="text.secondary">
+              Industry Ranking
+            </Typography>
           </Box>
         </Box>
         <Box sx={{ flex: 1 }}>

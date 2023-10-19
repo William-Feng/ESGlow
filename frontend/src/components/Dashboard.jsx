@@ -80,7 +80,6 @@ function Dashboard({ token }) {
   // Fetch indicator values whenever selected indicators change
   useEffect(() => {
     if (selectedIndicators.length) {
-
       // new selection of company wipes data display to blank
       const companyId = selectedCompany ? selectedCompany.company_id : 0;
       if (!companyId) {

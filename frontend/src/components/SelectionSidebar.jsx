@@ -83,6 +83,7 @@ export default function SelectionSidebar({
   const [indicatorCheckedState, setIndicatorCheckedState] = useState({});
   
   useEffect(() => {
+
     // Initialise the indicatorCheckedState based on selectedIndicators
     const initialCheckedState = {};
     selectedIndicators.forEach((indicatorId) => {
