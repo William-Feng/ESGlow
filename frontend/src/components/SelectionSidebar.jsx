@@ -32,6 +32,11 @@ export default function SelectionSidebar({
     setSelectedFramework(
       frameworksData.find((f) => f.framework_id === parseInt(frameworkId))
     );
+    setSelectedIndicators(frameworksData.flatMap((framework) =>
+      framework.metrics.flatMap((metric) =>
+        metric.indicators.map((indicator) => indicator.indicator_id)
+      )
+    ))
   };
 
   const selectedMetrics = selectedFramework ? selectedFramework.metrics : [];
@@ -90,6 +95,8 @@ export default function SelectionSidebar({
       initialCheckedState[indicatorId] = true;
     });
     setIndicatorCheckedState(initialCheckedState);
+    console.log('new selectedIndicators', initialCheckedState)
+    
   }, [selectedIndicators]);
 
   const updateMetricIndicators = (indicators, checked) => {
