@@ -17,7 +17,7 @@ class User(db.Model):
                         primary_key=True, default=uuid.uuid4)
     email = db.Column(db.Text, unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
-    verification_code = db.Column(db.Text(length=VERIFICATION_CODE_LENGTH))
+    verification_code = db.Column(db.String(length=VERIFICATION_CODE_LENGTH))
 
 
 class Company(db.Model):
@@ -97,7 +97,7 @@ class UserMetricPreference(db.Model):
     __tablename__ = 'user_metric_preferences'
 
     preference_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String, db.ForeignKey('users.user_id'))
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
     framework_id = db.Column(
         db.Integer, db.ForeignKey('frameworks.framework_id'))
     metric_id = db.Column(db.Integer, db.ForeignKey('metrics.metric_id'))
@@ -109,7 +109,7 @@ class UserIndicatorPreference(db.Model):
     __tablename__ = 'user_indicator_preferences'
 
     preference_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String, db.ForeignKey('users.user_id'))
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
     metric_id = db.Column(db.Integer, db.ForeignKey('metrics.metric_id'))
     indicator_id = db.Column(
         db.Integer, db.ForeignKey('indicators.indicator_id'))
