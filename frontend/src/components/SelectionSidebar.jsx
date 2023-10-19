@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function SelectionSidebar({
   frameworksData,
@@ -64,8 +64,6 @@ export default function SelectionSidebar({
   const isMetricExpanded = (metricId) => {
     return expandedMetrics.includes(metricId);
   };
-
-  const [indicatorCheckedState, setIndicatorCheckedState] = useState({});
 
   const handleIndicatorChange = (indicatorId, checked) => {
     setSelectedIndicators((prevIndicators) => {
@@ -134,7 +132,6 @@ export default function SelectionSidebar({
         <AccordionDetails>
           <FormControl fullWidth>
             <RadioGroup
-              fullWidth
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
               value={
@@ -302,8 +299,8 @@ export default function SelectionSidebar({
               name="controlled-radio-buttons-group"
             >
               {years.map((y) => (
-                <>
                   <FormControlLabel
+                    key={y}
                     value={y}
                     control={
                       <Checkbox
@@ -313,7 +310,6 @@ export default function SelectionSidebar({
                     }
                     label={y}
                   />
-                </>
               ))}
             </RadioGroup>
           </FormControl>
