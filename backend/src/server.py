@@ -5,7 +5,7 @@ from .database import User
 from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
 from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models, company_framework_name_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
-from .user import login, register, get_user, invalid_auth
+from .user import login, register, get_user
 
 
 api = Api()
@@ -177,6 +177,6 @@ class IndicatorValues(Resource):
             selected_indicators = [int(i) for i in indicator_ids.split(',')]
             selected_years = [int(y) for y in years.split(',')]
         except ValueError:
-            return {"message": "Invalid indicator_ids or years provided."}, 404
+            return {"message": "Invalid indicator_ids or years provided."}, 400
 
         return get_indicator_values(company_id, selected_indicators, selected_years)

@@ -55,7 +55,3 @@ def get_user(email):
         'name': user.name,
         'email': user.email
     }, 200
-
-
-def invalid_auth():
-    return {'message': 'Authentication required. Please log in.'}, 401
