@@ -14,7 +14,7 @@ def all_frameworks():
 
     frameworks = [framework.name for framework in Framework.query.all()]
     if not frameworks:
-        return {"message": "No frameworks found."}, 404
+        return {"message": "No frameworks found."}, 400
 
     return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
@@ -32,7 +32,7 @@ def all_companies():
 
     companies = [company.name for company in Company.query.all()]
     if not companies:
-        return {"message": "No companies found."}, 404
+        return {"message": "No companies found."}, 400
 
     return {"message": 'All companies retrieved!', "companies": companies}, 200
 
@@ -100,7 +100,7 @@ def get_framework_info_from_company(company_id):
         .all()
     )
 
-    response = []
+    framework_data = []
     curr_framework = {}
     curr_metric = {}
     for res in result:
@@ -111,7 +111,7 @@ def get_framework_info_from_company(company_id):
                 curr_framework['metrics'].append(curr_metric)
             # Insert framework into response
             if curr_framework:
-                response.append(curr_framework)
+                framework_data.append(curr_framework)
             # Reset for new framework and metric
             curr_framework = {
                 'framework_id': res.framework_id,
@@ -147,7 +147,12 @@ def get_framework_info_from_company(company_id):
     if curr_metric:
         curr_framework['metrics'].append(curr_metric)
     if curr_framework:
-        response.append(curr_framework)
+        framework_data.append(curr_framework)
+
+    response = {
+        "message": "Framework, metric & indicator information for company retrieved!",
+        "frameworks": framework_data
+    }
 
     return response, 200
 
@@ -173,7 +178,7 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
     if not values:
         return {"message": "No data values found for the provided criteria."}, 404
 
-    response = []
+    framework_data = []
     for val, indicator_name in values:
         response_item = {
             'indicator_id': val.indicator_id,
@@ -181,6 +186,11 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
             'year': val.year,
             'value': val.rating
         }
-        response.append(response_item)
+        framework_data.append(response_item)
+
+    response = {
+        "message": "Values successfully retrieved!",
+        "frameworks": framework_data
+    }
 
     return response, 200

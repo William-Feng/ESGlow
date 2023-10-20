@@ -3,7 +3,7 @@ from flask_restx import Api, Resource
 
 from .database import User
 from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
-from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models
+from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models, company_framework_name_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, invalid_auth
 
@@ -48,7 +48,7 @@ class Login(Resource):
 
 @api.route("/api/user")
 class DecodeUser(Resource):
-    @api.response(200, 'User authenticated!')
+    @api.response(200, 'User authenticated!') #TODO: add model
     @api.response(401, 'Authentication required. Please log in.')
     @jwt_required()
     def get(self):
@@ -126,12 +126,13 @@ class PasswordResetChange(Resource):
 #
 # ===================================================================
 
-framework_model, indicator_value_model = framework_metric_indicator_models(api)
+framework_list_model, indicator_value_list_model = framework_metric_indicator_models(api)
+framework_names_model, company_names_model = company_framework_name_models(api)
 
 
 @api.route("/api/companies/all")
 class CompaniesAll(Resource):
-    @api.response(200, 'All companies retrieved!')
+    @api.response(200, 'All companies retrieved!', model=company_names_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
@@ -144,7 +145,7 @@ class CompaniesAll(Resource):
 
 @api.route("/api/frameworks/all")
 class FrameworksAll(Resource):
-    @api.response(200, 'All frameworks retrieved!')
+    @api.response(200, 'All frameworks retrieved!', model=framework_names_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
@@ -157,7 +158,7 @@ class FrameworksAll(Resource):
 
 @api.route("/api/frameworks/<int:company_id>")
 class FrameworksByCompany(Resource):
-    @api.response(200, 'Framework, metric & indicator information for company retrieved!', framework_model)
+    @api.response(200, 'Framework, metric & indicator information for company retrieved!', model=framework_list_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
@@ -170,7 +171,7 @@ class FrameworksByCompany(Resource):
 
 @api.route("/api/values/<int:company_id>/<string:indicator_ids>/<string:years>")
 class IndicatorValues(Resource):
-    @api.response(200, 'Indicator values for company retrieved!', indicator_value_model)
+    @api.response(200, 'Indicator values for company retrieved!', model=indicator_value_list_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(404, 'An error occured.')
     @jwt_required()
