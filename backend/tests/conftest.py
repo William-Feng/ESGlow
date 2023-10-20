@@ -1,7 +1,6 @@
 from flask import Flask
 import pytest
 import os
-import sys
 import time
 from sqlalchemy import create_engine, text
 from flask_jwt_extended import JWTManager, create_access_token

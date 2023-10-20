@@ -100,7 +100,7 @@ def test_frameworks_by_company_endpoint(client_with_frameworks, access_token):
         'Authorization': f'Bearer {access_token}'
     })
 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json["message"] == "Company with ID 9 not found."
 
 
@@ -119,7 +119,7 @@ def test_indicator_values_endpoint(client_with_frameworks, access_token):
         'Authorization': f'Bearer {access_token}'
     })
 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json["message"] == "Company with ID 10 not found."
 
     # Invalid indicator

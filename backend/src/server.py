@@ -5,7 +5,7 @@ from .database import User
 from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
 from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models, company_framework_name_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
-from .user import login, register, invalid_auth
+from .user import login, register
 
 
 api = Api()
@@ -64,9 +64,6 @@ class DecodeUser(Resource):
     def get(self):
         # Decode the JWT token to retrieve the identity
         token = get_jwt_identity()
-
-        # if not token: # TODO: remove
-        #     return invalid_auth()
 
         response = {
             'email': token,
@@ -147,9 +144,6 @@ class CompaniesAll(Resource):
     @api.response(400, 'No companies found.')
     @jwt_required()
     def get(self):
-        # if not get_jwt_identity():
-        #     return invalid_auth()# TODO: remove
-
         return all_companies()
 
 
@@ -160,9 +154,6 @@ class FrameworksAll(Resource):
     @api.response(400, 'No frameworks found.')
     @jwt_required()
     def get(self):
-        # if not get_jwt_identity():
-        #     return invalid_auth()# TODO: remove
-
         return all_frameworks()
 
 
@@ -173,9 +164,6 @@ class FrameworksByCompany(Resource):
     @api.response(400, 'Invalid company.')
     @jwt_required()
     def get(self, company_id):
-        # if not get_jwt_identity():
-        #     return invalid_auth()# TODO: remove
-
         return get_framework_info_from_company(company_id)
 
 
@@ -186,8 +174,6 @@ class IndicatorValues(Resource):
     @api.response(400, 'Invalid company, indicator or none found.')
     @jwt_required()
     def get(self, company_id, indicator_ids, years):
-        # if not get_jwt_identity():
-        #     return invalid_auth()# TODO: remove
 
         try:
             selected_indicators = [int(i) for i in indicator_ids.split(',')]

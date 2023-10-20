@@ -43,7 +43,3 @@ def login(email, password):
         "message": "Login successful.",
         "token": token
     }, 200
-
-
-def invalid_auth():
-    return {'message': 'Authentication required. Please log in.'}, 401
