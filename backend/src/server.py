@@ -1,4 +1,4 @@
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required, JWTManager
 from flask_restx import Api, Resource
 
 from .database import User
@@ -9,6 +9,7 @@ from .user import login, register, invalid_auth
 
 
 api = Api()
+jwt = JWTManager()
 
 
 # ===================================================================
@@ -46,6 +47,15 @@ class Login(Resource):
         return login(email, password)
 
 
+# Callback for invalid tokens
+@jwt.invalid_token_loader
+def invalid_token_response(invalid_token):
+    return {
+        "message": "Authentication required. Please log in.",
+        "error": "invalid_token",
+        "description": str(invalid_token)
+    }, 401
+
 @api.route("/api/user")
 class DecodeUser(Resource):
     @api.response(200, 'User authenticated!') #TODO: add model
@@ -55,8 +65,8 @@ class DecodeUser(Resource):
         # Decode the JWT token to retrieve the identity
         token = get_jwt_identity()
 
-        if not token:
-            return invalid_auth()
+        # if not token: # TODO: remove
+        #     return invalid_auth()
 
         response = {
             'email': token,
@@ -137,8 +147,8 @@ class CompaniesAll(Resource):
     @api.response(400, 'No companies found.')
     @jwt_required()
     def get(self):
-        if not get_jwt_identity():
-            return invalid_auth()
+        # if not get_jwt_identity():
+        #     return invalid_auth()# TODO: remove
 
         return all_companies()
 
@@ -150,8 +160,8 @@ class FrameworksAll(Resource):
     @api.response(400, 'No frameworks found.')
     @jwt_required()
     def get(self):
-        if not get_jwt_identity():
-            return invalid_auth()
+        # if not get_jwt_identity():
+        #     return invalid_auth()# TODO: remove
 
         return all_frameworks()
 
@@ -163,8 +173,8 @@ class FrameworksByCompany(Resource):
     @api.response(400, 'Invalid company.')
     @jwt_required()
     def get(self, company_id):
-        if not get_jwt_identity():
-            return invalid_auth()
+        # if not get_jwt_identity():
+        #     return invalid_auth()# TODO: remove
 
         return get_framework_info_from_company(company_id)
 
@@ -176,8 +186,8 @@ class IndicatorValues(Resource):
     @api.response(400, 'Invalid company, indicator or none found.')
     @jwt_required()
     def get(self, company_id, indicator_ids, years):
-        if not get_jwt_identity():
-            return invalid_auth()
+        # if not get_jwt_identity():
+        #     return invalid_auth()# TODO: remove
 
         try:
             selected_indicators = [int(i) for i in indicator_ids.split(',')]
