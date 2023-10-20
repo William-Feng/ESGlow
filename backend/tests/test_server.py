@@ -1,5 +1,10 @@
 from flask_jwt_extended import decode_token
 
+# ===================================================================
+#
+# Login/Register endpoints
+#
+# ===================================================================
 
 def test_register_endpoint(client):
     data = {
@@ -55,3 +60,76 @@ def test_login_endpoint(client_with_user):
     response = client_with_user.post('/api/login', json=invalid_password)
     assert response.status_code == 400
     assert response.json["message"] == "Invalid password."
+
+
+# ===================================================================
+#
+# Frameworks/Companies endpoints
+#
+# ===================================================================
+
+def test_all_companies_endpoint(client_with_frameworks, access_token):
+
+    response = client_with_frameworks.get('/api/companies/all', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 200
+    assert response.json["message"] == "All companies retrieved!"
+    assert response.json["companies"]
+
+
+def test_all_frameworks_endpoint(client_with_frameworks, access_token):
+
+    response = client_with_frameworks.get('/api/frameworks/all', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 200
+    assert response.json["message"] == "All frameworks retrieved!"
+    assert response.json["frameworks"]
+
+
+def test_frameworks_by_company_endpoint(client_with_frameworks, access_token):
+    response = client_with_frameworks.get('/api/frameworks/1', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 200
+    assert response.json["message"] == "Framework, metric & indicator information for company retrieved!"
+    assert response.json["frameworks"]
+
+    # Invalid company
+    response = client_with_frameworks.get('/api/frameworks/9', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 400
+    assert response.json["message"] == "Company with ID 9 not found."
+
+
+def test_indicator_values_endpoint(client_with_frameworks, access_token):
+
+    response = client_with_frameworks.get('/api/values/1/1,2,3/2023', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 200
+    assert response.json["message"] == "Values successfully retrieved!"
+    assert response.json["values"]
+
+    # Invalid company
+    response = client_with_frameworks.get('/api/values/10/1,2,3/2023', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 400
+    assert response.json["message"] == "Company with ID 10 not found."
+
+    # Invalid indicator
+    response = client_with_frameworks.get('/api/values/1/1,2,15/2023', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 400
+    assert response.json["message"] == "One or more provided indicator_ids do not exist."

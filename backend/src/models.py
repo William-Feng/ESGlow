@@ -40,6 +40,19 @@ def password_reset_models(api):
     return password_reset_request_model, password_reset_verify_model, password_reset_change_model
 
 
+def company_framework_name_models(api):
+    framework_names_model = api.model('FrameworkNames', {
+        'message': fields.String(description='Status message', example='Frameworks successfully retrieved.'),
+        'frameworks': fields.List(fields.String(example="Framework 1"), description='List of framework names'),
+    })
+    company_names_model = api.model('CompanyNames', {
+        'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
+        'frameworks': fields.List(fields.String(example="Company 1"), description='List of framework names'),
+    })
+
+    return framework_names_model, company_names_model
+
+
 def framework_metric_indicator_models(api):
     indicator_model = api.model('Indicator', {
         'indicator_id': fields.Integer(description='The indicator ID', example=1),
@@ -60,10 +73,20 @@ def framework_metric_indicator_models(api):
         'metrics': fields.List(fields.Nested(metric_model), description='List of metrics')
     })
 
+    framework_list_model = api.model('FrameworkList', {
+        'message': fields.String(description='Status message', example='Frameworks successfully retrieved.'),
+        'values': fields.List(fields.Nested(framework_model), description='List of frameworks')
+    })
+
     indicator_value_model = api.model('IndicatorValue', {
         'indicator_id': fields.Integer(required=True, description='The indicator ID', example=12),
         'year': fields.Integer(required=True, description='The year of the indicator', example=2022),
         'value': fields.Float(required=True, description='The specific value of the indicator', example=85)
     })
 
-    return framework_model, indicator_value_model
+    indicator_value_list_model = api.model('IndicatorValueList', {
+        'message': fields.String(description='Status message', example='Values successfully retrieved.'),
+        'values': fields.List(fields.Nested(indicator_value_model), description='List of indicator values')
+    })
+
+    return framework_list_model, indicator_value_list_model
