@@ -134,7 +134,7 @@ framework_names_model, company_names_model = company_framework_name_models(api)
 class CompaniesAll(Resource):
     @api.response(200, 'All companies retrieved!', model=company_names_model)
     @api.response(401, 'Authentication required. Please log in.')
-    @api.response(404, 'An error occured.')
+    @api.response(400, 'No companies found.')
     @jwt_required()
     def get(self):
         if not get_jwt_identity():
@@ -147,7 +147,7 @@ class CompaniesAll(Resource):
 class FrameworksAll(Resource):
     @api.response(200, 'All frameworks retrieved!', model=framework_names_model)
     @api.response(401, 'Authentication required. Please log in.')
-    @api.response(404, 'An error occured.')
+    @api.response(400, 'No frameworks found.')
     @jwt_required()
     def get(self):
         if not get_jwt_identity():
@@ -160,7 +160,7 @@ class FrameworksAll(Resource):
 class FrameworksByCompany(Resource):
     @api.response(200, 'Framework, metric & indicator information for company retrieved!', model=framework_list_model)
     @api.response(401, 'Authentication required. Please log in.')
-    @api.response(404, 'An error occured.')
+    @api.response(400, 'Invalid company.')
     @jwt_required()
     def get(self, company_id):
         if not get_jwt_identity():
@@ -173,7 +173,7 @@ class FrameworksByCompany(Resource):
 class IndicatorValues(Resource):
     @api.response(200, 'Indicator values for company retrieved!', model=indicator_value_list_model)
     @api.response(401, 'Authentication required. Please log in.')
-    @api.response(404, 'An error occured.')
+    @api.response(400, 'Invalid company, indicator or none found.')
     @jwt_required()
     def get(self, company_id, indicator_ids, years):
         if not get_jwt_identity():

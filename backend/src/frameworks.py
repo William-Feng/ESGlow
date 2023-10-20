@@ -1,5 +1,5 @@
 from .database import db, Company, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
-
+from typing import List
 
 def all_frameworks():
     """
@@ -37,7 +37,7 @@ def all_companies():
     return {"message": 'All companies retrieved!', "companies": companies}, 200
 
 
-def get_framework_info_from_company(company_id):
+def get_framework_info_from_company(company_id: int):
     """
     Summary:
         Fetches all frameworks, metrics and indicators associated with a specified company.
@@ -70,7 +70,7 @@ def get_framework_info_from_company(company_id):
     """
     company = Company.query.get(company_id)
     if not company:
-        return {"message": f"Company with ID {company_id} not found."}, 404
+        return {"message": f"Company with ID {company_id} not found."}, 400
 
     result = (
         db.session.query(
@@ -157,10 +157,10 @@ def get_framework_info_from_company(company_id):
     return response, 200
 
 
-def get_indicator_values(company_id, selected_indicators, selected_years):
+def get_indicator_values(company_id: int, selected_indicators: List[int], selected_years: List[int]):
     company = Company.query.get(company_id)
     if not company:
-        return {"message": f"Company with ID {company_id} not found."}, 404
+        return {"message": f"Company with ID {company_id} not found."}, 400
 
     existing_indicators = Indicator.query.filter(
         Indicator.indicator_id.in_(selected_indicators)).all()
@@ -176,7 +176,7 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
     ).all()
 
     if not values:
-        return {"message": "No data values found for the provided criteria."}, 404
+        return {"message": "No data values found for the provided criteria."}, 400
 
     indicator_values = []
     for val, indicator_name in values:
