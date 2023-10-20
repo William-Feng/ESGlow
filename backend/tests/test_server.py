@@ -112,7 +112,7 @@ def test_indicator_values_endpoint(client_with_frameworks, access_token):
 
     assert response.status_code == 200
     assert response.json["message"] == "Values successfully retrieved!"
-    assert response.json["frameworks"]
+    assert response.json["values"]
 
     # Invalid company
     response = client_with_frameworks.get('/api/values/10/1,2,3/2023', headers={

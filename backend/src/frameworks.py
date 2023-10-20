@@ -178,7 +178,7 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
     if not values:
         return {"message": "No data values found for the provided criteria."}, 404
 
-    framework_data = []
+    indicator_values = []
     for val, indicator_name in values:
         response_item = {
             'indicator_id': val.indicator_id,
@@ -186,11 +186,11 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
             'year': val.year,
             'value': val.rating
         }
-        framework_data.append(response_item)
+        indicator_values.append(response_item)
 
     response = {
         "message": "Values successfully retrieved!",
-        "frameworks": framework_data
+        "values": indicator_values
     }
 
     return response, 200
