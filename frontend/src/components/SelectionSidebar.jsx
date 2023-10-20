@@ -106,9 +106,17 @@ export default function SelectionSidebar({
       selectedIndicators.includes(indicatorId)
     );
     // Return the count of checked indicators
-
     return checkedIndicators.length;
   }
+
+  const [indicatorWeights, setIndicatorWeights] = useState({});
+
+  const handleWeightChange = (indicatorId, newWeight) => {
+    setIndicatorWeights((prevWeights) => ({
+      ...prevWeights,
+      [indicatorId]: newWeight,
+    }));
+  };
   
   return (
     <Box>
@@ -257,8 +265,15 @@ export default function SelectionSidebar({
                               <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                             </Tooltip>
                             <Chip
-                              label={`${indicator.predefined_weight}`}
+                              label={`${indicatorWeights[indicator.indicator_id] || indicator.predefined_weight}`}
                               color={selectedIndicators.includes(indicator.indicator_id) ? "success" : "warning"}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const newWeight = prompt("Enter the new weight for this indicator:");
+                                if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
+                                  handleWeightChange(indicator.indicator_id, parseFloat(newWeight));
+                                }
+                              }}
                             />
                           </Box>
                         </Box>
