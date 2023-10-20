@@ -3,7 +3,7 @@ import {
   Alert,
   Box,
   Button,
-  Grid,
+  CircularProgress,
   Link,
   Snackbar,
   TextField,
@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 export default function ResetInputEmail({ setter }) {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
@@ -22,8 +23,11 @@ export default function ResetInputEmail({ setter }) {
   };
 
   const submitEmail = async () => {
+    setLoading(true);
     if (email.length === 0) {
-      return setErrorMessage("Please enter your email");
+      setErrorMessage("Please enter your email");
+      setLoading(false);
+      return;
     }
 
     const response = await fetch("/api/password-reset/request", {
@@ -38,12 +42,12 @@ export default function ResetInputEmail({ setter }) {
     });
 
     const data = await response.json();
-    console.log(data);
+    setLoading(false);
     if (response.status === 200) {
       setter(email);
       navigate("/resetPassword/verify");
     } else {
-      return setErrorMessage(data.message);
+      setErrorMessage(data.message);
     }
   };
 
@@ -57,22 +61,42 @@ export default function ResetInputEmail({ setter }) {
         alignItems: "center",
       }}
     >
-      <Box sx={{ margin: 5, textAlign: "center" }}>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
+
+      <Typography variant="h4" gutterBottom>
+        Forgot Password?
+      </Typography>
+
+      <Box
+        component="form"
+        noValidate
+        sx={{
+          width: "90%",
+          maxWidth: "420px",
+          p: 2,
+        }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitEmail();
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          color="textSecondary"
+          mb={2}
+          textAlign="center"
         >
-          <Alert severity="error">{errorMessage}</Alert>
-        </Snackbar>
-        <Typography variant="h2">Forgot Password?</Typography>
-        <Typography variant="subtitle1">
           Enter the email associated with your account, and we'll send you a
           code to reset your password.
         </Typography>
-      </Box>
-      <Box component="form" noValidate sx={{ mt: 1 }}>
+
         <TextField
           margin="normal"
           required
@@ -83,21 +107,28 @@ export default function ResetInputEmail({ setter }) {
           autoComplete="email"
           autoFocus
           onChange={(e) => setEmail(e.target.value)}
+          variant="standard"
         />
 
         <Button
+          type="submit"
           fullWidth
           variant="contained"
+          color="primary"
           sx={{ mt: 3, mb: 2 }}
-          onClick={(e) => submitEmail(e.target.value)}
+          disabled={loading}
         >
-          Next
+          {loading ? <CircularProgress size={24} /> : "Next"}
         </Button>
-        <Grid item xs>
-          <Link href="/" variant="body2">
-            Return to home screen
-          </Link>
-        </Grid>
+
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="textSecondary">
+            Remember your password?{" "}
+            <Link href="/" color="primary" underline="hover">
+              Return to login
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

@@ -3,7 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Grid,
   Link,
   Snackbar,
   TextField,
@@ -56,21 +55,32 @@ export default function ResetVerify({ email }) {
         alignItems: "center",
       }}
     >
-      <Box sx={{ margin: 5, textAlign: "center" }}>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
+      <Typography variant="h4" gutterBottom>
+        Verify Your Code
+      </Typography>
+
+      <Box
+        component="form"
+        noValidate
+        sx={{
+          width: "90%",
+          maxWidth: "420px",
+          p: 2,
+        }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitVerificationCode();
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          color="textSecondary"
+          mb={2}
+          textAlign="center"
         >
-          <Alert severity="error">{errorMessage}</Alert>
-        </Snackbar>
-        <Typography variant="h2">Forgot Password?</Typography>
-        <Typography variant="subtitle1">
-          Enter the verification code sent to you at {email}.
+          Enter the verification code sent to {email}.
         </Typography>
-      </Box>
-      <Box component="form" noValidate sx={{ mt: 1 }}>
+
         <TextField
           margin="normal"
           required
@@ -81,21 +91,36 @@ export default function ResetVerify({ email }) {
           autoComplete="code"
           autoFocus
           onChange={(e) => setCode(e.target.value)}
+          variant="standard"
         />
 
         <Button
+          type="submit"
           fullWidth
           variant="contained"
+          color="primary"
           sx={{ mt: 3, mb: 2 }}
-          onClick={(e) => submitVerificationCode(e.target.value)}
         >
-          Next
+          Verify
         </Button>
-        <Grid item xs>
-          <Link href="/" variant="body2">
-            Return to home screen
-          </Link>
-        </Grid>
+
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={!!errorMessage}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert severity="error">{errorMessage}</Alert>
+        </Snackbar>
+
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="textSecondary">
+            Go back to{" "}
+            <Link href="/" color="primary" underline="hover">
+              login page
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

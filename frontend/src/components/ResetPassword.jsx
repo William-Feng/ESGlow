@@ -3,7 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Grid,
   Link,
   Snackbar,
   TextField,
@@ -59,19 +58,32 @@ export default function ResetPassword({ email }) {
         alignItems: "center",
       }}
     >
-      <Box sx={{ margin: 5, textAlign: "center" }}>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
+      <Typography variant="h4" gutterBottom>
+        Set New Password
+      </Typography>
+
+      <Box
+        component="form"
+        noValidate
+        sx={{
+          width: "90%",
+          maxWidth: "420px",
+          p: 2,
+        }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitNewPassword();
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          color="textSecondary"
+          mb={2}
+          textAlign="center"
         >
-          <Alert severity="error">{errorMessage}</Alert>
-        </Snackbar>
-        <Typography variant="h3">Set New Password</Typography>
-        <Typography variant="subtitle1">Enter your new password.</Typography>
-      </Box>
-      <Box component="form" noValidate sx={{ mt: 1 }}>
+          Enter your new password below.
+        </Typography>
+
         <TextField
           margin="normal"
           required
@@ -83,6 +95,7 @@ export default function ResetPassword({ email }) {
           autoComplete="password"
           autoFocus
           onChange={(e) => setNewPassword(e.target.value)}
+          variant="standard"
         />
         <TextField
           margin="normal"
@@ -93,22 +106,35 @@ export default function ResetPassword({ email }) {
           type="password"
           name="confirm password"
           onChange={(e) => setConfirmPassword(e.target.value)}
+          variant="standard"
         />
-
         <Button
+          type="submit"
           fullWidth
           variant="contained"
+          color="primary"
           sx={{ mt: 3, mb: 2 }}
-          onClick={() => submitNewPassword()}
         >
-          Next
+          Confirm
         </Button>
 
-        <Grid item xs>
-          <Link href="/" variant="body2">
-            Return to home screen
-          </Link>
-        </Grid>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={!!errorMessage}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert severity="error">{errorMessage}</Alert>
+        </Snackbar>
+
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2" color="textSecondary">
+            Remembered your password?{" "}
+            <Link href="/" color="primary" underline="hover">
+              Return to login
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
