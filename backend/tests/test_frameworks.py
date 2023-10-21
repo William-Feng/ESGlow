@@ -7,9 +7,21 @@ def test_all_companies(client_with_frameworks):
     assert result["message"] == 'All companies retrieved!'
     returned_companies = result["companies"]
     assert len(returned_companies) == 3
-    assert 'CompanyA' in returned_companies
-    assert 'CompanyB' in returned_companies
-    assert 'CompanyC' in returned_companies
+    company_a = {
+        'company_id': 1,
+        'name': 'CompanyA'
+    }
+    company_b = {
+        'company_id': 2,
+        'name': 'CompanyB'
+    }
+    company_c = {
+        'company_id': 3,
+        'name': 'CompanyC'
+    }
+    assert company_a in returned_companies
+    assert company_b in returned_companies
+    assert company_c in returned_companies
 
 
 def test_all_frameworks(client_with_frameworks):
