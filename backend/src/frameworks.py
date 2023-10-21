@@ -36,6 +36,22 @@ def all_companies():
 
     return {"message": 'All companies retrieved!', "companies": companies}, 200
 
+def get_company_description(company_id: int):
+    """
+    Summary:
+        Fetches all company names from the database.
+    Args:
+        company_id (int): The ID of the company.
+    Returns:
+        Dictionary containing a successful message and the description
+        HTTP status code
+    """
+
+    company = Company.query.get(company_id)
+    if not company:
+        return {"message": f"Company with ID {company_id} not found."}, 400
+
+    return {"message": 'Description successfully retrieved!', "description": company.description}, 200
 
 def get_framework_info_from_company(company_id: int):
     """

@@ -1,4 +1,4 @@
-from src.frameworks import all_companies, all_frameworks, get_framework_info_from_company, get_indicator_values
+from src.frameworks import all_companies, all_frameworks, get_framework_info_from_company, get_indicator_values, get_company_description
 
 
 def test_all_companies(client_with_frameworks):
@@ -185,4 +185,11 @@ def test_indicator_values(client_with_frameworks):
     assert len(expected_values) == len(returned_values)
     for expected in expected_values:
         assert expected in returned_values
-    
+
+
+def test_company_description(client_with_frameworks):
+    result = get_company_description(1)[0]
+
+    assert result["message"] == "Description successfully retrieved!" 
+    assert result["description"] == "Description for CompanyA" 
+
