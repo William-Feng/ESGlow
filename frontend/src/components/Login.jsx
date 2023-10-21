@@ -38,9 +38,7 @@ function Login({ onSuccess }) {
         password,
       }),
     });
-    console.log(response);
     const data = await response.json();
-    console.log(data);
     if (response.status === 200) {
       onSuccess(data.token);
       navigate("/dashboard");
