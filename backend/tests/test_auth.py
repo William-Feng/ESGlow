@@ -1,33 +1,30 @@
-def get_access_token(client):
-    # Registering a test user will return a access token
-    response = client.post(
-        '/register', json={"name": "Person", "email": "testjwt@example.com", "password": "password123"})
 
-    return response.json['access_token']
+def test_valid_jwt(client_with_frameworks, access_token):
+    response = client_with_frameworks.get('/api/frameworks/all', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
 
-
-'''
-Uncomment these tests once the protected endpoints have been created to ensure JWT Tokens work as expected
-
-def test_valid_jwt(client):
-    access_token = get_access_token(client)
-    headers = {'Authorization': f'Bearer {access_token}'}
-
-    # TODO: Test JWT once we have created the endpoint that needs to be protected
-    response = client.get('/protected-endpoint', headers=headers)
     assert response.status_code == 200
 
 
-def test_invalid_jwt(client):
+def test_malformed_jwt(client_with_frameworks, access_token):
+    valid_jwt = access_token
+    
+    # Altering a few characters in the valid JWT
+    invalid_jwt = valid_jwt[:-2] + "XY"
+    headers = {'Authorization': f'Bearer {invalid_jwt}'}
+
+    response = client_with_frameworks.get('/api/companies/all', headers=headers)
+    assert response.status_code == 401
+
+
+def test_malformed_jwt(client_with_frameworks):
     headers = {'Authorization': 'Bearer invalidtoken'}
 
-    # TODO: Test JWT once we have created the endpoint that needs to be protected
-    response = client.get('/protected-endpoint', headers=headers)
-    assert response.status_code == 400
+    response = client_with_frameworks.get('/api/companies/all', headers=headers)
+    assert response.status_code == 422
 
 
-def test_no_jwt(client):
-    # TODO: Test JWT once we have created the endpoint that needs to be protected
-    response = client.get('/protected-endpoint')
-    assert response.status_code == 400
-'''
+def test_no_jwt(client_with_frameworks):
+    response = client_with_frameworks.get('/api/companies/all')
+    assert response.status_code == 401
