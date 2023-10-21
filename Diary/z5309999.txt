@@ -41,3 +41,13 @@ We managed to finish all of the Registration Epic, and began the Metric Selectio
 Since the environment setup took much longer than expected in the previous week, I stressed the importance of completing the Register/Login/Reset Password user stories.
 Over the past week, I created the framework for the backend pytests, JWT tokens, created the entire database schema and generated all the dummy test data.
 Effective teamwork and communication throughout, as we all worked on connecting the backend and frontend together, and reviewed each other's PRs before merging.
+
+
+Week 6:
+
+Closely monitored the sprint burndown and set mini deadlines for the team after 1-1 chats, as suggested in the actions to try from the retrospective.
+During this flexibility week, I took initiative to grind out the project, finishing off the Metric Selection Epic and making great progress on epics in this new sprint.
+I spent a decent amount of time creating and designing the selection sidebar, then making the table and ensuring that it shows relevant data with varying selections.
+I decided to create an automated logout endpoint to prevent unexpected frontend crashes, as well as storing the user's name to display it in the profile icon.
+I also explored frontend from a UI perspective, overhauling the design of the home screen, refining all register/login/reset password pages, and the dashboard banner.
+Despite having a whopping 53 story points in total (we only managed to complete 12 in sprint one), we are more than half way complete (and there's two week left)!
