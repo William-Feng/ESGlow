@@ -30,7 +30,7 @@ def all_companies():
         HTTP status code
     """
 
-    companies = [company.name for company in Company.query.all()]
+    companies = [{'name': company.name, 'company_id': company.company_id} for company in Company.query.all()]
     if not companies:
         return {"message": "No companies found."}, 400
 
