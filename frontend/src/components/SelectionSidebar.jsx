@@ -117,12 +117,13 @@ export default function SelectionSidebar({
   }
 
   return (
-    <Box>
+    <Box sx={{ paddingBottom: 3 }}>
       <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
+          sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
           <Typography
             sx={{
@@ -132,7 +133,7 @@ export default function SelectionSidebar({
               textTransform: "uppercase",
             }}
           >
-            Framework
+            Frameworks
           </Typography>
         </AccordionSummary>
         <AccordionDetails>

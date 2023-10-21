@@ -7,7 +7,7 @@ export default function Overview() {
       sx={{
         bgcolor: "background.paper",
         mx: "auto",
-        width: "90%",
+        padding: "16px 0",
       }}
     >
       <Typography
@@ -27,8 +27,8 @@ export default function Overview() {
           justifyContent: "space-between",
           alignItems: "center",
           border: 1,
-          borderRadius: 4, // Add rounded corners to the container
-          padding: 2, // Add padding to the container
+          borderRadius: 4,
+          padding: 2,
         }}
       >
         <Box sx={{ flex: 1 }}>
@@ -75,7 +75,12 @@ export default function Overview() {
             <Typography variant="h6" color="text.secondary">
               Industry Mean
             </Typography>
-            <Typography variant="h5" color="text.primary" sx={{ margin: '24px 0px' }} paragraph>
+            <Typography
+              variant="h5"
+              color="text.primary"
+              sx={{ margin: "24px 0px" }}
+              paragraph
+            >
               24/185
             </Typography>
             <Typography variant="h6" color="text.secondary">

@@ -57,13 +57,10 @@ export default function DataDisplay({
     );
   }
 
-
   return (
     <Box
       sx={{
-        mt: "20px",
-        ml: "20px",
-        mr: "20px",
+        padding: "0 20px 24px",
         overflowX: "auto",
         width: "100%",
       }}
