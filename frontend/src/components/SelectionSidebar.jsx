@@ -11,7 +11,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -26,17 +26,18 @@ export default function SelectionSidebar({
   setSelectedIndicators,
   setSelectedYears,
 }) {
-
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
       frameworksData.find((f) => f.framework_id === parseInt(frameworkId))
     );
-    setSelectedIndicators(frameworksData.flatMap((framework) =>
-      framework.metrics.flatMap((metric) =>
-        metric.indicators.map((indicator) => indicator.indicator_id)
+    setSelectedIndicators(
+      frameworksData.flatMap((framework) =>
+        framework.metrics.flatMap((metric) =>
+          metric.indicators.map((indicator) => indicator.indicator_id)
+        )
       )
-    ))
+    );
   };
 
   const selectedMetrics = selectedFramework ? selectedFramework.metrics : [];
@@ -72,7 +73,7 @@ export default function SelectionSidebar({
       } else {
         return prevIndicators.filter((id) => id !== indicatorId);
       }
-    });  
+    });
   };
 
   const handleYearChange = (year) => {
@@ -86,7 +87,7 @@ export default function SelectionSidebar({
   };
 
   const updateMetricIndicators = (indicators, event) => {
-    const checked = event.target.checked
+    const checked = event.target.checked;
 
     setSelectedIndicators((prevIndicators) => {
       const updatedIndicators = prevIndicators.filter(
@@ -94,14 +95,19 @@ export default function SelectionSidebar({
       );
 
       return checked
-        ? [...updatedIndicators, ...indicators.map((indicator) => indicator.indicator_id)]
+        ? [
+            ...updatedIndicators,
+            ...indicators.map((indicator) => indicator.indicator_id),
+          ]
         : updatedIndicators;
     });
   };
 
   function howManyIndicatorsChecked(metric) {
-    const indicatorList = metric.indicators.map((indicator) => indicator.indicator_id);
-    // check how many of the IDs in indicatorList is in selectedIndicators
+    const indicatorList = metric.indicators.map(
+      (indicator) => indicator.indicator_id
+    );
+    // Check how many of the IDs in indicatorList is in selectedIndicators
     const checkedIndicators = indicatorList.filter((indicatorId) =>
       selectedIndicators.includes(indicatorId)
     );
@@ -109,14 +115,15 @@ export default function SelectionSidebar({
 
     return checkedIndicators.length;
   }
-  
+
   return (
-    <Box>
+    <Box sx={{ paddingBottom: 3 }}>
       <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
+          sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
           <Typography
             sx={{
@@ -126,7 +133,7 @@ export default function SelectionSidebar({
               textTransform: "uppercase",
             }}
           >
-            Framework
+            Frameworks
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -141,32 +148,30 @@ export default function SelectionSidebar({
               }
               onChange={handleFrameworkChange}
             >
-              {frameworksData ?
-              frameworksData.map((framework) => (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  key={framework.framework_id}
-                  justifyContent="space-between"
-                >
-                  <Box display="flex" alignItems="center">
-                    <Radio value={framework.framework_id.toString()} />
-                    <Typography fontWeight="bold">
-                      {framework.framework_name}
-                    </Typography>
+              {frameworksData ? (
+                frameworksData.map((framework) => (
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    key={framework.framework_id}
+                    justifyContent="space-between"
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Radio value={framework.framework_id.toString()} />
+                      <Typography fontWeight="bold">
+                        {framework.framework_name}
+                      </Typography>
+                    </Box>
+                    <Tooltip title={framework.description}>
+                      <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                    </Tooltip>
                   </Box>
-                  <Tooltip title={framework.description}>
-                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                  </Tooltip>
-                </Box>
-              ))
-              :
-              (
+                ))
+              ) : (
                 <Typography style={{ color: "red" }}>
                   Select a company to see the associated frameworks
                 </Typography>
-              )
-            }
+              )}
             </RadioGroup>
           </FormControl>
         </AccordionDetails>
@@ -208,12 +213,18 @@ export default function SelectionSidebar({
                   >
                     <Box display="flex" alignItems="center">
                       <Checkbox
-                        checked={howManyIndicatorsChecked(metric) === metric.indicators.length}
-                        indeterminate={
-                          howManyIndicatorsChecked(metric) < metric.indicators.length
-                          && howManyIndicatorsChecked(metric) > 0
+                        checked={
+                          howManyIndicatorsChecked(metric) ===
+                          metric.indicators.length
                         }
-                        onChange={(e) => updateMetricIndicators(metric.indicators, e)}
+                        indeterminate={
+                          howManyIndicatorsChecked(metric) <
+                            metric.indicators.length &&
+                          howManyIndicatorsChecked(metric) > 0
+                        }
+                        onChange={(e) =>
+                          updateMetricIndicators(metric.indicators, e)
+                        }
                       />
                       <Typography fontWeight="bold">
                         {metric.metric_name}
@@ -244,9 +255,16 @@ export default function SelectionSidebar({
                             control={
                               <Checkbox
                                 key={"_checkbox_" + indicator.indicator_id}
-                                checked={selectedIndicators.includes(indicator.indicator_id)|| false}
+                                checked={
+                                  selectedIndicators.includes(
+                                    indicator.indicator_id
+                                  ) || false
+                                }
                                 onChange={(e) =>
-                                  handleIndicatorChange(indicator.indicator_id, e.target.checked)
+                                  handleIndicatorChange(
+                                    indicator.indicator_id,
+                                    e.target.checked
+                                  )
                                 }
                               />
                             }
@@ -258,7 +276,13 @@ export default function SelectionSidebar({
                             </Tooltip>
                             <Chip
                               label={`${indicator.predefined_weight}`}
-                              color={selectedIndicators.includes(indicator.indicator_id) ? "success" : "warning"}
+                              color={
+                                selectedIndicators.includes(
+                                  indicator.indicator_id
+                                )
+                                  ? "success"
+                                  : "warning"
+                              }
                             />
                           </Box>
                         </Box>
@@ -299,17 +323,17 @@ export default function SelectionSidebar({
               name="controlled-radio-buttons-group"
             >
               {years.map((y) => (
-                  <FormControlLabel
-                    key={y}
-                    value={y}
-                    control={
-                      <Checkbox
-                        defaultChecked
-                        onChange={() => handleYearChange(y)}
-                      />
-                    }
-                    label={y}
-                  />
+                <FormControlLabel
+                  key={y}
+                  value={y}
+                  control={
+                    <Checkbox
+                      defaultChecked
+                      onChange={() => handleYearChange(y)}
+                    />
+                  }
+                  label={y}
+                />
               ))}
             </RadioGroup>
           </FormControl>

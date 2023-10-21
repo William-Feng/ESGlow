@@ -1,5 +1,5 @@
 from .database import db, Company, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
-
+from typing import List
 
 def all_frameworks():
     """
@@ -14,7 +14,7 @@ def all_frameworks():
 
     frameworks = [framework.name for framework in Framework.query.all()]
     if not frameworks:
-        return {"message": "No frameworks found."}, 404
+        return {"message": "No frameworks found."}, 400
 
     return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
@@ -32,12 +32,12 @@ def all_companies():
 
     companies = [{'name': company.name, 'company_id': company.company_id} for company in Company.query.all()]
     if not companies:
-        return {"message": "No companies found."}, 404
+        return {"message": "No companies found."}, 400
 
     return {"message": 'All companies retrieved!', "companies": companies}, 200
 
 
-def get_framework_info_from_company(company_id):
+def get_framework_info_from_company(company_id: int):
     """
     Summary:
         Fetches all frameworks, metrics and indicators associated with a specified company.
@@ -70,7 +70,7 @@ def get_framework_info_from_company(company_id):
     """
     company = Company.query.get(company_id)
     if not company:
-        return {"message": f"Company with ID {company_id} not found."}, 404
+        return {"message": f"Company with ID {company_id} not found."}, 400
 
     result = (
         db.session.query(
@@ -100,7 +100,7 @@ def get_framework_info_from_company(company_id):
         .all()
     )
 
-    response = []
+    framework_data = []
     curr_framework = {}
     curr_metric = {}
     for res in result:
@@ -111,7 +111,7 @@ def get_framework_info_from_company(company_id):
                 curr_framework['metrics'].append(curr_metric)
             # Insert framework into response
             if curr_framework:
-                response.append(curr_framework)
+                framework_data.append(curr_framework)
             # Reset for new framework and metric
             curr_framework = {
                 'framework_id': res.framework_id,
@@ -147,15 +147,20 @@ def get_framework_info_from_company(company_id):
     if curr_metric:
         curr_framework['metrics'].append(curr_metric)
     if curr_framework:
-        response.append(curr_framework)
+        framework_data.append(curr_framework)
+
+    response = {
+        "message": "Framework, metric & indicator information for company retrieved!",
+        "frameworks": framework_data
+    }
 
     return response, 200
 
 
-def get_indicator_values(company_id, selected_indicators, selected_years):
+def get_indicator_values(company_id: int, selected_indicators: List[int], selected_years: List[int]):
     company = Company.query.get(company_id)
     if not company:
-        return {"message": f"Company with ID {company_id} not found."}, 404
+        return {"message": f"Company with ID {company_id} not found."}, 400
 
     existing_indicators = Indicator.query.filter(
         Indicator.indicator_id.in_(selected_indicators)).all()
@@ -171,9 +176,9 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
     ).all()
 
     if not values:
-        return {"message": "No data values found for the provided criteria."}, 404
+        return {"message": "No data values found for the provided criteria."}, 400
 
-    response = []
+    indicator_values = []
     for val, indicator_name in values:
         response_item = {
             'indicator_id': val.indicator_id,
@@ -181,6 +186,11 @@ def get_indicator_values(company_id, selected_indicators, selected_years):
             'year': val.year,
             'value': val.rating
         }
-        response.append(response_item)
+        indicator_values.append(response_item)
+
+    response = {
+        "message": "Values successfully retrieved!",
+        "values": indicator_values
+    }
 
     return response, 200

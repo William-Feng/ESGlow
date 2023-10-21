@@ -28,7 +28,7 @@ function Header(token) {
         setName(data.name);
       })
       .catch((error) =>
-        console.error("There was an error fetching the user's name!", error)
+        console.error("There was an error fetching the user's name.", error)
       );
   }, [token, navigate]);
 

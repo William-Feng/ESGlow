@@ -34,7 +34,7 @@ function Dashboard({ token }) {
   }, [selectedYears]);
 
   useEffect(() => {
-    // new selection of company wipes data display to blank
+    // New selection of company wipes data display to blank
     const companyId = selectedCompany ? selectedCompany.company_id : 0;
     if (!companyId) {
       setSelectedFramework(null);
@@ -59,10 +59,10 @@ function Dashboard({ token }) {
         return response.json();
       })
       .then((data) => {
-        setFrameworksData(data);
-        // selection is refreshed
+        setFrameworksData(data.frameworks);
+        // Selection is refreshed
         setSelectedFramework(null);
-        const allIndicators = data.flatMap((framework) =>
+        const allIndicators = data.frameworks.flatMap((framework) =>
           framework.metrics.flatMap((metric) =>
             metric.indicators.map((indicator) => indicator.indicator_id)
           )
@@ -71,8 +71,8 @@ function Dashboard({ token }) {
       })
       .catch((error) =>
         console.error(
-          "There was an error fetching the framework, metric and indicator information!",
-          error 
+          "There was an error fetching the framework, metric and indicator information.",
+          error
         )
       );
   }, [token, navigate, selectedCompany]);
@@ -80,7 +80,7 @@ function Dashboard({ token }) {
   // Fetch indicator values whenever selected indicators change
   useEffect(() => {
     if (selectedIndicators.length) {
-      // new selection of company wipes data display to blank
+      // New selection of company wipes data display to blank
       const companyId = selectedCompany ? selectedCompany.company_id : 0;
       if (!companyId) {
         setSelectedFramework(null);
@@ -107,7 +107,9 @@ function Dashboard({ token }) {
           }
           return response.json();
         })
-        .then((data) => setIndicatorValues(data))
+        .then((data) => {
+          setIndicatorValues(data.values);
+        })
         .catch((error) =>
           console.error("Error fetching indicator values:", error)
         );
