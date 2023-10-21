@@ -57,9 +57,10 @@ def invalid_token_response(invalid_token):
         "description": str(invalid_token)
     }, 401
 
+
 @api.route("/api/user")
 class DecodeUser(Resource):
-    @api.response(200, 'User authenticated!') #TODO: add model
+    @api.response(200, 'User authenticated!')
     @api.response(401, 'Authentication required. Please log in.')
     @jwt_required()
     def get(self):

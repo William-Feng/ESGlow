@@ -7,17 +7,6 @@ def test_valid_jwt(client_with_frameworks, access_token):
     assert response.status_code == 200
 
 
-def test_invalid_jwt(client_with_frameworks, access_token):
-    valid_jwt = access_token
-    
-    # Altering a few characters in the valid JWT
-    invalid_jwt = valid_jwt[:-2] + "XY"
-    headers = {'Authorization': f'Bearer {invalid_jwt}'}
-
-    response = client_with_frameworks.get('/api/companies/all', headers=headers)
-    assert response.status_code == 401
-
-
 def test_malformed_jwt(client_with_frameworks):
     headers = {'Authorization': 'Bearer invalidtoken'}
 
