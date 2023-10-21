@@ -18,7 +18,7 @@ def start_docker():
     """
     # Start the docker container
     current_script_directory = os.path.dirname(os.path.abspath(__file__))
-    docker_compose_path = os.path.join(current_script_directory, '../../docker-compose-test.yml')
+    docker_compose_path = os.path.join(current_script_directory, 'test_database/docker-compose-test.yml')
 
     os.system(f'docker-compose -f {docker_compose_path} up -d')
     
