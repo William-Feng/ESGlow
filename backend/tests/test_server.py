@@ -143,6 +143,7 @@ def test_company_description_endpoint(client_with_frameworks, access_token):
     assert response.json["message"] == "Description successfully retrieved!"
     assert response.json["description"]
 
+    # Invalid company
     response = client_with_frameworks.get('/api/companies/10/description', headers={
         'Authorization': f'Bearer {access_token}'
     })

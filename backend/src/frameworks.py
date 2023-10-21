@@ -43,7 +43,7 @@ def get_company_description(company_id: int):
     Args:
         company_id (int): The ID of the company.
     Returns:
-        Dictionary containing a successful message and a the description
+        Dictionary containing a successful message and the description
         HTTP status code
     """
 
