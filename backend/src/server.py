@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required, JWTManager
 from flask_restx import Api, Resource
 
 from .database import User
-from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values
+from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values, get_company_description
 from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models, company_framework_name_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
@@ -133,8 +133,7 @@ class PasswordResetChange(Resource):
 # ===================================================================
 
 framework_list_model, indicator_value_list_model = framework_metric_indicator_models(api)
-framework_names_model, company_names_model = company_framework_name_models(api)
-
+framework_names_model, company_names_model, company_description_model = company_framework_name_models(api)
 
 @api.route("/api/companies/all")
 class CompaniesAll(Resource):
@@ -154,6 +153,15 @@ class FrameworksAll(Resource):
     @jwt_required()
     def get(self):
         return all_frameworks()
+
+
+@api.route("/api/companies/<int:company_id>/description")
+class CompanyDescription(Resource):
+    @api.response(200, 'Description successfully retrieved!', model=company_description_model)
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'Company not found.')
+    def get(self, company_id):
+        return get_company_description(company_id)
 
 
 @api.route("/api/frameworks/<int:company_id>")

@@ -49,10 +49,13 @@ def company_framework_name_models(api):
         'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
         'frameworks': fields.List(fields.String(example="Company 1"), description='List of framework names'),
     })
+    company_description_model = api.model('CompanyDescription', {
+        'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
+        'description': fields.String(description='Company description', example="Description for Company 1"),
+    })
 
-    return framework_names_model, company_names_model
-
-
+    return framework_names_model, company_names_model, company_description_model
+    
 def framework_metric_indicator_models(api):
     indicator_model = api.model('Indicator', {
         'indicator_id': fields.Integer(description='The indicator ID', example=1),

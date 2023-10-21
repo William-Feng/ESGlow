@@ -133,3 +133,19 @@ def test_indicator_values_endpoint(client_with_frameworks, access_token):
 
     assert response.status_code == 400
     assert response.json["message"] == "One or more provided indicator_ids do not exist."
+
+def test_company_description_endpoint(client_with_frameworks, access_token):
+    response = client_with_frameworks.get('/api/companies/1/description', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 200
+    assert response.json["message"] == "Description successfully retrieved!"
+    assert response.json["description"]
+
+    response = client_with_frameworks.get('/api/companies/10/description', headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    assert response.status_code == 400
+    assert response.json["message"] == "Company with ID 10 not found."
