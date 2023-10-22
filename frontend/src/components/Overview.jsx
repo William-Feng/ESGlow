@@ -25,21 +25,26 @@ export default function Overview({
         // Create a map to store the most recent indicator values by indicator_id
         const mostRecentIndicatorValues = new Map();
 
+        // Iterate through indicatorValues to find the most recent values for each indicator_id
         indicatorValues.forEach((indicatorValue) => {
           if (!mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
               indicatorValue.year > mostRecentIndicatorValues.get(indicatorValue.indicator_id).year) {
             mostRecentIndicatorValues.set(indicatorValue.indicator_id, indicatorValue);
           }
         });
-
+  
         // Calculate the metric score for this metric
         const metricScore = indicators.reduce((accumulator, indicator) => {
-          const indicatorValue = indicatorValues.find((value) => value.indicator_id === indicator.indicator_id);
-          if (!indicatorValue) {
-            return accumulator + 0
+          // Find the most recent indicator value based on its id
+          const indicatorValue = mostRecentIndicatorValues.get(indicator.indicator_id);
+  
+          if (indicatorValue) {
+            // Calculate the indicator score based on its predefined_weight and value
+            const indicatorScore = indicatorValue.value * indicator.predefined_weight;
+            return accumulator + indicatorScore;
           }
-          const indicatorScore = indicatorValue.value * indicator.predefined_weight;
-          return accumulator + indicatorScore;
+  
+          return accumulator; // If no matching indicator value is found, don't add to the score.
         }, 0);
     
         frameworkScore += predefined_weight * metricScore;
@@ -50,10 +55,10 @@ export default function Overview({
     return scoreList;
   }
 
-  const ESGScoreList = calculateESG();
-  const ESGScore = ESGScoreList.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.score, 0)
-     / ESGScoreList.length;
+  const ESGScore = calculateESG();
+  // const ESGScore = ESGScoreList.reduce(
+  //   (accumulator, currentValue) => accumulator + currentValue.score, 0)
+  //    / ESGScoreList.length;
 
   return (
     <Box
