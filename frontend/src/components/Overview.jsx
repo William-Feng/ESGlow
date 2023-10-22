@@ -19,15 +19,6 @@ export default function Overview({
       let frameworkScore = 0; // Declare frameworkScore here.
     
       framework.metrics.forEach((metric) => {
-
-        const { predefined_weight, indicators } = metric;
-
-        // Calculate the metric score for this metric
-        const metricScore = indicators.reduce((accumulator, indicator) => {
-          const indicatorValue = indicatorValues.find((value) => value.indicator_id === indicator.indicator_id);
-          const indicatorScore = indicatorValue.value * indicator.predefined_weight;
-          return accumulator + indicatorScore;
-        }, 0);
     
         frameworkScore += predefined_weight * metricScore;
 
