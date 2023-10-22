@@ -20,3 +20,7 @@ Jira and GitHub.
 Week 5
 Worked on creating the basic UI framework for the dashboard page, 
 specifically the company summary and table sections.
+
+Week 6
+Worked on adjusting the sidebar to reflect user changes to metric and 
+indicator checkbox selection, and indicator weight modification. 
