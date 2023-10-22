@@ -10,15 +10,23 @@ import {
 import { useMemo } from "react";
 
 export default function DataDisplay({
+  selectedCompany,
+  selectedFramework,
   selectedYears,
-  filteredData
+  indicatorValues,
 }) {
+  const validIndicatorIds = selectedFramework
+    ? selectedFramework.metrics.flatMap((metric) =>
+        metric.indicators.map((indicator) => indicator.indicator_id)
+      )
+    : [];
+
+  const filteredData = indicatorValues.filter((row) =>
+    validIndicatorIds.includes(row.indicator_id)
+  );
 
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
-    if (filteredData['error']) {
-      return
-    }
     const dataMap = {};
 
     filteredData.forEach((row) => {
@@ -27,12 +35,12 @@ export default function DataDisplay({
       }
       dataMap[row.indicator_id][row.year] = row.value;
     });
-    console.log(Object.values(dataMap));
+
     return Object.values(dataMap);
   }, [filteredData]);
 
-  if (filteredData['error']) {
-    const keyword = filteredData['error']
+  if (!(selectedFramework && selectedCompany)) {
+    const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
         sx={{
