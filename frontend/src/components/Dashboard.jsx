@@ -27,11 +27,35 @@ function Dashboard({ token }) {
   const [selectedFramework, setSelectedFramework] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
+  const [filteredData, setFilteredData] = useState({'error': 'company'});
   const [indicatorValues, setIndicatorValues] = useState([]);
 
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
   }, [selectedYears]);
+
+  // selecting a framework creates filteredData (for table and ESG summary)
+  useEffect(() => {
+    if (!(selectedFramework && selectedCompany)) {
+      const keyword = selectedCompany ? "framework" : "company";
+      setFilteredData({'error': `${keyword}`})
+      return
+    }
+
+    const validIndicatorIds = selectedFramework
+    ? selectedFramework.metrics.flatMap((metric) =>
+        metric.indicators.map((indicator) => indicator.indicator_id)
+      )
+    : [];
+
+    setFilteredData(indicatorValues.filter((row) =>
+      validIndicatorIds.includes(row.indicator_id)
+    ))
+  }, [selectedFramework, indicatorValues, selectedCompany])
+
+  // function getCompanyESG() {
+
+  // }
 
   useEffect(() => {
     // New selection of company wipes data display to blank
@@ -108,6 +132,7 @@ function Dashboard({ token }) {
           return response.json();
         })
         .then((data) => {
+          console.log(data.values);
           setIndicatorValues(data.values);
         })
         .catch((error) =>
@@ -196,6 +221,7 @@ function Dashboard({ token }) {
               selectedFramework={selectedFramework}
               selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}
+              filteredData={filteredData}
             />
           </Box>
         </Box>

@@ -17,6 +17,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useState } from "react";
 
+/*
+  selectedFramework: Nested Object that contains all metric and indicator information
+    -> this information does NOT CHANGE with user selection; retrieved from database
+  selectedIndicators: Array that contains the selected indicators by ID
+    -> selectedIndicators array CHANGES with user selection from the sidebar
+*/
 export default function SelectionSidebar({
   frameworksData,
   years,
