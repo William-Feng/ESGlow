@@ -110,7 +110,7 @@ export default function SelectionSidebar({
     });
   };
 
-  const updateMetricIndicators = (metric, event) => {
+  const handleMetricChange = (metric, event) => {
     const checked = event.target.checked
 
     setSelectedMetrics((prevMetrics) => {
@@ -143,11 +143,17 @@ export default function SelectionSidebar({
     return checkedIndicators.length;
   }
 
-  const handleWeightChange = (indicatorId, newWeight) => {
-    setIndicatorWeights((prevWeights) => ({
-      ...prevWeights,
-      [indicatorId]: newWeight,
-    }));
+  const handleWeightChange = (indicatorId, e) => {
+    e.stopPropagation();
+    const newWeight = prompt("Enter the new weight for this indicator:");
+
+    if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
+      setIndicatorWeights((prevWeights) => ({
+        ...prevWeights,
+        [indicatorId]: newWeight,
+      }));
+    }
+
   };
 
   const handleSave = () => {
@@ -277,7 +283,7 @@ export default function SelectionSidebar({
                           howManyIndicatorsChecked(metric) < metric.indicators.length
                           && howManyIndicatorsChecked(metric) > 0
                         }
-                        onChange={(e) => updateMetricIndicators(metric, e)}
+                        onChange={(e) => handleMetricChange(metric, e)}
                       />
                       <Typography fontWeight="bold">
                         {metric.metric_name}
@@ -322,14 +328,10 @@ export default function SelectionSidebar({
                             </Tooltip>
                             <Chip
                               label={`${indicatorWeights[indicator.indicator_id] || indicator.predefined_weight}`}
-                              color={selectedIndicators.includes(indicator.indicator_id) ? "success" : "warning"}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                const newWeight = prompt("Enter the new weight for this indicator:");
-                                if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
-                                  handleWeightChange(indicator.indicator_id, parseFloat(newWeight));
-                                }
-                              }}
+                              color={selectedIndicators.includes(indicator.indicator_id) ? "success" : "error"}
+                              onClick={(e) => 
+                                handleWeightChange(indicator.indicator_id, e)
+                              }
                             />
                           </Box>
                         </Box>
