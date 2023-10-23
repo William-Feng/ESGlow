@@ -116,7 +116,9 @@ export default function Searchbar({
           );
         }}
         options={companyList.map((c) => c.name)}
-        noOptionsText="No options available"
+        noOptionsText={
+          selectedIndustry ? "No options available" : "Select an industry first"
+        }
         sx={{
           width: "300px",
           backgroundColor: "#E8E8E8",

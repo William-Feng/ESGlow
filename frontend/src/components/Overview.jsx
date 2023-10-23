@@ -4,6 +4,7 @@ import React from "react";
 
 export default function Overview({
   selectedIndustry,
+  selectedCompany,
   frameworksData,
   indicatorValues,
 }) {
@@ -100,6 +101,7 @@ export default function Overview({
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
+    console.log(frameworksData);
     const scoreList = getRecentESGScores();
     const mostRecentYearScores = scoreList
       .filter(
@@ -128,7 +130,7 @@ export default function Overview({
           gutterBottom
           textAlign="center"
         >
-          Company Name
+          {selectedCompany.name}
         </Typography>
         <Container
           sx={{
@@ -143,8 +145,8 @@ export default function Overview({
           }}
         >
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" color="text.secondary" paragraph>
-              Company description
+            <Typography variant="h6" color="text.primary" paragraph>
+              {selectedCompany.description}
             </Typography>
           </Box>
           <Box
@@ -221,5 +223,7 @@ export default function Overview({
     );
   };
 
-  return frameworksData ? renderCompanyData() : renderPrompt();
+  return frameworksData && selectedCompany
+    ? renderCompanyData()
+    : renderPrompt();
 }

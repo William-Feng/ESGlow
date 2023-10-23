@@ -165,6 +165,7 @@ function Dashboard({ token }) {
           >
             <Overview
               selectedIndustry={selectedIndustry}
+              selectedCompany={selectedCompany}
               frameworksData={frameworksData}
               indicatorValues={indicatorValues}
             />
