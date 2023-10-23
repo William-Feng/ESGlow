@@ -36,9 +36,8 @@ export default function SelectionSidebar({
   setSelectedYears,
   setSavedWeights,
 }) {
-
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
-  
+
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
@@ -52,7 +51,7 @@ export default function SelectionSidebar({
       )
     );
   };
-    
+
   const [selectedMetrics, setSelectedMetrics] = useState([]);
   const [metricWeights, setMetricWeights] = useState({});
   const [indicatorWeights, setIndicatorWeights] = useState({});
@@ -62,13 +61,14 @@ export default function SelectionSidebar({
       const selectedMetrics = selectedFramework.metrics;
       setSelectedMetrics(selectedMetrics);
 
-      // populate the metric and indicator weights with predefined weights
+      // Populate the metric and indicator weights with predefined weights
       const initialMetricWeights = {};
       const initialIndicatorWeights = {};
       selectedMetrics.forEach((metric) => {
         initialMetricWeights[metric.metric_id] = metric.predefined_weight;
         metric.indicators.forEach((indicator) => {
-          initialIndicatorWeights[indicator.indicator_id] = indicator.predefined_weight;
+          initialIndicatorWeights[indicator.indicator_id] =
+            indicator.predefined_weight;
         });
       });
       setMetricWeights(initialMetricWeights);
@@ -113,7 +113,7 @@ export default function SelectionSidebar({
       }
     });
 
-    // ensure metric is selected if indicator is selected
+    // Ensure metric is selected if indicator is selected
     setSelectedMetrics((prevMetrics) => {
       if (checked && prevMetrics.includes(metric)) {
         return [...prevMetrics];
@@ -134,7 +134,7 @@ export default function SelectionSidebar({
   };
 
   const handleMetricChange = (metric, event) => {
-    const checked = event.target.checked
+    const checked = event.target.checked;
 
     setSelectedMetrics((prevMetrics) => {
       if (!checked) {
@@ -205,26 +205,32 @@ export default function SelectionSidebar({
       return setErrorMessage("No indicators have been selected.");
     }
 
-    const totalMetricWeight = selectedMetrics.reduce((total, metric) =>
-      total + metricWeights[metric.metric_id], 0
+    const totalMetricWeight = selectedMetrics.reduce(
+      (total, metric) => total + metricWeights[metric.metric_id],
+      0
     );
     if (parseInt(totalMetricWeight) !== 1) {
       return setErrorMessage("Metric weights do not add up to 1.");
     }
 
     const hasError = selectedMetrics.some((metric) => {
-      const totalIndicatorWeight = metric.indicators.reduce((total, indicator) => {
-        return selectedIndicators.includes(indicator.indicator_id) 
-          ? total + indicatorWeights[indicator.indicator_id] 
-          : total;
-      }, 0);
+      const totalIndicatorWeight = metric.indicators.reduce(
+        (total, indicator) => {
+          return selectedIndicators.includes(indicator.indicator_id)
+            ? total + indicatorWeights[indicator.indicator_id]
+            : total;
+        },
+        0
+      );
       return parseInt(totalIndicatorWeight) !== 1;
     });
     if (hasError) {
-      return setErrorMessage("Indicator weights for some metrics do not add up to 1.")
+      return setErrorMessage(
+        "Indicator weights for some metrics do not add up to 1."
+      );
     }
 
-    // update savedWeights
+    // Update savedWeights
     const newSavedWeights = {};
     selectedMetrics.forEach((metric) => {
       const metricId = metric.metric_id;
@@ -242,10 +248,10 @@ export default function SelectionSidebar({
       };
     });
     setSavedWeights(newSavedWeights);
-    
+
     return setSuccessMessage("Preferences saved successfully.");
   };
-  
+
   return (
     <Box sx={{ paddingBottom: 3 }}>
       <Snackbar
@@ -264,7 +270,7 @@ export default function SelectionSidebar({
       >
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
-      
+
       <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -382,7 +388,7 @@ export default function SelectionSidebar({
                       <Chip
                         label={`${metricWeights[metric.metric_id]}`}
                         color="primary"
-                        onClick={(e) => 
+                        onClick={(e) =>
                           handleWeightChange(metric.metric_id, null, e)
                         }
                       />
@@ -410,8 +416,8 @@ export default function SelectionSidebar({
                                 }
                                 onChange={(e) =>
                                   handleIndicatorChange(
-                                    metric, 
-                                    indicator.indicator_id, 
+                                    metric,
+                                    indicator.indicator_id,
                                     e.target.checked
                                   )
                                 }
@@ -424,14 +430,22 @@ export default function SelectionSidebar({
                               <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                             </Tooltip>
                             <Chip
-                              label={`${indicatorWeights[indicator.indicator_id]}`}
+                              label={`${
+                                indicatorWeights[indicator.indicator_id]
+                              }`}
                               color={
-                                selectedIndicators.includes(indicator.indicator_id) 
-                                ? "success" 
-                                : "error"
+                                selectedIndicators.includes(
+                                  indicator.indicator_id
+                                )
+                                  ? "success"
+                                  : "error"
                               }
-                              onClick={(e) => 
-                                handleWeightChange(null, indicator.indicator_id, e)
+                              onClick={(e) =>
+                                handleWeightChange(
+                                  null,
+                                  indicator.indicator_id,
+                                  e
+                                )
                               }
                             />
                           </Box>
@@ -489,16 +503,20 @@ export default function SelectionSidebar({
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Box sx={{
-        mt: 2,
-        mr: 2,
-        display: "flex",
-        justifyContent: "right",
-      }}>
-        <Button variant="contained" color="primary" onClick={handleSave}>
-          Save
-        </Button>
-      </Box>
+      {selectedFramework && (
+        <Box
+          sx={{
+            mt: 2,
+            mr: 2,
+            display: "flex",
+            justifyContent: "right",
+          }}
+        >
+          <Button variant="contained" color="primary" onClick={handleSave}>
+            Save
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }
