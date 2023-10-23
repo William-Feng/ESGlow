@@ -9,13 +9,32 @@ import {
 import { useEffect, useState } from "react";
 import React from "react";
 
-export default function Searchbar({ token, setCompany }) {
+export default function Searchbar({ token, setIndustry, setCompany }) {
   const [view, setView] = useState("single");
-  const [companyList, setCompanyList] = useState([]);
-
   const handleView = (_, newView) => {
     setView(newView);
   };
+
+  const [industryList, setIndustryList] = useState([]);
+  const [companyList, setCompanyList] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/industries/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIndustryList(data.industries);
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the industry information.",
+          error
+        )
+      );
+  }, [token]);
 
   useEffect(() => {
     fetch("/api/companies/all", {
@@ -46,14 +65,25 @@ export default function Searchbar({ token, setCompany }) {
     >
       <Autocomplete
         disablePortal
-        id="combo-box-demo"
-        onChange={(_, selectedName) => {
-          selectedName ? setCompany(companyList.find(company => company.name === selectedName))
-                        : setCompany(null);
+        onChange={(_, i) => {
+          setIndustry(i || null);
         }}
-        options={ companyList.map(c => c.name) }
+        options={industryList}
         sx={{
-          width: "400px",
+          width: "300px",
+          backgroundColor: "#E8E8E8",
+          borderRadius: 1,
+        }}
+        renderInput={(params) => <TextField {...params} label="Industry" />}
+      />
+      <Autocomplete
+        disablePortal
+        onChange={(_, c) => {
+          setCompany(companyList.find((company) => company.name === c) || null);
+        }}
+        options={companyList.map((c) => c.name)}
+        sx={{
+          width: "300px",
           backgroundColor: "#E8E8E8",
           borderRadius: 1,
         }}

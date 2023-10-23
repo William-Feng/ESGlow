@@ -2,7 +2,11 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import React from "react";
 
-export default function Overview({ frameworksData, indicatorValues }) {
+export default function Overview({
+  selectedIndustry,
+  frameworksData,
+  indicatorValues,
+}) {
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];
@@ -89,7 +93,7 @@ export default function Overview({ frameworksData, indicatorValues }) {
         paragraph
         textAlign="center"
       >
-        Please select a company from the searchbar above to view its details.
+        Please select a company from the search bar above to view its details.
       </Typography>
     </Box>
   );
