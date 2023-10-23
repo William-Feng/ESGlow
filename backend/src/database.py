@@ -1,3 +1,4 @@
+import enum
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
@@ -27,6 +28,7 @@ class Company(db.Model):
     company_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
+    industry = db.Column(db.Text, nullable=False)
 
 
 class Framework(db.Model):
@@ -45,6 +47,11 @@ class Metric(db.Model):
     description = db.Column(db.Text, nullable=False)
 
 
+class Pillar(enum.Enum):
+    E = 'E'
+    S = 'S'
+    G = 'G'
+
 class Indicator(db.Model):
     __tablename__ = 'indicators'
 
@@ -52,6 +59,7 @@ class Indicator(db.Model):
     name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=False)
     source = db.Column(db.Text, nullable=False)
+    pillars = db.Column(db.Enum(Pillar), nullable=False)
 
 
 class DataValue(db.Model):

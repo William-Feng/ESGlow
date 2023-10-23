@@ -16,6 +16,7 @@ CREATE TABLE companies (
     company_id          SERIAL,
     name                TEXT UNIQUE NOT NULL,
     description         TEXT NOT NULL,
+    industry            TEXT NOT NULL,
     PRIMARY KEY (company_id)
 );
 
@@ -33,11 +34,13 @@ CREATE TABLE metrics (
     PRIMARY KEY (metric_id)
 );
 
+CREATE TYPE pillars AS ENUM ('E', 'S', 'G');
 CREATE TABLE indicators (
     indicator_id        SERIAL,
     name                TEXT NOT NULL,
     description         TEXT NOT NULL,
     source              TEXT NOT NULL,
+    pillars             pillars,
     PRIMARY KEY (indicator_id)
 );
 
