@@ -163,6 +163,7 @@ export default function SelectionSidebar({
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
+    setSuccessMessage("");
   };
 
   const handleSave = () => {
