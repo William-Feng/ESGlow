@@ -85,6 +85,32 @@ export default function Overview({ frameworksData, indicatorValues }) {
     mostRecentYearScores.length
   ).toFixed(1);
 
+  if (!frameworksData) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          padding: "32px 0",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "35vh",
+          bgcolor: "#f5f5f5",
+          mx: "auto",
+        }}
+      >
+        <Typography
+          variant="h4"
+          color="text.secondary"
+          paragraph
+          textAlign="center"
+        >
+          Please select a company from the searchbar above to view its details.
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
