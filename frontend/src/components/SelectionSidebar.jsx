@@ -28,6 +28,7 @@ export default function SelectionSidebar({
   selectedIndicators,
   setSelectedIndicators,
   setSelectedYears,
+  setSavedWeights,
 }) {
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
@@ -190,12 +191,12 @@ export default function SelectionSidebar({
     } else if (!selectedIndicators) {
       return setErrorMessage("No indicators have been selected.");
     }
-    
+
     const totalMetricWeight = selectedMetrics.reduce((total, metric) =>
       total + metricWeights[metric.metric_id], 0
     );
     if (parseInt(totalMetricWeight) !== 1) {
-      return setErrorMessage("Metrics weights do not add up to 1.");
+      return setErrorMessage("Metric weights do not add up to 1.");
     }
 
     const hasError = selectedMetrics.some((metric) => {
@@ -206,10 +207,30 @@ export default function SelectionSidebar({
       }, 0);
       return parseInt(totalIndicatorWeight) !== 1;
     });
+    if (hasError) {
+      return setErrorMessage("Indicator weights for some metrics do not add up to 1.")
+    }
 
-    return hasError
-      ? setErrorMessage("Indicator weights for some metrics do not add up to 1.")
-      : setSuccessMessage("Preferences saved successfully.");
+    // update savedWeights
+    const newSavedWeights = {};
+    selectedMetrics.forEach((metric) => {
+      const metricId = metric.metric_id;
+      const metricWeight = metricWeights[metricId];
+      const indicators = {};
+      metric.indicators.forEach((indicator) => {
+        const indicatorId = indicator.indicator_id;
+        const indicatorWeight = indicatorWeights[indicatorId];
+        indicators[indicatorId] = indicatorWeight;
+      });
+      newSavedWeights[metricId] = {
+        metric_id: metricId,
+        metric_weight: metricWeight,
+        indicators: indicators,
+      };
+    });
+    setSavedWeights(newSavedWeights);
+    
+    return setSuccessMessage("Preferences saved successfully.");
   };
   
   return (
