@@ -28,6 +28,7 @@ function Dashboard({ token }) {
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
+  const [savedWeights, setSavedWeights] = useState({});
 
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
@@ -192,6 +193,7 @@ function Dashboard({ token }) {
                 selectedIndicators={selectedIndicators}
                 setSelectedIndicators={setSelectedIndicators}
                 setSelectedYears={setSelectedYears}
+                setSavedWeights={setSavedWeights}
               />
             </Drawer>
             <DataDisplay
@@ -199,6 +201,7 @@ function Dashboard({ token }) {
               selectedFramework={selectedFramework}
               selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}
+              savedWeights={savedWeights}
             />
           </Box>
         </Box>
