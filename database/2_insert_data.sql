@@ -1,13 +1,22 @@
 \c esglow;
 
 
+-- Industries
+INSERT INTO industries (name) VALUES 
+('Technology'),
+('Healthcare'),
+('Finance'),
+('Manufacturing'),
+('Energy');
+
+
 -- Companies
-INSERT INTO companies (name, description) VALUES 
-('GreenTech Innovations', 'Innovative solutions for sustainable urban living.'),
-('CareCommunity Health', 'Providing quality healthcare in underserved regions.'),
-('FairTrade Enterprises', 'Promoting ethical sourcing and trading practices.'),
-('FutureDriven Tech', 'Leveraging technology for a better tomorrow.'),
-('UnityGlobal Services', 'Global services with a commitment to diversity and quality.');
+INSERT INTO companies (industry_id, name, description) VALUES 
+(1, 'GreenTech Innovations', 'Leading the forefront in technological advancements, GreenTech Innovations is dedicated to creating state-of-the-art solutions that champion greener, more sustainable urban environments.'),
+(2, 'CareCommunity Health', 'At the intersection of technology and healthcare, CareCommunity Health strives to deliver digital healthcare platforms and tools that transform the way care is provided in underserved regions.'),
+(3, 'FairTrade Enterprises', 'As a trailblazer in the financial world, FairTrade Enterprises offers a unique blend of financial services, emphasising ethical investment strategies and transparent trading practices that promote a fairer global economy.'),
+(1, 'FutureDriven Tech', 'FutureDriven Tech is committed to leveraging cutting-edge technology to design innovative solutions that not only meet the demands of today but also pave the way for a brighter, more sustainable tomorrow.'),
+(2, 'UnityGlobal Services', 'With a passion for quality healthcare and a commitment to diversity, UnityGlobal Services offers a comprehensive suite of healthcare solutions that bridge gaps and ensure accessibility to quality care on a global scale.');
 
 
 -- Frameworks
