@@ -12,7 +12,9 @@ import {
   AccordionSummary,
   Checkbox,
   Tooltip,
-  Button
+  Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -156,9 +158,16 @@ export default function SelectionSidebar({
 
   };
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
+  };
+
   const handleSave = () => {
     if (!selectedFramework) {
-      return alert("No framework has been selected.");
+      return setErrorMessage("No framework has been selected.");
     }
 
     const totalWeights = {};
@@ -174,14 +183,31 @@ export default function SelectionSidebar({
     });
 
     if (hasError) {
-      alert("Indicator weights for some metrics do not add up to 1. Please correct them.");
+      return setErrorMessage("Indicator weights for some metrics do not add up to 1.");
     } else {
-      alert("Preferences saved successfully.")
+      return setSuccessMessage("Preferences saved successfully.")
     }
   };
   
   return (
     <Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="success">{successMessage}</Alert>
+      </Snackbar>
+      
       <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
