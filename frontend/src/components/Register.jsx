@@ -112,7 +112,6 @@ function Register({ onSuccess }) {
           label="Email Address"
           name="email"
           autoComplete="email"
-          autoFocus
           onChange={(e) => setEmail(e.target.value)}
           variant="standard"
         />
