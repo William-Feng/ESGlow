@@ -101,7 +101,7 @@ def get_company_info(company_ids: List[int]):
 
         company_dict = {
             "company_id": company.company_id,
-            "company_name": company.name,
+            "name": company.name,
             "description": company.description
         }
         companies_data.append(company_dict)

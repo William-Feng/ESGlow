@@ -9,7 +9,12 @@ import {
 import { useEffect, useState } from "react";
 import React from "react";
 
-export default function Searchbar({ token, setIndustry, setCompany }) {
+export default function Searchbar({
+  token,
+  selectedIndustry,
+  setSelectedIndustry,
+  setCompany,
+}) {
   const [view, setView] = useState("single");
   const handleView = (_, newView) => {
     setView(newView);
@@ -37,22 +42,35 @@ export default function Searchbar({ token, setIndustry, setCompany }) {
   }, [token]);
 
   useEffect(() => {
-    fetch("/api/companies/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCompanyList(data.companies);
+    if (selectedIndustry) {
+      fetch(`/api/industries/${selectedIndustry}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the company information.",
-          error
-        )
-      );
-  }, [token]);
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          const companyIds = data.companies.join(",");
+          return fetch(`/api/companies/${companyIds}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          setCompanyList(data.companies);
+        })
+        .catch((error) =>
+          console.error(
+            "There was an error fetching the company information.",
+            error
+          )
+        );
+    }
+  }, [selectedIndustry, token]);
 
   return (
     <Box
@@ -66,7 +84,7 @@ export default function Searchbar({ token, setIndustry, setCompany }) {
       <Autocomplete
         disablePortal
         onChange={(_, i) => {
-          setIndustry(i || null);
+          setSelectedIndustry(i || null);
         }}
         options={industryList}
         sx={{

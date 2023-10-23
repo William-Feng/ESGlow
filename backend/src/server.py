@@ -185,7 +185,6 @@ class CompanyInformation(Resource):
     @api.response(200, 'Companies\' information successfully retrieved!')
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Company not found.')
-    @jwt_required
     def get(self, company_ids):
 
         try:
