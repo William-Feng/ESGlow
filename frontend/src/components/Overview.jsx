@@ -5,60 +5,69 @@ export default function Overview({
   frameworksData,
   indicatorValues
 }) {
-  console.log("overview", indicatorValues)
+  console.log("overview", frameworksData)
 
-  const calculateESG = () => {
+  const getRecentESGScores = () => {
     if (!frameworksData) {
-      return 0
+      return [];
     }
-    let scoreList = [];
-
+    let ESGScoreList = [];
+  
     // Iterate over the frameworks in the array.
     frameworksData.forEach((framework) => {
-
-      let frameworkScore = 0; // Declare frameworkScore here.
-    
-      framework.metrics.forEach((metric) => {
-
-        const { predefined_weight, indicators } = metric;
-
-        // Create a map to store the most recent indicator values by indicator_id
-        const mostRecentIndicatorValues = new Map();
-
-        // Iterate through indicatorValues to find the most recent values for each indicator_id
-        indicatorValues.forEach((indicatorValue) => {
-          if (!mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
-              indicatorValue.year > mostRecentIndicatorValues.get(indicatorValue.indicator_id).year) {
-            mostRecentIndicatorValues.set(indicatorValue.indicator_id, indicatorValue);
-          }
-        });
+      let frameworkScore = 0;
+      const { framework_name } = framework; // Get the framework name
   
-        // Calculate the metric score for this metric
+      // Create a map to store the most recent indicator values by indicator_id
+      const mostRecentIndicatorValues = new Map();
+  
+      // Iterate through indicatorValues to find the most recent values for each indicator_id
+      indicatorValues.forEach((indicatorValue) => {
+        if (!mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
+            indicatorValue.year > mostRecentIndicatorValues.get(indicatorValue.indicator_id).year) {
+          mostRecentIndicatorValues.set(indicatorValue.indicator_id, indicatorValue);
+        }
+      });
+  
+      // Calculate the metric score for this framework
+      framework.metrics.forEach((metric) => {
+        const { predefined_weight, indicators } = metric;
         const metricScore = indicators.reduce((accumulator, indicator) => {
-          // Find the most recent indicator value based on its id
           const indicatorValue = mostRecentIndicatorValues.get(indicator.indicator_id);
   
           if (indicatorValue) {
-            // Calculate the indicator score based on its predefined_weight and value
             const indicatorScore = indicatorValue.value * indicator.predefined_weight;
             return accumulator + indicatorScore;
           }
   
-          return accumulator; // If no matching indicator value is found, don't add to the score.
+          return accumulator;
         }, 0);
-    
+  
         frameworkScore += predefined_weight * metricScore;
-
       });
-      scoreList.push(Math.round(frameworkScore));
+  
+      // Get the most recent year chosen for indicators in this framework
+      const mostRecentYear = [...mostRecentIndicatorValues.values()].reduce((maxYear, indicatorValue) => {
+        return Math.max(maxYear, indicatorValue.year);
+      }, -Infinity);
+  
+      ESGScoreList.push({
+        framework_name,
+        year: mostRecentYear,
+        score: Math.round(frameworkScore),
+      });
     });
-    return scoreList;
-  }
+  
+    return ESGScoreList;
+  };
+  console.log(getRecentESGScores());
 
-  const ESGScore = calculateESG();
-  // const ESGScore = ESGScoreList.reduce(
-  //   (accumulator, currentValue) => accumulator + currentValue.score, 0)
-  //    / ESGScoreList.length;
+  const scoreList = getRecentESGScores();
+  const mostRecentYearScores = scoreList
+    .filter((framework) => framework.year === Math.max(...scoreList.map((f) => f.year)))
+    .map((framework) => framework.score);
+
+  const averageESGScore = mostRecentYearScores.reduce((sum, score) => sum + score, 0) / mostRecentYearScores.length;
 
   return (
     <Box
@@ -111,7 +120,7 @@ export default function Overview({
             }}
           >
             <Typography variant="h2" color="text.primary" paragraph>
-              {ESGScore}
+              {averageESGScore}
             </Typography>
             <Typography variant="h6" color="text.secondary">
               ESG Rating
