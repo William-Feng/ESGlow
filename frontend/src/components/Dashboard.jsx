@@ -156,7 +156,10 @@ function Dashboard({ token }) {
               maxHeight: "450px",
             }}
           >
-            <Overview />
+            <Overview 
+              frameworksData={frameworksData}
+              indicatorValues={indicatorValues}
+            />
           </Box>
           <Box
             sx={{
