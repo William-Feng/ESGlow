@@ -2,73 +2,88 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import React from "react";
 
-export default function Overview({
-  frameworksData,
-  indicatorValues
-}) {
-  // console.log("overview", frameworksData)
+export default function Overview({ frameworksData, indicatorValues }) {
+  //   console.log("overview", frameworksData);
 
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];
     }
     let ESGScoreList = [];
-  
+
     // Iterate over the frameworks in the array.
     frameworksData.forEach((framework) => {
       let frameworkScore = 0;
-      const { framework_name } = framework; // Get the framework name
-  
+      const { framework_name } = framework;
+
       // Map to store the most recent year's indicator values by indicator_id
       const mostRecentIndicatorValues = new Map();
-  
+
       // Iterate through indicatorValues to find the most recent values for each indicator_id
       indicatorValues.forEach((indicatorValue) => {
-        if (!mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
-            indicatorValue.year > mostRecentIndicatorValues.get(indicatorValue.indicator_id).year) {
-          mostRecentIndicatorValues.set(indicatorValue.indicator_id, indicatorValue);
+        if (
+          !mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
+          indicatorValue.year >
+            mostRecentIndicatorValues.get(indicatorValue.indicator_id).year
+        ) {
+          mostRecentIndicatorValues.set(
+            indicatorValue.indicator_id,
+            indicatorValue
+          );
         }
       });
-  
+
       // Calculate each metric score
       framework.metrics.forEach((metric) => {
         const { predefined_weight, indicators } = metric;
         const metricScore = indicators.reduce((accumulator, indicator) => {
-          const indicatorValue = mostRecentIndicatorValues.get(indicator.indicator_id);
-  
+          const indicatorValue = mostRecentIndicatorValues.get(
+            indicator.indicator_id
+          );
+
           if (indicatorValue) {
-            const indicatorScore = indicatorValue.value * indicator.predefined_weight;
+            const indicatorScore =
+              indicatorValue.value * indicator.predefined_weight;
             return accumulator + indicatorScore;
           }
-  
+
           return accumulator;
         }, 0);
-  
+
         frameworkScore += predefined_weight * metricScore;
       });
-  
+
       // Find most recent year and only calculate values based on that year
-      const mostRecentYear = [...mostRecentIndicatorValues.values()].reduce((maxYear, indicatorValue) => {
-        return Math.max(maxYear, indicatorValue.year);
-      }, -Infinity);
-  
+      const mostRecentYear = [...mostRecentIndicatorValues.values()].reduce(
+        (maxYear, indicatorValue) => {
+          return Math.max(maxYear, indicatorValue.year);
+        },
+        -Infinity
+      );
+
       ESGScoreList.push({
         framework_name,
         year: mostRecentYear,
         score: Math.round(frameworkScore),
       });
     });
-  
+
     return ESGScoreList;
   };
-  console.log(getRecentESGScores());
+  //   console.log(getRecentESGScores());
 
   const scoreList = getRecentESGScores();
   const mostRecentYearScores = scoreList
-    .filter((framework) => framework.year === Math.max(...scoreList.map((f) => f.year)))
+    .filter(
+      (framework) =>
+        framework.year === Math.max(...scoreList.map((f) => f.year))
+    )
     .map((framework) => framework.score);
 
-  const averageESGScore = (mostRecentYearScores.reduce((sum, score) => sum + score, 0) / mostRecentYearScores.length).toFixed(1);
+  const averageESGScore = (
+    mostRecentYearScores.reduce((sum, score) => sum + score, 0) /
+    mostRecentYearScores.length
+  ).toFixed(1);
 
   return (
     <Box
@@ -101,12 +116,12 @@ export default function Overview({
       >
         <Box sx={{ flex: 1 }}>
           <Typography variant="h5" color="text.secondary" paragraph>
-            Summary of company's ESG reporting...
+            Company description
           </Typography>
         </Box>
         <Box
           sx={{
-            flex: 1,
+            flex: 1.5,
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -123,15 +138,14 @@ export default function Overview({
             <Typography variant="h2" color="text.primary" paragraph>
               {averageESGScore}
             </Typography>
-            <Box
-              display="flex"
-              alignItems="center"
-            >
+            <Box display="flex" alignItems="center">
               <Typography variant="h6" color="text.secondary">
                 ESG Rating
               </Typography>
               <Tooltip title="information about how it was calculated">
-                <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                <InfoOutlinedIcon
+                  style={{ cursor: "pointer", paddingLeft: 3 }}
+                />
               </Tooltip>
             </Box>
           </Box>
