@@ -92,14 +92,23 @@ export default function SelectionSidebar({
     return expandedMetrics.includes(metricId);
   };
 
-  const handleIndicatorChange = (indicatorId, checked) => {
+  const handleIndicatorChange = (metric, indicatorId, checked) => {
     setSelectedIndicators((prevIndicators) => {
       if (checked) {
         return [...prevIndicators, indicatorId];
       } else {
         return prevIndicators.filter((id) => id !== indicatorId);
       }
-    });  
+    });
+
+    // ensure metric is selected if indicator is selected
+    setSelectedMetrics((prevMetrics) => {
+      if (checked && prevMetrics.includes(metric)) {
+        return [...prevMetrics];
+      } else {
+        return [...prevMetrics, metric];
+      }
+    });
   };
 
   const handleYearChange = (year) => {
@@ -152,10 +161,9 @@ export default function SelectionSidebar({
     if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
       setIndicatorWeights((prevWeights) => ({
         ...prevWeights,
-        [indicatorId]: newWeight,
+        [indicatorId]: parseFloat(newWeight),
       }));
     }
-
   };
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -171,16 +179,14 @@ export default function SelectionSidebar({
       return setErrorMessage("No framework has been selected.");
     }
 
-    const totalWeights = {};
-    let hasError = selectedMetrics.some((metric) => {
-      let totalMetricWeight = 0;
-      metric.indicators.forEach((indicator) => {
+    const hasError = selectedMetrics.some((metric) => {
+      const totalMetricWeight = metric.indicators.reduce((total, indicator) => {
         if (selectedIndicators.includes(indicator.indicator_id)) {
-          totalMetricWeight += indicatorWeights[indicator.indicator_id];
+          return total + indicatorWeights[indicator.indicator_id];
         }
-      });
-      totalWeights[metric.metric_id] = totalMetricWeight;
-      return totalMetricWeight !== 1;
+        return total;
+      }, 0);
+      return parseInt(totalMetricWeight) !== 1;
     });
 
     if (hasError) {
@@ -343,7 +349,7 @@ export default function SelectionSidebar({
                                 key={"_checkbox_" + indicator.indicator_id}
                                 checked={selectedIndicators.includes(indicator.indicator_id)|| false}
                                 onChange={(e) =>
-                                  handleIndicatorChange(indicator.indicator_id, e.target.checked)
+                                  handleIndicatorChange(metric, indicator.indicator_id, e.target.checked)
                                 }
                               />
                             }
