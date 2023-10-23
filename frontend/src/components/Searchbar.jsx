@@ -13,7 +13,8 @@ export default function Searchbar({
   token,
   selectedIndustry,
   setSelectedIndustry,
-  setCompany,
+  selectedCompany,
+  setSelectedCompany,
 }) {
   const [view, setView] = useState("single");
   const handleView = (_, newView) => {
@@ -42,17 +43,22 @@ export default function Searchbar({
   }, [token]);
 
   useEffect(() => {
+    // Once an industry has been selected, fetch the companies for that industry
     if (selectedIndustry) {
       fetch(`/api/industries/${selectedIndustry}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => {
-          return response.json();
-        })
+        .then((response) => response.json())
         .then((data) => {
+          // Halt the chain if there are no companies for the selected industry
+          if (data.companies.length === 0) {
+            setCompanyList([]);
+            return Promise.reject("No companies found for selected industry");
+          }
           const companyIds = data.companies.join(",");
+          // Fetch the company information
           return fetch(`/api/companies/${companyIds}`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,12 +69,17 @@ export default function Searchbar({
         .then((data) => {
           setCompanyList(data.companies);
         })
-        .catch((error) =>
-          console.error(
-            "There was an error fetching the company information.",
-            error
-          )
-        );
+        .catch((error) => {
+          if (error !== "No companies found for the selected industry") {
+            console.error(
+              "There was an error fetching the company information.",
+              error
+            );
+          }
+        });
+    } else {
+      // Reset to null if no industry is selected
+      setCompanyList([]);
     }
   }, [selectedIndustry, token]);
 
@@ -85,6 +96,8 @@ export default function Searchbar({
         disablePortal
         onChange={(_, i) => {
           setSelectedIndustry(i || null);
+          setCompanyList([]);
+          setSelectedCompany(null);
         }}
         options={industryList}
         sx={{
@@ -96,10 +109,14 @@ export default function Searchbar({
       />
       <Autocomplete
         disablePortal
+        value={selectedCompany ? selectedCompany.name : null}
         onChange={(_, c) => {
-          setCompany(companyList.find((company) => company.name === c) || null);
+          setSelectedCompany(
+            companyList.find((company) => company.name === c) || null
+          );
         }}
         options={companyList.map((c) => c.name)}
+        noOptionsText="No options available"
         sx={{
           width: "300px",
           backgroundColor: "#E8E8E8",

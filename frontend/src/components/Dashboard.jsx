@@ -23,7 +23,7 @@ function Dashboard({ token }) {
   const years = useMemo(() => [2022, 2023], []);
 
   const [selectedIndustry, setSelectedIndustry] = useState();
-  const [selectedCompany, setCompany] = useState(null);
+  const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
@@ -141,7 +141,8 @@ function Dashboard({ token }) {
               token={token}
               selectedIndustry={selectedIndustry}
               setSelectedIndustry={setSelectedIndustry}
-              setCompany={setCompany}
+              selectedCompany={selectedCompany}
+              setSelectedCompany={setSelectedCompany}
             />
           </Toolbar>
         </AppBar>
