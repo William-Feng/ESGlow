@@ -45,25 +45,28 @@ export default function SelectionSidebar({
   };
     
   const [selectedMetrics, setSelectedMetrics] = useState([]);
+  const [metricWeights, setMetricWeights] = useState({});
   const [indicatorWeights, setIndicatorWeights] = useState({});
 
   useEffect(() => {
-    setSelectedMetrics(selectedFramework ? selectedFramework.metrics : []);
     if (selectedFramework) {
       const selectedMetrics = selectedFramework.metrics;
       setSelectedMetrics(selectedMetrics);
-  
-      // populate the indicator weights with predefined weights
+
+      // populate the metric and indicator weights with predefined weights
+      const initialMetricWeights = {};
       const initialIndicatorWeights = {};
       selectedMetrics.forEach((metric) => {
+        initialMetricWeights[metric.metric_id] = metric.predefined_weight;
         metric.indicators.forEach((indicator) => {
           initialIndicatorWeights[indicator.indicator_id] = indicator.predefined_weight;
         });
       });
-  
+      setMetricWeights(initialMetricWeights);
       setIndicatorWeights(initialIndicatorWeights);
     } else {
       setSelectedMetrics([]);
+      setMetricWeights({});
       setIndicatorWeights({});
     }
   }, [selectedFramework]);
@@ -154,15 +157,22 @@ export default function SelectionSidebar({
     return checkedIndicators.length;
   }
 
-  const handleWeightChange = (indicatorId, e) => {
+  const handleWeightChange = (metricId, indicatorId, e) => {
     e.stopPropagation();
-    const newWeight = prompt("Enter the new weight for this indicator:");
+    const newWeight = prompt("Enter the new weight:");
 
     if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
-      setIndicatorWeights((prevWeights) => ({
-        ...prevWeights,
-        [indicatorId]: parseFloat(newWeight),
-      }));
+      if (metricId) {
+        setMetricWeights((prevMetrics) => ({
+          ...prevMetrics,
+          [metricId]: parseFloat(newWeight),
+        }));
+      } else if (indicatorId) {
+        setIndicatorWeights((prevWeights) => ({
+          ...prevWeights,
+          [indicatorId]: parseFloat(newWeight),
+        }));
+      }
     }
   };
 
@@ -177,23 +187,29 @@ export default function SelectionSidebar({
   const handleSave = () => {
     if (!selectedFramework) {
       return setErrorMessage("No framework has been selected.");
+    } else if (!selectedIndicators) {
+      return setErrorMessage("No indicators have been selected.");
+    }
+    
+    const totalMetricWeight = selectedMetrics.reduce((total, metric) =>
+      total + metricWeights[metric.metric_id], 0
+    );
+    if (parseInt(totalMetricWeight) !== 1) {
+      return setErrorMessage("Metrics weights do not add up to 1.");
     }
 
     const hasError = selectedMetrics.some((metric) => {
-      const totalMetricWeight = metric.indicators.reduce((total, indicator) => {
-        if (selectedIndicators.includes(indicator.indicator_id)) {
-          return total + indicatorWeights[indicator.indicator_id];
-        }
-        return total;
+      const totalIndicatorWeight = metric.indicators.reduce((total, indicator) => {
+        return selectedIndicators.includes(indicator.indicator_id) 
+          ? total + indicatorWeights[indicator.indicator_id] 
+          : total;
       }, 0);
-      return parseInt(totalMetricWeight) !== 1;
+      return parseInt(totalIndicatorWeight) !== 1;
     });
 
-    if (hasError) {
-      return setErrorMessage("Indicator weights for some metrics do not add up to 1.");
-    } else {
-      return setSuccessMessage("Preferences saved successfully.")
-    }
+    return hasError
+      ? setErrorMessage("Indicator weights for some metrics do not add up to 1.")
+      : setSuccessMessage("Preferences saved successfully.");
   };
   
   return (
@@ -327,8 +343,11 @@ export default function SelectionSidebar({
                         <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                       </Tooltip>
                       <Chip
-                        label={`${metric.predefined_weight}`}
+                        label={`${metricWeights[metric.metric_id]}`}
                         color="primary"
+                        onClick={(e) => 
+                          handleWeightChange(metric.metric_id, null, e)
+                        }
                       />
                       <ExpandMoreIcon />
                     </Box>
@@ -360,10 +379,10 @@ export default function SelectionSidebar({
                               <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                             </Tooltip>
                             <Chip
-                              label={`${indicatorWeights[indicator.indicator_id] || indicator.predefined_weight}`}
+                              label={`${indicatorWeights[indicator.indicator_id]}`}
                               color={selectedIndicators.includes(indicator.indicator_id) ? "success" : "error"}
                               onClick={(e) => 
-                                handleWeightChange(indicator.indicator_id, e)
+                                handleWeightChange(null, indicator.indicator_id, e)
                               }
                             />
                           </Box>
