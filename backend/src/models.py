@@ -40,29 +40,43 @@ def password_reset_models(api):
     return password_reset_request_model, password_reset_verify_model, password_reset_change_model
 
 
-def company_framework_name_models(api):
+def all_industry_company_framework_models(api):
     industry_names_model = api.model('IndustryNames', {
         'message': fields.String(description='Status message', example='Industries successfully retrieved.'),
         'industries': fields.List(fields.String(example="Industry 1"), description='List of industries names'),
     })
+
     company_names_model = api.model('CompanyNames', {
         'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
         'companies': fields.List(fields.String(example="Company 1"), description='List of company names'),
     })
+
     framework_names_model = api.model('FrameworkNames', {
         'message': fields.String(description='Status message', example='Frameworks successfully retrieved.'),
         'frameworks': fields.List(fields.String(example="Framework 1"), description='List of framework names'),
     })
+
+    return industry_names_model, company_names_model, framework_names_model
+
+
+def specific_industry_company_models(api):
     industry_companies_model = api.model('IndustryCompanies', {
         'message': fields.String(description='Status message', example='Companies for industry successfully retrieved.'),
         'companies': fields.List(fields.Integer(example="Company ID 1"), description='List of company IDs'),
     })
-    company_description_model = api.model('CompanyDescription', {
-        'message': fields.String(description='Status message', example='Description successfully retrieved.'),
-        'description': fields.String(description='Company description', example="Description for Company 1"),
+
+    company_info_fields = {
+        'company_id': fields.Integer(description='The ID of the company', example=1),
+        'company_name': fields.String(description='The name of the company', example="Company 1"),
+        'description': fields.String(description='The description of the company', example="Description for Company 1"),
+    }
+
+    company_info_model = api.model('CompanyInfo', {
+        'message': fields.String(description='Status message', example='Companies\' information successfully retrieved.'),
+        'companies': fields.List(fields.Nested(company_info_fields), description="List of companies' information"),
     })
 
-    return industry_names_model, company_names_model, framework_names_model, industry_companies_model, company_description_model
+    return industry_companies_model, company_info_model
 
 
 def framework_metric_indicator_models(api):
@@ -85,7 +99,7 @@ def framework_metric_indicator_models(api):
         'metrics': fields.List(fields.Nested(metric_model), description='List of metrics')
     })
 
-    framework_list_model = api.model('FrameworkList', {
+    framework_detailed_model = api.model('FrameworkList', {
         'message': fields.String(description='Status message', example='Frameworks successfully retrieved.'),
         'values': fields.List(fields.Nested(framework_model), description='List of frameworks')
     })
@@ -96,9 +110,9 @@ def framework_metric_indicator_models(api):
         'value': fields.Float(required=True, description='The specific value of the indicator', example=85)
     })
 
-    indicator_value_list_model = api.model('IndicatorValueList', {
+    indicator_value_detailed_model = api.model('IndicatorValueList', {
         'message': fields.String(description='Status message', example='Values successfully retrieved.'),
         'values': fields.List(fields.Nested(indicator_value_model), description='List of indicator values')
     })
 
-    return framework_list_model, indicator_value_list_model
+    return framework_detailed_model, indicator_value_detailed_model

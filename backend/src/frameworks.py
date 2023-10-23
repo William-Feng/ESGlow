@@ -83,22 +83,34 @@ def get_companies_by_industry(industry_id: int):
     return {"message": 'Companies for industry successfully retrieved!', "companies": company_ids}, 200
 
 
-def get_company_description(company_id: int):
+def get_company_info(company_ids: List[int]):
     """
     Summary:
-        Fetches all company names from the database.
+        Fetches the company names and descriptions associated with the specified company IDs from the database.
     Args:
-        company_id (int): The ID of the company.
+        company_ids (List[int]): A list of company IDs.
     Returns:
-        Dictionary containing a successful message and the description
+        Dictionary containing a successful message and a list of nested dictionaries containing the company information.
         HTTP status code
     """
 
-    company = Company.query.get(company_id)
-    if not company:
-        return {"message": f"Company with ID {company_id} not found."}, 400
+    companies_data = []
+    for company_id in company_ids:
+        company = Company.query.get(company_id)
+        if not company:
+            return {"message": f"Company with ID {company_id} not found."}, 400
 
-    return {"message": 'Description successfully retrieved!', "description": company.description}, 200
+        company_dict = {
+            "company_id": company.company_id,
+            "company_name": company.name,
+            "description": company.description
+        }
+        companies_data.append(company_dict)
+
+    return {
+        "message": "Companies\' information successfully retrieved!",
+        "companies": companies_data
+    }, 200
 
 
 def get_framework_info_from_company(company_id: int):
