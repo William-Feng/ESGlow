@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Chip,
@@ -12,6 +12,9 @@ import {
   AccordionSummary,
   Checkbox,
   Tooltip,
+  Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -31,7 +34,11 @@ export default function SelectionSidebar({
   selectedIndicators,
   setSelectedIndicators,
   setSelectedYears,
+  setSavedWeights,
 }) {
+
+  const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
+  
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
@@ -45,8 +52,33 @@ export default function SelectionSidebar({
       )
     );
   };
+    
+  const [selectedMetrics, setSelectedMetrics] = useState([]);
+  const [metricWeights, setMetricWeights] = useState({});
+  const [indicatorWeights, setIndicatorWeights] = useState({});
 
-  const selectedMetrics = selectedFramework ? selectedFramework.metrics : [];
+  useEffect(() => {
+    if (selectedFramework) {
+      const selectedMetrics = selectedFramework.metrics;
+      setSelectedMetrics(selectedMetrics);
+
+      // populate the metric and indicator weights with predefined weights
+      const initialMetricWeights = {};
+      const initialIndicatorWeights = {};
+      selectedMetrics.forEach((metric) => {
+        initialMetricWeights[metric.metric_id] = metric.predefined_weight;
+        metric.indicators.forEach((indicator) => {
+          initialIndicatorWeights[indicator.indicator_id] = indicator.predefined_weight;
+        });
+      });
+      setMetricWeights(initialMetricWeights);
+      setIndicatorWeights(initialIndicatorWeights);
+    } else {
+      setSelectedMetrics([]);
+      setMetricWeights({});
+      setIndicatorWeights({});
+    }
+  }, [selectedFramework]);
 
   const [expanded, setExpanded] = useState({
     panel1: false,
@@ -72,12 +104,21 @@ export default function SelectionSidebar({
     return expandedMetrics.includes(metricId);
   };
 
-  const handleIndicatorChange = (indicatorId, checked) => {
+  const handleIndicatorChange = (metric, indicatorId, checked) => {
     setSelectedIndicators((prevIndicators) => {
       if (checked) {
         return [...prevIndicators, indicatorId];
       } else {
         return prevIndicators.filter((id) => id !== indicatorId);
+      }
+    });
+
+    // ensure metric is selected if indicator is selected
+    setSelectedMetrics((prevMetrics) => {
+      if (checked && prevMetrics.includes(metric)) {
+        return [...prevMetrics];
+      } else {
+        return [...prevMetrics, metric];
       }
     });
   };
@@ -92,9 +133,18 @@ export default function SelectionSidebar({
     });
   };
 
-  const updateMetricIndicators = (indicators, event) => {
-    const checked = event.target.checked;
+  const handleMetricChange = (metric, event) => {
+    const checked = event.target.checked
 
+    setSelectedMetrics((prevMetrics) => {
+      if (!checked) {
+        return prevMetrics.filter((m) => m !== metric);
+      } else {
+        return [...prevMetrics, metric];
+      }
+    });
+
+    const indicators = metric.indicators;
     setSelectedIndicators((prevIndicators) => {
       const updatedIndicators = prevIndicators.filter(
         (id) => !indicators.some((indicator) => indicator.indicator_id === id)
@@ -118,12 +168,103 @@ export default function SelectionSidebar({
       selectedIndicators.includes(indicatorId)
     );
     // Return the count of checked indicators
-
     return checkedIndicators.length;
   }
 
+  const handleWeightChange = (metricId, indicatorId, e) => {
+    e.stopPropagation();
+    const newWeight = prompt("Enter the new weight:");
+
+    if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
+      if (metricId) {
+        setMetricWeights((prevMetrics) => ({
+          ...prevMetrics,
+          [metricId]: parseFloat(newWeight),
+        }));
+      } else if (indicatorId) {
+        setIndicatorWeights((prevWeights) => ({
+          ...prevWeights,
+          [indicatorId]: parseFloat(newWeight),
+        }));
+      }
+    }
+  };
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
+    setSuccessMessage("");
+  };
+
+  const handleSave = () => {
+    if (!selectedFramework) {
+      return setErrorMessage("No framework has been selected.");
+    } else if (!selectedIndicators) {
+      return setErrorMessage("No indicators have been selected.");
+    }
+
+    const totalMetricWeight = selectedMetrics.reduce((total, metric) =>
+      total + metricWeights[metric.metric_id], 0
+    );
+    if (parseInt(totalMetricWeight) !== 1) {
+      return setErrorMessage("Metric weights do not add up to 1.");
+    }
+
+    const hasError = selectedMetrics.some((metric) => {
+      const totalIndicatorWeight = metric.indicators.reduce((total, indicator) => {
+        return selectedIndicators.includes(indicator.indicator_id) 
+          ? total + indicatorWeights[indicator.indicator_id] 
+          : total;
+      }, 0);
+      return parseInt(totalIndicatorWeight) !== 1;
+    });
+    if (hasError) {
+      return setErrorMessage("Indicator weights for some metrics do not add up to 1.")
+    }
+
+    // update savedWeights
+    const newSavedWeights = {};
+    selectedMetrics.forEach((metric) => {
+      const metricId = metric.metric_id;
+      const metricWeight = metricWeights[metricId];
+      const indicators = {};
+      metric.indicators.forEach((indicator) => {
+        const indicatorId = indicator.indicator_id;
+        const indicatorWeight = indicatorWeights[indicatorId];
+        indicators[indicatorId] = indicatorWeight;
+      });
+      newSavedWeights[metricId] = {
+        metric_id: metricId,
+        metric_weight: metricWeight,
+        indicators: indicators,
+      };
+    });
+    setSavedWeights(newSavedWeights);
+    
+    return setSuccessMessage("Preferences saved successfully.");
+  };
+  
   return (
     <Box sx={{ paddingBottom: 3 }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="success">{successMessage}</Alert>
+      </Snackbar>
+      
       <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -202,7 +343,7 @@ export default function SelectionSidebar({
         <AccordionDetails>
           <Box>
             {selectedFramework ? (
-              selectedMetrics.map((metric) => (
+              frameworkMetrics.map((metric) => (
                 <Box key={"_metric_" + metric.metric_id} sx={{ mb: 2 }}>
                   <Box
                     display="flex"
@@ -228,9 +369,7 @@ export default function SelectionSidebar({
                             metric.indicators.length &&
                           howManyIndicatorsChecked(metric) > 0
                         }
-                        onChange={(e) =>
-                          updateMetricIndicators(metric.indicators, e)
-                        }
+                        onChange={(e) => handleMetricChange(metric, e)}
                       />
                       <Typography fontWeight="bold">
                         {metric.metric_name}
@@ -241,8 +380,11 @@ export default function SelectionSidebar({
                         <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                       </Tooltip>
                       <Chip
-                        label={`${metric.predefined_weight}`}
+                        label={`${metricWeights[metric.metric_id]}`}
                         color="primary"
+                        onClick={(e) => 
+                          handleWeightChange(metric.metric_id, null, e)
+                        }
                       />
                       <ExpandMoreIcon />
                     </Box>
@@ -268,7 +410,8 @@ export default function SelectionSidebar({
                                 }
                                 onChange={(e) =>
                                   handleIndicatorChange(
-                                    indicator.indicator_id,
+                                    metric, 
+                                    indicator.indicator_id, 
                                     e.target.checked
                                   )
                                 }
@@ -281,13 +424,14 @@ export default function SelectionSidebar({
                               <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                             </Tooltip>
                             <Chip
-                              label={`${indicator.predefined_weight}`}
+                              label={`${indicatorWeights[indicator.indicator_id]}`}
                               color={
-                                selectedIndicators.includes(
-                                  indicator.indicator_id
-                                )
-                                  ? "success"
-                                  : "warning"
+                                selectedIndicators.includes(indicator.indicator_id) 
+                                ? "success" 
+                                : "error"
+                              }
+                              onClick={(e) => 
+                                handleWeightChange(null, indicator.indicator_id, e)
                               }
                             />
                           </Box>
@@ -345,6 +489,16 @@ export default function SelectionSidebar({
           </FormControl>
         </AccordionDetails>
       </Accordion>
+      <Box sx={{
+        mt: 2,
+        mr: 2,
+        display: "flex",
+        justifyContent: "right",
+      }}>
+        <Button variant="contained" color="primary" onClick={handleSave}>
+          Save
+        </Button>
+      </Box>
     </Box>
   );
 }
