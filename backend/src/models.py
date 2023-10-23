@@ -41,21 +41,30 @@ def password_reset_models(api):
 
 
 def company_framework_name_models(api):
+    industry_names_model = api.model('IndustryNames', {
+        'message': fields.String(description='Status message', example='Industries successfully retrieved.'),
+        'industries': fields.List(fields.String(example="Industry 1"), description='List of industries names'),
+    })
+    company_names_model = api.model('CompanyNames', {
+        'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
+        'companies': fields.List(fields.String(example="Company 1"), description='List of company names'),
+    })
     framework_names_model = api.model('FrameworkNames', {
         'message': fields.String(description='Status message', example='Frameworks successfully retrieved.'),
         'frameworks': fields.List(fields.String(example="Framework 1"), description='List of framework names'),
     })
-    company_names_model = api.model('CompanyNames', {
-        'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
-        'frameworks': fields.List(fields.String(example="Company 1"), description='List of framework names'),
+    industry_companies_model = api.model('IndustryCompanies', {
+        'message': fields.String(description='Status message', example='Companies for industry successfully retrieved.'),
+        'companies': fields.List(fields.Integer(example="Company ID 1"), description='List of company IDs'),
     })
     company_description_model = api.model('CompanyDescription', {
-        'message': fields.String(description='Status message', example='Companies successfully retrieved.'),
+        'message': fields.String(description='Status message', example='Description successfully retrieved.'),
         'description': fields.String(description='Company description', example="Description for Company 1"),
     })
 
-    return framework_names_model, company_names_model, company_description_model
-    
+    return industry_names_model, company_names_model, framework_names_model, industry_companies_model, company_description_model
+
+
 def framework_metric_indicator_models(api):
     indicator_model = api.model('Indicator', {
         'indicator_id': fields.Integer(description='The indicator ID', example=1),

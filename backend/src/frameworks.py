@@ -1,5 +1,43 @@
-from .database import db, Company, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
+from .database import db, Company, Industry, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
 from typing import List
+
+
+def all_industries():
+    """
+    Summary:
+        Fetches all industry names from the database.
+    Args:
+        None
+    Returns:
+        Dictionary containing a successful message and a list of industry names
+        HTTP status code
+    """
+
+    industries = [industry.name for industry in Industry.query.all()]
+    if not industries:
+        return {"message": "No industries found."}, 400
+
+    return {"message": 'All industries retrieved!', "industries": industries}, 200
+
+
+def all_companies():
+    """
+    Summary:
+        Fetches all company names from the database.
+    Args:
+        None
+    Returns:
+        Dictionary containing a successful message and a list of company names
+        HTTP status code
+    """
+
+    companies = [{'name': company.name, 'company_id': company.company_id}
+                 for company in Company.query.all()]
+    if not companies:
+        return {"message": "No companies found."}, 400
+
+    return {"message": 'All companies retrieved!', "companies": companies}, 200
+
 
 def all_frameworks():
     """
@@ -19,22 +57,31 @@ def all_frameworks():
     return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
 
-def all_companies():
+def get_companies_by_industry(industry_id: int):
     """
     Summary:
-        Fetches all company names from the database.
+        Fetches all company IDs associated with a given industry from the database.
     Args:
-        None
+        industry_id (int): The ID of the industry.
     Returns:
-        Dictionary containing a successful message and a list of company names
+        Dictionary containing a successful message and a list of company IDs
         HTTP status code
     """
 
-    companies = [{'name': company.name, 'company_id': company.company_id} for company in Company.query.all()]
-    if not companies:
-        return {"message": "No companies found."}, 400
+    # Fetch the industry
+    industry = db.session.query(Industry).filter_by(
+        industry_id=industry_id).first()
 
-    return {"message": 'All companies retrieved!', "companies": companies}, 200
+    if not industry:
+        return {"message": f"Industry with ID {industry_id} not found."}, 400
+
+    # Extract company IDs
+    companies = db.session.query(Company).filter_by(
+        industry_id=industry.industry_id).all()
+    company_ids = [company.company_id for company in companies]
+
+    return {"message": 'Companies for industry successfully retrieved!', "companies": company_ids}, 200
+
 
 def get_company_description(company_id: int):
     """
@@ -52,6 +99,7 @@ def get_company_description(company_id: int):
         return {"message": f"Company with ID {company_id} not found."}, 400
 
     return {"message": 'Description successfully retrieved!', "description": company.description}, 200
+
 
 def get_framework_info_from_company(company_id: int):
     """
@@ -166,7 +214,7 @@ def get_framework_info_from_company(company_id: int):
         framework_data.append(curr_framework)
 
     response = {
-        "message": "Framework, metric & indicator information for company retrieved!",
+        "message": "Framework, metric & indicator information for company successfully retrieved!",
         "frameworks": framework_data
     }
 
@@ -205,7 +253,7 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
         indicator_values.append(response_item)
 
     response = {
-        "message": "Values successfully retrieved!",
+        "message": "Indicator values for company successfully retrieved!",
         "values": indicator_values
     }
 
