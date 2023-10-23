@@ -139,6 +139,28 @@ export default function DataDisplay({
           </TableBody>
         </Table>
       </Box>
+      <Box
+        sx={{
+          margin: '10px',
+          display: 'flex',
+          float: 'right'
+        }}
+      >
+        <Typography
+          variant="h5"
+        >
+          Adjusted ESG Score: 
+        </Typography>
+        <Typography
+          variant="h5"
+          color="text.secondary"
+          paragraph
+          textAlign="center"
+          sx={{ ml: '10px' }}
+        >
+          100
+        </Typography>
+      </Box>
     </Box>
   );
 }

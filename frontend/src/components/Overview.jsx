@@ -1,11 +1,12 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Typography, Tooltip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import React from "react";
 
 export default function Overview({
   frameworksData,
   indicatorValues
 }) {
-  console.log("overview", frameworksData)
+  // console.log("overview", frameworksData)
 
   const getRecentESGScores = () => {
     if (!frameworksData) {
@@ -18,7 +19,7 @@ export default function Overview({
       let frameworkScore = 0;
       const { framework_name } = framework; // Get the framework name
   
-      // Create a map to store the most recent indicator values by indicator_id
+      // Map to store the most recent year's indicator values by indicator_id
       const mostRecentIndicatorValues = new Map();
   
       // Iterate through indicatorValues to find the most recent values for each indicator_id
@@ -29,7 +30,7 @@ export default function Overview({
         }
       });
   
-      // Calculate the metric score for this framework
+      // Calculate each metric score
       framework.metrics.forEach((metric) => {
         const { predefined_weight, indicators } = metric;
         const metricScore = indicators.reduce((accumulator, indicator) => {
@@ -46,7 +47,7 @@ export default function Overview({
         frameworkScore += predefined_weight * metricScore;
       });
   
-      // Get the most recent year chosen for indicators in this framework
+      // Find most recent year and only calculate values based on that year
       const mostRecentYear = [...mostRecentIndicatorValues.values()].reduce((maxYear, indicatorValue) => {
         return Math.max(maxYear, indicatorValue.year);
       }, -Infinity);
@@ -67,7 +68,7 @@ export default function Overview({
     .filter((framework) => framework.year === Math.max(...scoreList.map((f) => f.year)))
     .map((framework) => framework.score);
 
-  const averageESGScore = mostRecentYearScores.reduce((sum, score) => sum + score, 0) / mostRecentYearScores.length;
+  const averageESGScore = (mostRecentYearScores.reduce((sum, score) => sum + score, 0) / mostRecentYearScores.length).toFixed(1);
 
   return (
     <Box
@@ -122,9 +123,17 @@ export default function Overview({
             <Typography variant="h2" color="text.primary" paragraph>
               {averageESGScore}
             </Typography>
-            <Typography variant="h6" color="text.secondary">
-              ESG Rating
-            </Typography>
+            <Box
+              display="flex"
+              alignItems="center"
+            >
+              <Typography variant="h6" color="text.secondary">
+                ESG Rating
+              </Typography>
+              <Tooltip title="information about how it was calculated">
+                <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+              </Tooltip>
+            </Box>
           </Box>
           <Box
             sx={{
