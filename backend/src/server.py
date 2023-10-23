@@ -170,14 +170,14 @@ class FrameworksAll(Resource):
         return all_frameworks()
 
 
-@api.route("/api/industries/<int:industry_id>")
+@api.route("/api/industries/<string:industry_name>")
 class CompaniesByIndustry(Resource):
     @api.response(200, 'Companies for industry successfully retrieved!', model=industry_companies_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Industry not found.')
     @jwt_required()
-    def get(self, industry_id):
-        return get_companies_by_industry(industry_id)
+    def get(self, industry_name):
+        return get_companies_by_industry(industry_name)
 
 
 @api.route("/api/companies/<string:company_ids>")

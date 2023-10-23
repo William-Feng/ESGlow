@@ -57,23 +57,22 @@ def all_frameworks():
     return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
 
-def get_companies_by_industry(industry_id: int):
+def get_companies_by_industry(industry_name: str):
     """
     Summary:
-        Fetches all company IDs associated with a given industry from the database.
+        Fetches all company IDs associated with a given industry name from the database.
     Args:
-        industry_id (int): The ID of the industry.
+        industry_name (int): The name of the industry.
     Returns:
         Dictionary containing a successful message and a list of company IDs
         HTTP status code
     """
 
     # Fetch the industry
-    industry = db.session.query(Industry).filter_by(
-        industry_id=industry_id).first()
+    industry = db.session.query(Industry).filter_by(name=industry_name).first()
 
     if not industry:
-        return {"message": f"Industry with ID {industry_id} not found."}, 400
+        return {"message": f"Industry named '{industry_name}' not found."}, 400
 
     # Extract company IDs
     companies = db.session.query(Company).filter_by(
