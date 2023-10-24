@@ -274,6 +274,7 @@ function Dashboard({ token }) {
               anchor="left"
             >
               <SelectionSidebar
+                selectedCompany={selectedCompany}
                 frameworksData={frameworksData}
                 years={years}
                 selectedFramework={selectedFramework}
