@@ -15,7 +15,6 @@ export default function Overview({
     let ESGScoreList = [];
 
     // Iterate over the frameworks in the array.
-    console.log('frameworksdata', frameworksData)
     frameworksData.forEach((framework) => {
       let frameworkScore = 0;
       const { framework_name } = framework;
@@ -183,7 +182,7 @@ export default function Overview({
                     <Typography variant="body2">
                       {toolTipStringIntro}
                       {toolTipStringList.map((str) =>
-                        <Typography variant="body3" sx={{textIndent: '20px'}}>
+                        <Typography variant="body3" sx={{textIndent: '20px'}} key={str}>
                           <br />{str}
                         </Typography>
                       )}

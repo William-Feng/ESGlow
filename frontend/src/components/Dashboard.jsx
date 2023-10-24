@@ -225,6 +225,7 @@ function Dashboard({ token }) {
                 setSelectedFramework={setSelectedFramework}
                 selectedIndicators={selectedIndicators}
                 setSelectedIndicators={setSelectedIndicators}
+                selectedYears={selectedYears}
                 setSelectedYears={setSelectedYears}
                 setSavedWeights={setSavedWeights}
               />

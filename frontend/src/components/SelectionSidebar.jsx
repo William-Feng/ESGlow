@@ -33,6 +33,7 @@ export default function SelectionSidebar({
   setSelectedFramework,
   selectedIndicators,
   setSelectedIndicators,
+  selectedYears,
   setSelectedYears,
   setSavedWeights,
 }) {
@@ -225,7 +226,8 @@ export default function SelectionSidebar({
     }
 
     // Update savedWeights
-    const newSavedWeights = [];
+    const newSavedWeights = {};
+    const savedMetricsList = [];
     selectedMetrics.forEach((metric) => {
       const metricId = metric.metric_id;
       const metricWeight = metricWeights[metricId];
@@ -235,12 +237,14 @@ export default function SelectionSidebar({
         const indicatorWeight = indicatorWeights[indicatorId];
         indicators.push({ 'indicator_id': indicatorId, 'indicator_weight': indicatorWeight })
       });
-      newSavedWeights.push({
+      savedMetricsList.push({
         metric_id: metricId,
         metric_weight: metricWeight,
         indicators: indicators,
       });
     });
+    newSavedWeights['metrics'] = savedMetricsList;
+    newSavedWeights['year'] = Math.max(...selectedYears)
     setSavedWeights(newSavedWeights);
 
     return setSuccessMessage("Preferences saved successfully.");
