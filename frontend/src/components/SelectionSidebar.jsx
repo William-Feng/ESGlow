@@ -305,7 +305,11 @@ export default function SelectionSidebar({
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
 
-      <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel1}
+        onChange={handleChange("panel1")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
@@ -335,7 +339,7 @@ export default function SelectionSidebar({
               }
               onChange={handleFrameworkChange}
             >
-              {frameworksData ? (
+              {frameworksData &&
                 frameworksData.map((framework) => (
                   <Box
                     display="flex"
@@ -353,17 +357,16 @@ export default function SelectionSidebar({
                       <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                     </Tooltip>
                   </Box>
-                ))
-              ) : (
-                <Typography style={{ color: "red" }}>
-                  Select a company to see the associated frameworks
-                </Typography>
-              )}
+                ))}
             </RadioGroup>
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded.panel2} onChange={handleChange("panel2")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel2}
+        onChange={handleChange("panel2")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2bh-content"
@@ -497,7 +500,11 @@ export default function SelectionSidebar({
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded.panel3} onChange={handleChange("panel3")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel3}
+        onChange={handleChange("panel3")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3bh-content"
@@ -515,14 +522,17 @@ export default function SelectionSidebar({
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-            >
-              {years.map((y) => (
+          <Box flexWrap="wrap" display="flex" width="100%" px={2}>
+            {years.map((y, idx) => (
+              <Box
+                key={y}
+                flex={1}
+                width="50%"
+                display="flex"
+                justifyContent={idx % 2 === 0 ? "flex-start" : "center"}
+                ml={idx % 2 === 0 ? 0 : -2}
+              >
                 <FormControlLabel
-                  key={y}
                   value={y}
                   control={
                     <Checkbox
@@ -530,14 +540,18 @@ export default function SelectionSidebar({
                       onChange={() => handleYearChange(y)}
                     />
                   }
-                  label={y}
+                  label={<Typography fontWeight="bold">{y}</Typography>}
                 />
-              ))}
-            </RadioGroup>
-          </FormControl>
+              </Box>
+            ))}
+          </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded.panel4} onChange={handleChange("panel4")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel4}
+        onChange={handleChange("panel4")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2bh-content"
@@ -557,18 +571,22 @@ export default function SelectionSidebar({
               textTransform: "uppercase",
             }}
           >
-            All Indicators
+            Additional Indicators
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box>
+            <Typography style={{ color: "red", paddingBottom: "24px" }}>
+              Note that the following indicators are not included in the
+              selected framework and will not affect the ESG Score.
+            </Typography>
             {remainingExtraIndicators.map((indicator) => (
               <Box
                 key={indicator.indicator_id}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                sx={{ mb: 1 }}
+                sx={{ mb: 1, pl: 2 }}
               >
                 <FormControlLabel
                   control={
@@ -583,7 +601,11 @@ export default function SelectionSidebar({
                       }
                     />
                   }
-                  label={indicator.name}
+                  label={
+                    <Typography style={{ maxWidth: 200, whiteSpace: "normal" }}>
+                      {indicator.name}
+                    </Typography>
+                  }
                 />
               </Box>
             ))}

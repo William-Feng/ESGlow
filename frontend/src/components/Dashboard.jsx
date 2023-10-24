@@ -267,6 +267,7 @@ function Dashboard({ token }) {
                   boxSizing: "border-box",
                   overflowY: "auto",
                   maxHeight: "100%",
+                  backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
                 },
               }}
               variant="permanent"
