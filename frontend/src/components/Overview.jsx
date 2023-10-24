@@ -108,7 +108,14 @@ export default function Overview({
       (framework) =>
         framework.year === Math.max(...scoreList.map((f) => f.year))
     )
+
+    const year = filteredFrameworksScores[0].year; // Assuming all objects have the same year
+    const toolTipStringIntro = `The ESG Score was calculated by averaging` +
+      ` ${year} data of the following framework scores:\n`
     
+    const toolTipStringList = filteredFrameworksScores
+        .map((item) => `- ${item.framework_name}: ${item.score}`)
+
     const mostRecentYearScores = filteredFrameworksScores.map((framework) => framework.score);
     const averageESGScore = (
       mostRecentYearScores.reduce((sum, score) => sum + score, 0) /
@@ -172,7 +179,17 @@ export default function Overview({
                 <Typography variant="h6" color="text.secondary">
                   ESG Rating
                 </Typography>
-                <Tooltip title="information about how it was calculated">
+                <Tooltip title={
+                    <Typography variant="body2">
+                      {toolTipStringIntro}
+                      {toolTipStringList.map((str) =>
+                        <Typography variant="body3" sx={{textIndent: '20px'}}>
+                          <br />{str}
+                        </Typography>
+                      )}
+                    </Typography>
+                  }
+                >
                   <InfoOutlinedIcon
                     style={{ cursor: "pointer", paddingLeft: 3 }}
                   />
