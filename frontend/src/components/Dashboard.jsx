@@ -16,7 +16,6 @@ import DataDisplay from "./DataDisplay";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 function Dashboard({ token }) {
   const navigate = useNavigate();
   const defaultTheme = createTheme();
@@ -108,6 +107,9 @@ function Dashboard({ token }) {
             console.log('set fixed overview')
             setFixedIndicatorValues(data.values);
           })
+          .catch((error) =>
+            console.error(error)
+          );
       })
       .catch((error) =>
         console.error(
@@ -134,6 +136,9 @@ function Dashboard({ token }) {
         .then((data) => {
           setIndicatorValues(data.values);
         })
+        .catch((error) =>
+          console.error(error)
+        );
     }
   }, [selectedIndicators, token, years, navigate, selectedCompany, fetchIndicatorValues, yearsString]);
 

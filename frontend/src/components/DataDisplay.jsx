@@ -14,7 +14,9 @@ export default function DataDisplay({
   selectedFramework,
   selectedYears,
   indicatorValues,
+  savedWeights
 }) {
+  console.log('saved', savedWeights)
   const validIndicatorIds = selectedFramework
     ? selectedFramework.metrics.flatMap((metric) =>
         metric.indicators.map((indicator) => indicator.indicator_id)

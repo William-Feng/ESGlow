@@ -15,6 +15,7 @@ export default function Overview({
     let ESGScoreList = [];
 
     // Iterate over the frameworks in the array.
+    console.log('frameworksdata', frameworksData)
     frameworksData.forEach((framework) => {
       let frameworkScore = 0;
       const { framework_name } = framework;
