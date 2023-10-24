@@ -42,14 +42,6 @@ export default function SelectionSidebar({
 }) {
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
-  // Discover the indicators that are not in the selected framework
-  const frameworkIndicatorIds = selectedFramework
-    ? selectedFramework.metrics.map((metric) => metric.indicator_id)
-    : [];
-  const filteredAllIndicators = allIndicators.filter(
-    (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
-  );
-
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
     setSelectedFramework(
@@ -136,17 +128,6 @@ export default function SelectionSidebar({
         return [...prevMetrics];
       }
     });
-    console.log(selectedMetrics);
-  };
-
-  const handleYearChange = (year) => {
-    setSelectedYears((prevYears) => {
-      if (prevYears.includes(year)) {
-        return prevYears.filter((y) => y !== year);
-      } else {
-        return [...prevYears, year];
-      }
-    });
   };
 
   const handleMetricChange = (metric, event) => {
@@ -205,6 +186,33 @@ export default function SelectionSidebar({
       }
     }
   };
+
+  const handleYearChange = (year) => {
+    setSelectedYears((prevYears) => {
+      if (prevYears.includes(year)) {
+        return prevYears.filter((y) => y !== year);
+      } else {
+        return [...prevYears, year];
+      }
+    });
+  };
+
+  const [remainingExtraIndicators, setRemainingExtraIndicators] = useState([]);
+
+  // Discover the indicators that are not in the selected framework
+  useEffect(() => {
+    const frameworkIndicatorIds = selectedFramework
+      ? selectedFramework.metrics
+          .reduce((acc, metric) => acc.concat(metric.indicators), [])
+          .map((indicator) => indicator.indicator_id)
+      : [];
+
+    const filtered_indicators = allIndicators.filter(
+      (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
+    );
+
+    setRemainingExtraIndicators(filtered_indicators);
+  }, [allIndicators, selectedFramework]);
 
   const handleExtraIndicatorsChange = (indicatorId) => {
     setSelectedExtraIndicators((prev) => {
@@ -554,7 +562,7 @@ export default function SelectionSidebar({
         </AccordionSummary>
         <AccordionDetails>
           <Box>
-            {filteredAllIndicators.map((indicator) => (
+            {remainingExtraIndicators.map((indicator) => (
               <Box
                 key={indicator.indicator_id}
                 display="flex"
@@ -575,7 +583,7 @@ export default function SelectionSidebar({
                       }
                     />
                   }
-                  label={indicator.indicator_name}
+                  label={indicator.name}
                 />
               </Box>
             ))}
