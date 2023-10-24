@@ -36,8 +36,19 @@ export default function SelectionSidebar({
   selectedYears,
   setSelectedYears,
   setSavedWeights,
+  allIndicators,
+  selectedExtraIndicators,
+  setSelectedExtraIndicators,
 }) {
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
+
+  // Discover the indicators that are not in the selected framework
+  const frameworkIndicatorIds = selectedFramework
+    ? selectedFramework.metrics.map((metric) => metric.indicator_id)
+    : [];
+  const filteredAllIndicators = allIndicators.filter(
+    (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
+  );
 
   const handleFrameworkChange = (event) => {
     const frameworkId = event.target.value;
@@ -85,6 +96,7 @@ export default function SelectionSidebar({
     panel1: false,
     panel2: false,
     panel3: false,
+    panel4: false,
   });
 
   const handleChange = (panel) => (_, isExpanded) => {
@@ -194,6 +206,16 @@ export default function SelectionSidebar({
     }
   };
 
+  const handleExtraIndicatorsChange = (indicatorId) => {
+    setSelectedExtraIndicators((prev) => {
+      if (prev.includes(indicatorId)) {
+        return prev.filter((id) => id !== indicatorId);
+      } else {
+        return [...prev, indicatorId];
+      }
+    });
+  };
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -249,8 +271,8 @@ export default function SelectionSidebar({
         indicators: indicators,
       });
     });
-    newSavedWeights['metrics'] = savedMetricsList;
-    newSavedWeights['year'] = Math.max(...selectedYears)
+    newSavedWeights["metrics"] = savedMetricsList;
+    newSavedWeights["year"] = Math.max(...selectedYears);
     setSavedWeights(newSavedWeights);
 
     return setSuccessMessage("Preferences saved successfully.");
@@ -505,6 +527,59 @@ export default function SelectionSidebar({
               ))}
             </RadioGroup>
           </FormControl>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded.panel4} onChange={handleChange("panel4")}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+          sx={{
+            fontSize: "1.2rem",
+            fontWeight: "bold",
+            letterSpacing: "0.5px",
+            textTransform: "uppercase",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            All Indicators
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box>
+            {filteredAllIndicators.map((indicator) => (
+              <Box
+                key={indicator.indicator_id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: 1 }}
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={
+                        selectedExtraIndicators.includes(
+                          indicator.indicator_id
+                        ) || false
+                      }
+                      onChange={() =>
+                        handleExtraIndicatorsChange(indicator.indicator_id)
+                      }
+                    />
+                  }
+                  label={indicator.indicator_name}
+                />
+              </Box>
+            ))}
+          </Box>
         </AccordionDetails>
       </Accordion>
       {selectedFramework && (

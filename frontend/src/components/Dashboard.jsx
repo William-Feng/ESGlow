@@ -283,6 +283,7 @@ function Dashboard({ token }) {
                 setSelectedYears={setSelectedYears}
                 setSavedWeights={setSavedWeights}
                 allIndicators={allIndicators}
+                selectedExtraIndicators={selectedExtraIndicators}
                 setSelectedExtraIndicators={setSelectedExtraIndicators}
               />
             </Drawer>
@@ -292,6 +293,8 @@ function Dashboard({ token }) {
               selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}
               savedWeights={savedWeights}
+              allIndicatorValues={allIndicatorValues}
+              selectedExtraIndicators={selectedExtraIndicators}
             />
           </Box>
         </Box>
