@@ -27,7 +27,6 @@ export default function DataDisplay({
   const filteredData = indicatorValues.filter((row) =>
     validIndicatorIds.includes(row.indicator_id)
   );
-  console.log(savedWeights)
 
   // display the new adjusted ESG score based on savedWeights
   useEffect(() => {
@@ -55,6 +54,7 @@ export default function DataDisplay({
       }
       setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
     }
+    // eslint-disable-next-line
   }, [savedWeights]);
   
 
@@ -180,16 +180,23 @@ export default function DataDisplay({
           float: "right",
         }}
       >
-        <Typography variant="h5">Adjusted ESG Score:</Typography>
-        <Typography
-          variant="h5"
-          color="text.secondary"
-          paragraph
-          textAlign="center"
-          sx={{ ml: "10px" }}
-        >
-          {adjustedScore}
-        </Typography>
+        {adjustedScore ?
+          <>
+            <Typography variant="h5">Adjusted ESG Score:</Typography>
+            <Typography
+              variant="h5"
+              color="text.secondary"
+              paragraph
+              textAlign="center"
+              sx={{ ml: "10px" }}
+            >
+              {adjustedScore}
+            </Typography>
+          </>
+          :
+          <Typography variant="h5">Please make sure selections are saved.</Typography>
+        }
+
       </Box>
     </Box>
   );
