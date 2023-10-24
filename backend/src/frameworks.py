@@ -57,6 +57,25 @@ def all_frameworks():
     return {"message": 'All frameworks retrieved!', "frameworks": frameworks}, 200
 
 
+def all_indicators():
+    """
+    Summary:
+        Fetches all indicator names and IDs from the database.
+    Args:
+        None
+    Returns:
+        Dictionary containing a successful message and a list of indicator names & IDs
+        HTTP status code
+    """
+
+    indicators = [{'name': indicator.name, 'indicator_id': indicator.indicator_id}
+                  for indicator in Indicator.query.all()]
+    if not indicators:
+        return {"message": "No indicators found."}, 400
+
+    return {"message": 'All indicators retrieved!', "indicators": indicators}, 200
+
+
 def get_companies_by_industry(industry_name: str):
     """
     Summary:
