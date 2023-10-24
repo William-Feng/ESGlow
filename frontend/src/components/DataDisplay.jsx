@@ -7,7 +7,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function DataDisplay({
   selectedCompany,
@@ -16,6 +16,7 @@ export default function DataDisplay({
   indicatorValues,
   savedWeights
 }) {
+  const [adjustedScore, setAdjustedScore] = useState(0);
 
   const validIndicatorIds = selectedFramework
   ? selectedFramework.metrics.flatMap((metric) =>
@@ -50,12 +51,9 @@ export default function DataDisplay({
         });
       
         const finalScore = metricScores.reduce((accumulator, metricScore) => accumulator + metricScore, 0);
-      
         return finalScore;
       }
-      
-      const score = calculateScore(savedWeights, filteredData).toFixed(1);
-      console.log(score)
+      setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
     }
   }, [savedWeights]);
   
@@ -190,7 +188,7 @@ export default function DataDisplay({
           textAlign="center"
           sx={{ ml: "10px" }}
         >
-          100
+          {adjustedScore}
         </Typography>
       </Box>
     </Box>
