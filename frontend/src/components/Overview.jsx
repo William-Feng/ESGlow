@@ -103,13 +103,13 @@ export default function Overview({
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
     const scoreList = getRecentESGScores();
-    const mostRecentYearScores = scoreList
-      .filter(
-        (framework) =>
-          framework.year === Math.max(...scoreList.map((f) => f.year))
-      )
-      .map((framework) => framework.score);
-
+    const filteredFrameworksScores = scoreList
+    .filter(
+      (framework) =>
+        framework.year === Math.max(...scoreList.map((f) => f.year))
+    )
+    
+    const mostRecentYearScores = filteredFrameworksScores.map((framework) => framework.score);
     const averageESGScore = (
       mostRecentYearScores.reduce((sum, score) => sum + score, 0) /
       mostRecentYearScores.length
