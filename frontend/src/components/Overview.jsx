@@ -6,7 +6,7 @@ export default function Overview({
   selectedIndustry,
   selectedCompany,
   frameworksData,
-  indicatorValues,
+  fixedIndicatorValues,
 }) {
   const getRecentESGScores = () => {
     if (!frameworksData) {
@@ -22,8 +22,8 @@ export default function Overview({
       // Map to store the most recent year's indicator values by indicator_id
       const mostRecentIndicatorValues = new Map();
 
-      // Iterate through indicatorValues to find the most recent values for each indicator_id
-      indicatorValues.forEach((indicatorValue) => {
+      // Iterate through fixedIndicatorValues to find the most recent values for each indicator_id
+      fixedIndicatorValues.forEach((indicatorValue) => {
         if (
           !mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
           indicatorValue.year >
@@ -101,15 +101,21 @@ export default function Overview({
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-    console.log(frameworksData);
     const scoreList = getRecentESGScores();
-    const mostRecentYearScores = scoreList
-      .filter(
-        (framework) =>
-          framework.year === Math.max(...scoreList.map((f) => f.year))
-      )
-      .map((framework) => framework.score);
+    const filteredFrameworksScores = scoreList
+    .filter(
+      (framework) =>
+        framework.year === Math.max(...scoreList.map((f) => f.year))
+    )
 
+    const year = filteredFrameworksScores[0].year; // Assuming all objects have the same year
+    const toolTipStringIntro = `The ESG Score was calculated by averaging` +
+      ` ${year} data of the following framework scores:\n`
+    
+    const toolTipStringList = filteredFrameworksScores
+        .map((item) => `- ${item.framework_name}: ${item.score}`)
+
+    const mostRecentYearScores = filteredFrameworksScores.map((framework) => framework.score);
     const averageESGScore = (
       mostRecentYearScores.reduce((sum, score) => sum + score, 0) /
       mostRecentYearScores.length
@@ -172,7 +178,17 @@ export default function Overview({
                 <Typography variant="h6" color="text.secondary">
                   ESG Rating
                 </Typography>
-                <Tooltip title="information about how it was calculated">
+                <Tooltip title={
+                    <Typography variant="body2">
+                      {toolTipStringIntro}
+                      {toolTipStringList.map((str) =>
+                        <Typography variant="body3" sx={{textIndent: '20px'}} key={str}>
+                          <br />{str}
+                        </Typography>
+                      )}
+                    </Typography>
+                  }
+                >
                   <InfoOutlinedIcon
                     style={{ cursor: "pointer", paddingLeft: 3 }}
                   />

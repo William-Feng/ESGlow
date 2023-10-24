@@ -141,7 +141,19 @@ export default function Searchbar({
             backgroundColor: view === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography>Single Company View</Typography>
+          <Typography variant="body4" textAlign="center"
+            sx={{
+              fontSize: "14px", // Default font size
+              "@media (min-width: 768px)": {
+                fontSize: "10px", // Adjust font size for screens wider than 768px
+              },
+              "@media (min-width: 1024px)": {
+                fontSize: "14px", // Adjust font size for screens wider than 1024px
+              },
+            }}
+          >
+            Single Company View
+          </Typography>
         </ToggleButton>
         <ToggleButton
           value="multiple"
@@ -149,7 +161,19 @@ export default function Searchbar({
             backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography>Comparison View</Typography>
+          <Typography variant="body4" textAlign="center"
+            sx={{
+              fontSize: "14px", // Default font size
+              "@media (min-width: 768px)": {
+                fontSize: "10px", // Adjust font size for screens wider than 768px
+              },
+              "@media (min-width: 1024px)": {
+                fontSize: "14px", // Adjust font size for screens wider than 1024px
+              },
+            }}
+          >
+            Comparison View
+          </Typography>
         </ToggleButton>
       </ToggleButtonGroup>
     </Box>

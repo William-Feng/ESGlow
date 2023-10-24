@@ -7,23 +7,56 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function DataDisplay({
   selectedCompany,
   selectedFramework,
   selectedYears,
   indicatorValues,
+  savedWeights
 }) {
+  const [adjustedScore, setAdjustedScore] = useState(0);
+
   const validIndicatorIds = selectedFramework
-    ? selectedFramework.metrics.flatMap((metric) =>
-        metric.indicators.map((indicator) => indicator.indicator_id)
-      )
-    : [];
+  ? selectedFramework.metrics.flatMap((metric) =>
+      metric.indicators.map((indicator) => indicator.indicator_id)
+    )
+  : [];
 
   const filteredData = indicatorValues.filter((row) =>
     validIndicatorIds.includes(row.indicator_id)
   );
+
+  // display the new adjusted ESG score based on savedWeights
+  useEffect(() => {
+    if (savedWeights.metrics) {
+      function calculateScore(savedWeights, filteredData) {
+        const metricScores = savedWeights.metrics.map((metric) => {
+          const metricScore = metric.indicators.reduce((accumulator, indicator) => {
+            const matchingIndicator = filteredData.find(
+              (data) =>
+                data.indicator_id === indicator.indicator_id && data.year === savedWeights.year
+            );
+      
+            if (matchingIndicator) {
+              return accumulator + matchingIndicator.value * indicator.indicator_weight;
+            }
+      
+            return accumulator;
+          }, 0);
+      
+          return metricScore * metric.metric_weight;
+        });
+      
+        const finalScore = metricScores.reduce((accumulator, metricScore) => accumulator + metricScore, 0);
+        return finalScore;
+      }
+      setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
+    }
+    // eslint-disable-next-line
+  }, [savedWeights]);
+  
 
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
@@ -147,16 +180,23 @@ export default function DataDisplay({
           float: "right",
         }}
       >
-        <Typography variant="h5">Adjusted ESG Score:</Typography>
-        <Typography
-          variant="h5"
-          color="text.secondary"
-          paragraph
-          textAlign="center"
-          sx={{ ml: "10px" }}
-        >
-          100
-        </Typography>
+        {adjustedScore ?
+          <>
+            <Typography variant="h5">Adjusted ESG Score:</Typography>
+            <Typography
+              variant="h5"
+              color="text.secondary"
+              paragraph
+              textAlign="center"
+              sx={{ ml: "10px" }}
+            >
+              {adjustedScore}
+            </Typography>
+          </>
+          :
+          <Typography variant="h5">Please make sure selections are saved.</Typography>
+        }
+
       </Box>
     </Box>
   );
