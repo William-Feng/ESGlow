@@ -95,6 +95,18 @@ export default function SelectionSidebar({
     setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
   };
 
+  // Collapse all accordions when the company is changed or deleted
+  useEffect(() => {
+    if (!frameworksData) {
+      setExpanded({
+        panel1: false,
+        panel2: false,
+        panel3: false,
+        panel4: false,
+      });
+    }
+  }, [frameworksData]);
+
   const [expandedMetrics, setExpandedMetrics] = useState([]);
 
   const toggleMetric = (metricId) => {
