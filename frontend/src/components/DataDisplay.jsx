@@ -14,49 +14,60 @@ export default function DataDisplay({
   selectedFramework,
   selectedYears,
   indicatorValues,
-  savedWeights
+  savedWeights,
+  allIndicatorValues,
+  selectedExtraIndicators,
 }) {
   const [adjustedScore, setAdjustedScore] = useState(0);
 
   const validIndicatorIds = selectedFramework
-  ? selectedFramework.metrics.flatMap((metric) =>
-      metric.indicators.map((indicator) => indicator.indicator_id)
-    )
-  : [];
+    ? selectedFramework.metrics.flatMap((metric) =>
+        metric.indicators.map((indicator) => indicator.indicator_id)
+      )
+    : [];
 
   const filteredData = indicatorValues.filter((row) =>
     validIndicatorIds.includes(row.indicator_id)
   );
 
-  // display the new adjusted ESG score based on savedWeights
+  // Display the new adjusted ESG score based on savedWeights
   useEffect(() => {
     if (savedWeights.metrics) {
       function calculateScore(savedWeights, filteredData) {
         const metricScores = savedWeights.metrics.map((metric) => {
-          const metricScore = metric.indicators.reduce((accumulator, indicator) => {
-            const matchingIndicator = filteredData.find(
-              (data) =>
-                data.indicator_id === indicator.indicator_id && data.year === savedWeights.year
-            );
-      
-            if (matchingIndicator) {
-              return accumulator + matchingIndicator.value * indicator.indicator_weight;
-            }
-      
-            return accumulator;
-          }, 0);
-      
+          const metricScore = metric.indicators.reduce(
+            (accumulator, indicator) => {
+              const matchingIndicator = filteredData.find(
+                (data) =>
+                  data.indicator_id === indicator.indicator_id &&
+                  data.year === savedWeights.year
+              );
+
+              if (matchingIndicator) {
+                return (
+                  accumulator +
+                  matchingIndicator.value * indicator.indicator_weight
+                );
+              }
+
+              return accumulator;
+            },
+            0
+          );
+
           return metricScore * metric.metric_weight;
         });
-      
-        const finalScore = metricScores.reduce((accumulator, metricScore) => accumulator + metricScore, 0);
+
+        const finalScore = metricScores.reduce(
+          (accumulator, metricScore) => accumulator + metricScore,
+          0
+        );
         return finalScore;
       }
       setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
     }
     // eslint-disable-next-line
   }, [savedWeights]);
-  
 
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
@@ -71,6 +82,15 @@ export default function DataDisplay({
 
     return Object.values(dataMap);
   }, [filteredData]);
+
+  // Retrieve the additional indicators and data selected by the user
+  const displayExtraIndicatorData = useMemo(
+    () =>
+      allIndicatorValues.filter((indicator) =>
+        selectedExtraIndicators.includes(indicator.indicator_id)
+      ),
+    [selectedExtraIndicators]
+  );
 
   if (!(selectedFramework && selectedCompany)) {
     const keyword = selectedCompany ? "framework" : "company";
@@ -180,7 +200,7 @@ export default function DataDisplay({
           float: "right",
         }}
       >
-        {adjustedScore ?
+        {adjustedScore ? (
           <>
             <Typography variant="h5">Adjusted ESG Score:</Typography>
             <Typography
@@ -193,10 +213,11 @@ export default function DataDisplay({
               {adjustedScore}
             </Typography>
           </>
-          :
-          <Typography variant="h5">Please make sure selections are saved.</Typography>
-        }
-
+        ) : (
+          <Typography variant="h5">
+            Please make sure selections are saved.
+          </Typography>
+        )}
       </Box>
     </Box>
   );
