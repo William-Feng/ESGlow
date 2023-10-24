@@ -199,17 +199,11 @@ export default function SelectionSidebar({
   };
 
   const handleSave = () => {
-    if (!selectedFramework) {
-      return setErrorMessage("No framework has been selected.");
-    } else if (!selectedIndicators) {
-      return setErrorMessage("No indicators have been selected.");
-    }
-
     const totalMetricWeight = selectedMetrics.reduce(
       (total, metric) => total + metricWeights[metric.metric_id],
       0
     );
-    if (parseInt(totalMetricWeight) !== 1) {
+    if (Math.abs(totalMetricWeight - 1) > 0.0001) {
       return setErrorMessage("Metric weights do not add up to 1.");
     }
 
@@ -222,7 +216,7 @@ export default function SelectionSidebar({
         },
         0
       );
-      return parseInt(totalIndicatorWeight) !== 1;
+      return Math.abs(totalIndicatorWeight - 1) > 0.001;
     });
     if (hasError) {
       return setErrorMessage(
