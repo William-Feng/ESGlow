@@ -13,14 +13,16 @@ import Searchbar from "./Searchbar";
 import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+
 
 function Dashboard({ token }) {
   const navigate = useNavigate();
   const defaultTheme = createTheme();
 
   const years = useMemo(() => [2022, 2023], []);
+  const yearsString = years.join(",");
 
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -29,11 +31,40 @@ function Dashboard({ token }) {
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
+  const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
 
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
   }, [selectedYears]);
+
+    // fetch function is extracted as a separate function
+  // this is called to set: indicatorValues (variable changes with sidebar selection)
+  //                     & fixedIndicatorValues (fixed value after company selection)
+  const fetchIndicatorValues = useCallback(
+    (companyId, indicatorIds, yearsString) => {
+      return fetch(`/api/values/${companyId}/${indicatorIds}/${yearsString}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (response.status === 401) {
+            localStorage.removeItem("token");
+            navigate("/");
+            return;
+          }
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .catch((error) =>
+          console.error("Error fetching indicator values:", error)
+        );
+    },
+    [token, navigate]
+  );
 
   useEffect(() => {
     // New selection of company wipes data display to blank
@@ -70,6 +101,13 @@ function Dashboard({ token }) {
           )
         );
         setSelectedIndicators(allIndicators);
+        // Set FIXED Indicator values (doesn't change with sidebar selection)
+        // this displays a ESG score in Overview for a company
+        fetchIndicatorValues(companyId, [...new Set(allIndicators)].join(","), yearsString)
+          .then((data) => {
+            console.log('set fixed overview')
+            setFixedIndicatorValues(data.values);
+          })
       })
       .catch((error) =>
         console.error(
@@ -77,9 +115,9 @@ function Dashboard({ token }) {
           error
         )
       );
-  }, [token, navigate, selectedCompany]);
+  }, [token, navigate, selectedCompany, yearsString, fetchIndicatorValues]);
 
-  // Fetch indicator values whenever selected indicators change
+  // Set indicatorValues, variable selection of indicator values that changes with sidebar
   useEffect(() => {
     if (selectedIndicators.length) {
       // New selection of company wipes data display to blank
@@ -91,32 +129,13 @@ function Dashboard({ token }) {
       // Convert the selectedIndicators to a set to ensure there are no duplicates
       // This is because frameworks may encompass the same metrics and hence the same indicators
       const indicatorIds = [...new Set(selectedIndicators)].join(",");
-      const yearsString = years.join(",");
 
-      fetch(`/api/values/${companyId}/${indicatorIds}/${yearsString}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          if (response.status === 401) {
-            localStorage.removeItem("token");
-            navigate("/");
-            return;
-          }
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
+      fetchIndicatorValues(companyId, indicatorIds, yearsString)
         .then((data) => {
           setIndicatorValues(data.values);
         })
-        .catch((error) =>
-          console.error("Error fetching indicator values:", error)
-        );
     }
-  }, [selectedIndicators, token, years, navigate, selectedCompany]);
+  }, [selectedIndicators, token, years, navigate, selectedCompany, fetchIndicatorValues, yearsString]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -168,7 +187,7 @@ function Dashboard({ token }) {
               selectedIndustry={selectedIndustry}
               selectedCompany={selectedCompany}
               frameworksData={frameworksData}
-              indicatorValues={indicatorValues}
+              fixedIndicatorValues={fixedIndicatorValues}
             />
           </Box>
           <Box
