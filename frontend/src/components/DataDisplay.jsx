@@ -145,7 +145,7 @@ export default function DataDisplay({
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  fontSize: "1.1em",
+                  fontSize: "1.2em",
                   background: "#D1EFFF",
                   borderRight: "1px solid",
                   borderColor: "divider",
@@ -160,11 +160,11 @@ export default function DataDisplay({
                   key={year}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "1.1em",
+                    fontSize: "1.2em",
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "15px",
+                    padding: "5px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
@@ -179,7 +179,11 @@ export default function DataDisplay({
               <TableRow
                 key={index}
                 sx={{
-                  backgroundColor: index % 2 === 0 ? "#F5F5F5" : "#E0E0E0",
+                  backgroundColor: index % 2 === 0 ? "#FAFAFA" : "#F5F5F5",
+                  borderTop: "1px solid #E0E0E0",
+                  "&:hover": {
+                    backgroundColor: "#E5E5E5",
+                  },
                 }}
               >
                 <TableCell
@@ -205,7 +209,11 @@ export default function DataDisplay({
               <TableRow
                 key={`extra-${index}`}
                 sx={{
-                  backgroundColor: "#F0E0FF",
+                  backgroundColor: "#F0E5FF",
+                  borderTop: "1px solid #D5C8FF",
+                  "&:hover": {
+                    backgroundColor: "#E8D6FF",
+                  },
                 }}
               >
                 <TableCell
@@ -232,26 +240,22 @@ export default function DataDisplay({
       </Box>
       <Box
         sx={{
-          margin: "10px",
+          pt: 3,
           display: "flex",
           float: "right",
         }}
       >
         {adjustedScore ? (
           <>
-            <Typography variant="h5">Adjusted ESG Score:</Typography>
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              paragraph
-              textAlign="center"
-              sx={{ ml: "10px" }}
-            >
+            <Typography variant="h5" color="text.secondary">
+              Adjusted ESG Score:
+            </Typography>
+            <Typography variant="h5" fontWeight="bold" sx={{ ml: 2 }}>
               {adjustedScore}
             </Typography>
           </>
         ) : (
-          <Typography variant="h5">
+          <Typography variant="h5" color="text.secondary">
             Please make sure selections are saved.
           </Typography>
         )}
