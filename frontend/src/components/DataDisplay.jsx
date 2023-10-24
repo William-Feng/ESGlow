@@ -84,13 +84,27 @@ export default function DataDisplay({
   }, [filteredData]);
 
   // Retrieve the additional indicators and data selected by the user
-  const displayExtraIndicatorData = useMemo(
+  const extraIndicatorData = useMemo(
     () =>
       allIndicatorValues.filter((indicator) =>
         selectedExtraIndicators.includes(indicator.indicator_id)
       ),
     [selectedExtraIndicators]
   );
+
+  // Convert the extra indicator data into a format that can be displayed in the table
+  const structuredExtraData = useMemo(() => {
+    const dataMap = {};
+
+    extraIndicatorData.forEach((row) => {
+      if (!dataMap[row.indicator_id]) {
+        dataMap[row.indicator_id] = { name: row.indicator_name };
+      }
+      dataMap[row.indicator_id][row.year] = row.value;
+    });
+
+    return Object.values(dataMap);
+  }, [extraIndicatorData]);
 
   if (!(selectedFramework && selectedCompany)) {
     const keyword = selectedCompany ? "framework" : "company";
@@ -177,15 +191,38 @@ export default function DataDisplay({
                   <TableCell
                     key={year}
                     sx={{
-                      borderRight:
-                        index !== selectedYears.length - 1
-                          ? "1px solid"
-                          : "none",
+                      borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
                     }}
                   >
                     {row[year] || null}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+            {structuredExtraData.map((extraRow, index) => (
+              <TableRow
+                key={`extra-${index}`}
+                sx={{
+                  backgroundColor: "#F0E0FF",
+                }}
+              >
+                <TableCell
+                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                >
+                  {extraRow.name}
+                </TableCell>
+                {selectedYears.map((year) => (
+                  <TableCell
+                    key={year}
+                    sx={{
+                      borderRight: "1px solid",
+                      borderColor: "divider",
+                      textAlign: "center",
+                    }}
+                  >
+                    {extraRow[year] || null}
                   </TableCell>
                 ))}
               </TableRow>
