@@ -115,12 +115,15 @@ export default function SelectionSidebar({
 
     // Ensure metric is selected if indicator is selected
     setSelectedMetrics((prevMetrics) => {
-      if (checked && prevMetrics.includes(metric)) {
-        return [...prevMetrics];
-      } else {
+      if (checked && !prevMetrics.includes(metric)) {
         return [...prevMetrics, metric];
+      } else if (howManyIndicatorsChecked(metric) === 0) {
+        return prevMetrics.filter((m) => m !== metric);
+      } else {
+        return [...prevMetrics];
       }
     });
+    console.log(selectedMetrics);
   };
 
   const handleYearChange = (year) => {
@@ -233,7 +236,10 @@ export default function SelectionSidebar({
       metric.indicators.forEach((indicator) => {
         const indicatorId = indicator.indicator_id;
         const indicatorWeight = indicatorWeights[indicatorId];
-        indicators.push({ 'indicator_id': indicatorId, 'indicator_weight': indicatorWeight })
+        indicators.push({
+          indicator_id: indicatorId,
+          indicator_weight: indicatorWeight,
+        });
       });
       newSavedWeights.push({
         metric_id: metricId,
