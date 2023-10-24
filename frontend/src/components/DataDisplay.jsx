@@ -48,9 +48,10 @@ export default function DataDisplay({
           justifyContent: "center",
           alignItems: "center",
           flex: 1,
+          bgcolor: "#f5f5f5",
         }}
       >
-        <Typography variant="h6" color="textSecondary">
+        <Typography variant="h6" color="text.secondary">
           Please select a {keyword} to see the ESG data.
         </Typography>
       </Box>
@@ -141,22 +142,18 @@ export default function DataDisplay({
       </Box>
       <Box
         sx={{
-          margin: '10px',
-          display: 'flex',
-          float: 'right'
+          margin: "10px",
+          display: "flex",
+          float: "right",
         }}
       >
-        <Typography
-          variant="h5"
-        >
-          Adjusted ESG Score: 
-        </Typography>
+        <Typography variant="h5">Adjusted ESG Score:</Typography>
         <Typography
           variant="h5"
           color="text.secondary"
           paragraph
           textAlign="center"
-          sx={{ ml: '10px' }}
+          sx={{ ml: "10px" }}
         >
           100
         </Typography>

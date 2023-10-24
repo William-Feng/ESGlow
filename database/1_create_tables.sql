@@ -12,8 +12,15 @@ CREATE TABLE users (
     PRIMARY KEY (user_id)
 );
 
+CREATE TABLE industries (
+    industry_id         SERIAL,
+    name                TEXT UNIQUE NOT NULL,
+    PRIMARY KEY (industry_id)
+);
+
 CREATE TABLE companies (
     company_id          SERIAL,
+    industry_id         INT REFERENCES industries(industry_id),
     name                TEXT UNIQUE NOT NULL,
     description         TEXT NOT NULL,
     PRIMARY KEY (company_id)
