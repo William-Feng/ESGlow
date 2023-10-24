@@ -27,7 +27,6 @@ import { useState } from "react";
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
 export default function SelectionSidebar({
-  selectedCompany,
   frameworksData,
   years,
   selectedFramework,
@@ -41,12 +40,6 @@ export default function SelectionSidebar({
   selectedExtraIndicators,
   setSelectedExtraIndicators,
 }) {
-  // Reset the selected extra indicators if the company is changed or deleted
-  // Note that selected extra indicators remain the same if a new framework is selected
-  useEffect(() => {
-    setSelectedExtraIndicators([]);
-  }, [selectedCompany]);
-
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const handleFrameworkChange = (event) => {
@@ -231,6 +224,8 @@ export default function SelectionSidebar({
     );
 
     setRemainingExtraIndicators(filtered_indicators);
+    // Reset the selected extra indicators if the company or framework is changed
+    setSelectedExtraIndicators([]);
   }, [allIndicators, selectedFramework]);
 
   const handleExtraIndicatorsChange = (indicatorId) => {
