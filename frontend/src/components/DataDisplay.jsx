@@ -106,7 +106,12 @@ export default function DataDisplay({
     return Object.values(dataMap);
   }, [extraIndicatorData]);
 
-  if (!(selectedFramework && selectedCompany)) {
+  const hasDataToShow = useMemo(
+    () => selectedFramework || structuredExtraData.length > 0,
+    [selectedFramework, structuredExtraData]
+  );
+
+  if (!selectedCompany || !hasDataToShow) {
     const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
@@ -119,7 +124,9 @@ export default function DataDisplay({
         }}
       >
         <Typography variant="h6" color="text.secondary">
-          Please select a {keyword} to see the ESG data.
+          {selectedCompany
+            ? "Please select a framework or at least one of the additional indicators to see the ESG data."
+            : "Please select a company to see the ESG data."}
         </Typography>
       </Box>
     );
@@ -245,7 +252,7 @@ export default function DataDisplay({
           float: "right",
         }}
       >
-        {adjustedScore ? (
+        {selectedFramework && adjustedScore ? (
           <>
             <Typography variant="h5" color="text.secondary">
               Adjusted ESG Score:
@@ -254,11 +261,11 @@ export default function DataDisplay({
               {adjustedScore}
             </Typography>
           </>
-        ) : (
+        ) : selectedFramework ? (
           <Typography variant="h5" color="text.secondary">
             Please make sure selections are saved.
           </Typography>
-        )}
+        ) : null}
       </Box>
     </Box>
   );
