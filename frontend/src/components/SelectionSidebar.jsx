@@ -231,21 +231,21 @@ export default function SelectionSidebar({
     }
 
     // Update savedWeights
-    const newSavedWeights = {};
+    const newSavedWeights = [];
     selectedMetrics.forEach((metric) => {
       const metricId = metric.metric_id;
       const metricWeight = metricWeights[metricId];
-      const indicators = {};
+      const indicators = [];
       metric.indicators.forEach((indicator) => {
         const indicatorId = indicator.indicator_id;
         const indicatorWeight = indicatorWeights[indicatorId];
-        indicators[indicatorId] = indicatorWeight;
+        indicators.push({ 'indicator_id': indicatorId, 'indicator_weight': indicatorWeight })
       });
-      newSavedWeights[metricId] = {
+      newSavedWeights.push({
         metric_id: metricId,
         metric_weight: metricWeight,
         indicators: indicators,
-      };
+      });
     });
     setSavedWeights(newSavedWeights);
 

@@ -6,7 +6,7 @@ export default function Overview({
   selectedIndustry,
   selectedCompany,
   frameworksData,
-  indicatorValues,
+  fixedIndicatorValues,
 }) {
   const getRecentESGScores = () => {
     if (!frameworksData) {
@@ -15,6 +15,7 @@ export default function Overview({
     let ESGScoreList = [];
 
     // Iterate over the frameworks in the array.
+    console.log('frameworksdata', frameworksData)
     frameworksData.forEach((framework) => {
       let frameworkScore = 0;
       const { framework_name } = framework;
@@ -22,8 +23,8 @@ export default function Overview({
       // Map to store the most recent year's indicator values by indicator_id
       const mostRecentIndicatorValues = new Map();
 
-      // Iterate through indicatorValues to find the most recent values for each indicator_id
-      indicatorValues.forEach((indicatorValue) => {
+      // Iterate through fixedIndicatorValues to find the most recent values for each indicator_id
+      fixedIndicatorValues.forEach((indicatorValue) => {
         if (
           !mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
           indicatorValue.year >
@@ -101,7 +102,6 @@ export default function Overview({
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-    console.log(frameworksData);
     const scoreList = getRecentESGScores();
     const mostRecentYearScores = scoreList
       .filter(
