@@ -2,8 +2,8 @@ from flask_jwt_extended import get_jwt_identity, jwt_required, JWTManager
 from flask_restx import Api, Resource
 
 from .database import User
-from .frameworks import all_frameworks, all_companies, get_framework_info_from_company, get_indicator_values, get_company_description
-from .models import user_authentication_models, password_reset_models, framework_metric_indicator_models, company_framework_name_models
+from .frameworks import all_industries, all_companies, all_frameworks, all_indicators, get_companies_by_industry, get_framework_info_from_company, get_indicator_values, get_company_info
+from .models import user_authentication_models, password_reset_models, all_industry_company_framework_indicator_models, specific_industry_company_models, framework_metric_indicator_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
 
@@ -132,8 +132,23 @@ class PasswordResetChange(Resource):
 #
 # ===================================================================
 
-framework_list_model, indicator_value_list_model = framework_metric_indicator_models(api)
-framework_names_model, company_names_model, company_description_model = company_framework_name_models(api)
+industry_names_model, company_names_model, framework_names_model, indicator_names_model = all_industry_company_framework_indicator_models(
+    api)
+industry_companies_model, company_info_model = specific_industry_company_models(
+    api)
+framework_detailed_model, indicator_value_detailed_model = framework_metric_indicator_models(
+    api)
+
+
+@api.route("/api/industries/all")
+class IndustriesAll(Resource):
+    @api.response(200, 'All industries retrieved!', model=industry_names_model)
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'No industries found.')
+    @jwt_required()
+    def get(self):
+        return all_industries()
+
 
 @api.route("/api/companies/all")
 class CompaniesAll(Resource):
@@ -155,18 +170,44 @@ class FrameworksAll(Resource):
         return all_frameworks()
 
 
-@api.route("/api/companies/<int:company_id>/description")
-class CompanyDescription(Resource):
-    @api.response(200, 'Description successfully retrieved!', model=company_description_model)
+@api.route("/api/indicators/all")
+class CompaniesAll(Resource):
+    @api.response(200, 'All indicators retrieved!', model=indicator_names_model)
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'No indicators found.')
+    @jwt_required()
+    def get(self):
+        return all_indicators()
+
+
+@api.route("/api/industries/<string:industry_name>")
+class CompaniesByIndustry(Resource):
+    @api.response(200, 'Companies for industry successfully retrieved!', model=industry_companies_model)
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'Industry not found.')
+    @jwt_required()
+    def get(self, industry_name):
+        return get_companies_by_industry(industry_name)
+
+
+@api.route("/api/companies/<string:company_ids>")
+class CompanyInformation(Resource):
+    @api.response(200, 'Companies\' information successfully retrieved!')
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Company not found.')
-    def get(self, company_id):
-        return get_company_description(company_id)
+    def get(self, company_ids):
+
+        try:
+            selected_companies = [int(i) for i in company_ids.split(',')]
+        except ValueError:
+            return {"message": "Invalid company_ids provided."}, 400
+
+        return get_company_info(selected_companies)
 
 
 @api.route("/api/frameworks/<int:company_id>")
 class FrameworksByCompany(Resource):
-    @api.response(200, 'Framework, metric & indicator information for company retrieved!', model=framework_list_model)
+    @api.response(200, 'Framework, metric & indicator information for company successfully retrieved!', model=framework_detailed_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid company.')
     @jwt_required()
@@ -176,7 +217,7 @@ class FrameworksByCompany(Resource):
 
 @api.route("/api/values/<int:company_id>/<string:indicator_ids>/<string:years>")
 class IndicatorValues(Resource):
-    @api.response(200, 'Indicator values for company retrieved!', model=indicator_value_list_model)
+    @api.response(200, 'Indicator values for company successfully retrieved!', model=indicator_value_detailed_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid company, indicator or none found.')
     @jwt_required()

@@ -22,10 +22,19 @@ class User(db.Model):
     verification_code = db.Column(db.String(length=VERIFICATION_CODE_LENGTH))
 
 
+class Industry(db.Model):
+    __tablename__ = 'industries'
+
+    industry_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, unique=True, nullable=False)
+
+
 class Company(db.Model):
     __tablename__ = 'companies'
 
     company_id = db.Column(db.Integer, primary_key=True)
+    industry_id = db.Column(
+        db.Integer, db.ForeignKey('industries.industry_id'))
     name = db.Column(db.Text, unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
 

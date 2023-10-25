@@ -7,14 +7,19 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function DataDisplay({
   selectedCompany,
   selectedFramework,
   selectedYears,
   indicatorValues,
+  savedWeights,
+  allIndicatorValues,
+  selectedExtraIndicators,
 }) {
+  const [adjustedScore, setAdjustedScore] = useState(0);
+
   const validIndicatorIds = selectedFramework
     ? selectedFramework.metrics.flatMap((metric) =>
         metric.indicators.map((indicator) => indicator.indicator_id)
@@ -24,6 +29,45 @@ export default function DataDisplay({
   const filteredData = indicatorValues.filter((row) =>
     validIndicatorIds.includes(row.indicator_id)
   );
+
+  // Display the new adjusted ESG score based on savedWeights
+  useEffect(() => {
+    if (savedWeights.metrics) {
+      function calculateScore(savedWeights, filteredData) {
+        const metricScores = savedWeights.metrics.map((metric) => {
+          const metricScore = metric.indicators.reduce(
+            (accumulator, indicator) => {
+              const matchingIndicator = filteredData.find(
+                (data) =>
+                  data.indicator_id === indicator.indicator_id &&
+                  data.year === savedWeights.year
+              );
+
+              if (matchingIndicator) {
+                return (
+                  accumulator +
+                  matchingIndicator.value * indicator.indicator_weight
+                );
+              }
+
+              return accumulator;
+            },
+            0
+          );
+
+          return metricScore * metric.metric_weight;
+        });
+
+        const finalScore = metricScores.reduce(
+          (accumulator, metricScore) => accumulator + metricScore,
+          0
+        );
+        return finalScore;
+      }
+      setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
+    }
+    // eslint-disable-next-line
+  }, [savedWeights]);
 
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
@@ -39,7 +83,35 @@ export default function DataDisplay({
     return Object.values(dataMap);
   }, [filteredData]);
 
-  if (!(selectedFramework && selectedCompany)) {
+  // Retrieve the additional indicators and data selected by the user
+  const extraIndicatorData = useMemo(
+    () =>
+      allIndicatorValues.filter((indicator) =>
+        selectedExtraIndicators.includes(indicator.indicator_id)
+      ),
+    [selectedExtraIndicators]
+  );
+
+  // Convert the extra indicator data into a format that can be displayed in the table
+  const structuredExtraData = useMemo(() => {
+    const dataMap = {};
+
+    extraIndicatorData.forEach((row) => {
+      if (!dataMap[row.indicator_id]) {
+        dataMap[row.indicator_id] = { name: row.indicator_name };
+      }
+      dataMap[row.indicator_id][row.year] = row.value;
+    });
+
+    return Object.values(dataMap);
+  }, [extraIndicatorData]);
+
+  const hasDataToShow = useMemo(
+    () => selectedFramework || structuredExtraData.length > 0,
+    [selectedFramework, structuredExtraData]
+  );
+
+  if (!selectedCompany || !hasDataToShow) {
     const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
@@ -48,10 +120,13 @@ export default function DataDisplay({
           justifyContent: "center",
           alignItems: "center",
           flex: 1,
+          bgcolor: "#f5f5f5",
         }}
       >
-        <Typography variant="h6" color="textSecondary">
-          Please select a {keyword} to see the ESG data.
+        <Typography variant="h6" color="text.secondary">
+          {selectedCompany
+            ? "Please select a framework or at least one of the additional indicators to see the ESG data."
+            : "Please select a company to see the ESG data."}
         </Typography>
       </Box>
     );
@@ -77,7 +152,7 @@ export default function DataDisplay({
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  fontSize: "1.1em",
+                  fontSize: "1.2em",
                   background: "#D1EFFF",
                   borderRight: "1px solid",
                   borderColor: "divider",
@@ -92,11 +167,11 @@ export default function DataDisplay({
                   key={year}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "1.1em",
+                    fontSize: "1.2em",
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "15px",
+                    padding: "5px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
@@ -111,7 +186,11 @@ export default function DataDisplay({
               <TableRow
                 key={index}
                 sx={{
-                  backgroundColor: index % 2 === 0 ? "#F5F5F5" : "#E0E0E0",
+                  backgroundColor: index % 2 === 0 ? "#FAFAFA" : "#F5F5F5",
+                  borderTop: "1px solid #E0E0E0",
+                  "&:hover": {
+                    backgroundColor: "#E5E5E5",
+                  },
                 }}
               >
                 <TableCell
@@ -123,10 +202,7 @@ export default function DataDisplay({
                   <TableCell
                     key={year}
                     sx={{
-                      borderRight:
-                        index !== selectedYears.length - 1
-                          ? "1px solid"
-                          : "none",
+                      borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
                     }}
@@ -136,8 +212,60 @@ export default function DataDisplay({
                 ))}
               </TableRow>
             ))}
+            {structuredExtraData.map((extraRow, index) => (
+              <TableRow
+                key={`extra-${index}`}
+                sx={{
+                  backgroundColor: "#F0E5FF",
+                  borderTop: "1px solid #D5C8FF",
+                  "&:hover": {
+                    backgroundColor: "#E8D6FF",
+                  },
+                }}
+              >
+                <TableCell
+                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                >
+                  {extraRow.name}
+                </TableCell>
+                {selectedYears.map((year) => (
+                  <TableCell
+                    key={year}
+                    sx={{
+                      borderRight: "1px solid",
+                      borderColor: "divider",
+                      textAlign: "center",
+                    }}
+                  >
+                    {extraRow[year] || null}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
+      </Box>
+      <Box
+        sx={{
+          pt: 3,
+          display: "flex",
+          float: "right",
+        }}
+      >
+        {selectedFramework && adjustedScore ? (
+          <>
+            <Typography variant="h5" color="text.secondary">
+              Adjusted ESG Score:
+            </Typography>
+            <Typography variant="h5" fontWeight="bold" sx={{ ml: 2 }}>
+              {adjustedScore}
+            </Typography>
+          </>
+        ) : selectedFramework ? (
+          <Typography variant="h5" color="text.secondary">
+            Please make sure selections are saved.
+          </Typography>
+        ) : null}
       </Box>
     </Box>
   );
