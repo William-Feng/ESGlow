@@ -33,6 +33,7 @@ INSERT INTO metrics (name, description) VALUES
 
 
 -- Indicators
+-- TODO: Change Sources to add multiple data sources, in the format Source 1; Source 2; Source 3
 INSERT INTO indicators (name, description, source) VALUES 
 -- Emission Standards
 ('CO2 Emission Compliance', 'Adherence to CO2 emission standards.', 'PlanetCare Reports'),

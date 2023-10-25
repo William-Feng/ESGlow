@@ -16,7 +16,6 @@ CREATE TABLE companies (
     company_id          SERIAL,
     name                TEXT UNIQUE NOT NULL,
     description         TEXT NOT NULL,
-    industry            TEXT NOT NULL,
     PRIMARY KEY (company_id)
 );
 
