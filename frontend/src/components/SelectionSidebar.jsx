@@ -27,6 +27,7 @@ import { useState } from "react";
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
 export default function SelectionSidebar({
+  selectedCompany,
   frameworksData,
   years,
   selectedFramework,
@@ -36,7 +37,19 @@ export default function SelectionSidebar({
   selectedYears,
   setSelectedYears,
   setSavedWeights,
+  allIndicators,
+  selectedExtraIndicators,
+  setSelectedExtraIndicators,
 }) {
+  // Reset the states if the company is changed or deleted
+  // Note that selected extra indicators remain the same if a new framework is selected
+  useEffect(() => {
+    setSelectedFramework([]);
+    setSelectedMetrics([]);
+    setSelectedIndicators([]);
+    setSelectedExtraIndicators([]);
+  }, [selectedCompany]);
+
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const handleFrameworkChange = (event) => {
@@ -85,11 +98,24 @@ export default function SelectionSidebar({
     panel1: false,
     panel2: false,
     panel3: false,
+    panel4: false,
   });
 
   const handleChange = (panel) => (_, isExpanded) => {
     setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
   };
+
+  // Collapse all accordions when the company is changed or deleted
+  useEffect(() => {
+    if (!frameworksData) {
+      setExpanded({
+        panel1: false,
+        panel2: false,
+        panel3: false,
+        panel4: false,
+      });
+    }
+  }, [frameworksData]);
 
   const [expandedMetrics, setExpandedMetrics] = useState([]);
 
@@ -122,17 +148,6 @@ export default function SelectionSidebar({
         return prevMetrics.filter((m) => m !== metric);
       } else {
         return [...prevMetrics];
-      }
-    });
-    console.log(selectedMetrics);
-  };
-
-  const handleYearChange = (year) => {
-    setSelectedYears((prevYears) => {
-      if (prevYears.includes(year)) {
-        return prevYears.filter((y) => y !== year);
-      } else {
-        return [...prevYears, year];
       }
     });
   };
@@ -194,6 +209,43 @@ export default function SelectionSidebar({
     }
   };
 
+  const handleYearChange = (year) => {
+    setSelectedYears((prevYears) => {
+      if (prevYears.includes(year)) {
+        return prevYears.filter((y) => y !== year);
+      } else {
+        return [...prevYears, year];
+      }
+    });
+  };
+
+  const [remainingExtraIndicators, setRemainingExtraIndicators] = useState([]);
+
+  // Discover the indicators that are not in the selected framework
+  useEffect(() => {
+    const frameworkIndicatorIds = selectedFramework
+      ? selectedFramework.metrics
+          .reduce((acc, metric) => acc.concat(metric.indicators), [])
+          .map((indicator) => indicator.indicator_id)
+      : [];
+
+    const filtered_indicators = allIndicators.filter(
+      (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
+    );
+
+    setRemainingExtraIndicators(filtered_indicators);
+  }, [allIndicators, selectedFramework]);
+
+  const handleExtraIndicatorsChange = (indicatorId) => {
+    setSelectedExtraIndicators((prev) => {
+      if (prev.includes(indicatorId)) {
+        return prev.filter((id) => id !== indicatorId);
+      } else {
+        return [...prev, indicatorId];
+      }
+    });
+  };
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -249,8 +301,8 @@ export default function SelectionSidebar({
         indicators: indicators,
       });
     });
-    newSavedWeights['metrics'] = savedMetricsList;
-    newSavedWeights['year'] = Math.max(...selectedYears)
+    newSavedWeights["metrics"] = savedMetricsList;
+    newSavedWeights["year"] = Math.max(...selectedYears);
     setSavedWeights(newSavedWeights);
 
     return setSuccessMessage("Preferences saved successfully.");
@@ -275,7 +327,11 @@ export default function SelectionSidebar({
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
 
-      <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel1}
+        onChange={handleChange("panel1")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
@@ -305,7 +361,7 @@ export default function SelectionSidebar({
               }
               onChange={handleFrameworkChange}
             >
-              {frameworksData ? (
+              {frameworksData &&
                 frameworksData.map((framework) => (
                   <Box
                     display="flex"
@@ -323,17 +379,16 @@ export default function SelectionSidebar({
                       <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                     </Tooltip>
                   </Box>
-                ))
-              ) : (
-                <Typography style={{ color: "red" }}>
-                  Select a company to see the associated frameworks
-                </Typography>
-              )}
+                ))}
             </RadioGroup>
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded.panel2} onChange={handleChange("panel2")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel2}
+        onChange={handleChange("panel2")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2bh-content"
@@ -467,7 +522,11 @@ export default function SelectionSidebar({
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded.panel3} onChange={handleChange("panel3")}>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel3}
+        onChange={handleChange("panel3")}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3bh-content"
@@ -485,14 +544,17 @@ export default function SelectionSidebar({
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-            >
-              {years.map((y) => (
+          <Box flexWrap="wrap" display="flex" width="100%" px={2}>
+            {years.map((y, idx) => (
+              <Box
+                key={y}
+                flex={1}
+                width="50%"
+                display="flex"
+                justifyContent={idx % 2 === 0 ? "flex-start" : "center"}
+                ml={idx % 2 === 0 ? 0 : -2}
+              >
                 <FormControlLabel
-                  key={y}
                   value={y}
                   control={
                     <Checkbox
@@ -500,11 +562,76 @@ export default function SelectionSidebar({
                       onChange={() => handleYearChange(y)}
                     />
                   }
-                  label={y}
+                  label={<Typography fontWeight="bold">{y}</Typography>}
                 />
-              ))}
-            </RadioGroup>
-          </FormControl>
+              </Box>
+            ))}
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
+        disabled={!frameworksData}
+        expanded={expanded.panel4}
+        onChange={handleChange("panel4")}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+          sx={{
+            fontSize: "1.2rem",
+            fontWeight: "bold",
+            letterSpacing: "0.5px",
+            textTransform: "uppercase",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            Additional Indicators
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box>
+            <Typography style={{ color: "red", paddingBottom: "24px" }}>
+              Note that the following indicators are not included in the
+              selected framework and will not affect the ESG Score.
+            </Typography>
+            {remainingExtraIndicators.map((indicator) => (
+              <Box
+                key={indicator.indicator_id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: 1, pl: 2 }}
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={
+                        selectedExtraIndicators.includes(
+                          indicator.indicator_id
+                        ) || false
+                      }
+                      onChange={() =>
+                        handleExtraIndicatorsChange(indicator.indicator_id)
+                      }
+                    />
+                  }
+                  label={
+                    <Typography style={{ maxWidth: 200, whiteSpace: "normal" }}>
+                      {indicator.name}
+                    </Typography>
+                  }
+                />
+              </Box>
+            ))}
+          </Box>
         </AccordionDetails>
       </Accordion>
       {selectedFramework && (

@@ -40,7 +40,7 @@ def password_reset_models(api):
     return password_reset_request_model, password_reset_verify_model, password_reset_change_model
 
 
-def all_industry_company_framework_models(api):
+def all_industry_company_framework_indicator_models(api):
     industry_names_model = api.model('IndustryNames', {
         'message': fields.String(description='Status message', example='Industries successfully retrieved.'),
         'industries': fields.List(fields.String(example="Industry 1"), description='List of industries names'),
@@ -56,7 +56,12 @@ def all_industry_company_framework_models(api):
         'frameworks': fields.List(fields.String(example="Framework 1"), description='List of framework names'),
     })
 
-    return industry_names_model, company_names_model, framework_names_model
+    indicator_names_model = api.model('IndicatorNames', {
+        'message': fields.String(description='Status message', example='Indicators successfully retrieved.'),
+        'indicators': fields.List(fields.String(example="Indicator 1"), description='List of indicator names & IDs'),
+    })
+
+    return industry_names_model, company_names_model, framework_names_model, indicator_names_model
 
 
 def specific_industry_company_models(api):

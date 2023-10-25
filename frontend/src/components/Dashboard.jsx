@@ -33,11 +33,15 @@ function Dashboard({ token }) {
   const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
 
+  const [allIndicators, setAllIndicators] = useState([]);
+  const [allIndicatorValues, setAllIndicatorValues] = useState([]);
+  const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
+
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
   }, [selectedYears]);
 
-    // fetch function is extracted as a separate function
+  // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
   //                     & fixedIndicatorValues (fixed value after company selection)
   const fetchIndicatorValues = useCallback(
@@ -102,14 +106,16 @@ function Dashboard({ token }) {
         setSelectedIndicators(allIndicators);
         // Set FIXED Indicator values (doesn't change with sidebar selection)
         // this displays a ESG score in Overview for a company
-        fetchIndicatorValues(companyId, [...new Set(allIndicators)].join(","), yearsString)
+        fetchIndicatorValues(
+          companyId,
+          [...new Set(allIndicators)].join(","),
+          yearsString
+        )
           .then((data) => {
-            console.log('set fixed overview')
+            console.log("set fixed overview");
             setFixedIndicatorValues(data.values);
           })
-          .catch((error) =>
-            console.error(error)
-          );
+          .catch((error) => console.error(error));
       })
       .catch((error) =>
         console.error(
@@ -136,11 +142,59 @@ function Dashboard({ token }) {
         .then((data) => {
           setIndicatorValues(data.values);
         })
-        .catch((error) =>
-          console.error(error)
-        );
+        .catch((error) => console.error(error));
     }
-  }, [selectedIndicators, token, years, navigate, selectedCompany, fetchIndicatorValues, yearsString]);
+  }, [
+    selectedIndicators,
+    token,
+    years,
+    navigate,
+    selectedCompany,
+    fetchIndicatorValues,
+    yearsString,
+  ]);
+
+  // Retrieve the values of all possible indicators for the selected company
+  useEffect(() => {
+    const companyId = selectedCompany ? selectedCompany.company_id : 0;
+    if (!companyId) {
+      return;
+    }
+
+    // Fetch all the possible indicators
+    fetch("/api/indicators/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAllIndicators(data.indicators);
+        const indicatorIds = data.indicators
+          .map((d) => d.indicator_id)
+          .join(",");
+
+        // Fetch the indicator values for all the indicators
+        return fetch(
+          `/api/values/${companyId}/${indicatorIds}/${yearsString}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        setAllIndicatorValues(data.values);
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the complete indicator information.",
+          error
+        )
+      );
+  }, [token, selectedCompany, yearsString]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -213,12 +267,14 @@ function Dashboard({ token }) {
                   boxSizing: "border-box",
                   overflowY: "auto",
                   maxHeight: "100%",
+                  backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
                 },
               }}
               variant="permanent"
               anchor="left"
             >
               <SelectionSidebar
+                selectedCompany={selectedCompany}
                 frameworksData={frameworksData}
                 years={years}
                 selectedFramework={selectedFramework}
@@ -228,6 +284,9 @@ function Dashboard({ token }) {
                 selectedYears={selectedYears}
                 setSelectedYears={setSelectedYears}
                 setSavedWeights={setSavedWeights}
+                allIndicators={allIndicators}
+                selectedExtraIndicators={selectedExtraIndicators}
+                setSelectedExtraIndicators={setSelectedExtraIndicators}
               />
             </Drawer>
             <DataDisplay
@@ -236,6 +295,8 @@ function Dashboard({ token }) {
               selectedYears={sortedSelectedYears}
               indicatorValues={indicatorValues}
               savedWeights={savedWeights}
+              allIndicatorValues={allIndicatorValues}
+              selectedExtraIndicators={selectedExtraIndicators}
             />
           </Box>
         </Box>
