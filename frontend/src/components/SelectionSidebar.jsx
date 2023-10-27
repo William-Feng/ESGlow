@@ -47,7 +47,12 @@ export default function SelectionSidebar({
     setSelectedFramework(null);
     setSelectedIndicators([]);
     setSelectedExtraIndicators([]);
-  }, [selectedCompany]);
+  }, [
+    selectedCompany,
+    setSelectedFramework,
+    setSelectedIndicators,
+    setSelectedExtraIndicators,
+  ]);
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
