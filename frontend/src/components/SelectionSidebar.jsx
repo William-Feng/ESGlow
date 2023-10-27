@@ -15,6 +15,12 @@ import {
   Button,
   Snackbar,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  DialogContentText,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -174,22 +180,46 @@ export default function SelectionSidebar({
     return checkedIndicators.length;
   }
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newWeightInput, setNewWeightInput] = useState("");
+  const [newWeightMetridId, setNewWeightMetridId] = useState("");
+  const [newWeightIndicatorId, setNewWeightIndicatorId] = useState("");
+
+  const openWeightDialog = (metricId, indicatorId) => {
+    setIsDialogOpen(true);
+    setNewWeightMetridId(metricId);
+    setNewWeightIndicatorId(indicatorId);
+  };
+
+  const closeWeightDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleNewWeightChange = (e) => {
+    setNewWeightInput(e.target.value);
+  };
+
   const handleWeightChange = (metricId, indicatorId, e) => {
     e.stopPropagation();
-    const newWeight = prompt("Enter the new weight:");
+    openWeightDialog(metricId, indicatorId);
+  };
 
-    if (parseFloat(newWeight) > 0 && parseFloat(newWeight) <= 1) {
-      if (metricId) {
+  const handleWeightSave = () => {
+    if (parseFloat(newWeightInput) > 0 && parseFloat(newWeightInput) <= 1) {
+      if (newWeightMetridId) {
         setMetricWeights((prevMetrics) => ({
           ...prevMetrics,
-          [metricId]: parseFloat(newWeight),
+          [newWeightMetridId]: parseFloat(parseFloat(newWeightInput).toFixed(3)),
         }));
-      } else if (indicatorId) {
+      } else if (newWeightIndicatorId) {
         setIndicatorWeights((prevWeights) => ({
           ...prevWeights,
-          [indicatorId]: parseFloat(newWeight),
+          [newWeightIndicatorId]: parseFloat(parseFloat(newWeightInput).toFixed(3)),
         }));
       }
+      closeWeightDialog();
+    } else {
+      setErrorMessage("Please enter a value between 0 and 1.");
     }
   };
 
@@ -270,6 +300,27 @@ export default function SelectionSidebar({
       >
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
+      <Dialog open={isDialogOpen} onClose={closeWeightDialog}>
+        <DialogTitle>Enter New Weight</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter a value between 0 and 1 with at most 3 decimal places.
+          </DialogContentText>
+          <TextField
+            value={newWeightInput}
+            onChange={handleNewWeightChange}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeWeightDialog}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleWeightSave}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Accordion expanded={expanded.panel1} onChange={handleChange("panel1")}>
         <AccordionSummary
