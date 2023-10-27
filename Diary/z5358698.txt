@@ -35,4 +35,4 @@ Week 6:
 For week 6 during flexi, the majority of work was done for sprint 2; My workload assigned was the continued generation of fake data, work on backend functionalities and changing existing tables to have extra columns. With the feedback we received from our client, we had to add some extra fields and data that was not originally covererd by the tables we had when we submitted our original project demo for review; as a result, we had to update not only just the PostGRESQL table, but also the Database.py we used with SQLAlchemy. 
 
 Week 7:
-In week 7, 
+In week 7, I continued creating more data for the frontend/backend, as well as to fit with the automated Pytests written by Sean. To help create data, I wrote extra Python programs to randomly generate relationships as well as weights for tables, in order to accomodate all of our new extra frameworks, metrics and indicators/companies. I'm also preparing to swap over to Frontend for Sprint 3, given the decreasing amount of backend tasks, tickets and user stories, as well as the fact that we have finished the majority of Sprint 2 already, and have been given permission to start Sprint 3 early.
