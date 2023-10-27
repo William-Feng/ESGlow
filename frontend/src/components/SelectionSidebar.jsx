@@ -44,11 +44,15 @@ export default function SelectionSidebar({
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected
   useEffect(() => {
-    setSelectedFramework([]);
-    setSelectedMetrics([]);
+    setSelectedFramework(null);
     setSelectedIndicators([]);
     setSelectedExtraIndicators([]);
-  }, [selectedCompany]);
+  }, [
+    selectedCompany,
+    setSelectedFramework,
+    setSelectedIndicators,
+    setSelectedExtraIndicators,
+  ]);
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
