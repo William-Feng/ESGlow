@@ -32,7 +32,7 @@ import { useState } from "react";
   selectedIndicators: Array that contains the selected indicators by ID
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
-export default function SelectionSidebar({
+function SelectionSidebar({
   selectedCompany,
   frameworksData,
   years,
@@ -229,12 +229,16 @@ export default function SelectionSidebar({
       if (newWeightMetridId) {
         setMetricWeights((prevMetrics) => ({
           ...prevMetrics,
-          [newWeightMetridId]: parseFloat(parseFloat(newWeightInput).toFixed(3)),
+          [newWeightMetridId]: parseFloat(
+            parseFloat(newWeightInput).toFixed(3)
+          ),
         }));
       } else if (newWeightIndicatorId) {
         setIndicatorWeights((prevWeights) => ({
           ...prevWeights,
-          [newWeightIndicatorId]: parseFloat(parseFloat(newWeightInput).toFixed(3)),
+          [newWeightIndicatorId]: parseFloat(
+            parseFloat(newWeightInput).toFixed(3)
+          ),
         }));
       }
       closeWeightDialog();
@@ -365,19 +369,21 @@ export default function SelectionSidebar({
             Please enter a value between 0 and 1 with at most 3 decimal places.
           </DialogContentText>
           <TextField
-            error={parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1}
-            helperText={parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1
-              ? 'Value must be between 0 and 1.'
-              : ''}
+            error={
+              parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1
+            }
+            helperText={
+              parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1
+                ? "Value must be between 0 and 1."
+                : ""
+            }
             value={newWeightInput}
             onChange={handleNewWeightChange}
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeWeightDialog}>
-            Cancel
-          </Button>
+          <Button onClick={closeWeightDialog}>Cancel</Button>
           <Button variant="contained" onClick={handleWeightSave}>
             Save
           </Button>
@@ -708,3 +714,5 @@ export default function SelectionSidebar({
     </Box>
   );
 }
+
+export default SelectionSidebar;

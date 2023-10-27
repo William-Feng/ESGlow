@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect, useMemo } from "react";
 
-export default function DataDisplay({
+function DataDisplay({
   selectedCompany,
   selectedFramework,
   selectedYears,
@@ -89,7 +89,7 @@ export default function DataDisplay({
       allIndicatorValues.filter((indicator) =>
         selectedExtraIndicators.includes(indicator.indicator_id)
       ),
-    [selectedExtraIndicators]
+    [allIndicatorValues, selectedExtraIndicators]
   );
 
   // Convert the extra indicator data into a format that can be displayed in the table
@@ -112,7 +112,6 @@ export default function DataDisplay({
   );
 
   if (!selectedCompany || !hasDataToShow) {
-    const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
         sx={{
@@ -270,3 +269,5 @@ export default function DataDisplay({
     </Box>
   );
 }
+
+export default DataDisplay;

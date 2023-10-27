@@ -7,7 +7,6 @@ import {
   Toolbar,
   createTheme,
 } from "@mui/material";
-import React from "react";
 import Header from "./Header";
 import Searchbar from "./Searchbar";
 import Overview from "./Overview";

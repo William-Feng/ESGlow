@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import React from "react";
 
-export default function Searchbar({
+function Searchbar({
   token,
   selectedIndustry,
   setSelectedIndustry,
@@ -141,7 +141,9 @@ export default function Searchbar({
             backgroundColor: view === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
               fontSize: "14px", // Default font size
               "@media (min-width: 768px)": {
@@ -161,7 +163,9 @@ export default function Searchbar({
             backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
               fontSize: "14px", // Default font size
               "@media (min-width: 768px)": {
@@ -179,3 +183,5 @@ export default function Searchbar({
     </Box>
   );
 }
+
+export default Searchbar;
