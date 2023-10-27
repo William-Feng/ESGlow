@@ -17,11 +17,13 @@ INSERT INTO companies (industry_id, name, description) VALUES
 (3, 'FairTrade Enterprises', 'As a trailblazer in the financial world, FairTrade Enterprises offers a unique blend of financial services, emphasising ethical investment strategies and transparent trading practices that promote a fairer global economy.'),
 (1, 'FutureDriven Tech', 'FutureDriven Tech is committed to leveraging cutting-edge technology to design innovative solutions that not only meet the demands of today but also pave the way for a brighter, more sustainable tomorrow.'),
 (2, 'UnityGlobal Services', 'With a passion for quality healthcare and a commitment to diversity, UnityGlobal Services offers a comprehensive suite of healthcare solutions that bridge gaps and ensure accessibility to quality care on a global scale.'),
-(2, 'MediTech Solutions', 'At MediTech Solutions, we leverage technology to revolutionize healthcare, creating digital solutions that improve patient outcomes and enhance the healthcare experience.')
+(2, 'MediTech Solutions', 'At MediTech Solutions, we leverage technology to revolutionize healthcare, creating digital solutions that improve patient outcomes and enhance the healthcare experience.'),
 (3, 'EcoFinance', 'EcoFinance is revolutionizing the finance industry by offering sustainable and ethical financial solutions that prioritize the environment and social responsibility.'),
 (4, 'EcoManufacturing', 'EcoManufacturing is redefining the manufacturing industry, prioritizing sustainable practices and eco-friendly materials to create high-quality products.'),
 (4, 'Manufacturing Pioneers', 'As a leader in the manufacturing sector, Manufacturing Pioneers is dedicated to driving innovation and revolutionizing the way products are made.'),
-(5, 'GreenEnergy Solutions', 'GreenEnergy Solutions is a leader in the energy sector, committed to developing renewable energy solutions that reduce dependence on fossil fuels and minimize environmental impact.');
+(5, 'GreenEnergy Solutions', 'GreenEnergy Solutions is a leader in the energy sector, committed to developing renewable energy solutions that reduce dependence on fossil fuels and minimize environmental impact.'),
+(5, 'Less Evil Renewables', 'Founded by the formerly and now currently reformed Doctor Evil, Less Evil Renewables is commited to making renewables that are less evil than their competitors, but not too good either.');
+
 
 -- Frameworks
 INSERT INTO frameworks (name, description) VALUES 
@@ -51,7 +53,7 @@ INSERT INTO metrics (name, description) VALUES
 
 
 -- Indicators
--- Changed to Source Format: Source 1; Source 2; Source 3...
+-- Changed to Source Format: Source 1: Data Description; Source 2: Data Description; Source 3...
 INSERT INTO indicators (name, description, source) VALUES 
 -- Emission Standards
 ('CO2 Emission Compliance', 'Adherence to CO2 emission standards.', 'PlanetCare Reports; EcoMetrics; AquaStats'),
@@ -2064,7 +2066,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (3, 2, 2022, 91),
 (3, 3, 2022, 92),
 (3, 4, 2022, 100),
-(3, 5, 2022, 100);
+(3, 5, 2022, 100),
 -- 2023
 (1, 1, 2023, 92),
 (1, 2, 2023, 88),
@@ -2165,7 +2167,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (6, 2, 2022, 86),
 (6, 3, 2022, 84),
 (6, 4, 2022, 92),
-(6, 5, 2022, 75);
+(6, 5, 2022, 75),
 -- 2023
 (4, 1, 2023, 84),
 (4, 2, 2023, 80),
@@ -2266,7 +2268,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (9, 2, 2022, 91),
 (9, 3, 2022, 90),
 (9, 4, 2022, 98),
-(9, 5, 2022, 87);
+(9, 5, 2022, 87),
 
 -- 2023
 (7, 1, 2023, 94),
@@ -2406,7 +2408,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (13, 2, 2022, 82),
 (13, 3, 2022, 94),
 (13, 4, 2022, 97),
-(13, 5, 2022, 96);
+(13, 5, 2022, 96),
 -- 2023
 (12, 1, 2023, 88),
 (12, 2, 2023, 85),
@@ -2654,7 +2656,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (21, 2, 2022, 71),
 (21, 3, 2022, 69),
 (21, 4, 2022, 68),
-(21, 5, 2022, 72);
+(21, 5, 2022, 72),
 -- 2023
 (18, 1, 2023, 94),
 (18, 2, 2023, 92),
@@ -2735,7 +2737,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (23, 2, 2022, 53),
 (23, 3, 2022, 52),
 (23, 4, 2022, 72),
-(23, 5, 2022, 55);
+(23, 5, 2022, 55),
 
 -- 2023
 (22, 1, 2023, 90),
@@ -2815,7 +2817,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (26, 2, 2022, 74),
 (26, 3, 2022, 75),
 (26, 4, 2022, 73),
-(26, 5, 2022, 75);
+(26, 5, 2022, 75),
 
 -- 2023
 (24, 1, 2023, 68),
@@ -2941,7 +2943,7 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (30, 2, 2022, 88),
 (30, 3, 2022, 87),
 (30, 4, 2022, 86),
-(30, 5, 2022, 85);
+(30, 5, 2022, 85),
 
 -- 2023
 (27, 1, 2023, 75),
@@ -3274,7 +3276,8 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (30, 5, 2021, 78);
 
 -- Framework Metrics Relationship
--- TODO: add Framework_metrics that add up to 1, use ids 6-11
+-- TODO: add Framework_metrics that add up to 1, use ids 6-10
+-- TODO: Already Used
 INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUES 
 (1, 1, 0.30),
 (1, 3, 0.20),
@@ -3298,47 +3301,42 @@ INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUE
 (5, 6, 0.30),
 (5, 8, 0.20),
 (5, 9, 0.10),
-(6, 9, 0.1),
+(6, 5, 0.1),
+(6, 7, 0.2),
 (6, 10, 0.025),
-(6, 8, 0.2),
-(6, 2, 0.15),
-(6, 10, 0.1),
-(6, 10, 0.2),
-(6, 1, 0.225),
-(6, 10, 0.0),
-(7, 5, 0.2),
-(7, 2, 0.175),
-(7, 2, 0.025),
-(7, 9, 0.225),
-(7, 5, 0.225),
-(7, 3, 0.125),
-(7, 10, 0.025),
-(8, 4, 0.25),
-(8, 2, 0.25),
-(8, 10, 0.225),
-(8, 6, 0.25),
-(8, 2, 0.025),
-(9, 6, 0.225),
-(9, 10, 0.225),
-(9, 6, 0.05),
-(9, 10, 0.1),
-(9, 10, 0.25),
-(9, 1, 0.05),
-(9, 8, 0.1),
-(10, 6, 0.025),
-(10, 7, 0.25),
-(10, 7, 0.25),
-(10, 8, 0.05),
-(10, 8, 0.125),
-(10, 1, 0.25),
-(10, 7, 0.05),
-(11, 7, 0.25),
-(11, 9, 0.075),
-(11, 4, 0.175),
-(11, 9, 0.15),
-(11, 8, 0.15),
-(11, 7, 0.15),
-(11, 1, 0.05);
+(6, 4, 0.175),
+(6, 3, 0.125),
+(6, 1, 0.2),
+(6, 9, 0.125),
+(6, 2, 0.05),
+(7, 2, 0.1),
+(7, 8, 0.25),
+(7, 4, 0.1),
+(7, 1, 0.1),
+(7, 3, 0.25),
+(7, 9, 0.15),
+(7, 5, 0.025),
+(7, 6, 0.025),
+(8, 5, 0.25),
+(8, 4, 0.15),
+(8, 9, 0.1),
+(8, 7, 0.125),
+(8, 10, 0.25),
+(8, 1, 0.125),
+(9, 4, 0.225),
+(9, 3, 0.175),
+(9, 1, 0.225),
+(9, 8, 0.225),
+(9, 6, 0.075),
+(9, 5, 0.075),
+(10, 8, 0.075),
+(10, 1, 0.15),
+(10, 5, 0.125),
+(10, 6, 0.125),
+(10, 2, 0.1),
+(10, 4, 0.15),
+(10, 9, 0.225),
+(10, 7, 0.05);
 
 
 -- Company Frameworks Relationship
@@ -3384,15 +3382,15 @@ INSERT INTO metric_indicators (metric_id, indicator_id, predefined_weight) VALUE
 (1, 15, 0.35),
 (1, 6, 0.3),
 (2, 25, 0.3),
-(2, 25, 0.3),
+(2, 2, 0.3),
 (2, 8, 0.2),
 (2, 26, 0.2),
-(3, 19, 0.2),
+(3, 13, 0.2),
 (3, 17, 0.1),
-(3, 29, 0.2),
+(3, 19, 0.2),
 (3, 15, 0.05),
 (3, 16, 0.3),
-(3, 19, 0.1),
+(3, 12, 0.1),
 (3, 29, 0.05),
 (4, 28, 0.05),
 (4, 23, 0.1),
@@ -3413,7 +3411,7 @@ INSERT INTO metric_indicators (metric_id, indicator_id, predefined_weight) VALUE
 (7, 25, 0.35),
 (7, 14, 0.05),
 (7, 28, 0.05),
-(7, 28, 0.2),
+(7, 21, 0.2),
 (7, 6, 0.3),
 (7, 7, 0.05),
 (8, 20, 0.3),
@@ -3426,9 +3424,9 @@ INSERT INTO metric_indicators (metric_id, indicator_id, predefined_weight) VALUE
 (9, 11, 0.25),
 (9, 19, 0.05),
 (9, 15, 0.05),
-(9, 5, 0.05),
+(9, 9, 0.05),
 (9, 25, 0.05),
-(9, 15, 0.1),
+(9, 16, 0.1),
 (10, 29, 0.15),
 (10, 6, 0.2),
 (10, 14, 0.05),
