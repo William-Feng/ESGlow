@@ -218,8 +218,6 @@ export default function SelectionSidebar({
         }));
       }
       closeWeightDialog();
-    } else {
-      setErrorMessage("Please enter a value between 0 and 1.");
     }
   };
 
@@ -307,6 +305,10 @@ export default function SelectionSidebar({
             Please enter a value between 0 and 1 with at most 3 decimal places.
           </DialogContentText>
           <TextField
+            error={parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1}
+            helperText={parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1
+              ? 'Value must be between 0 and 1.'
+              : ''}
             value={newWeightInput}
             onChange={handleNewWeightChange}
             fullWidth
