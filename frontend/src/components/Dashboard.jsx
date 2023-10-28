@@ -221,13 +221,11 @@ function Dashboard({ token }) {
             <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <Searchbar
-              token={token}
-              selectedIndustry={selectedIndustry}
-              setSelectedIndustry={setSelectedIndustry}
-              selectedCompany={selectedCompany}
-              setSelectedCompany={setSelectedCompany}
-            />
+            <PageContext.Provider 
+              value={{ token, selectedIndustry, setSelectedIndustry, selectedCompany, setSelectedCompany, view, setView}}
+            >
+              <Searchbar/>
+            </PageContext.Provider>
           </Toolbar>
         </AppBar>
         <Box
