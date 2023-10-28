@@ -1,12 +1,10 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useContext } from "react";
+import { PageContext } from "./Dashboard";
 
-function Overview({
-  selectedIndustry,
-  selectedCompany,
-  frameworksData,
-  fixedIndicatorValues,
-}) {
+function Overview() {
+  const { selectedCompany, frameworksData, fixedIndicatorValues } = useContext(PageContext);
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];

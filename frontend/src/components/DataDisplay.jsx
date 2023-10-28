@@ -89,7 +89,7 @@ function DataDisplay({
       allIndicatorValues.filter((indicator) =>
         selectedExtraIndicators.includes(indicator.indicator_id)
       ),
-    [allIndicatorValues, selectedExtraIndicators]
+    [selectedExtraIndicators, allIndicatorValues]
   );
 
   // Convert the extra indicator data into a format that can be displayed in the table
