@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ResetInputEmail({ setter }) {
+function ResetInputEmail({ setter }) {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -133,3 +133,5 @@ export default function ResetInputEmail({ setter }) {
     </Box>
   );
 }
+
+export default ResetInputEmail;

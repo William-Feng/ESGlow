@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ResetPassword({ email }) {
+function ResetPassword({ email }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -139,3 +139,5 @@ export default function ResetPassword({ email }) {
     </Box>
   );
 }
+
+export default ResetPassword;

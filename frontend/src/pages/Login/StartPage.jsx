@@ -5,14 +5,14 @@ import TuneIcon from "@mui/icons-material/Tune";
 import React from "react";
 import Login from "./Login";
 import Register from "./Register";
-import Logo from "../assets/logo-white.png";
+import Logo from "../../assets/logo-white.png";
 import { useState } from "react";
 import ResetInputEmail from "./ResetInputEmail";
 import ResetVerify from "./ResetVerify";
 import ResetPassword from "./ResetPassword";
 import ResetSuccess from "./ResetSuccess";
 
-export default function StartPage({ page, onSuccess }) {
+function StartPage({ page, onSuccess }) {
   const [email, setEmail] = useState(localStorage.getItem("email"));
 
   function setUserEmail(email) {
@@ -175,3 +175,5 @@ export default function StartPage({ page, onSuccess }) {
     </Grid>
   );
 }
+
+export default StartPage;

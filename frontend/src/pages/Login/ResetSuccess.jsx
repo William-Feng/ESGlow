@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export default function ResetSuccess({ remover }) {
+function ResetSuccess({ remover }) {
   const navigate = useNavigate();
 
   function handleResetSuccess() {
@@ -50,3 +50,5 @@ export default function ResetSuccess({ remover }) {
     </Box>
   );
 }
+
+export default ResetSuccess;

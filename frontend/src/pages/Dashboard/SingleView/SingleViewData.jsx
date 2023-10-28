@@ -7,17 +7,19 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
+import { PageContext } from "../Dashboard";
 
-export default function DataDisplay({
-  selectedCompany,
-  selectedFramework,
-  selectedYears,
-  indicatorValues,
-  savedWeights,
-  allIndicatorValues,
-  selectedExtraIndicators,
-}) {
+function SingleViewData() {
+  const {
+    selectedCompany,
+    selectedFramework,
+    selectedYears,
+    indicatorValues,
+    savedWeights,
+    allIndicatorValues,
+    selectedExtraIndicators,
+  } = useContext(PageContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
 
   const validIndicatorIds = selectedFramework
@@ -89,7 +91,7 @@ export default function DataDisplay({
       allIndicatorValues.filter((indicator) =>
         selectedExtraIndicators.includes(indicator.indicator_id)
       ),
-    [selectedExtraIndicators]
+    [selectedExtraIndicators, allIndicatorValues]
   );
 
   // Convert the extra indicator data into a format that can be displayed in the table
@@ -112,7 +114,6 @@ export default function DataDisplay({
   );
 
   if (!selectedCompany || !hasDataToShow) {
-    const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
         sx={{
@@ -270,3 +271,5 @@ export default function DataDisplay({
     </Box>
   );
 }
+
+export default SingleViewData;

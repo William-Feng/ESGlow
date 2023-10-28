@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Avatar, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/logo-white.png";
+import Logo from "../../assets/logo-white.png";
 
 function Header(token) {
   const navigate = useNavigate();
