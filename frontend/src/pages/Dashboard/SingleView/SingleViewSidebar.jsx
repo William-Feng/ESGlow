@@ -1,17 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   Box,
-  Chip,
-  FormControl,
-  RadioGroup,
-  Radio,
-  Typography,
-  FormControlLabel,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
-  Tooltip,
   Button,
   Snackbar,
   Alert,
@@ -22,10 +11,13 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useState } from "react";
 import { PageContext } from "../Dashboard";
+import FrameworkAccordion from "./Accordion/FrameworkAccordion";
+import MetricsIndicatorsAccordion from "./Accordion/MetricsIndicatorsAccordion";
+import YearsAccordion from "./Accordion/YearsAccordion";
+import AdditionalIndicatorsAccordion from "./Accordion/AdditionalIndicatorsAccordion";
+
+export const SidebarContext = createContext();
 
 /*
   selectedFramework: Nested Object that contains all metric and indicator information
@@ -49,6 +41,7 @@ function SingleViewSidebar() {
     selectedExtraIndicators,
     setSelectedExtraIndicators,
   } = useContext(PageContext);
+
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected
   useEffect(() => {
@@ -391,314 +384,49 @@ function SingleViewSidebar() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Accordion
-        disabled={!frameworksData}
-        expanded={expanded.panel1}
-        onChange={handleChange("panel1")}
+      <SidebarContext.Provider
+        value={{
+          frameworksData,
+          selectedFramework,
+          handleFrameworkChange,
+          frameworkMetrics,
+          howManyIndicatorsChecked,
+          handleMetricChange,
+          metricWeights,
+          handleWeightChange,
+          isMetricExpanded,
+          selectedIndicators,
+          handleIndicatorChange,
+          indicatorWeights,
+          toggleMetric,
+          years,
+          handleYearChange,
+          remainingExtraIndicators,
+          selectedExtraIndicators,
+          handleExtraIndicatorsChange,
+        }}
       >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-          sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
-        >
-          <Typography
-            sx={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              letterSpacing: "0.5px",
-              textTransform: "uppercase",
-            }}
-          >
-            Frameworks
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormControl fullWidth>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={
-                selectedFramework
-                  ? selectedFramework.framework_id.toString()
-                  : ""
-              }
-              onChange={handleFrameworkChange}
-            >
-              {frameworksData &&
-                frameworksData.map((framework) => (
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    key={framework.framework_id}
-                    justifyContent="space-between"
-                  >
-                    <Box display="flex" alignItems="center">
-                      <Radio value={framework.framework_id.toString()} />
-                      <Typography fontWeight="bold">
-                        {framework.framework_name}
-                      </Typography>
-                    </Box>
-                    <Tooltip title={framework.description}>
-                      <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                    </Tooltip>
-                  </Box>
-                ))}
-            </RadioGroup>
-          </FormControl>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        disabled={!frameworksData}
-        expanded={expanded.panel2}
-        onChange={handleChange("panel2")}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2bh-content"
-          id="panel2bh-header"
-        >
-          <Typography
-            sx={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              letterSpacing: "0.5px",
-              textTransform: "uppercase",
-            }}
-          >
-            Metrics & Indicators
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box>
-            {selectedFramework ? (
-              frameworkMetrics.map((metric) => (
-                <Box key={"_metric_" + metric.metric_id} sx={{ mb: 2 }}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    sx={{
-                      cursor: "pointer",
-                      p: 0.5,
-                      border: "1px solid",
-                      borderRadius: "4px",
-                      mb: 1,
-                    }}
-                    onClick={() => toggleMetric(metric.metric_id)}
-                  >
-                    <Box display="flex" alignItems="center">
-                      <Checkbox
-                        checked={
-                          howManyIndicatorsChecked(metric) ===
-                          metric.indicators.length
-                        }
-                        indeterminate={
-                          howManyIndicatorsChecked(metric) <
-                            metric.indicators.length &&
-                          howManyIndicatorsChecked(metric) > 0
-                        }
-                        onChange={(e) => handleMetricChange(metric, e)}
-                      />
-                      <Typography fontWeight="bold">
-                        {metric.metric_name}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Tooltip title={metric.description}>
-                        <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                      </Tooltip>
-                      <Chip
-                        label={`${metricWeights[metric.metric_id]}`}
-                        color="primary"
-                        onClick={(e) =>
-                          handleWeightChange(metric.metric_id, null, e)
-                        }
-                      />
-                      <ExpandMoreIcon />
-                    </Box>
-                  </Box>
-                  {isMetricExpanded(metric.metric_id) && (
-                    <Box sx={{ mt: 1, pl: 5 }}>
-                      {metric.indicators.map((indicator) => (
-                        <Box
-                          key={indicator.indicator_id}
-                          display="flex"
-                          justifyContent="space-between"
-                          alignItems="center"
-                          sx={{ mb: 1 }}
-                        >
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                key={"_checkbox_" + indicator.indicator_id}
-                                checked={
-                                  selectedIndicators.includes(
-                                    indicator.indicator_id
-                                  ) || false
-                                }
-                                onChange={(e) =>
-                                  handleIndicatorChange(
-                                    metric,
-                                    indicator.indicator_id,
-                                    e.target.checked
-                                  )
-                                }
-                              />
-                            }
-                            label={indicator.indicator_name}
-                          />
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <Tooltip title={indicator.description}>
-                              <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                            </Tooltip>
-                            <Chip
-                              label={`${
-                                indicatorWeights[indicator.indicator_id]
-                              }`}
-                              color={
-                                selectedIndicators.includes(
-                                  indicator.indicator_id
-                                )
-                                  ? "success"
-                                  : "error"
-                              }
-                              onClick={(e) =>
-                                handleWeightChange(
-                                  null,
-                                  indicator.indicator_id,
-                                  e
-                                )
-                              }
-                            />
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-              ))
-            ) : (
-              <Typography style={{ color: "red" }}>
-                Select a framework to see the associated metrics and indicators
-              </Typography>
-            )}
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        disabled={!frameworksData}
-        expanded={expanded.panel3}
-        onChange={handleChange("panel3")}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3bh-content"
-          id="panel3bh-header"
-        >
-          <Typography
-            sx={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              letterSpacing: "0.5px",
-              textTransform: "uppercase",
-            }}
-          >
-            Years
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box flexWrap="wrap" display="flex" width="100%" px={2}>
-            {years.map((y, idx) => (
-              <Box
-                key={y}
-                flex={1}
-                width="50%"
-                display="flex"
-                justifyContent={idx % 2 === 0 ? "flex-start" : "center"}
-                ml={idx % 2 === 0 ? 0 : -2}
-              >
-                <FormControlLabel
-                  value={y}
-                  control={
-                    <Checkbox
-                      defaultChecked
-                      onChange={() => handleYearChange(y)}
-                    />
-                  }
-                  label={<Typography fontWeight="bold">{y}</Typography>}
-                />
-              </Box>
-            ))}
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        disabled={!frameworksData}
-        expanded={expanded.panel4}
-        onChange={handleChange("panel4")}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2bh-content"
-          id="panel2bh-header"
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              letterSpacing: "0.5px",
-              textTransform: "uppercase",
-            }}
-          >
-            Additional Indicators
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box>
-            <Typography style={{ color: "red", paddingBottom: "24px" }}>
-              Note that the following indicators are not included in the
-              selected framework and will not affect the ESG Score.
-            </Typography>
-            {remainingExtraIndicators.map((indicator) => (
-              <Box
-                key={indicator.indicator_id}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ mb: 1, pl: 2 }}
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={
-                        selectedExtraIndicators.includes(
-                          indicator.indicator_id
-                        ) || false
-                      }
-                      onChange={() =>
-                        handleExtraIndicatorsChange(indicator.indicator_id)
-                      }
-                    />
-                  }
-                  label={
-                    <Typography style={{ maxWidth: 200, whiteSpace: "normal" }}>
-                      {indicator.name}
-                    </Typography>
-                  }
-                />
-              </Box>
-            ))}
-          </Box>
-        </AccordionDetails>
-      </Accordion>
+        <FrameworkAccordion
+          disabled={!frameworksData}
+          expanded={expanded.panel1}
+          onChange={handleChange("panel1")}
+        />
+        <MetricsIndicatorsAccordion
+          disabled={!frameworksData}
+          expanded={expanded.panel2}
+          onChange={handleChange("panel2")}
+        />
+        <YearsAccordion
+          disabled={!frameworksData}
+          expanded={expanded.panel3}
+          onChange={handleChange("panel3")}
+        />
+        <AdditionalIndicatorsAccordion
+          disabled={!frameworksData}
+          expanded={expanded.panel4}
+          onChange={handleChange("panel4")}
+        />
+      </SidebarContext.Provider>
       {selectedFramework && (
         <Box
           sx={{
