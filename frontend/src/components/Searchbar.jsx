@@ -6,16 +6,19 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import React from "react";
+import { PageContext } from "./Dashboard";
 
-function Searchbar({
-  token,
-  selectedIndustry,
-  setSelectedIndustry,
-  selectedCompany,
-  setSelectedCompany,
-}) {
+function Searchbar() {
+  const {
+    token,
+    selectedIndustry,
+    setSelectedIndustry,
+    selectedCompany,
+    setSelectedCompany,
+  } = useContext(PageContext);
+  
   const [view, setView] = useState("single");
   const handleView = (_, newView) => {
     setView(newView);

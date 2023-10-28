@@ -4,7 +4,8 @@ import { useContext } from "react";
 import { PageContext } from "./Dashboard";
 
 function Overview() {
-  const { selectedCompany, frameworksData, fixedIndicatorValues } = useContext(PageContext);
+  const { selectedCompany, frameworksData, fixedIndicatorValues } =
+    useContext(PageContext);
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];

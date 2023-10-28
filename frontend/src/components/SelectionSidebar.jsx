@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Box,
   Chip,
@@ -25,6 +25,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useState } from "react";
+import { PageContext } from "./Dashboard";
 
 /*
   selectedFramework: Nested Object that contains all metric and indicator information
@@ -32,21 +33,22 @@ import { useState } from "react";
   selectedIndicators: Array that contains the selected indicators by ID
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
-function SelectionSidebar({
-  selectedCompany,
-  frameworksData,
-  years,
-  selectedFramework,
-  setSelectedFramework,
-  selectedIndicators,
-  setSelectedIndicators,
-  selectedYears,
-  setSelectedYears,
-  setSavedWeights,
-  allIndicators,
-  selectedExtraIndicators,
-  setSelectedExtraIndicators,
-}) {
+function SelectionSidebar() {
+  const {
+    selectedCompany,
+    frameworksData,
+    years,
+    selectedFramework,
+    setSelectedFramework,
+    selectedIndicators,
+    setSelectedIndicators,
+    selectedYears,
+    setSelectedYears,
+    setSavedWeights,
+    allIndicators,
+    selectedExtraIndicators,
+    setSelectedExtraIndicators,
+  } = useContext(PageContext);
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected
   useEffect(() => {

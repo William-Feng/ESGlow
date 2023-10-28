@@ -12,9 +12,14 @@ import Searchbar from "./Searchbar";
 import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
-import { useEffect, useMemo, useState, useCallback, createContext } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  createContext,
+} from "react";
 import { useNavigate } from "react-router-dom";
-
 
 export const PageContext = createContext();
 
@@ -38,9 +43,8 @@ function Dashboard({ token }) {
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
   const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
-  
-  const [view, setView] = useState("single");
 
+  const [view, setView] = useState("single");
 
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
@@ -221,13 +225,17 @@ function Dashboard({ token }) {
             <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <Searchbar
-              token={token}
-              selectedIndustry={selectedIndustry}
-              setSelectedIndustry={setSelectedIndustry}
-              selectedCompany={selectedCompany}
-              setSelectedCompany={setSelectedCompany}
-            />
+            <PageContext.Provider
+              value={{
+                token,
+                selectedIndustry,
+                setSelectedIndustry,
+                selectedCompany,
+                setSelectedCompany,
+              }}
+            >
+              <Searchbar />
+            </PageContext.Provider>
           </Toolbar>
         </AppBar>
         <Box
@@ -247,8 +255,14 @@ function Dashboard({ token }) {
               maxHeight: "450px",
             }}
           >
-            <PageContext.Provider value={{ selectedCompany, frameworksData, fixedIndicatorValues }}>
-              <Overview/>
+            <PageContext.Provider
+              value={{
+                selectedCompany,
+                frameworksData,
+                fixedIndicatorValues,
+              }}
+            >
+              <Overview />
             </PageContext.Provider>
           </Box>
           <Box
@@ -275,31 +289,39 @@ function Dashboard({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <SelectionSidebar
-                selectedCompany={selectedCompany}
-                frameworksData={frameworksData}
-                years={years}
-                selectedFramework={selectedFramework}
-                setSelectedFramework={setSelectedFramework}
-                selectedIndicators={selectedIndicators}
-                setSelectedIndicators={setSelectedIndicators}
-                selectedYears={selectedYears}
-                setSelectedYears={setSelectedYears}
-                setSavedWeights={setSavedWeights}
-                allIndicators={allIndicators}
-                selectedExtraIndicators={selectedExtraIndicators}
-                setSelectedExtraIndicators={setSelectedExtraIndicators}
-              />
+              <PageContext.Provider
+                value={{
+                  selectedCompany,
+                  frameworksData,
+                  years,
+                  selectedFramework,
+                  setSelectedFramework,
+                  selectedIndicators,
+                  setSelectedIndicators,
+                  selectedYears,
+                  setSelectedYears,
+                  setSavedWeights,
+                  allIndicators,
+                  selectedExtraIndicators,
+                  setSelectedExtraIndicators,
+                }}
+              >
+                <SelectionSidebar />
+              </PageContext.Provider>
             </Drawer>
-            <DataDisplay
-              selectedCompany={selectedCompany}
-              selectedFramework={selectedFramework}
-              selectedYears={sortedSelectedYears}
-              indicatorValues={indicatorValues}
-              savedWeights={savedWeights}
-              allIndicatorValues={allIndicatorValues}
-              selectedExtraIndicators={selectedExtraIndicators}
-            />
+            <PageContext.Provider
+              value={{
+                selectedCompany,
+                selectedFramework,
+                selectedYears,
+                indicatorValues,
+                savedWeights,
+                allIndicatorValues,
+                selectedExtraIndicators,
+              }}
+            >
+              <DataDisplay />
+            </PageContext.Provider>
           </Box>
         </Box>
       </Box>
