@@ -10,8 +10,8 @@ import {
 import Header from "./Header";
 import SingleViewSearchbar from "./SingleViewSearchbar";
 import Overview from "./Overview";
-import SelectionSidebar from "./SelectionSidebar";
-import DataDisplay from "./DataDisplay";
+import SelectionSidebar from "./SingleViewSidebar";
+import DataDisplay from "./SingleViewData";
 import { useEffect, useMemo, useState, useCallback, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ComparisonSearchbar from "./ComparisonSearchbar";
@@ -222,15 +222,15 @@ function Dashboard({ token }) {
             <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            {/* <PageContext.Provider 
+            <PageContext.Provider 
               value={{ token, selectedIndustry, setSelectedIndustry, selectedCompany, setSelectedCompany, view, setView}}
             >
-              <SingleViewSearchbar/> */}
+              <SingleViewSearchbar/>
             {/* COMMENT THE TWO TAGS ABOVE + UNCOMMENT THE TWO TAGS BELOW => TO CHANGE TO COMPARISON VIEW SEARCHBAR */}
-            <PageContext.Provider 
+            {/* <PageContext.Provider 
               value={{ token, view, setView}}
             >
-              <ComparisonSearchbar/>
+              <ComparisonSearchbar/> */}
             </PageContext.Provider>
           </Toolbar>
         </AppBar>
