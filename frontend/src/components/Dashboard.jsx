@@ -10,12 +10,17 @@ import {
 import Header from "./Header";
 import SingleViewSearchbar from "./SingleViewSearchbar";
 import Overview from "./Overview";
-import SelectionSidebar from "./SingleViewSidebar";
-import DataDisplay from "./SingleViewData";
-import { useEffect, useMemo, useState, useCallback, createContext } from "react";
+import SingleViewSidebar from "./SingleViewSidebar";
+import SingleViewData from "./SingleViewData";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  createContext,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import ComparisonSearchbar from "./ComparisonSearchbar";
-
 
 export const PageContext = createContext();
 
@@ -39,13 +44,12 @@ function Dashboard({ token }) {
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
   const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
-  
+
   const [view, setView] = useState("single");
 
-
-  const sortedSelectedYears = useMemo(() => {
-    return [...selectedYears].sort((a, b) => a - b);
-  }, [selectedYears]);
+  // const sortedSelectedYears = useMemo(() => {
+  //   return [...selectedYears].sort((a, b) => a - b);
+  // }, [selectedYears]);
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -222,10 +226,16 @@ function Dashboard({ token }) {
             <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <PageContext.Provider 
-              value={{ token, selectedIndustry, setSelectedIndustry, selectedCompany, setSelectedCompany, view, setView}}
+            <PageContext.Provider
+              value={{
+                token,
+                selectedIndustry,
+                setSelectedIndustry,
+                selectedCompany,
+                setSelectedCompany,
+              }}
             >
-              <SingleViewSearchbar/>
+              <SingleViewSearchbar />
             {/* COMMENT THE TWO TAGS ABOVE + UNCOMMENT THE TWO TAGS BELOW => TO CHANGE TO COMPARISON VIEW SEARCHBAR */}
             {/* <PageContext.Provider 
               value={{ token, view, setView}}
@@ -251,8 +261,14 @@ function Dashboard({ token }) {
               maxHeight: "450px",
             }}
           >
-            <PageContext.Provider value={{ selectedCompany, frameworksData, fixedIndicatorValues }}>
-              <Overview/>
+            <PageContext.Provider
+              value={{
+                selectedCompany,
+                frameworksData,
+                fixedIndicatorValues,
+              }}
+            >
+              <Overview />
             </PageContext.Provider>
           </Box>
           <Box
@@ -279,31 +295,39 @@ function Dashboard({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <SelectionSidebar
-                selectedCompany={selectedCompany}
-                frameworksData={frameworksData}
-                years={years}
-                selectedFramework={selectedFramework}
-                setSelectedFramework={setSelectedFramework}
-                selectedIndicators={selectedIndicators}
-                setSelectedIndicators={setSelectedIndicators}
-                selectedYears={selectedYears}
-                setSelectedYears={setSelectedYears}
-                setSavedWeights={setSavedWeights}
-                allIndicators={allIndicators}
-                selectedExtraIndicators={selectedExtraIndicators}
-                setSelectedExtraIndicators={setSelectedExtraIndicators}
-              />
+              <PageContext.Provider
+                value={{
+                  selectedCompany,
+                  frameworksData,
+                  years,
+                  selectedFramework,
+                  setSelectedFramework,
+                  selectedIndicators,
+                  setSelectedIndicators,
+                  selectedYears,
+                  setSelectedYears,
+                  setSavedWeights,
+                  allIndicators,
+                  selectedExtraIndicators,
+                  setSelectedExtraIndicators,
+                }}
+              >
+                <SingleViewSidebar />
+              </PageContext.Provider>
             </Drawer>
-            <DataDisplay
-              selectedCompany={selectedCompany}
-              selectedFramework={selectedFramework}
-              selectedYears={sortedSelectedYears}
-              indicatorValues={indicatorValues}
-              savedWeights={savedWeights}
-              allIndicatorValues={allIndicatorValues}
-              selectedExtraIndicators={selectedExtraIndicators}
-            />
+            <PageContext.Provider
+              value={{
+                selectedCompany,
+                selectedFramework,
+                selectedYears,
+                indicatorValues,
+                savedWeights,
+                allIndicatorValues,
+                selectedExtraIndicators,
+              }}
+            >
+              <SingleViewData />
+            </PageContext.Provider>
           </Box>
         </Box>
       </Box>

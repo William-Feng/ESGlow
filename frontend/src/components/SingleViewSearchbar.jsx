@@ -6,11 +6,19 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PageContext } from "./Dashboard";
 
-export default function SingleViewSearchbar() {
-  const { token, selectedIndustry, setSelectedIndustry, selectedCompany, setSelectedCompany, view, setView } = useContext(PageContext);
+function SingleViewSearchbar() {
+  const {
+    token,
+    selectedIndustry,
+    setSelectedIndustry,
+    selectedCompany,
+    setSelectedCompany,
+  } = useContext(PageContext);
+  
+  const [view, setView] = useState("single");
   const handleView = (_, newView) => {
     setView(newView);
   };
@@ -135,7 +143,9 @@ export default function SingleViewSearchbar() {
             backgroundColor: view === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
               fontSize: "14px", // Default font size
               "@media (min-width: 768px)": {
@@ -155,7 +165,9 @@ export default function SingleViewSearchbar() {
             backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
               fontSize: "14px", // Default font size
               "@media (min-width: 768px)": {
@@ -173,3 +185,5 @@ export default function SingleViewSearchbar() {
     </Box>
   );
 }
+
+export default SingleViewSearchbar;

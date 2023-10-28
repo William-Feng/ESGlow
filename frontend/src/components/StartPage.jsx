@@ -12,7 +12,7 @@ import ResetVerify from "./ResetVerify";
 import ResetPassword from "./ResetPassword";
 import ResetSuccess from "./ResetSuccess";
 
-export default function StartPage({ page, onSuccess }) {
+function StartPage({ page, onSuccess }) {
   const [email, setEmail] = useState(localStorage.getItem("email"));
 
   function setUserEmail(email) {
@@ -175,3 +175,5 @@ export default function StartPage({ page, onSuccess }) {
     </Grid>
   );
 }
+
+export default StartPage;

@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ResetVerify({ email }) {
+function ResetVerify({ email }) {
   const [code, setCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -125,3 +125,5 @@ export default function ResetVerify({ email }) {
     </Box>
   );
 }
+
+export default ResetVerify;

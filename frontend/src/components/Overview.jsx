@@ -3,8 +3,9 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { PageContext } from "./Dashboard";
 
-export default function Overview() {
-  const { selectedCompany, frameworksData, fixedIndicatorValues } = useContext(PageContext);
+function Overview() {
+  const { selectedCompany, frameworksData, fixedIndicatorValues } =
+    useContext(PageContext);
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];
@@ -99,20 +100,23 @@ export default function Overview() {
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
     const scoreList = getRecentESGScores();
-    const filteredFrameworksScores = scoreList
-    .filter(
+    const filteredFrameworksScores = scoreList.filter(
       (framework) =>
         framework.year === Math.max(...scoreList.map((f) => f.year))
-    )
+    );
 
     const year = filteredFrameworksScores[0].year; // Assuming all objects have the same year
-    const toolTipStringIntro = `The ESG Score was calculated by averaging` +
-      ` ${year} data of the following framework scores:\n`
-    
-    const toolTipStringList = filteredFrameworksScores
-        .map((item) => `- ${item.framework_name}: ${item.score}`)
+    const toolTipStringIntro =
+      `The ESG Score was calculated by averaging` +
+      ` ${year} data of the following framework scores:\n`;
 
-    const mostRecentYearScores = filteredFrameworksScores.map((framework) => framework.score);
+    const toolTipStringList = filteredFrameworksScores.map(
+      (item) => `- ${item.framework_name}: ${item.score}`
+    );
+
+    const mostRecentYearScores = filteredFrameworksScores.map(
+      (framework) => framework.score
+    );
     const averageESGScore = (
       mostRecentYearScores.reduce((sum, score) => sum + score, 0) /
       mostRecentYearScores.length
@@ -175,14 +179,20 @@ export default function Overview() {
                 <Typography variant="h6" color="text.secondary">
                   ESG Rating
                 </Typography>
-                <Tooltip title={
+                <Tooltip
+                  title={
                     <Typography variant="body2">
                       {toolTipStringIntro}
-                      {toolTipStringList.map((str) =>
-                        <Typography variant="body3" sx={{textIndent: '20px'}} key={str}>
-                          <br />{str}
+                      {toolTipStringList.map((str) => (
+                        <Typography
+                          variant="body3"
+                          sx={{ textIndent: "20px" }}
+                          key={str}
+                        >
+                          <br />
+                          {str}
                         </Typography>
-                      )}
+                      ))}
                     </Typography>
                   }
                 >
@@ -240,3 +250,5 @@ export default function Overview() {
     ? renderCompanyData()
     : renderPrompt();
 }
+
+export default Overview;
