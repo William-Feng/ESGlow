@@ -7,14 +7,16 @@ import {
   Toolbar,
   createTheme,
 } from "@mui/material";
-import React from "react";
 import Header from "./Header";
 import Searchbar from "./Searchbar";
 import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, createContext } from "react";
 import { useNavigate } from "react-router-dom";
+
+
+export const PageContext = createContext();
 
 function Dashboard({ token }) {
   const navigate = useNavigate();
@@ -36,6 +38,9 @@ function Dashboard({ token }) {
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
   const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
+  
+  const [view, setView] = useState("single");
+
 
   const sortedSelectedYears = useMemo(() => {
     return [...selectedYears].sort((a, b) => a - b);
@@ -242,12 +247,9 @@ function Dashboard({ token }) {
               maxHeight: "450px",
             }}
           >
-            <Overview
-              selectedIndustry={selectedIndustry}
-              selectedCompany={selectedCompany}
-              frameworksData={frameworksData}
-              fixedIndicatorValues={fixedIndicatorValues}
-            />
+            <PageContext.Provider value={{ selectedCompany, frameworksData, fixedIndicatorValues }}>
+              <Overview/>
+            </PageContext.Provider>
           </Box>
           <Box
             sx={{

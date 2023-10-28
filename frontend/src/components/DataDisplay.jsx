@@ -89,7 +89,7 @@ export default function DataDisplay({
       allIndicatorValues.filter((indicator) =>
         selectedExtraIndicators.includes(indicator.indicator_id)
       ),
-    [selectedExtraIndicators]
+    [selectedExtraIndicators, allIndicatorValues]
   );
 
   // Convert the extra indicator data into a format that can be displayed in the table
@@ -112,7 +112,6 @@ export default function DataDisplay({
   );
 
   if (!selectedCompany || !hasDataToShow) {
-    const keyword = selectedCompany ? "framework" : "company";
     return (
       <Box
         sx={{
