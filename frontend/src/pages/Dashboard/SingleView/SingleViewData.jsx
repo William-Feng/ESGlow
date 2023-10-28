@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { PageContext } from "../Dashboard";
+import { PageContext } from "./SingleViewMainPage";
 
 function SingleViewData() {
   const {

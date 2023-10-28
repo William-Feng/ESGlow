@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { PageContext } from "../Dashboard";
+import { PageContext } from "./SingleViewMainPage";
 
 function SingleViewSearchbar() {
   const {

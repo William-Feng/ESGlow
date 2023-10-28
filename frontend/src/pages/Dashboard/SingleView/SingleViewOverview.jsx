@@ -1,7 +1,7 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { PageContext } from "../Dashboard";
+import { PageContext } from "./SingleViewMainPage";
 
 function SingleViewOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =

@@ -11,7 +11,7 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import { PageContext } from "../Dashboard";
+import { PageContext } from "./SingleViewMainPage";
 import FrameworkAccordion from "../Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Accordion/MetricsIndicatorsAccordion";
 import YearsAccordion from "../Accordion/YearsAccordion";
