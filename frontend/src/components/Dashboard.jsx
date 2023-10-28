@@ -8,12 +8,13 @@ import {
   createTheme,
 } from "@mui/material";
 import Header from "./Header";
-import Searchbar from "./Searchbar";
+import SingleViewSearchbar from "./SingleViewSearchbar";
 import Overview from "./Overview";
 import SelectionSidebar from "./SelectionSidebar";
 import DataDisplay from "./DataDisplay";
 import { useEffect, useMemo, useState, useCallback, createContext } from "react";
 import { useNavigate } from "react-router-dom";
+import ComparisonSearchbar from "./ComparisonSearchbar";
 
 
 export const PageContext = createContext();
@@ -221,10 +222,15 @@ function Dashboard({ token }) {
             <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <PageContext.Provider 
+            {/* <PageContext.Provider 
               value={{ token, selectedIndustry, setSelectedIndustry, selectedCompany, setSelectedCompany, view, setView}}
             >
-              <Searchbar/>
+              <SingleViewSearchbar/> */}
+            {/* COMMENT THE TWO TAGS ABOVE + UNCOMMENT THE TWO TAGS BELOW => TO CHANGE TO COMPARISON VIEW SEARCHBAR */}
+            <PageContext.Provider 
+              value={{ token, view, setView}}
+            >
+              <ComparisonSearchbar/>
             </PageContext.Provider>
           </Toolbar>
         </AppBar>

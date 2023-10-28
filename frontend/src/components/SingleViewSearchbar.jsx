@@ -9,7 +9,7 @@ import {
 import { useEffect, useState, useContext } from "react";
 import { PageContext } from "./Dashboard";
 
-export default function Searchbar() {
+export default function SingleViewSearchbar() {
   const { token, selectedIndustry, setSelectedIndustry, selectedCompany, setSelectedCompany, view, setView } = useContext(PageContext);
   const handleView = (_, newView) => {
     setView(newView);
