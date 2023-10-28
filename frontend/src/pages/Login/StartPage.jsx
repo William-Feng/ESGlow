@@ -5,7 +5,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import React from "react";
 import Login from "./Login";
 import Register from "./Register";
-import Logo from "../assets/logo-white.png";
+import Logo from "../../assets/logo-white.png";
 import { useState } from "react";
 import ResetInputEmail from "./ResetInputEmail";
 import ResetVerify from "./ResetVerify";

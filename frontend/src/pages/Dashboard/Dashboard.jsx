@@ -8,10 +8,10 @@ import {
   createTheme,
 } from "@mui/material";
 import Header from "./Header";
-import SingleViewSearchbar from "./SingleViewSearchbar";
+import SingleViewSearchbar from "./SingleView/SingleViewSearchbar";
 import Overview from "./Overview";
-import SingleViewSidebar from "./SingleViewSidebar";
-import SingleViewData from "./SingleViewData";
+import SingleViewSidebar from "./SingleView/SingleViewSidebar";
+import SingleViewData from "./SingleView/SingleViewData";
 import {
   useEffect,
   useMemo,
@@ -20,7 +20,7 @@ import {
   createContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import ComparisonSearchbar from "./ComparisonSearchbar";
+import ComparisonSearchbar from "./Comparison/ComparisonSearchbar";
 
 export const PageContext = createContext();
 

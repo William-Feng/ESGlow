@@ -25,7 +25,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useState } from "react";
-import { PageContext } from "./Dashboard";
+import { PageContext } from "../Dashboard";
 
 /*
   selectedFramework: Nested Object that contains all metric and indicator information
