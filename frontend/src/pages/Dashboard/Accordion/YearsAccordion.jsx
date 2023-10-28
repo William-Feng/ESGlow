@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { SidebarContext } from "../SingleViewSidebar";
+import { SidebarContext } from "../SingleView/SingleViewSidebar";
 
 function YearsAccordion({ disabled, expanded, onChange }) {
   const { years, handleYearChange } = useContext(SidebarContext);

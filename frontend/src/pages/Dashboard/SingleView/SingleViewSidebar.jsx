@@ -12,10 +12,10 @@ import {
   DialogContentText,
 } from "@mui/material";
 import { PageContext } from "../Dashboard";
-import FrameworkAccordion from "./Accordion/FrameworkAccordion";
-import MetricsIndicatorsAccordion from "./Accordion/MetricsIndicatorsAccordion";
-import YearsAccordion from "./Accordion/YearsAccordion";
-import AdditionalIndicatorsAccordion from "./Accordion/AdditionalIndicatorsAccordion";
+import FrameworkAccordion from "../Accordion/FrameworkAccordion";
+import MetricsIndicatorsAccordion from "../Accordion/MetricsIndicatorsAccordion";
+import YearsAccordion from "../Accordion/YearsAccordion";
+import AdditionalIndicatorsAccordion from "../Accordion/AdditionalIndicatorsAccordion";
 
 export const SidebarContext = createContext();
 
