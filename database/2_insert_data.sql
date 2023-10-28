@@ -1989,23 +1989,7 @@ INSERT INTO company_frameworks (company_id, framework_id) VALUES
 (4, 3),
 (4, 4),
 (5, 1),
-(5, 5),
-(6, 8),
-(10, 7),
-(7, 6),
-(8, 6),
-(6, 10),
-(10, 8),
-(8, 7),
-(7, 9),
-(10, 9),
-(9, 8),
-(9, 10),
-(7, 8),
-(9, 7),
-(8, 9),
-(7, 10),
-(9, 9);
+(5, 5);
 
 
 -- Metric Indicators Relationship
