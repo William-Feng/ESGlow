@@ -1,9 +1,9 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { PageContext } from "./Dashboard";
+import { PageContext } from "../Dashboard";
 
-function Overview() {
+function SingleViewOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
     useContext(PageContext);
   const getRecentESGScores = () => {
@@ -251,4 +251,4 @@ function Overview() {
     : renderPrompt();
 }
 
-export default Overview;
+export default SingleViewOverview;

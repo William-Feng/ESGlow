@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import Header from "./Header";
 import SingleViewSearchbar from "./SingleView/SingleViewSearchbar";
-import Overview from "./Overview";
+import SingleViewOverview from "./SingleView/SingleViewOverview";
 import SingleViewSidebar from "./SingleView/SingleViewSidebar";
 import SingleViewData from "./SingleView/SingleViewData";
 import {
@@ -115,7 +115,7 @@ function Dashboard({ token }) {
         );
         setSelectedIndicators(allIndicators);
         // Set FIXED Indicator values (doesn't change with sidebar selection)
-        // this displays a ESG score in Overview for a company
+        // this displays a ESG score in SingleViewOverview for a company
         fetchIndicatorValues(
           companyId,
           [...new Set(allIndicators)].join(","),
@@ -268,7 +268,7 @@ function Dashboard({ token }) {
                 fixedIndicatorValues,
               }}
             >
-              <Overview />
+              <SingleViewOverview />
             </PageContext.Provider>
           </Box>
           <Box
