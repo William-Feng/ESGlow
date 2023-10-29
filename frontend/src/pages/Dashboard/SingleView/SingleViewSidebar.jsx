@@ -16,12 +16,6 @@ import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
 import YearsAccordion from "../Components/Accordion/YearsAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
-// import {
-//   FrameworkAccordion,
-//   MetricsIndicatorsAccordion,
-//   YearsAccordion,
-//   AdditionalIndicatorsAccordion
-// } from "../Components/Accordion";
 
 export const SidebarContext = createContext();
 
