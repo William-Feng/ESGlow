@@ -36,14 +36,9 @@ export default function ComparisonOverview() {
             padding: 2,
           }}
         >
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" color="text.primary" paragraph>
-              COMPANY DESCRIPTION
-            </Typography>
-          </Box>
           <Box
             sx={{
-              flex: 1.5,
+              flex: 2.5,
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
@@ -58,11 +53,11 @@ export default function ComparisonOverview() {
               }}
             >
               <Typography variant="h2" color="text.primary" paragraph>
-                AVERAGE
+                SCORE
               </Typography>
               <Box display="flex" alignItems="center">
                 <Typography variant="h6" color="text.secondary">
-                  ESG Rating
+                  Portfolio ESG Rating
                 </Typography>
                 <Tooltip
                   title={
@@ -77,6 +72,7 @@ export default function ComparisonOverview() {
                 </Tooltip>
               </Box>
             </Box>
+            {/* FIRST COLUMN: BEST AND WORST PERFORMERS */}
             <Box
               sx={{
                 flex: 1,
@@ -105,6 +101,30 @@ export default function ComparisonOverview() {
                 Industry Ranking
               </Typography>
             </Box>
+            {/* SECOND COLUMN: BEST AND WORST PERFORMERS */}
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="h4" color="text.primary" paragraph>
+                90
+              </Typography>
+              <Typography variant="h6" color="text.secondary">
+                Best Performer
+              </Typography>
+              <Typography variant="h4" color="text.primary" paragraph>
+                20
+              </Typography>
+              <Typography variant="h6" color="text.secondary">
+                Worst Performer
+              </Typography>
+            </Box>
           </Box>
           <Box sx={{ flex: 1 }}>
             <Typography
@@ -121,7 +141,7 @@ export default function ComparisonOverview() {
     );
   };
 
-  return false // this would be dependent on company selected or not
+  return true // this would use something equivalent to selectedCompany state
     ? renderCompanyData()
     : <OverviewPrompt/>;
 }

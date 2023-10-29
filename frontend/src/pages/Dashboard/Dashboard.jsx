@@ -15,8 +15,6 @@ function Dashboard({ token }) {
   const defaultTheme = createTheme();
   const [view, setView] = useState("single");
 
-  console.log(view)
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <PageContext.Provider
