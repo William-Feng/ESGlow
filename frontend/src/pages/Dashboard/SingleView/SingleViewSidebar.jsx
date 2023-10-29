@@ -11,11 +11,11 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import { PageContext } from "../Dashboard";
-import FrameworkAccordion from "../Accordion/FrameworkAccordion";
-import MetricsIndicatorsAccordion from "../Accordion/MetricsIndicatorsAccordion";
-import YearsAccordion from "../Accordion/YearsAccordion";
-import AdditionalIndicatorsAccordion from "../Accordion/AdditionalIndicatorsAccordion";
+import { SingleViewContext } from "./SingleView";
+import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
+import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
+import YearsAccordion from "../Components/Accordion/YearsAccordion";
+import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 
 export const SidebarContext = createContext();
 
@@ -40,7 +40,7 @@ function SingleViewSidebar() {
     allIndicators,
     selectedExtraIndicators,
     setSelectedExtraIndicators,
-  } = useContext(PageContext);
+  } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected
@@ -399,8 +399,6 @@ function SingleViewSidebar() {
           handleIndicatorChange,
           indicatorWeights,
           toggleMetric,
-          years,
-          handleYearChange,
           remainingExtraIndicators,
           selectedExtraIndicators,
           handleExtraIndicatorsChange,
@@ -410,6 +408,7 @@ function SingleViewSidebar() {
           disabled={!frameworksData}
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
+          frameworksData={frameworksData}
         />
         <MetricsIndicatorsAccordion
           disabled={!frameworksData}
@@ -420,6 +419,8 @@ function SingleViewSidebar() {
           disabled={!frameworksData}
           expanded={expanded.panel3}
           onChange={handleChange("panel3")}
+          years={years}
+          handleYearChange={handleYearChange}
         />
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}

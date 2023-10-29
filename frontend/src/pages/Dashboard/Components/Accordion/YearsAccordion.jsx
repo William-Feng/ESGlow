@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -9,10 +8,8 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { SidebarContext } from "../SingleView/SingleViewSidebar";
 
-function YearsAccordion({ disabled, expanded, onChange }) {
-  const { years, handleYearChange } = useContext(SidebarContext);
+function YearsAccordion({ disabled, expanded, onChange, years, handleYearChange }) {
 
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>

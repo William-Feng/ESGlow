@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { SidebarContext } from "../SingleView/SingleViewSidebar";
+import { SidebarContext } from "../../SingleView/SingleViewSidebar";
 
 function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
   const {

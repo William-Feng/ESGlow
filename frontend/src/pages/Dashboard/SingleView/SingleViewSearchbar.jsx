@@ -7,18 +7,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { PageContext } from "../Dashboard";
+import { SingleViewContext } from "./SingleView";
 
-function SingleViewSearchbar() {
+function SingleViewSearchbar({ token }) {
   const {
-    token,
     selectedIndustry,
     setSelectedIndustry,
     selectedCompany,
     setSelectedCompany,
-  } = useContext(PageContext);
-  
-  const [view, setView] = useState("single");
+    view,
+    setView
+  } = useContext(SingleViewContext);
+
   const handleView = (_, newView) => {
     setView(newView);
   };
