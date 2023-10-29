@@ -118,11 +118,11 @@ export default function ComparisonOverview() {
               <Typography variant="h6" color="text.secondary">
                 Best Performer
               </Typography>
-              <Typography variant="h4" color="text.primary" paragraph>
+              <Typography variant="h4" color="text.primary" sx={{ mt: '15px' }} paragraph>
                 20
               </Typography>
               <Typography variant="h6" color="text.secondary">
-                Worst Performer
+                Best Performer
               </Typography>
             </Box>
           </Box>
