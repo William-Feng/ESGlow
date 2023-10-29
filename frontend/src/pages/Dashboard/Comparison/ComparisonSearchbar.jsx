@@ -10,13 +10,13 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useEffect, useState, useContext } from "react";
-import { PageContext } from "../SingleView/SingleView";
+import { ComparisonViewContext } from "./ComparisonView";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparisonSearchbar() {
-  const { token, view, setView } = useContext(PageContext);
+export default function ComparisonSearchbar({ token }) {
+  const { view, setView } = useContext(ComparisonViewContext);
   const handleView = (_, newView) => {
     setView(newView);
   };

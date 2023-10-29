@@ -225,7 +225,6 @@ export default function SingleView({ token }) {
           <Toolbar sx={{ margin: "auto" }}>
             <SingleViewContext.Provider
               value={{
-                token,
                 selectedIndustry,
                 setSelectedIndustry,
                 selectedCompany,
@@ -234,7 +233,7 @@ export default function SingleView({ token }) {
                 setView
               }}
             >
-              <SingleViewSearchbar />
+              <SingleViewSearchbar token={ token }/>
             </SingleViewContext.Provider>
           </Toolbar>
         </AppBar>

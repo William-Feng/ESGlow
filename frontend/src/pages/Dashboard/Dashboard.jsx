@@ -26,7 +26,7 @@ function Dashboard({ token }) {
         }}
       >
         {view === 'single' ? 
-          <SingleView token={ token } /> : <ComparisonView/>
+          <SingleView token={ token } /> : <ComparisonView token={ token }/>
         }
       </PageContext.Provider>
     </ThemeProvider>

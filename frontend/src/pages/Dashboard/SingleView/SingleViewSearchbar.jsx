@@ -9,9 +9,8 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { SingleViewContext } from "./SingleView";
 
-function SingleViewSearchbar() {
+function SingleViewSearchbar({ token }) {
   const {
-    token,
     selectedIndustry,
     setSelectedIndustry,
     selectedCompany,
