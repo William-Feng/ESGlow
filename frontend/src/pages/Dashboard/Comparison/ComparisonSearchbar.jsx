@@ -10,7 +10,7 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useEffect, useState, useContext } from "react";
-import { PageContext } from "../SingleView/SingleViewMainPage";
+import { PageContext } from "../SingleView/SingleView";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;

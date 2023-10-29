@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { PageContext } from "./SingleViewMainPage";
+import { SingleViewContext } from "./SingleView";
 
 function SingleViewData() {
   const {
@@ -19,7 +19,7 @@ function SingleViewData() {
     savedWeights,
     allIndicatorValues,
     selectedExtraIndicators,
-  } = useContext(PageContext);
+  } = useContext(SingleViewContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
 
   const validIndicatorIds = selectedFramework

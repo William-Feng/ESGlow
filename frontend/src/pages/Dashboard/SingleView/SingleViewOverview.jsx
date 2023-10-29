@@ -1,11 +1,11 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { PageContext } from "./SingleViewMainPage";
+import { SingleViewContext } from "./SingleView";
 
 function SingleViewOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
-    useContext(PageContext);
+    useContext(SingleViewContext);
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];

@@ -2,15 +2,33 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import SingleView from "./SingleView/SingleViewMainPage";
+import {
+  useState,
+  createContext,
+} from "react";
+import SingleView from "./SingleView/SingleView";
+import ComparisonView from "./Comparison/ComparisonView";
 
+export const PageContext = createContext();
 
 function Dashboard({ token }) {
   const defaultTheme = createTheme();
+  const [view, setView] = useState("single");
+
+  console.log(view)
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <SingleView token={ token } />
+      <PageContext.Provider
+        value={{
+          view,
+          setView
+        }}
+      >
+        {view === 'single' ? 
+          <SingleView token={ token } /> : <ComparisonView/>
+        }
+      </PageContext.Provider>
     </ThemeProvider>
   );
 }

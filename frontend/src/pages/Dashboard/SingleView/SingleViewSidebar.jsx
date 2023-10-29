@@ -11,7 +11,7 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import { PageContext } from "./SingleViewMainPage";
+import { SingleViewContext } from "./SingleView";
 import FrameworkAccordion from "../Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Accordion/MetricsIndicatorsAccordion";
 import YearsAccordion from "../Accordion/YearsAccordion";
@@ -40,7 +40,7 @@ function SingleViewSidebar() {
     allIndicators,
     selectedExtraIndicators,
     setSelectedExtraIndicators,
-  } = useContext(PageContext);
+  } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected

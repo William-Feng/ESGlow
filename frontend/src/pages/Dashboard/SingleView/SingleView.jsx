@@ -15,14 +15,19 @@ import {
   useMemo,
   useState,
   useCallback,
+  useContext,
   createContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-// import ComparisonSearchbar from "./Comparison/ComparisonSearchbar";
+import { PageContext } from "../Dashboard";
 
-export const PageContext = createContext();
+export const SingleViewContext = createContext();
 
 export default function SingleView({ token }) {
+  const {
+    view,
+    setView
+  } = useContext(PageContext);
   const navigate = useNavigate();
 
   const years = useMemo(() => [2022, 2023], []);
@@ -42,11 +47,6 @@ export default function SingleView({ token }) {
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
   const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
 
-  const [view, setView] = useState("single");
-
-  // const sortedSelectedYears = useMemo(() => {
-  //   return [...selectedYears].sort((a, b) => a - b);
-  // }, [selectedYears]);
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -223,22 +223,19 @@ export default function SingleView({ token }) {
             <Header token={token} />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
-            <PageContext.Provider
+            <SingleViewContext.Provider
               value={{
                 token,
                 selectedIndustry,
                 setSelectedIndustry,
                 selectedCompany,
                 setSelectedCompany,
+                view,
+                setView
               }}
             >
               <SingleViewSearchbar />
-            {/* COMMENT THE TWO TAGS ABOVE + UNCOMMENT THE TWO TAGS BELOW => TO CHANGE TO COMPARISON VIEW SEARCHBAR */}
-            {/* <PageContext.Provider 
-              value={{ token, view, setView}}
-            >
-              <ComparisonSearchbar/> */}
-            </PageContext.Provider>
+            </SingleViewContext.Provider>
           </Toolbar>
         </AppBar>
         <Box
@@ -258,7 +255,7 @@ export default function SingleView({ token }) {
               maxHeight: "450px",
             }}
           >
-            <PageContext.Provider
+            <SingleViewContext.Provider
               value={{
                 selectedCompany,
                 frameworksData,
@@ -266,7 +263,7 @@ export default function SingleView({ token }) {
               }}
             >
               <SingleViewOverview />
-            </PageContext.Provider>
+            </SingleViewContext.Provider>
           </Box>
           <Box
             sx={{
@@ -292,7 +289,7 @@ export default function SingleView({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <PageContext.Provider
+              <SingleViewContext.Provider
                 value={{
                   selectedCompany,
                   frameworksData,
@@ -310,9 +307,9 @@ export default function SingleView({ token }) {
                 }}
               >
                 <SingleViewSidebar />
-              </PageContext.Provider>
+              </SingleViewContext.Provider>
             </Drawer>
-            <PageContext.Provider
+            <SingleViewContext.Provider
               value={{
                 selectedCompany,
                 selectedFramework,
@@ -324,7 +321,7 @@ export default function SingleView({ token }) {
               }}
             >
               <SingleViewData />
-            </PageContext.Provider>
+            </SingleViewContext.Provider>
           </Box>
         </Box>
       </Box>
