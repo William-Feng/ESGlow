@@ -3,14 +3,23 @@ import {
   Button
 } from "@mui/material";
 import YearsAccordion from "../Components/Accordion/YearsAccordion";
-import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 
-// export const SidebarContext = createContext();
+/* These are dummy variables for placeholder */
+const years = [2020, 2023];
+const dummyFunction = () => {};
 
 export default function ComparisonSidebar() {
+
   return (
     <Box sx={{ paddingBottom: 3 }}>
-      {/* Call the Accordion components needed with the props */}
+      {/* Should modularize the indicators/weight Accordion to add here */}
+      <YearsAccordion
+        disabled={false} // Depending on some sort of selection
+        expanded={true}
+        onChange={dummyFunction}
+        years={years}
+        handleYearChange={dummyFunction}
+      />
       <Box
         sx={{
           mt: 2,

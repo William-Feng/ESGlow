@@ -399,8 +399,6 @@ function SingleViewSidebar() {
           handleIndicatorChange,
           indicatorWeights,
           toggleMetric,
-          years,
-          handleYearChange,
           remainingExtraIndicators,
           selectedExtraIndicators,
           handleExtraIndicatorsChange,
@@ -410,6 +408,7 @@ function SingleViewSidebar() {
           disabled={!frameworksData}
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
+          frameworksData={frameworksData}
         />
         <MetricsIndicatorsAccordion
           disabled={!frameworksData}
@@ -420,6 +419,8 @@ function SingleViewSidebar() {
           disabled={!frameworksData}
           expanded={expanded.panel3}
           onChange={handleChange("panel3")}
+          years={years}
+          handleYearChange={handleYearChange}
         />
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
