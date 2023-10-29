@@ -7,7 +7,7 @@ import {
   createContext,
 } from "react";
 import SingleView from "./SingleView/SingleView";
-import ComparisonView from "./Comparison/ComparisonView";
+import ComparisonView from "./ComparisonView/ComparisonView";
 
 export const PageContext = createContext();
 
