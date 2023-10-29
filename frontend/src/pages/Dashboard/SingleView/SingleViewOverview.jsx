@@ -2,6 +2,7 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
+import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
 function SingleViewOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
@@ -71,31 +72,6 @@ function SingleViewOverview() {
 
     return ESGScoreList;
   };
-
-  // Company hasn't been selected, so inform the user to select a company
-  const renderPrompt = () => (
-    <Box
-      sx={{
-        display: "flex",
-        padding: "32px 0",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "34.5vh",
-        bgcolor: "#f5f5f5",
-        mx: "auto",
-      }}
-    >
-      <Typography
-        variant="h4"
-        color="text.secondary"
-        paragraph
-        textAlign="center"
-      >
-        Please select a company from the search bar above to view its details.
-      </Typography>
-    </Box>
-  );
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
@@ -248,7 +224,7 @@ function SingleViewOverview() {
 
   return frameworksData && selectedCompany
     ? renderCompanyData()
-    : renderPrompt();
+    : <OverviewPrompt/>;
 }
 
 export default SingleViewOverview;

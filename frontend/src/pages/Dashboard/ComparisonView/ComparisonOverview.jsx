@@ -1,32 +1,9 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
 export default function ComparisonOverview() {
   
-  const renderPrompt = () => (
-    <Box
-      sx={{
-        display: "flex",
-        padding: "32px 0",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "34.5vh",
-        bgcolor: "#f5f5f5",
-        mx: "auto",
-      }}
-    >
-      <Typography
-        variant="h4"
-        color="text.secondary"
-        paragraph
-        textAlign="center"
-      >
-        Please select a company from the search bar above to view its details.
-      </Typography>
-    </Box>
-  );
-
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
 
@@ -146,5 +123,5 @@ export default function ComparisonOverview() {
 
   return false // this would be dependent on company selected or not
     ? renderCompanyData()
-    : renderPrompt();
+    : <OverviewPrompt/>;
 }
