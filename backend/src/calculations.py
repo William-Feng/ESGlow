@@ -1,6 +1,26 @@
 from .database import db, Company, Industry, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
 
-def get_company_values(company):
+
+
+def get_company_values(companies):
+    """
+    Given a list of companies, return all values of the companies
+
+    Args:
+        companies ([int]): list of company ids
+
+    Returns:
+        {
+            company_id: company_value...
+        }
+    """
+    values = {}
+    for company in companies:
+        values[company] = get_company_value(company)
+    return values
+    
+
+def get_company_value(company):
     """
     Given a Company Id, return company_values.
 

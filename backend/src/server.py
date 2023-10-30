@@ -245,18 +245,22 @@ class IndicatorValues(Resource):
 
 company_values_model = value_calculations(api)
 
-@api.route("/api/values/<int:company_id>")
+@api.route("/api/values/<string:company_id>")
 class CompanyValues(Resource):
     # TODO: Model is broken? Unknown why...
     @api.response(200, "Values for company retrieved!", model=company_values_model)
     @api.response(401, 'Authentication required. Please log in.')
-    @api.response(400, 'Invalid company id!')
+    @api.response(400, 'Invalid company id provided')
         
     
-    # @jwt_required()
+    @jwt_required()
     def get(self, company_id):
-        # TODO: Model, Authentication
+        try:
+            selected_companies = [int(i) for i in company_id.split(',')]
+        except ValueError:
+            return {"message": "Invalid company id provided"}, 400
+
         
-        
-        return get_company_values(company_id), 200
+        return get_company_values(selected_companies), 200
+       
        
