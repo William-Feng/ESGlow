@@ -67,7 +67,7 @@ def get_company_values(company):
         'message' : "Values for company retrieved!",
         'value' : {
             'id': company,
-            'ESGscore': sum([framework['score'] for framework in framework_values])//len(framework_values),
+            'ESGscore': sum([framework['score'] for framework in framework_values.values()])//len(framework_values),
             'year': most_recent_year,
             'frameworks': framework_values
         }        

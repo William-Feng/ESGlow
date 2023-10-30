@@ -138,8 +138,6 @@ industry_companies_model, company_info_model = specific_industry_company_models(
     api)
 framework_detailed_model, indicator_value_detailed_model = framework_metric_indicator_models(
     api)
-company_values_model = value_calculations(api)
-
 @api.route("/api/industries/all")
 class IndustriesAll(Resource):
     @api.response(200, 'All industries retrieved!', model=industry_names_model)
@@ -245,14 +243,17 @@ class IndicatorValues(Resource):
 # Calculate the Max, Min, Mean
 # TODO: Could also do calc with company later
 
-@api.route("/api/values/<int:company_id")
+company_values_model = value_calculations(api)
+
+@api.route("/api/values/<int:company_id>")
 class CompanyValues(Resource):
+    # TODO: Model is broken? Unknown why...
     @api.response(200, "Values for company retrieved!", model=company_values_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid company id!')
         
     
-    @jwt_required()
+    # @jwt_required()
     def get(self, company_id):
         # TODO: Model, Authentication
         

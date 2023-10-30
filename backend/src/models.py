@@ -124,7 +124,7 @@ def framework_metric_indicator_models(api):
 
 
 def value_calculations(api):
-    
+    """
     framework_values_model = api.model("FrameworkValue"), {
         'framework_id' : fields.Integer(required=True, description='The indicator ID of framework', example=12),
         'score' : fields.Integer(required=True, description='Score of the framework', example = 76)
@@ -142,6 +142,14 @@ def value_calculations(api):
         'message': fields.String(description='Status message', example='Values for company retrieved!'),
         'values': fields.List(fields.Nested(company_values_value_model), description = "Company framework value")
     })
+    """
+    
+    company_values_model = api.model('CompanyValues', {
+        'message': fields.String(description='Status message', example='Values for company retrieved!'),
+        'values': fields.String(description = "Company framework value")
+    })
     
     return company_values_model
+    
+    
     
