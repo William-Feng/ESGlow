@@ -60,6 +60,7 @@ def get_company_values(company):
     for framework in frameworks:
         framework_values[framework.framework_id] = {
             'framework_id' : framework.framework_id,
+            'name' : framework.name,
             'score' : calculate_framework(framework, metric_values)
         }
         
@@ -69,7 +70,7 @@ def get_company_values(company):
             'id': company,
             'ESGscore': sum([framework['score'] for framework in framework_values.values()])//len(framework_values),
             'year': most_recent_year,
-            'frameworks': framework_values
+            'frameworks': [framework_values[key] for key in framework_values.keys()]
         }        
     }
     
