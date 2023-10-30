@@ -3,10 +3,10 @@ from flask_restx import Api, Resource
 
 from .database import User
 from .frameworks import all_industries, all_companies, all_frameworks, all_indicators, get_companies_by_industry, get_framework_info_from_company, get_indicator_values, get_company_info
-from .models import user_authentication_models, password_reset_models, all_industry_company_framework_indicator_models, specific_industry_company_models, framework_metric_indicator_models
+from .models import user_authentication_models, password_reset_models, all_industry_company_framework_indicator_models, specific_industry_company_models, framework_metric_indicator_models, value_calculations
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
-
+from .calculations import get_company_values
 
 api = Api()
 jwt = JWTManager()
@@ -138,7 +138,7 @@ industry_companies_model, company_info_model = specific_industry_company_models(
     api)
 framework_detailed_model, indicator_value_detailed_model = framework_metric_indicator_models(
     api)
-
+company_values_model = value_calculations(api)
 
 @api.route("/api/industries/all")
 class IndustriesAll(Resource):
@@ -171,7 +171,7 @@ class FrameworksAll(Resource):
 
 
 @api.route("/api/indicators/all")
-class CompaniesAll(Resource):
+class IndicatorsAll(Resource):
     @api.response(200, 'All indicators retrieved!', model=indicator_names_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'No indicators found.')
@@ -230,3 +230,32 @@ class IndicatorValues(Resource):
             return {"message": "Invalid indicator_ids or years provided."}, 400
 
         return get_indicator_values(company_id, selected_indicators, selected_years)
+
+
+# ===================================================================
+#
+# Company/Framework Calculations
+#
+# ===================================================================
+
+
+# TODO: Return Max/Min/Average of a Framework.
+# Given Framework, find most recent year of data for framework.
+# For year, find all companies w/ Year in that Framework.
+# Calculate the Max, Min, Mean
+# TODO: Could also do calc with company later
+
+@api.route("/api/values/<int:company_id")
+class CompanyValues(Resource):
+    @api.response(200, "Values for company retrieved!", model=company_values_model)
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'Invalid company id!')
+        
+    
+    @jwt_required()
+    def get(self, company_id):
+        # TODO: Model, Authentication
+        
+        
+        return get_company_values(company_id), 200
+       
