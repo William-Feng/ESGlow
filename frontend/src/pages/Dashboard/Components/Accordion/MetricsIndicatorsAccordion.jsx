@@ -27,6 +27,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
     handleIndicatorChange,
     indicatorWeights,
     toggleMetric,
+    determineChipColor,
   } = useContext(SidebarContext);
 
   return (
@@ -88,7 +89,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
                     </Tooltip>
                     <Chip
                       label={`${metricWeights[metric.metric_id]}`}
-                      color="primary"
+                      color={determineChipColor(metric, null)}
                       onClick={(e) =>
                         handleWeightChange(metric.metric_id, null, e)
                       }
@@ -134,13 +135,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
                             label={`${
                               indicatorWeights[indicator.indicator_id]
                             }`}
-                            color={
-                              selectedIndicators.includes(
-                                indicator.indicator_id
-                              )
-                                ? "success"
-                                : "error"
-                            }
+                            color={determineChipColor(null, indicator)}
                             onClick={(e) =>
                               handleWeightChange(
                                 null,
