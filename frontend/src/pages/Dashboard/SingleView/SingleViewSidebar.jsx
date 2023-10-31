@@ -163,8 +163,10 @@ function SingleViewSidebar() {
     setSelectedMetrics((prevMetrics) => {
       if (!checked) {
         return prevMetrics.filter((m) => m !== metric);
-      } else {
+      } else if (checked && !prevMetrics.includes(metric)) {
         return [...prevMetrics, metric];
+      } else {
+        return [...prevMetrics];
       }
     });
 
@@ -200,6 +202,29 @@ function SingleViewSidebar() {
   const [newWeightMetridId, setNewWeightMetridId] = useState("");
   const [newWeightIndicatorId, setNewWeightIndicatorId] = useState("");
 
+  const determineChipColor = (metric, indicator) => {
+    if (metric) {
+      const metricId = metric.metric_id;
+      if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
+        return "error";
+      } else if (Math.abs(metricWeights[metricId] - parseFloat(metric.predefined_weight)) <= 0.0001) {
+        return "success";
+      } else {
+        // Return orange if weight has been edited
+        return "warning";
+      }
+    } else if (indicator) {
+      const indicatorId = indicator.indicator_id;
+      if (!selectedIndicators.includes(indicatorId)) {
+        return "error";
+      } else if (Math.abs(indicatorWeights[indicatorId] - parseFloat(indicator.predefined_weight)) <= 0.0001) {
+        return "success";
+      } else {
+        return "warning";
+      }
+    }
+  }
+
   const openWeightDialog = (metricId, indicatorId) => {
     setIsDialogOpen(true);
     setNewWeightMetridId(metricId);
@@ -207,6 +232,7 @@ function SingleViewSidebar() {
   };
 
   const closeWeightDialog = () => {
+    setNewWeightInput('');
     setIsDialogOpen(false);
   };
 
@@ -402,6 +428,7 @@ function SingleViewSidebar() {
           remainingExtraIndicators,
           selectedExtraIndicators,
           handleExtraIndicatorsChange,
+          determineChipColor,
         }}
       >
         <FrameworkAccordion
