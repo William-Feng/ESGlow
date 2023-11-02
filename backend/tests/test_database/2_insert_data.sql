@@ -1,9 +1,13 @@
 
+INSERT INTO industries (name) VALUES 
+('Industry 1'),
+('Industry 2');
+
 -- Inserting into the `companies` table
-INSERT INTO companies (name, description) VALUES 
-('CompanyA', 'Description for CompanyA'),
-('CompanyB', 'Description for CompanyB'),
-('CompanyC', 'Description for CompanyC');
+INSERT INTO companies (industry_id, name, description) VALUES 
+(1, 'CompanyA', 'Description for CompanyA'),
+(1, 'CompanyB', 'Description for CompanyB'),
+(2, 'CompanyC', 'Description for CompanyC');
 
 -- Inserting into the `frameworks` table
 INSERT INTO frameworks (name, description) VALUES 

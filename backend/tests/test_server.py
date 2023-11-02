@@ -96,7 +96,7 @@ def test_frameworks_by_company_endpoint(client_with_frameworks, access_token):
     })
 
     assert response.status_code == 200
-    assert response.json["message"] == "Framework, metric & indicator information for company retrieved!"
+    assert response.json["message"] == "Framework, metric & indicator information for company successfully retrieved!"
     assert response.json["frameworks"]
 
     # Invalid company
@@ -115,7 +115,7 @@ def test_indicator_values_endpoint(client_with_frameworks, access_token):
     })
 
     assert response.status_code == 200
-    assert response.json["message"] == "Values successfully retrieved!"
+    assert response.json["message"] == "Indicator values for company successfully retrieved!"
     assert response.json["values"]
 
     # Invalid company
@@ -134,17 +134,17 @@ def test_indicator_values_endpoint(client_with_frameworks, access_token):
     assert response.status_code == 400
     assert response.json["message"] == "One or more provided indicator_ids do not exist."
 
-def test_company_description_endpoint(client_with_frameworks, access_token):
-    response = client_with_frameworks.get('/api/companies/1/description', headers={
+def test_company_info_endpoint(client_with_frameworks, access_token):
+    response = client_with_frameworks.get('/api/companies/1', headers={
         'Authorization': f'Bearer {access_token}'
     })
 
     assert response.status_code == 200
-    assert response.json["message"] == "Description successfully retrieved!"
-    assert response.json["description"]
+    assert response.json["message"] == "Companies' information successfully retrieved!"
+    assert response.json["companies"]
 
     # Invalid company
-    response = client_with_frameworks.get('/api/companies/10/description', headers={
+    response = client_with_frameworks.get('/api/companies/10', headers={
         'Authorization': f'Bearer {access_token}'
     })
 
