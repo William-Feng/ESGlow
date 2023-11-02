@@ -27,3 +27,10 @@ Implemented JWTs for authentication.
 Finished login endpoint.
 Created endpoint to retrieve indicator values based on company and years.
 Created endpoint to retried all frameworks, indicators, and metrics for a company.
+
+Week 6/7
+Created test data for backend testing.
+Setup a test database that would automatically startup when running pytest and taredown at the end.
+Created endpoint for getting company description.
+Standardised returns for backend endpoints, including flask models for all returns.
+Testing for most backend endpoints.
