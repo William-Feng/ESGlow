@@ -114,7 +114,7 @@ def get_company_info(company_ids: List[int]):
 
     companies_data = []
     for company_id in company_ids:
-        company = Company.query.get(company_id)
+        company = db.session.get(Company, company_id)
         if not company:
             return {"message": f"Company with ID {company_id} not found."}, 400
 
@@ -162,7 +162,7 @@ def get_framework_info_from_company(company_id: int):
             }
         ], status_code
     """
-    company = Company.query.get(company_id)
+    company = db.session.get(Company, company_id)
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
 
@@ -252,7 +252,7 @@ def get_framework_info_from_company(company_id: int):
 
 
 def get_indicator_values(company_id: int, selected_indicators: List[int], selected_years: List[int]):
-    company = Company.query.get(company_id)
+    company = db.session.get(Company, company_id)
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
 
