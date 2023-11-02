@@ -30,3 +30,8 @@ Fixed git commit authorship issue where previous commits (from week 1-5) were do
 Contribution graph reflects my work accurately now. Implemented autocomplete search by company, and the resultant
 population of sidebar choices based on user company selection. Smoothed out UX of sidebar, such as
 refreshing metric selections for change of framework, enabling "indeterminate" state for metric selection, etc.
+
+Week 7
+Continued the refactor from Mel's initial work and created/rearranged new components to start Comparison View.
+Wrote child tasks under sprint 3 tickets to break down into manageable tasks and assign between Mel and I.
+Created the skeleton for the Comparison View so there is a holistic view of the page.
