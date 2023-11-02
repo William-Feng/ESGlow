@@ -138,29 +138,8 @@ def get_framework_info_from_company(company_id: int):
     Args:
         company_id (int): The ID of the company.
     Returns:
-        [
-            {
-                'framework_id': 1,
-                'framework_name': 'Framework',
-                'description': 'Framework description',
-                'metrics': [
-                    {
-                        'metric_id': 2,
-                        'metric_name': 'Metric',
-                        'description: 'Metric description',
-                        'predefined_weight': 0.4,
-                        'indicators': [
-                            {
-                                'indicator_id': 1,
-                                'indicator_name': 'Indicator',
-                                'description': 'Indicator description',
-                                'predefined_weight': 0.3
-                            }
-                        ]
-                    }
-                ]
-            }
-        ], status_code
+        A list of framework info dicts. 
+        HTTP status code
     """
     company = db.session.get(Company, company_id)
     if not company:
@@ -252,6 +231,17 @@ def get_framework_info_from_company(company_id: int):
 
 
 def get_indicator_values(company_id: int, selected_indicators: List[int], selected_years: List[int]):
+    """
+    Summary:
+        Fetches the values of indicators according to the given years and company.
+    Args:
+        company_ids (int): A company ID.
+        selected_indicators (List[int]): A list of indicators IDs.
+        selected_years (List[int]): A list of years.
+    Returns:
+        List of dictionaries containing indicator id, name, year and value.
+        HTTP status code
+    """
     company = db.session.get(Company, company_id)
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
