@@ -11,7 +11,13 @@ def get_company_values(companies):
 
     Returns:
         {
-            company_id: company_value...
+            company_id: 
+            {
+                id: Company Id
+                ESGscore: Int
+                year: Int
+                frameworks: [ {name: , score: } ...]
+            }
         }
     """
     values = {}
@@ -68,7 +74,6 @@ def get_company_value(company):
         .scalar()
     )
     
-    print(f"Most recent year is {most_recent_year}")
  
     # Calculate the data values of each indicator, then the data values of all metrics.
     metric_values = {}
@@ -143,7 +148,6 @@ def calculate_metric(metric, most_recent_year, company):
     
     weighted_sum = 0
     for indicator, weight in indicator_weights:
-        print(indicator.name)
         most_recent_data_value = (
             db.session.query(DataValue.rating)
             .filter(
@@ -174,16 +178,30 @@ def get_industry_values(industry_id):
             average_score: 
         }
     """
-    
+    existing_industry = Industry.query.filter_by(industry_id=industry_id).first()
+    if not existing_industry:
+        return ({"message" : "Invalid industry id provided"}, 400)
     
     # Find all companies associated with the industry
-    companies = db.session.query(Company).filter(Company.industry_id == industry_id).all()
+    companies = [company[0] for company in db.session.query(Company.company_id).filter(Company.industry_id == industry_id)]
+
     values = get_company_values(companies)
+    scores = []
+    for company_value in values.values():
+        # Calculate value of all framework_scores
+        company_value = company_value['value']
+        framework_scores = sum([framework["score"] for framework in company_value["frameworks"]])
+        scores.append(framework_scores/len(company_value["frameworks"]))
+        
+    if len(scores) == 0:
+        return ({"message" : "Industry has no companies!"}, 400)
+        
+    # May need to extract the average score....
     return ({
         "message" : "Values for industry retrieved!",
-        "min_score": min(values.values()),
-        "max_score": max(values.values()),
-        "average_score": sum(values.values()) // len(values)
+        "min_score": min(scores),
+        "max_score": max(scores),
+        "average_score": sum(scores) // len(scores)
         }, 
         200)
     

@@ -271,7 +271,8 @@ class IndustryValues(Resource):
     @api.response(200, "Values for industry retrieved!")
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid industry id provided')
+    @api.response(400, 'Industry has no companies!')
         
-    @jwt_required()
+    #@jwt_required()
     def get(self, industry_id):
         return get_industry_values(industry_id)
