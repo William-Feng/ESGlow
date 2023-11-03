@@ -16,7 +16,7 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export default function ComparisonSearchbar({ token }) {
-  const { view, setView } = useContext(ComparisonViewContext);
+  const { setSelectedCompanies, view, setView } = useContext(ComparisonViewContext);
   const handleView = (_, newView) => {
     setView(newView);
   };
@@ -43,6 +43,7 @@ export default function ComparisonSearchbar({ token }) {
       })
   }, [token]);
 
+
   return (
     <Box
       sx={{
@@ -54,12 +55,9 @@ export default function ComparisonSearchbar({ token }) {
     >
       <Autocomplete
         disablePortal
-        // value={selectedCompany ? selectedCompany.name : null}
-        // onChange={(_, c) => {
-        //   setSelectedCompany(
-        //     companyList.find((company) => company.name === c) || null
-        //   );
-        // }}
+        onChange={(_, c) => {
+          setSelectedCompanies(c);
+        }}
         multiple
         options={companyList}
         disableCloseOnSelect

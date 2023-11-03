@@ -26,6 +26,7 @@ export default function ComparisonView({ token }) {
   } = useContext(PageContext);
 
   const [selectedCompanies, setSelectedCompanies] = useState([]);
+  console.log(selectedCompanies)
 
   return (
     <>
@@ -49,6 +50,7 @@ export default function ComparisonView({ token }) {
           <Toolbar sx={{ margin: "auto" }}>
             <ComparisonViewContext.Provider
               value={{
+                setSelectedCompanies,
                 view,
                 setView
               }}
