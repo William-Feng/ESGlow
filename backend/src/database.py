@@ -103,25 +103,19 @@ class MetricIndicator(db.Model):
     predefined_weight = db.Column(db.Float)
 
 
-class UserMetricPreference(db.Model):
-    __tablename__ = 'user_metric_preferences'
+class CustomFrameworks(db.Model):
+    __tablename__ = 'custom_frameworks'
 
-    preference_id = db.Column(db.Integer, primary_key=True)
+    custom_framework_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
-    framework_id = db.Column(
-        db.Integer, db.ForeignKey('frameworks.framework_id'))
-    metric_id = db.Column(db.Integer, db.ForeignKey('metrics.metric_id'))
-    custom_weight = db.Column(db.Float)
-    saved_date = db.Column(db.Date)
+    framework_name = db.Column(db.Text, nullable=False)
 
 
-class UserIndicatorPreference(db.Model):
-    __tablename__ = 'user_indicator_preferences'
+class CustomFrameworkPreferences(db.Model):
+    __tablename__ = 'custom_framework_preferences'
 
-    preference_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
-    metric_id = db.Column(db.Integer, db.ForeignKey('metrics.metric_id'))
-    indicator_id = db.Column(
-        db.Integer, db.ForeignKey('indicators.indicator_id'))
-    custom_weight = db.Column(db.Float)
-    saved_date = db.Column(db.Date)
+    custom_framework_id = db.Column(db.Integer, db.ForeignKey(
+        'custom_frameworks.custom_framework_id'), primary_key=True)
+    indicator_id = db.Column(db.Integer, db.ForeignKey(
+        'indicators.indicator_id'), primary_key=True)
+    predefined_weight = db.Column(db.Float)
