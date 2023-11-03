@@ -11,6 +11,7 @@ import ComparisonSidebar from './ComparisonSidebar'
 import ComparisonDataDisplay from './ComparisonDataDisplay'
 import {
   useContext,
+  useState,
   createContext
 } from "react";
 import { PageContext } from "../Dashboard";
@@ -23,6 +24,8 @@ export default function ComparisonView({ token }) {
     view,
     setView
   } = useContext(PageContext);
+
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
 
   return (
     <>
