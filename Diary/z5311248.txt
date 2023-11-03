@@ -24,3 +24,9 @@ specifically the company summary and table sections.
 Week 6
 Worked on adjusting the sidebar to reflect user changes to metric and 
 indicator checkbox selection, and indicator weight modification. 
+
+Week 7
+Worked on saving the user selection of the sidebar elements and sending 
+it to the data display section of the dashboard to calculate the adjusted 
+ESG score. Also refactored the sidebar, modularising the accordion 
+components to make the code less cluttered.

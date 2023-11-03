@@ -51,3 +51,13 @@ I spent a decent amount of time creating and designing the selection sidebar, th
 I decided to create an automated logout endpoint to prevent unexpected frontend crashes, as well as storing the user's name to display it in the profile icon.
 I also explored frontend from a UI perspective, overhauling the design of the home screen, refining all register/login/reset password pages, and the dashboard banner.
 Despite having a whopping 53 story points in total (we only managed to complete 12 in sprint one), we are more than half way complete (and there's two week left)!
+
+
+Week 7:
+
+I planned a Discord call for a progression demo and outlined some aspects from the client feedback to assign tasks and raised the idea of finishing this sprint earlier.
+Some of the client's suggestions were originally unplanned for, meaning that we had to account for additional tasks on top of the user stories that we had completed.
+Given that I was relatively free, I took initiative to work on these additional features and took screenshots/screen recordings to update my team on my outcomes.
+I added an industry table to the database, created relevant endpoints and ultimately incorporated an industry search bar feature (on top of company) into the frontend.
+I also made fullstack accomplishments with the inclusion of additional indicators in the selection sidebar, which gives users more flexibility when viewing data.
+Ultimately, we ended Sprint two on Friday, meaning that we finished an astronomical amount of work with high quality one week before the deadline (unlike sprint one).
