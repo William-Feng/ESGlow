@@ -34,3 +34,9 @@ Setup a test database that would automatically startup when running pytest and t
 Created endpoint for getting company description.
 Standardised returns for backend endpoints, including flask models for all returns.
 Testing for most backend endpoints.
+
+Week 8
+Wrote Restrospective B.
+Wrote backend technologies sections for final report.
+Added documentation for remaining backend functions.
+Updated backend tests for the new database structure and endpoints.
