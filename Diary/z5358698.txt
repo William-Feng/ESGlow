@@ -36,3 +36,9 @@ For week 6 during flexi, the majority of work was done for sprint 2; My workload
 
 Week 7:
 In week 7, I continued creating more data for the frontend/backend, as well as to fit with the automated Pytests written by Sean. To help create data, I wrote extra Python programs to randomly generate relationships as well as weights for tables, in order to accomodate all of our new extra frameworks, metrics and indicators/companies. I'm also preparing to swap over to Frontend for Sprint 3, given the decreasing amount of backend tasks, tickets and user stories, as well as the fact that we have finished the majority of Sprint 2 already, and have been given permission to start Sprint 3 early.
+
+
+Week 8:
+Week 8 was our second project demonstration of the project, showing off the features and corresponding user stories we had assigned for the second sprint. In the demonstration, I talked about the way we generated data for our website to use, whether that be for the actual deployed frontend or backend testing with Pytest.
+
+Since we were officially starting Sprint 3 as well, we spent time in the tutorial going over what user stories and tickets were required for each members, assigning and distributing new child issues and branches for each member. For myself I continued to receive backend tickets, with the potential to swap over to frontend later on.
