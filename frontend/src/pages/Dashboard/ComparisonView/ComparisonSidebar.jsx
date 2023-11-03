@@ -2,24 +2,48 @@ import {
   Box,
   Button
 } from "@mui/material";
-import YearsAccordion from "../Components/Accordion/YearsAccordion";
+import { createContext, useState } from "react";
+import YearsSingleSelectAccordion from "./YearsSingleSelectAccordion";
 
-/* These are dummy variables for placeholder */
-const years = [2020, 2023];
-const dummyFunction = () => {};
+export const ComparisonSidebarContext = createContext();
 
-export default function ComparisonSidebar() {
+function ComparisonSidebar() {
+  /* These are dummy variables for placeholder */
+  const years = [2020, 2023];
+  const [selectedYear, setSelectedYear] = useState(null);
+
+  const handleYearChange = (event) => {
+    const year = event.target.value;
+    setSelectedYear(years.find((y) => y === parseInt(year)));
+  };
+
+  const [expanded, setExpanded] = useState({
+    panel1: false,
+    panel2: false,
+  });
+  
+  const handleChange = (panel) => (_, isExpanded) => {
+    setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
+  }
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
-      {/* Should modularize the indicators/weight Accordion to add here */}
-      <YearsAccordion
-        disabled={false} // Depending on some sort of selection
-        expanded={true}
-        onChange={dummyFunction}
-        years={years}
-        handleYearChange={dummyFunction}
-      />
+      <ComparisonSidebarContext.Provider
+        value={{
+          years,
+          selectedYear,
+          handleYearChange,
+        }}
+      >
+        {/* Should modularize the indicators/weight Accordion to add here */}
+        <YearsSingleSelectAccordion
+          disabled={false} // Depending on some sort of selection
+          expanded={true}
+          onChange={handleChange("panel1")}
+          years={years}
+          handleYearChange={handleYearChange}
+        />
+      </ComparisonSidebarContext.Provider>
       <Box
         sx={{
           mt: 2,
@@ -35,3 +59,5 @@ export default function ComparisonSidebar() {
     </Box>
   )
 }
+
+export default ComparisonSidebar;

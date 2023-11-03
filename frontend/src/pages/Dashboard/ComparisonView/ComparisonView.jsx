@@ -11,7 +11,10 @@ import ComparisonSidebar from './ComparisonSidebar'
 import ComparisonDataDisplay from './ComparisonDataDisplay'
 import {
   useContext,
-  createContext
+  createContext,
+  useState,
+  useMemo,
+  useEffect
 } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
