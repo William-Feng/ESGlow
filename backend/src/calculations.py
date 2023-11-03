@@ -160,48 +160,30 @@ def calculate_metric(metric, most_recent_year, company):
     return weighted_sum
 
     
-    
-"""
-def get_framework_values():
-
-    Given a framework_id, return the max, min and mean of the company, across 
-    all frameworks it is in.
+def get_industry_values(industry_id):
+    """
+    Given a industry_id, return the min, max and average score of the industry.
 
     Args:
-        framework_id (int): _description_
+        industry_id (int): Id for a given Industry
     Return:
-        { max, min, mean }
- 
-    # all Companies under framework
-    companies = (
-        db.session.query(Company)
-        .join(CompanyFramework, Company.company_id == CompanyFramework.company_id)
-        .filter(CompanyFramework.framework_id == framework)
-        .all()
-    )
-    # Get all Indicators in framework
-    indicators = (
-        db.session.query(Indicator)
-        .join(MetricIndicator, Indicator.indicator_id == MetricIndicator.indicator_id)
-        .join(FrameworkMetric, MetricIndicator.metric_id == FrameworkMetric.metric_id)
-        .filter(FrameworkMetric.framework_id == framework)
-        .all()
-    )
-
-    # Get the filtered data_values, for the most recent year with data.
-    data_values = (
-        db.session.query(DataValue)
-        .filter(
-            DataValue.company_id.in_([company.company_id for company in companies]),
-            DataValue.indicator_id.in_([indicator.indicator_id for indicator in indicators])
-        )
-        .all()
-    )
-
-    most_recent_year = max(data_value.year for data_value in data_values if data_value.year is not None)
-    filtered_data_values = [data_value for data_value in data_values if data_value.year == most_recent_year]
-        
-    # Now, given each company, rank them.
-    # Find average score, max scoring company, min scoring company, return associated values
-    # Dict of { company: score }?
-"""
+        {
+            message: 
+            min_score: ,
+            max_score: ,
+            average_score: 
+        }
+    """
+    
+    
+    # Find all companies associated with the industry
+    companies = db.session.query(Company).filter(Company.industry_id == industry_id).all()
+    values = get_company_values(companies)
+    return ({
+        "message" : "Values for industry retrieved!",
+        "min_score": min(values.values()),
+        "max_score": max(values.values()),
+        "average_score": sum(values.values()) // len(values)
+        }, 
+        200)
+    

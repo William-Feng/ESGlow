@@ -6,7 +6,7 @@ from .frameworks import all_industries, all_companies, all_frameworks, all_indic
 from .models import user_authentication_models, password_reset_models, all_industry_company_framework_indicator_models, specific_industry_company_models, framework_metric_indicator_models, value_calculations
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
-from .calculations import get_company_values
+from .calculations import get_company_values, get_industry_values
 
 api = Api()
 jwt = JWTManager()
@@ -264,3 +264,14 @@ class CompanyValues(Resource):
         return get_company_values(selected_companies), 200
        
        
+       
+@api.route("/api/values/<int:industry_id>")
+class IndustryValues(Resource):
+    # TODO: Model is broken? Unknown why...
+    @api.response(200, "Values for industry retrieved!")
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'Invalid industry id provided')
+        
+    @jwt_required()
+    def get(self, industry_id):
+        return get_industry_values(industry_id)
