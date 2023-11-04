@@ -241,7 +241,7 @@ export default function SingleView({ token }) {
           <Box
             sx={{
               textAlign: "center",
-              maxHeight: "450px",
+              maxHeight: "320px",
             }}
           >
             <SingleViewContext.Provider

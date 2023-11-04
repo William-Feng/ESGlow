@@ -3,10 +3,8 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
 export default function ComparisonOverview() {
-  
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-
     return (
       <Box
         sx={{
@@ -17,7 +15,7 @@ export default function ComparisonOverview() {
       >
         <Typography
           component="h1"
-          variant="h3"
+          variant="h4"
           color="text.primary"
           gutterBottom
           textAlign="center"
@@ -83,7 +81,7 @@ export default function ComparisonOverview() {
                 textAlign: "center",
               }}
             >
-              <Typography variant="h4" color="text.primary" paragraph>
+              <Typography variant="h5" color="text.primary" paragraph>
                 43
               </Typography>
               <Typography variant="h6" color="text.secondary">
@@ -118,7 +116,12 @@ export default function ComparisonOverview() {
               <Typography variant="h6" color="text.secondary">
                 Best Performer
               </Typography>
-              <Typography variant="h4" color="text.primary" sx={{ mt: '15px' }} paragraph>
+              <Typography
+                variant="h4"
+                color="text.primary"
+                sx={{ mt: "15px" }}
+                paragraph
+              >
                 20
               </Typography>
               <Typography variant="h6" color="text.secondary">
@@ -141,7 +144,9 @@ export default function ComparisonOverview() {
     );
   };
 
-  return true // this would use something equivalent to selectedCompany state
-    ? renderCompanyData()
-    : <OverviewPrompt/>;
+  return true ? ( // this would use something equivalent to selectedCompany state
+    renderCompanyData()
+  ) : (
+    <OverviewPrompt />
+  );
 }

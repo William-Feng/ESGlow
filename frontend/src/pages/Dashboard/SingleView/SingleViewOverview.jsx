@@ -108,7 +108,7 @@ function SingleViewOverview() {
       >
         <Typography
           component="h1"
-          variant="h3"
+          variant="h4"
           color="text.primary"
           gutterBottom
           textAlign="center"
@@ -128,7 +128,12 @@ function SingleViewOverview() {
           }}
         >
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" color="text.primary" paragraph>
+            <Typography
+              variant="body"
+              color="text.primary"
+              paragraph
+              sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+            >
               {selectedCompany.description}
             </Typography>
           </Box>
@@ -188,7 +193,7 @@ function SingleViewOverview() {
                 textAlign: "center",
               }}
             >
-              <Typography variant="h4" color="text.primary" paragraph>
+              <Typography variant="h5" color="text.primary" paragraph>
                 43
               </Typography>
               <Typography variant="h6" color="text.secondary">
@@ -222,9 +227,11 @@ function SingleViewOverview() {
     );
   };
 
-  return frameworksData && selectedCompany
-    ? renderCompanyData()
-    : <OverviewPrompt/>;
+  return frameworksData && selectedCompany ? (
+    renderCompanyData()
+  ) : (
+    <OverviewPrompt />
+  );
 }
 
 export default SingleViewOverview;
