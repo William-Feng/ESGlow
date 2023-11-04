@@ -231,3 +231,20 @@ def get_industry_values(industry_id):
         },
         200,
     )
+
+
+def get_years():
+    """
+    Retrieve all unique years as a list of years.
+    Return:
+        {
+            message: ,
+            years: [2018,2019...]
+        }
+    """
+
+    years = sorted(
+        [year[0] for year in db.session.query(DataValue.year.distinct()).all()]
+    )
+    print(years)
+    return {"message": "All years retrieved!", "years": years}

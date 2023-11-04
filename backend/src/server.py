@@ -22,7 +22,7 @@ from .models import (
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
-from .calculations import get_company_values, get_industry_values
+from .calculations import get_company_values, get_industry_values, get_years
 
 api = Api()
 jwt = JWTManager()
@@ -301,3 +301,12 @@ class IndustryValues(Resource):
     @jwt_required()
     def get(self, industry_id):
         return get_industry_values(industry_id)
+
+
+@api.route("/api/values/years")
+class AllYears(Resource):
+    @api.response(200, "All years retrieved!")
+    @api.response(401, "Authentication required. Please log in.")
+    @jwt_required()
+    def get(self):
+        return get_years()
