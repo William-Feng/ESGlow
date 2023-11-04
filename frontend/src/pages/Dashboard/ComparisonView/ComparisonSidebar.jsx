@@ -2,18 +2,22 @@ import {
   Box,
   Button
 } from "@mui/material";
-import { createContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import YearsSingleSelectAccordion from "./YearsSingleSelectAccordion";
 import IndicatorsAccordion from "./IndicatorsAccordion";
+import { ComparisonViewContext } from "./ComparisonView";
 
 export const ComparisonSidebarContext = createContext();
 
 function ComparisonSidebar() {
-  /* These are dummy variables for placeholder */
-  const years = [2020, 2023];
-  const [selectedYear, setSelectedYear] = useState(null);
-  const indicators = [];
-  const [selectedIndicators, setSelectedIndicators] = useState([]);
+  const {
+    years,
+    selectedYear,
+    setSelectedYear,
+    allIndicators,
+    selectedIndicators,
+    setSelectedIndicators,
+  } = useContext(ComparisonViewContext);
 
   const handleYearChange = (event) => {
     const year = event.target.value;
@@ -27,11 +31,17 @@ function ComparisonSidebar() {
   
   const handleChange = (panel) => (_, isExpanded) => {
     setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
-  }
+  };
 
-  const handleIndicatorsChange = () => {
-
-  }
+  const handleIndicatorsChange = (indicatorId) => {
+    setSelectedIndicators((prev) => {
+      if (prev.includes(indicatorId)) {
+        return prev.filter((id) => id !== indicatorId);
+      } else {
+        return [...prev, indicatorId];
+      }
+    });
+  };
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
@@ -40,7 +50,7 @@ function ComparisonSidebar() {
           years,
           selectedYear,
           handleYearChange,
-          indicators,
+          allIndicators,
           selectedIndicators,
           handleIndicatorsChange,
         }}
@@ -53,7 +63,6 @@ function ComparisonSidebar() {
           years={years}
           handleYearChange={handleYearChange}
         />
-        {/* IndicatorsAccordion */}
         <IndicatorsAccordion
           disabled={false}
           expanded={expanded.panel2}

@@ -1,31 +1,37 @@
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
-import ComparisonSearchbar from './ComparisonSearchbar'
-import ComparisonSidebar from './ComparisonSidebar'
-import ComparisonDataDisplay from './ComparisonDataDisplay'
-import {
-  useContext,
-  createContext,
-  useState,
-  useMemo,
-  useEffect
-} from "react";
+import ComparisonSearchbar from "./ComparisonSearchbar";
+import ComparisonSidebar from "./ComparisonSidebar";
+import ComparisonDataDisplay from "./ComparisonDataDisplay";
+import { useContext, createContext, useState, useMemo, useEffect } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
 
 export const ComparisonViewContext = createContext();
 
 export default function ComparisonView({ token }) {
-  const {
-    view,
-    setView
-  } = useContext(PageContext);
+  const { view, setView } = useContext(PageContext);
+
+  const years = useMemo(() => [2022, 2023], []);
+  const [selectedYear, setSelectedYear] = useState([]);
+  const [allIndicators, setAllIndicators] = useState([]);
+  const [selectedIndicators, setSelectedIndicators] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/indicators/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAllIndicators(data.indicators);
+        const indicatorIds = data.indicators
+          .map((d) => d.indicator_id)
+          .join(",");
+        // Fetch indicator values
+      });
+  }, [token, selectedYear]);
 
   return (
     <>
@@ -50,10 +56,10 @@ export default function ComparisonView({ token }) {
             <ComparisonViewContext.Provider
               value={{
                 view,
-                setView
+                setView,
               }}
             >
-              <ComparisonSearchbar token={ token }/>
+              <ComparisonSearchbar token={token} />
             </ComparisonViewContext.Provider>
           </Toolbar>
         </AppBar>
@@ -74,7 +80,7 @@ export default function ComparisonView({ token }) {
               maxHeight: "450px",
             }}
           >
-            <ComparisonOverview/>
+            <ComparisonOverview />
           </Box>
           <Box
             sx={{
@@ -100,12 +106,23 @@ export default function ComparisonView({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <ComparisonSidebar />
+              <ComparisonViewContext.Provider
+                value={{
+                  years,
+                  selectedYear,
+                  setSelectedYear,
+                  allIndicators,
+                  selectedIndicators,
+                  setSelectedIndicators,
+                }}
+              >
+                <ComparisonSidebar />
+              </ComparisonViewContext.Provider>
             </Drawer>
             <ComparisonDataDisplay />
           </Box>
         </Box>
       </Box>
     </>
-  )
+  );
 }
