@@ -23,6 +23,7 @@ from .models import (
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
 from .calculations import (
+    get_company_graph_values,
     get_company_values,
     get_industry_values,
     get_company_industry_ranking,
@@ -315,3 +316,13 @@ class CompanyRanking(Resource):
     @jwt_required()
     def get(self, company_id):
         return get_company_industry_ranking(company_id)
+
+
+@api.route("/api/values/graph/<int:company_id>")
+class GraphCompanyValues(Resource):
+    @api.response(200, "Graph Values for Company Returned!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid company id provided")
+    @jwt_required()
+    def get(self, company_id):
+        return get_company_graph_values(company_id)
