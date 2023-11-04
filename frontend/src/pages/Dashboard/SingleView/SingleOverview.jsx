@@ -114,6 +114,7 @@ function SingleOverview() {
           color="text.primary"
           gutterBottom
           textAlign="center"
+          fontWeight="bold"
         >
           {selectedCompany.name}
         </Typography>
@@ -207,21 +208,16 @@ function SingleOverview() {
                 textAlign: "center",
               }}
             >
-              <Typography variant="h5" color="text.primary" paragraph>
+              <Typography variant="h4" color="text.primary" paragraph>
                 43
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean
               </Typography>
-              <Typography
-                variant="h5"
-                color="text.primary"
-                sx={{ margin: "24px 0px" }}
-                paragraph
-              >
+              <Typography variant="h4" color="text.primary" mt={3} paragraph>
                 24/185
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Ranking
               </Typography>
             </Box>
