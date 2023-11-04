@@ -5,7 +5,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import React from "react";
 import Login from "./Login";
 import Register from "./Register";
-import Logo from "../../assets/logo-white.png";
+import Logo from "../../assets/Logo.png";
 import { useState } from "react";
 import ResetInputEmail from "./ResetInputEmail";
 import ResetVerify from "./ResetVerify";
@@ -32,7 +32,7 @@ function StartPage({ page, onSuccess }) {
         sm={8}
         md={8}
         sx={{
-          background: "linear-gradient(135deg, #2C5274, #203A53, #0F2017)",
+          background: "linear-gradient(135deg, #3A719B, #2C5274, #1C365A)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -40,11 +40,24 @@ function StartPage({ page, onSuccess }) {
           padding: "5rem",
         }}
       >
+        <Typography
+          variant="h1"
+          color="white"
+          sx={{
+            fontWeight: 700,
+            letterSpacing: "0.2rem",
+            textAlign: "center",
+            fontSize: "5rem",
+            textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)",
+          }}
+        >
+          ESGlow
+        </Typography>
         <Box
           component="img"
           src={Logo}
           alt="ESGlow Logo"
-          sx={{ width: "320px", marginBottom: "2rem" }}
+          sx={{ width: "200px", marginBottom: "1rem" }}
         />
 
         <Typography variant="h3" color="white" mb={2}>

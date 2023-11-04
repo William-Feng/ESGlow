@@ -10,7 +10,7 @@ import {
 import { useState, useEffect, useMemo, useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 
-function SingleViewData() {
+function SingleData() {
   const {
     selectedCompany,
     selectedFramework,
@@ -153,7 +153,7 @@ function SingleViewData() {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  fontSize: "1.2em",
+                  fontSize: "1.25em",
                   background: "#D1EFFF",
                   borderRight: "1px solid",
                   borderColor: "divider",
@@ -168,11 +168,11 @@ function SingleViewData() {
                   key={year}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "1.2em",
+                    fontSize: "1.25em",
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "5px",
+                    padding: "10px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
@@ -195,7 +195,11 @@ function SingleViewData() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.1em",
+                  }}
                 >
                   {row.name}
                 </TableCell>
@@ -206,6 +210,7 @@ function SingleViewData() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.1em",
                     }}
                   >
                     {row[year] || null}
@@ -272,4 +277,4 @@ function SingleViewData() {
   );
 }
 
-export default SingleViewData;
+export default SingleData;

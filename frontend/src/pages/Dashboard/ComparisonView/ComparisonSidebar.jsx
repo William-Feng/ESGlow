@@ -1,15 +1,11 @@
-import {
-  Box,
-  Button
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import YearsAccordion from "../Components/Accordion/YearsAccordion";
 
 /* These are dummy variables for placeholder */
-const years = [2020, 2023];
+const years = [2018, 2019, 2020, 2021, 2022, 2023];
 const dummyFunction = () => {};
 
-export default function ComparisonSidebar() {
-
+function ComparisonSidebar() {
   return (
     <Box sx={{ paddingBottom: 3 }}>
       {/* Should modularize the indicators/weight Accordion to add here */}
@@ -19,6 +15,7 @@ export default function ComparisonSidebar() {
         onChange={dummyFunction}
         years={years}
         handleYearChange={dummyFunction}
+        borderRequired={true}
       />
       <Box
         sx={{
@@ -28,10 +25,12 @@ export default function ComparisonSidebar() {
           justifyContent: "right",
         }}
       >
-        <Button variant="contained" color="primary" >
+        <Button variant="contained" color="primary">
           Save
         </Button>
       </Box>
     </Box>
-  )
+  );
 }
+
+export default ComparisonSidebar;

@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { SidebarContext } from "../../SingleView/SingleViewSidebar";
+import { SidebarContext } from "../../SingleView/SingleSidebar";
 
 function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
   const {

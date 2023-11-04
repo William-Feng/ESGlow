@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Avatar, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo-white.png";
+import Logo from "../../assets/Logo.png";
 
 function Header(token) {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ function Header(token) {
         <Button onClick={handleOpenUserMenu}>
           <Avatar
             sx={{
-              background: "#AAB7B8",
+              background: "#003366",
               boxShadow: 2,
             }}
           >

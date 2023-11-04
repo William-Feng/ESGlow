@@ -7,15 +7,15 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useEffect, useState, useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparisonSearchbar({ token }) {
+function ComparisonSearchbar({ token }) {
   const { view, setView } = useContext(ComparisonViewContext);
   const handleView = (_, newView) => {
     setView(newView);
@@ -24,7 +24,7 @@ export default function ComparisonSearchbar({ token }) {
   const [companyList, setCompanyList] = useState([]);
 
   useEffect(() => {
-    fetch('/api/companies/all', {
+    fetch("/api/companies/all", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -40,7 +40,7 @@ export default function ComparisonSearchbar({ token }) {
             error
           );
         }
-      })
+      });
   }, [token]);
 
   return (
@@ -75,9 +75,7 @@ export default function ComparisonSearchbar({ token }) {
             {company.name}
           </li>
         )}
-        noOptionsText={
-          "No options available"
-        }
+        noOptionsText={"No options available"}
         sx={{
           width: "300px",
           backgroundColor: "#E8E8E8",
@@ -100,7 +98,9 @@ export default function ComparisonSearchbar({ token }) {
             backgroundColor: view === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
               fontSize: "14px", // Default font size
               "@media (min-width: 768px)": {
@@ -120,14 +120,16 @@ export default function ComparisonSearchbar({ token }) {
             backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
-              fontSize: "14px", // Default font size
+              fontSize: "14px",
               "@media (min-width: 768px)": {
-                fontSize: "10px", // Adjust font size for screens wider than 768px
+                fontSize: "10px",
               },
               "@media (min-width: 1024px)": {
-                fontSize: "14px", // Adjust font size for screens wider than 1024px
+                fontSize: "14px",
               },
             }}
           >
@@ -138,3 +140,5 @@ export default function ComparisonSearchbar({ token }) {
     </Box>
   );
 }
+
+export default ComparisonSearchbar;

@@ -6,12 +6,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-const dummyCompanies = ['Google', 'Apple'];
-const dummyData = [
-  { name: 'indicator 1', 'Google': 90, 'Apple': 100},
-]
+const dummyCompanies = ["Google", "Apple"];
+const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
 
-export default function ComparisonDataDisplay() {
+function ComparisonDataDisplay() {
   return (
     <Box
       sx={{
@@ -32,7 +30,7 @@ export default function ComparisonDataDisplay() {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  fontSize: "1.2em",
+                  fontSize: "1.25em",
                   background: "#D1EFFF",
                   borderRight: "1px solid",
                   borderColor: "divider",
@@ -42,26 +40,28 @@ export default function ComparisonDataDisplay() {
               >
                 Indicator
               </TableCell>
-              {dummyCompanies.map((year) => (
+              {/* TODO: We need another column to display the year */}
+              {dummyCompanies.map((company) => (
                 <TableCell
-                  key={year}
+                  key={company}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "1.2em",
+                    fontSize: "1.25em",
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "5px",
+                    padding: "10px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
                 >
-                  {year}
+                  {company}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
+            {/* TODO: We need to repeat this indicator info for all the selected years */}
             {dummyData.map((row, index) => (
               <TableRow
                 key={index}
@@ -74,10 +74,15 @@ export default function ComparisonDataDisplay() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.1em",
+                  }}
                 >
                   {row.name}
                 </TableCell>
+                {/* TODO: This should be the row's company data for the specified year */}
                 {dummyCompanies.map((year) => (
                   <TableCell
                     key={year}
@@ -85,6 +90,7 @@ export default function ComparisonDataDisplay() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.1em",
                     }}
                   >
                     {row[year] || null}
@@ -96,5 +102,7 @@ export default function ComparisonDataDisplay() {
         </Table>
       </Box>
     </Box>
-  )
+  );
 }
+
+export default ComparisonDataDisplay;
