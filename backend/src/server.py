@@ -22,7 +22,11 @@ from .models import (
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
-from .calculations import get_company_values, get_industry_values
+from .calculations import (
+    get_company_values,
+    get_industry_values,
+    get_company_industry_ranking,
+)
 
 api = Api()
 jwt = JWTManager()
@@ -301,3 +305,13 @@ class IndustryValues(Resource):
     @jwt_required()
     def get(self, industry_id):
         return get_industry_values(industry_id)
+
+
+@api.route("/api/values/ranking/company/<int:company_id>")
+class CompanyRanking(Resource):
+    @api.response(200, "Ranking in industry determined!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid company id supplied!")
+    @jwt_required()
+    def get(self, company_id):
+        return get_company_industry_ranking(company_id)
