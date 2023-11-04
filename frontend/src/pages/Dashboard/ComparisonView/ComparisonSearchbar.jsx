@@ -15,13 +15,26 @@ import { ComparisonViewContext } from "./ComparisonView";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
+// Max Selection can be changed by variable below
+const maxSelection = 3;
+
+
 function ComparisonSearchbar({ token }) {
-  const { setSelectedCompanies, view, setView } = useContext(ComparisonViewContext);
+
+  const {
+    selectedCompanies,
+    setSelectedCompanies,
+    view,
+    setView
+  } = useContext(ComparisonViewContext);
+
   const handleView = (_, newView) => {
     setView(newView);
   };
 
   const [companyList, setCompanyList] = useState([]);
+
+  const isMaxSelectionReached = selectedCompanies.length >= maxSelection;
 
   useEffect(() => {
     fetch("/api/companies/all", {
@@ -59,11 +72,13 @@ function ComparisonSearchbar({ token }) {
           setSelectedCompanies(c);
         }}
         multiple
+        limitTags={1}
         options={companyList}
         disableCloseOnSelect
         getOptionLabel={(company) => company.name}
         renderOption={(props, company, { selected }) => (
-          <li {...props}>
+          // eslint-disable-next-line
+          <li {...props} aria-disabled={!selected&&isMaxSelectionReached}>
             <Checkbox
               icon={icon}
               checkedIcon={checkedIcon}
@@ -75,7 +90,7 @@ function ComparisonSearchbar({ token }) {
         )}
         noOptionsText={"No options available"}
         sx={{
-          width: "300px",
+          width: "340px",
           backgroundColor: "#E8E8E8",
           borderRadius: 1,
         }}

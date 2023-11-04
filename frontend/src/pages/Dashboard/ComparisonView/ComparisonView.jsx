@@ -36,6 +36,7 @@ function ComparisonView({ token }) {
           <Toolbar sx={{ margin: "auto" }}>
             <ComparisonViewContext.Provider
               value={{
+                selectedCompanies,
                 setSelectedCompanies,
                 view,
                 setView,
