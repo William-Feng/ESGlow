@@ -6,10 +6,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-const dummyCompanies = ['Google', 'Apple'];
-const dummyData = [
-  { name: 'indicator 1', 'Google': 90, 'Apple': 100},
-]
+const dummyCompanies = ["Google", "Apple"];
+const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
 
 export default function ComparisonDataDisplay() {
   return (
@@ -74,7 +72,11 @@ export default function ComparisonDataDisplay() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.05em",
+                  }}
                 >
                   {row.name}
                 </TableCell>
@@ -85,6 +87,7 @@ export default function ComparisonDataDisplay() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.05em",
                     }}
                   >
                     {row[year] || null}
@@ -96,5 +99,5 @@ export default function ComparisonDataDisplay() {
         </Table>
       </Box>
     </Box>
-  )
+  );
 }

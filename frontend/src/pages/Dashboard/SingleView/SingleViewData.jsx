@@ -195,7 +195,11 @@ function SingleViewData() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.05em",
+                  }}
                 >
                   {row.name}
                 </TableCell>
@@ -206,6 +210,7 @@ function SingleViewData() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.05em",
                     }}
                   >
                     {row[year] || null}
