@@ -18,10 +18,11 @@ from .models import (
     all_industry_company_framework_indicator_models,
     specific_industry_company_models,
     framework_metric_indicator_models,
+    value_calculations,
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
-
+from .calculations import get_company_values, get_industry_values, get_years
 
 api = Api()
 jwt = JWTManager()
@@ -194,7 +195,7 @@ class FrameworksAll(Resource):
 
 
 @api.route("/api/indicators/all")
-class CompaniesAll(Resource):
+class IndicatorsAll(Resource):
     @api.response(200, "All indicators retrieved!", model=indicator_names_model)
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "No indicators found.")
@@ -263,3 +264,49 @@ class IndicatorValues(Resource):
             return {"message": "Invalid indicator_ids or years provided."}, 400
 
         return get_indicator_values(company_id, selected_indicators, selected_years)
+
+
+# ===================================================================
+#
+# Company/Framework Calculations
+#
+# ===================================================================
+
+
+company_values_model = value_calculations(api)
+
+
+@api.route("/api/values/<string:company_id>")
+class CompanyValues(Resource):
+    @api.response(200, "Values for company retrieved!", model=company_values_model)
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid company id provided")
+    @jwt_required()
+    def get(self, company_id):
+        try:
+            selected_companies = [int(i) for i in company_id.split(",")]
+        except ValueError:
+            return {"message": "Invalid company id provided"}, 400
+
+        return get_company_values(selected_companies), 200
+
+
+@api.route("/api/values/<int:industry_id>")
+class IndustryValues(Resource):
+    # TODO: Model has been removed for error
+    @api.response(200, "Values for industry retrieved!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid industry id provided")
+    @api.response(400, "Industry has no companies!")
+    @jwt_required()
+    def get(self, industry_id):
+        return get_industry_values(industry_id)
+
+
+@api.route("/api/values/years")
+class AllYears(Resource):
+    @api.response(200, "All years retrieved!")
+    @api.response(401, "Authentication required. Please log in.")
+    @jwt_required()
+    def get(self):
+        return get_years()

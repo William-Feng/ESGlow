@@ -1,22 +1,27 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
+import { ComparisonSidebarContext } from "./ComparisonSidebar";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
   Checkbox,
+  Chip,
   FormControlLabel,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { SidebarContext } from "../../SingleView/SingleSidebar";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
-  const {
-    remainingExtraIndicators,
-    selectedExtraIndicators,
-    handleExtraIndicatorsChange,
-  } = useContext(SidebarContext);
+function IndicatorsAccordion({ disabled, expanded, onChange }) {
+  const { 
+    allIndicators, 
+    selectedIndicators, 
+    handleIndicatorsChange,
+    indicatorWeights,
+  } =
+    useContext(ComparisonSidebarContext);
 
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
@@ -39,16 +44,12 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
             textTransform: "uppercase",
           }}
         >
-          Additional Indicators
+          Indicators
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          <Typography style={{ color: "red", paddingBottom: "24px" }}>
-            Note that the following indicators are not included in the selected
-            framework and will not affect the ESG Score.
-          </Typography>
-          {remainingExtraIndicators.map((indicator) => (
+          {allIndicators.map((indicator) => (
             <Box
               key={indicator.indicator_id}
               display="flex"
@@ -60,12 +61,11 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                 control={
                   <Checkbox
                     checked={
-                      selectedExtraIndicators.includes(
-                        indicator.indicator_id
-                      ) || false
+                      selectedIndicators.includes(indicator.indicator_id) ||
+                      false
                     }
                     onChange={() =>
-                      handleExtraIndicatorsChange(indicator.indicator_id)
+                      handleIndicatorsChange(indicator.indicator_id)
                     }
                   />
                 }
@@ -75,6 +75,11 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                   </Typography>
                 }
               />
+              <Box display="flex" alignItems="center" gap={1}>
+                <Tooltip title={indicator.description}>
+                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                </Tooltip>
+              </Box>
             </Box>
           ))}
         </Box>
@@ -83,4 +88,4 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
   );
 }
 
-export default AdditionalIndicatorsAccordion;
+export default IndicatorsAccordion;

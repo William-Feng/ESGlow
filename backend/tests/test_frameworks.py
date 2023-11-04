@@ -1,4 +1,4 @@
-from src.frameworks import all_companies, all_frameworks, get_framework_info_from_company, get_indicator_values, get_company_description
+from src.frameworks import all_companies, all_frameworks, get_framework_info_from_company, get_indicator_values, get_company_info
 
 
 def test_all_companies(client_with_frameworks):
@@ -39,7 +39,7 @@ def test_frameworks_by_company(client_with_frameworks):
     # Company 1
     result = get_framework_info_from_company(1)[0]
 
-    assert result["message"] == "Framework, metric & indicator information for company retrieved!"
+    assert result["message"] == "Framework, metric & indicator information for company successfully retrieved!"
     returned_frameworks = result["frameworks"]
 
     indicator_1_metric_1_data = {
@@ -152,7 +152,7 @@ def test_frameworks_by_company(client_with_frameworks):
 
 def test_indicator_values(client_with_frameworks):
     result = get_indicator_values(1, [1, 2], [2022, 2023])[0]
-    assert result["message"] == "Values successfully retrieved!"
+    assert result["message"] == "Indicator values for company successfully retrieved!"
     returned_values = result["values"]
 
     expected_values = [
@@ -187,9 +187,14 @@ def test_indicator_values(client_with_frameworks):
         assert expected in returned_values
 
 
-def test_company_description(client_with_frameworks):
-    result = get_company_description(1)[0]
+def test_company_info(client_with_frameworks):
+    result = get_company_info([1])[0]
 
-    assert result["message"] == "Description successfully retrieved!" 
-    assert result["description"] == "Description for CompanyA" 
+    assert result["message"] == "Companies\' information successfully retrieved!" 
+    assert len(result["companies"]) == 1
+    assert result["companies"][0] == {
+            "company_id": 1,
+            "name": "CompanyA",
+            "description": "Description for CompanyA"
+        }
 

@@ -1,28 +1,21 @@
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
-import ComparisonSearchbar from './ComparisonSearchbar'
-import ComparisonSidebar from './ComparisonSidebar'
-import ComparisonDataDisplay from './ComparisonDataDisplay'
-import {
-  useContext,
-  createContext
-} from "react";
+import ComparisonSearchbar from "./ComparisonSearchbar";
+import ComparisonSidebar from "./ComparisonSidebar";
+import ComparisonDataDisplay from "./ComparisonDataDisplay";
+import { useContext, createContext, useState } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
 
 export const ComparisonViewContext = createContext();
 
-export default function ComparisonView({ token }) {
-  const {
-    view,
-    setView
-  } = useContext(PageContext);
+function ComparisonView({ token }) {
+  const { view, setView } = useContext(PageContext);
+
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [selectedYear, setSelectedYear] = useState([]);
+  const [allIndicators, setAllIndicators] = useState([]);
+  const [selectedIndicators, setSelectedIndicators] = useState([]);
 
   return (
     <>
@@ -34,7 +27,7 @@ export default function ComparisonView({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -46,11 +39,13 @@ export default function ComparisonView({ token }) {
           <Toolbar sx={{ margin: "auto" }}>
             <ComparisonViewContext.Provider
               value={{
+                selectedCompanies,
+                setSelectedCompanies,
                 view,
-                setView
+                setView,
               }}
             >
-              <ComparisonSearchbar token={ token }/>
+              <ComparisonSearchbar token={token} />
             </ComparisonViewContext.Provider>
           </Toolbar>
         </AppBar>
@@ -68,10 +63,10 @@ export default function ComparisonView({ token }) {
           <Box
             sx={{
               textAlign: "center",
-              maxHeight: "450px",
+              maxHeight: "320px",
             }}
           >
-            <ComparisonOverview/>
+            <ComparisonOverview />
           </Box>
           <Box
             sx={{
@@ -97,12 +92,26 @@ export default function ComparisonView({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <ComparisonSidebar />
+              <ComparisonViewContext.Provider
+                value={{
+                  selectedCompanies,
+                  selectedYear,
+                  setSelectedYear,
+                  allIndicators,
+                  setAllIndicators,
+                  selectedIndicators,
+                  setSelectedIndicators,
+                }}
+              >
+                <ComparisonSidebar token={token} />
+              </ComparisonViewContext.Provider>
             </Drawer>
             <ComparisonDataDisplay />
           </Box>
         </Box>
       </Box>
     </>
-  )
+  );
 }
+
+export default ComparisonView;

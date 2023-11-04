@@ -7,24 +7,37 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useEffect, useState, useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparisonSearchbar({ token }) {
-  const { view, setView } = useContext(ComparisonViewContext);
+// Max Selection can be changed by variable below
+const maxSelection = 3;
+
+
+function ComparisonSearchbar({ token }) {
+
+  const {
+    selectedCompanies,
+    setSelectedCompanies,
+    view,
+    setView
+  } = useContext(ComparisonViewContext);
+
   const handleView = (_, newView) => {
     setView(newView);
   };
 
   const [companyList, setCompanyList] = useState([]);
 
+  const isMaxSelectionReached = selectedCompanies.length >= maxSelection;
+
   useEffect(() => {
-    fetch('/api/companies/all', {
+    fetch("/api/companies/all", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -40,8 +53,9 @@ export default function ComparisonSearchbar({ token }) {
             error
           );
         }
-      })
+      });
   }, [token]);
+
 
   return (
     <Box
@@ -54,18 +68,17 @@ export default function ComparisonSearchbar({ token }) {
     >
       <Autocomplete
         disablePortal
-        // value={selectedCompany ? selectedCompany.name : null}
-        // onChange={(_, c) => {
-        //   setSelectedCompany(
-        //     companyList.find((company) => company.name === c) || null
-        //   );
-        // }}
+        onChange={(_, c) => {
+          setSelectedCompanies(c);
+        }}
         multiple
+        limitTags={1}
         options={companyList}
         disableCloseOnSelect
         getOptionLabel={(company) => company.name}
         renderOption={(props, company, { selected }) => (
-          <li {...props}>
+          // eslint-disable-next-line
+          <li {...props} aria-disabled={!selected&&isMaxSelectionReached}>
             <Checkbox
               icon={icon}
               checkedIcon={checkedIcon}
@@ -75,11 +88,9 @@ export default function ComparisonSearchbar({ token }) {
             {company.name}
           </li>
         )}
-        noOptionsText={
-          "No options available"
-        }
+        noOptionsText={"No options available"}
         sx={{
-          width: "300px",
+          width: "340px",
           backgroundColor: "#E8E8E8",
           borderRadius: 1,
         }}
@@ -100,7 +111,9 @@ export default function ComparisonSearchbar({ token }) {
             backgroundColor: view === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
               fontSize: "14px", // Default font size
               "@media (min-width: 768px)": {
@@ -120,14 +133,16 @@ export default function ComparisonSearchbar({ token }) {
             backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant="body4" textAlign="center"
+          <Typography
+            variant="body4"
+            textAlign="center"
             sx={{
-              fontSize: "14px", // Default font size
+              fontSize: "14px",
               "@media (min-width: 768px)": {
-                fontSize: "10px", // Adjust font size for screens wider than 768px
+                fontSize: "10px",
               },
               "@media (min-width: 1024px)": {
-                fontSize: "14px", // Adjust font size for screens wider than 1024px
+                fontSize: "14px",
               },
             }}
           >
@@ -138,3 +153,5 @@ export default function ComparisonSearchbar({ token }) {
     </Box>
   );
 }
+
+export default ComparisonSearchbar;

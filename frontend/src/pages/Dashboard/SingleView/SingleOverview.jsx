@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-function SingleViewOverview() {
+function SingleOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
     useContext(SingleViewContext);
   const getRecentESGScores = () => {
@@ -86,9 +86,11 @@ function SingleViewOverview() {
       `The ESG Score was calculated by averaging` +
       ` ${year} data of the following framework scores:\n`;
 
-    const toolTipStringList = filteredFrameworksScores.map(
-      (item) => `- ${item.framework_name}: ${item.score}`
-    );
+    const toolTipStringList = filteredFrameworksScores.map((item, index) => (
+      <span key={index}>
+        - {item.framework_name}: <strong>{item.score}</strong>
+      </span>
+    ));
 
     const mostRecentYearScores = filteredFrameworksScores.map(
       (framework) => framework.score
@@ -108,10 +110,11 @@ function SingleViewOverview() {
       >
         <Typography
           component="h1"
-          variant="h3"
+          variant="h4"
           color="text.primary"
           gutterBottom
           textAlign="center"
+          fontWeight="bold"
         >
           {selectedCompany.name}
         </Typography>
@@ -128,7 +131,12 @@ function SingleViewOverview() {
           }}
         >
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" color="text.primary" paragraph>
+            <Typography
+              variant="body"
+              color="text.primary"
+              paragraph
+              sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+            >
               {selectedCompany.description}
             </Typography>
           </Box>
@@ -157,20 +165,32 @@ function SingleViewOverview() {
                 </Typography>
                 <Tooltip
                   title={
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ fontSize: "1rem" }}>
                       {toolTipStringIntro}
                       {toolTipStringList.map((str) => (
                         <Typography
-                          variant="body3"
-                          sx={{ textIndent: "20px" }}
+                          variant="body2"
                           key={str}
+                          sx={{
+                            display: "block",
+                            marginTop: "4px",
+                            whiteSpace: "nowrap",
+                            textIndent: "16px",
+                            fontSize: "1rem",
+                          }}
                         >
-                          <br />
                           {str}
                         </Typography>
                       ))}
                     </Typography>
                   }
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        maxWidth: "none",
+                      },
+                    },
+                  }}
                 >
                   <InfoOutlinedIcon
                     style={{ cursor: "pointer", paddingLeft: 3 }}
@@ -191,18 +211,13 @@ function SingleViewOverview() {
               <Typography variant="h4" color="text.primary" paragraph>
                 43
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean
               </Typography>
-              <Typography
-                variant="h5"
-                color="text.primary"
-                sx={{ margin: "24px 0px" }}
-                paragraph
-              >
+              <Typography variant="h4" color="text.primary" mt={3} paragraph>
                 24/185
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Ranking
               </Typography>
             </Box>
@@ -222,9 +237,11 @@ function SingleViewOverview() {
     );
   };
 
-  return frameworksData && selectedCompany
-    ? renderCompanyData()
-    : <OverviewPrompt/>;
+  return frameworksData && selectedCompany ? (
+    renderCompanyData()
+  ) : (
+    <OverviewPrompt />
+  );
 }
 
-export default SingleViewOverview;
+export default SingleOverview;

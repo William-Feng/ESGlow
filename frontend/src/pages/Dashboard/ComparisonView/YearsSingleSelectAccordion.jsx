@@ -1,23 +1,11 @@
-import React, { useContext } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  RadioGroup,
-  Radio,
-  FormControl,
-  Box,
-  Tooltip,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, FormControl, Radio, RadioGroup, Typography } from "@mui/material";
+import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { ComparisonSidebarContext } from "./ComparisonSidebar";
 
-function FrameworkAccordion({ disabled, expanded, onChange }) {
-  const { frameworksData, selectedFramework, handleFrameworkChange } =
-    useContext(SidebarContext);
-
+function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
+  const { yearsList, selectedYear, handleYearChange } = useContext(ComparisonSidebarContext);
+  
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
       <AccordionSummary
@@ -34,7 +22,7 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
             textTransform: "uppercase",
           }}
         >
-          Frameworks
+          Years
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -43,34 +31,32 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={
-              selectedFramework ? selectedFramework.framework_id.toString() : ""
+              selectedYear ? selectedYear.toString() : ""
             }
-            onChange={handleFrameworkChange}
+            onChange={handleYearChange}
           >
-            {frameworksData &&
-              frameworksData.map((framework) => (
+            {yearsList &&
+              yearsList.map((year) => (
                 <Box
                   display="flex"
                   alignItems="center"
-                  key={framework.framework_id}
+                  key={year}
                   justifyContent="space-between"
                 >
                   <Box display="flex" alignItems="center">
-                    <Radio value={framework.framework_id.toString()} />
+                    <Radio value={year.toString()} />
                     <Typography fontWeight="bold">
-                      {framework.framework_name}
+                      {year}
                     </Typography>
                   </Box>
-                  <Tooltip title={framework.description}>
-                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                  </Tooltip>
                 </Box>
-              ))}
+              ))
+            }
           </RadioGroup>
         </FormControl>
       </AccordionDetails>
     </Accordion>
-  );
+  )
 }
 
-export default FrameworkAccordion;
+export default YearsSingleSelectAccordion;
