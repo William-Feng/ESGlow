@@ -3,7 +3,7 @@ import Header from "../Header";
 import ComparisonSearchbar from "./ComparisonSearchbar";
 import ComparisonSidebar from "./ComparisonSidebar";
 import ComparisonDataDisplay from "./ComparisonDataDisplay";
-import { useContext, createContext } from "react";
+import { useContext, useState, createContext } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
 
@@ -11,6 +11,8 @@ export const ComparisonViewContext = createContext();
 
 function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
+
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
 
   return (
     <>
@@ -34,6 +36,8 @@ function ComparisonView({ token }) {
           <Toolbar sx={{ margin: "auto" }}>
             <ComparisonViewContext.Provider
               value={{
+                selectedCompanies,
+                setSelectedCompanies,
                 view,
                 setView,
               }}
