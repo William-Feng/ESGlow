@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, FormControl, Radio, RadioGroup, Typography } from "@mui/material";
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ComparisonSidebarContext } from "./ComparisonSidebar";
+import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
 
 function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
   const { yearsList, selectedYear, handleYearChange } = useContext(ComparisonSidebarContext);

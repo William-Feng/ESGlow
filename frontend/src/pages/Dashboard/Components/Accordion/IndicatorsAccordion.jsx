@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ComparisonSidebarContext } from "./ComparisonSidebar";
+import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
 import {
   Accordion,
   AccordionDetails,

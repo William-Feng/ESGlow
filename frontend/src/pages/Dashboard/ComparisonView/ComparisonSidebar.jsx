@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
-import YearsSingleSelectAccordion from "./YearsSingleSelectAccordion";
-import IndicatorsAccordion from "./IndicatorsAccordion";
+import YearsSingleSelectAccordion from "../Components/Accordion/YearsSingleSelectAccordion";
+import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
 import { ComparisonViewContext } from "./ComparisonView";
 
 export const ComparisonSidebarContext = createContext();
