@@ -40,11 +40,24 @@ function StartPage({ page, onSuccess }) {
           padding: "5rem",
         }}
       >
+        <Typography
+          variant="h1"
+          color="white"
+          sx={{
+            fontWeight: 700,
+            letterSpacing: "0.2rem",
+            textAlign: "center",
+            fontSize: "5rem",
+            textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)",
+          }}
+        >
+          ESGlow
+        </Typography>
         <Box
           component="img"
           src={Logo}
           alt="ESGlow Logo"
-          sx={{ width: "320px", marginBottom: "2rem" }}
+          sx={{ width: "200px", marginBottom: "1rem" }}
         />
 
         <Typography variant="h3" color="white" mb={2}>
