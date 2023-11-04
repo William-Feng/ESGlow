@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-function SingleViewOverview() {
+function SingleOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
     useContext(SingleViewContext);
   const getRecentESGScores = () => {
@@ -169,6 +169,7 @@ function SingleViewOverview() {
                       {toolTipStringList.map((str) => (
                         <Typography
                           variant="body2"
+                          key={str}
                           sx={{
                             display: "block",
                             marginTop: "4px",
@@ -247,4 +248,4 @@ function SingleViewOverview() {
   );
 }
 
-export default SingleViewOverview;
+export default SingleOverview;

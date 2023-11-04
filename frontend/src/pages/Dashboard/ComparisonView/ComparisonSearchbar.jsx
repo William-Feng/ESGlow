@@ -15,7 +15,7 @@ import { ComparisonViewContext } from "./ComparisonView";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparisonSearchbar({ token }) {
+function ComparisonSearchbar({ token }) {
   const { view, setView } = useContext(ComparisonViewContext);
   const handleView = (_, newView) => {
     setView(newView);
@@ -140,3 +140,5 @@ export default function ComparisonSearchbar({ token }) {
     </Box>
   );
 }
+
+export default ComparisonSearchbar;

@@ -1,9 +1,9 @@
 import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
-import SingleViewSearchbar from "./SingleViewSearchbar";
-import SingleViewOverview from "./SingleViewOverview";
-import SingleViewSidebar from "./SingleViewSidebar";
-import SingleViewData from "./SingleViewData";
+import SingleViewSearchbar from "./SingleSearchbar";
+import SingleViewOverview from "./SingleOverview";
+import SingleViewSidebar from "./SingleSidebar";
+import SingleViewData from "./SingleData";
 import {
   useEffect,
   useMemo,
@@ -17,7 +17,7 @@ import { PageContext } from "../Dashboard";
 
 export const SingleViewContext = createContext();
 
-export default function SingleView({ token }) {
+function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
@@ -109,7 +109,6 @@ export default function SingleView({ token }) {
           yearsString
         )
           .then((data) => {
-            console.log("set fixed overview");
             setFixedIndicatorValues(data.values);
           })
           .catch((error) => console.error(error));
@@ -317,3 +316,5 @@ export default function SingleView({ token }) {
     </>
   );
 }
+
+export default SingleView;

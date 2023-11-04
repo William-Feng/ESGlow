@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export default function OverviewPrompt() {
+function OverviewPrompt() {
   return (
     <Box
       sx={{
@@ -25,3 +25,5 @@ export default function OverviewPrompt() {
     </Box>
   );
 }
+
+export default OverviewPrompt;

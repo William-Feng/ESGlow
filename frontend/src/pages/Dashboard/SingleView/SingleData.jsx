@@ -10,7 +10,7 @@ import {
 import { useState, useEffect, useMemo, useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 
-function SingleViewData() {
+function SingleData() {
   const {
     selectedCompany,
     selectedFramework,
@@ -277,4 +277,4 @@ function SingleViewData() {
   );
 }
 
-export default SingleViewData;
+export default SingleData;

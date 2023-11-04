@@ -9,7 +9,7 @@ import ComparisonOverview from "./ComparisonOverview";
 
 export const ComparisonViewContext = createContext();
 
-export default function ComparisonView({ token }) {
+function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
   return (
@@ -94,3 +94,5 @@ export default function ComparisonView({ token }) {
     </>
   );
 }
+
+export default ComparisonView;

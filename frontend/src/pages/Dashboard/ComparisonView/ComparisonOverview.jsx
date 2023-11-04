@@ -2,7 +2,7 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-export default function ComparisonOverview() {
+function ComparisonOverview() {
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
     return (
@@ -145,3 +145,5 @@ export default function ComparisonOverview() {
     <OverviewPrompt />
   );
 }
+
+export default ComparisonOverview;

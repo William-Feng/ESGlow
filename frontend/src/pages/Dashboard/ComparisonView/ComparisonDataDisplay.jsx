@@ -9,7 +9,7 @@ import {
 const dummyCompanies = ["Google", "Apple"];
 const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
 
-export default function ComparisonDataDisplay() {
+function ComparisonDataDisplay() {
   return (
     <Box
       sx={{
@@ -104,3 +104,5 @@ export default function ComparisonDataDisplay() {
     </Box>
   );
 }
+
+export default ComparisonDataDisplay;

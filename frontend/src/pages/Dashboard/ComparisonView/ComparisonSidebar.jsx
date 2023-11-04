@@ -5,7 +5,7 @@ import YearsAccordion from "../Components/Accordion/YearsAccordion";
 const years = [2018, 2019, 2020, 2021, 2022, 2023];
 const dummyFunction = () => {};
 
-export default function ComparisonSidebar() {
+function ComparisonSidebar() {
   return (
     <Box sx={{ paddingBottom: 3 }}>
       {/* Should modularize the indicators/weight Accordion to add here */}
@@ -32,3 +32,5 @@ export default function ComparisonSidebar() {
     </Box>
   );
 }
+
+export default ComparisonSidebar;

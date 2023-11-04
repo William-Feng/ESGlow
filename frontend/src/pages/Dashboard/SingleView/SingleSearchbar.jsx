@@ -9,7 +9,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { SingleViewContext } from "./SingleView";
 
-function SingleViewSearchbar({ token }) {
+function SingleSearchbar({ token }) {
   const {
     selectedIndustry,
     setSelectedIndustry,
@@ -186,4 +186,4 @@ function SingleViewSearchbar({ token }) {
   );
 }
 
-export default SingleViewSearchbar;
+export default SingleSearchbar;
