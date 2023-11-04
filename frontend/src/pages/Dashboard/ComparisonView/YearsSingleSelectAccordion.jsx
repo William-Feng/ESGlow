@@ -4,7 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonSidebarContext } from "./ComparisonSidebar";
 
 function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
-  const { years, selectedYear, handleYearChange } = useContext(ComparisonSidebarContext);
+  const { yearsList, selectedYear, handleYearChange } = useContext(ComparisonSidebarContext);
   
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
@@ -35,8 +35,8 @@ function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
             }
             onChange={handleYearChange}
           >
-            {years &&
-              years.map((year) => (
+            {yearsList &&
+              yearsList.map((year) => (
                 <Box
                   display="flex"
                   alignItems="center"

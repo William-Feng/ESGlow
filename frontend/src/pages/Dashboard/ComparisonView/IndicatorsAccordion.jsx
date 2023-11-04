@@ -6,13 +6,21 @@ import {
   AccordionSummary,
   Box,
   Checkbox,
+  Chip,
   FormControlLabel,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function IndicatorsAccordion({ disabled, expanded, onChange }) {
-  const { allIndicators, selectedIndicators, handleIndicatorsChange } =
+  const { 
+    allIndicators, 
+    selectedIndicators, 
+    handleIndicatorsChange,
+    indicatorWeights,
+  } =
     useContext(ComparisonSidebarContext);
 
   return (
@@ -67,6 +75,11 @@ function IndicatorsAccordion({ disabled, expanded, onChange }) {
                   </Typography>
                 }
               />
+              <Box display="flex" alignItems="center" gap={1}>
+                <Tooltip title={indicator.description}>
+                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                </Tooltip>
+              </Box>
             </Box>
           ))}
         </Box>

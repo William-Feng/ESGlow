@@ -1,7 +1,4 @@
-import {
-  Box,
-  Button
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
 import YearsSingleSelectAccordion from "./YearsSingleSelectAccordion";
 import IndicatorsAccordion from "./IndicatorsAccordion";
@@ -9,29 +6,65 @@ import { ComparisonViewContext } from "./ComparisonView";
 
 export const ComparisonSidebarContext = createContext();
 
-function ComparisonSidebar() {
+function ComparisonSidebar({ token }) {
   const {
-    years,
+    selectedCompanies,
     selectedYear,
     setSelectedYear,
     allIndicators,
+    setAllIndicators,
     selectedIndicators,
     setSelectedIndicators,
   } = useContext(ComparisonViewContext);
 
+  const [yearsList, setYearsList] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/values/years", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setYearsList(data.years);
+      })
+      .catch((error) => {
+        if (error !== "No years found") {
+          console.error("There was an error fetching the years.", error);
+        }
+      });
+  }, [selectedCompanies]);
+
   const handleYearChange = (event) => {
     const year = event.target.value;
-    setSelectedYear(years.find((y) => y === parseInt(year)));
+    setSelectedYear(yearsList.find((y) => y === parseInt(year)));
   };
 
   const [expanded, setExpanded] = useState({
     panel1: false,
     panel2: false,
   });
-  
+
   const handleChange = (panel) => (_, isExpanded) => {
     setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
   };
+
+  useEffect(() => {
+    fetch("/api/indicators/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAllIndicators(data.indicators);
+        const indicatorIds = data.indicators
+          .map((d) => d.indicator_id)
+          .join(",");
+        // Fetch indicator weights
+      });
+  }, [token, selectedCompanies, selectedYear]);
 
   const handleIndicatorsChange = (indicatorId) => {
     setSelectedIndicators((prev) => {
@@ -47,7 +80,8 @@ function ComparisonSidebar() {
     <Box sx={{ paddingBottom: 3 }}>
       <ComparisonSidebarContext.Provider
         value={{
-          years,
+          yearsList,
+          setYearsList,
           selectedYear,
           handleYearChange,
           allIndicators,
@@ -55,12 +89,11 @@ function ComparisonSidebar() {
           handleIndicatorsChange,
         }}
       >
-        {/* Should modularize the indicators/weight Accordion to add here */}
         <YearsSingleSelectAccordion
           disabled={false} // Depending on some sort of selection
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
-          years={years}
+          years={yearsList}
           handleYearChange={handleYearChange}
         />
         <IndicatorsAccordion

@@ -3,7 +3,7 @@ import Header from "../Header";
 import ComparisonSearchbar from "./ComparisonSearchbar";
 import ComparisonSidebar from "./ComparisonSidebar";
 import ComparisonDataDisplay from "./ComparisonDataDisplay";
-import { useContext, createContext, useState, useMemo, useEffect } from "react";
+import { useContext, createContext, useState } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
 
@@ -13,26 +13,9 @@ function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const years = useMemo(() => [2022, 2023], []);
   const [selectedYear, setSelectedYear] = useState([]);
   const [allIndicators, setAllIndicators] = useState([]);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/indicators/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setAllIndicators(data.indicators);
-        const indicatorIds = data.indicators
-          .map((d) => d.indicator_id)
-          .join(",");
-        // Fetch indicator values
-      });
-  }, [token, selectedCompanies, selectedYear]);
 
   return (
     <>
@@ -111,15 +94,16 @@ function ComparisonView({ token }) {
             >
               <ComparisonViewContext.Provider
                 value={{
-                  years,
+                  selectedCompanies,
                   selectedYear,
                   setSelectedYear,
                   allIndicators,
+                  setAllIndicators,
                   selectedIndicators,
                   setSelectedIndicators,
                 }}
               >
-                <ComparisonSidebar />
+                <ComparisonSidebar token={token} />
               </ComparisonViewContext.Provider>
             </Drawer>
             <ComparisonDataDisplay />
