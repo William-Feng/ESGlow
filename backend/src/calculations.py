@@ -231,3 +231,79 @@ def get_industry_values(industry_id):
         },
         200,
     )
+
+
+def get_company_industry_ranking(company_id):
+    """
+    Given a company_id, search thru it's industry, and determine it's ranking.
+
+    Args:
+        company_id (int):
+    Return:
+        {
+            message: string,
+            ranking: int
+        },
+        HTTP Status Code
+
+    """
+
+    # Grab Company Object
+    company = db.session.query(Company).filter(Company.company_id == company_id).first()
+    if not company:
+        return {"message": "Invalid company id supplied!"}, 400
+    print(company)
+
+    # Determine all industry rankings...
+    company_scores = get_industry_company_values(company.industry_id)
+
+    # Brute Force Method
+    ranking = -1
+    company_score = -1
+    for index, (id, score) in enumerate(company_scores):
+        if id == company_id:
+            ranking = index + 1
+            company_score = score
+            break
+
+    return {
+        "message": "Ranking in industry determined!",
+        "ranking": ranking,
+        "company_score": company_score,
+        "industry_company_count": len(company_scores),
+    }, 200
+
+
+def get_industry_company_values(industry_id):
+    """
+    Given an industry id, find all of the companies associated with that industry.
+    Return all of these companies with their scores.
+
+    Args:
+        industry_id (number)
+    Return:
+        [(company_id, company_score)], descending order
+    """
+
+    company_scores = []
+
+    companies = [
+        company[0]
+        for company in db.session.query(Company.company_id).filter(
+            Company.industry_id == industry_id
+        )
+    ]
+
+    values = get_company_values(companies)
+    for company_key in values:
+        # Calculate value of all framework_scores
+        company_value = values[company_key]["value"]
+        framework_scores = sum(
+            [framework["score"] for framework in company_value["frameworks"]]
+        )
+        company_scores.append(
+            (company_key, framework_scores / len(company_value["frameworks"]))
+        )
+
+    print(company_scores)
+    return sorted(company_scores, key=lambda x: (-x[1], x[0]))
