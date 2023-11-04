@@ -61,3 +61,12 @@ Given that I was relatively free, I took initiative to work on these additional 
 I added an industry table to the database, created relevant endpoints and ultimately incorporated an industry search bar feature (on top of company) into the frontend.
 I also made fullstack accomplishments with the inclusion of additional indicators in the selection sidebar, which gives users more flexibility when viewing data.
 Ultimately, we ended Sprint two on Friday, meaning that we finished an astronomical amount of work with high quality one week before the deadline (unlike sprint one).
+
+
+Week 8:
+
+I emphasised the need to modularise the frontend code given that some of the code was very long, and began the refactoring before passing it over to Carly and Mel.
+We presented Demo B as a team, which went smoothly since we completed everything nicely ahead of schedule, and received some feedback from the tutor which we'll tackle.
+I went on a short trip and fell sick early in the week, but quickly recovered and contributed to writing up Retrospective B along with planning out the upcoming tasks.
+I updated the tables for the custom frameworks user story to reflect our new understanding of the task, and made some heavy UI updates so there's a better design.
+This included creating a new ESGlow logo, adopting gradient backgrounds with better contrast, restyling the overview/table sections, incorporating more year data etc.
