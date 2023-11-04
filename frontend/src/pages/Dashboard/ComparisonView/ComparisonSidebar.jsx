@@ -14,7 +14,7 @@ function ComparisonSidebar({ token }) {
     selectedIndicators,
     setSelectedIndicators,
   } = useContext(ComparisonViewContext);
-  
+
   const [yearsList, setYearsList] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState([]);
 

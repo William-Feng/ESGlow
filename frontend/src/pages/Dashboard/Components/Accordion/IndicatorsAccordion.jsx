@@ -14,10 +14,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function IndicatorsAccordion({ disabled, expanded, onChange }) {
-  const { 
+  const {
     selectedYear,
-    indicatorsList, 
-    selectedIndicators, 
+    indicatorsList,
+    selectedIndicators,
     handleIndicatorsChange,
   } = useContext(ComparisonSidebarContext);
 

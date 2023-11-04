@@ -1,11 +1,22 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, FormControl, Radio, RadioGroup, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
 
 function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
-  const { yearsList, selectedYear, handleYearChange } = useContext(ComparisonSidebarContext);
-  
+  const { yearsList, selectedYear, handleYearChange } = useContext(
+    ComparisonSidebarContext
+  );
+
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
       <AccordionSummary
@@ -26,37 +37,42 @@ function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <FormControl fullWidth>
-          <RadioGroup
-            aria-labelledby="demo-controlled-radio-buttons-group"
-            name="controlled-radio-buttons-group"
-            value={
-              selectedYear ? selectedYear.toString() : ""
-            }
-            onChange={handleYearChange}
-          >
-            {yearsList &&
-              yearsList.map((year) => (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  key={year}
-                  justifyContent="space-between"
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 2,
+            width: "100%",
+            px: 2,
+          }}
+        >
+          {yearsList &&
+            yearsList.map((year) => (
+              <FormControl fullWidth>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={selectedYear ? selectedYear.toString() : ""}
+                  onChange={handleYearChange}
                 >
-                  <Box display="flex" alignItems="center">
-                    <Radio value={year.toString()} />
-                    <Typography fontWeight="bold">
-                      {year}
-                    </Typography>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    key={year}
+                    justifyContent="space-between"
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Radio value={year.toString()} />
+                      <Typography fontWeight="bold">{year}</Typography>
+                    </Box>
                   </Box>
-                </Box>
-              ))
-            }
-          </RadioGroup>
-        </FormControl>
+                </RadioGroup>
+              </FormControl>
+            ))}
+        </Box>
       </AccordionDetails>
     </Accordion>
-  )
+  );
 }
 
 export default YearsSingleSelectAccordion;
