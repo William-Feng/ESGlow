@@ -1,11 +1,12 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { PageContext } from "./Dashboard";
+import { SingleViewContext } from "./SingleView";
+import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-function Overview() {
+function SingleOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
-    useContext(PageContext);
+    useContext(SingleViewContext);
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];
@@ -72,31 +73,6 @@ function Overview() {
     return ESGScoreList;
   };
 
-  // Company hasn't been selected, so inform the user to select a company
-  const renderPrompt = () => (
-    <Box
-      sx={{
-        display: "flex",
-        padding: "32px 0",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "34.5vh",
-        bgcolor: "#f5f5f5",
-        mx: "auto",
-      }}
-    >
-      <Typography
-        variant="h4"
-        color="text.secondary"
-        paragraph
-        textAlign="center"
-      >
-        Please select a company from the search bar above to view its details.
-      </Typography>
-    </Box>
-  );
-
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
     const scoreList = getRecentESGScores();
@@ -110,9 +86,11 @@ function Overview() {
       `The ESG Score was calculated by averaging` +
       ` ${year} data of the following framework scores:\n`;
 
-    const toolTipStringList = filteredFrameworksScores.map(
-      (item) => `- ${item.framework_name}: ${item.score}`
-    );
+    const toolTipStringList = filteredFrameworksScores.map((item, index) => (
+      <span key={index}>
+        - {item.framework_name}: <strong>{item.score}</strong>
+      </span>
+    ));
 
     const mostRecentYearScores = filteredFrameworksScores.map(
       (framework) => framework.score
@@ -132,10 +110,11 @@ function Overview() {
       >
         <Typography
           component="h1"
-          variant="h3"
+          variant="h4"
           color="text.primary"
           gutterBottom
           textAlign="center"
+          fontWeight="bold"
         >
           {selectedCompany.name}
         </Typography>
@@ -152,7 +131,12 @@ function Overview() {
           }}
         >
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" color="text.primary" paragraph>
+            <Typography
+              variant="body"
+              color="text.primary"
+              paragraph
+              sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+            >
               {selectedCompany.description}
             </Typography>
           </Box>
@@ -181,20 +165,32 @@ function Overview() {
                 </Typography>
                 <Tooltip
                   title={
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ fontSize: "1rem" }}>
                       {toolTipStringIntro}
                       {toolTipStringList.map((str) => (
                         <Typography
-                          variant="body3"
-                          sx={{ textIndent: "20px" }}
+                          variant="body2"
                           key={str}
+                          sx={{
+                            display: "block",
+                            marginTop: "4px",
+                            whiteSpace: "nowrap",
+                            textIndent: "16px",
+                            fontSize: "1rem",
+                          }}
                         >
-                          <br />
                           {str}
                         </Typography>
                       ))}
                     </Typography>
                   }
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        maxWidth: "none",
+                      },
+                    },
+                  }}
                 >
                   <InfoOutlinedIcon
                     style={{ cursor: "pointer", paddingLeft: 3 }}
@@ -215,18 +211,13 @@ function Overview() {
               <Typography variant="h4" color="text.primary" paragraph>
                 43
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean
               </Typography>
-              <Typography
-                variant="h5"
-                color="text.primary"
-                sx={{ margin: "24px 0px" }}
-                paragraph
-              >
+              <Typography variant="h4" color="text.primary" mt={3} paragraph>
                 24/185
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Ranking
               </Typography>
             </Box>
@@ -246,9 +237,11 @@ function Overview() {
     );
   };
 
-  return frameworksData && selectedCompany
-    ? renderCompanyData()
-    : renderPrompt();
+  return frameworksData && selectedCompany ? (
+    renderCompanyData()
+  ) : (
+    <OverviewPrompt />
+  );
 }
 
-export default Overview;
+export default SingleOverview;

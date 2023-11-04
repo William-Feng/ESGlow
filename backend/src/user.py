@@ -3,7 +3,18 @@ from flask_jwt_extended import create_access_token
 from .database import db, bcrypt, User
 
 
-def register(name, email, password):
+def register(name: str, email: str, password: str):
+    """
+    Summary:
+        Verifies new details, registers a new user and provides a JWT.
+    Args:
+        name (str): The user's name.
+        email (str): The user's email.
+        password (str): The user's intended password.
+    Returns:
+        A dict containing status message and a JWT. 
+        HTTP status code
+    """
     # Check if user exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
@@ -26,7 +37,17 @@ def register(name, email, password):
     }, 200
 
 
-def login(email, password):
+def login(email: str, password: str):
+    """
+    Summary:
+        Verifies existing details and provides a JWT.
+    Args:
+        email (str): The user's email.
+        password (str): The user's password.
+    Returns:
+        A dict containing status message and a JWT. 
+        HTTP status code
+    """
     # Check if user exists
     user = User.query.filter_by(email=email).first()
     if not user:
@@ -45,7 +66,16 @@ def login(email, password):
     }, 200
 
 
-def get_user(email):
+def get_user(email: str):
+    """
+    Summary:
+        Fetches the user details from the database.
+    Args:
+        email (str): The user's email.
+    Returns:
+        A dict containing the user's name and email. 
+        HTTP status code
+    """
     user = User.query.filter_by(email=email).first()
     # Check if user exists
     if not user:

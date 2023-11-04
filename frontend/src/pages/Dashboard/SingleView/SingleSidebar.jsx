@@ -11,11 +11,11 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import { PageContext } from "../Dashboard";
-import FrameworkAccordion from "../Accordion/FrameworkAccordion";
-import MetricsIndicatorsAccordion from "../Accordion/MetricsIndicatorsAccordion";
-import YearsAccordion from "../Accordion/YearsAccordion";
-import AdditionalIndicatorsAccordion from "../Accordion/AdditionalIndicatorsAccordion";
+import { SingleViewContext } from "./SingleView";
+import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
+import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
+import YearsAccordion from "../Components/Accordion/YearsAccordion";
+import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 
 export const SidebarContext = createContext();
 
@@ -25,7 +25,7 @@ export const SidebarContext = createContext();
   selectedIndicators: Array that contains the selected indicators by ID
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
-function SingleViewSidebar() {
+function SingleSidebar() {
   const {
     selectedCompany,
     frameworksData,
@@ -40,7 +40,7 @@ function SingleViewSidebar() {
     allIndicators,
     selectedExtraIndicators,
     setSelectedExtraIndicators,
-  } = useContext(PageContext);
+  } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected
@@ -163,8 +163,10 @@ function SingleViewSidebar() {
     setSelectedMetrics((prevMetrics) => {
       if (!checked) {
         return prevMetrics.filter((m) => m !== metric);
-      } else {
+      } else if (checked && !prevMetrics.includes(metric)) {
         return [...prevMetrics, metric];
+      } else {
+        return [...prevMetrics];
       }
     });
 
@@ -200,6 +202,38 @@ function SingleViewSidebar() {
   const [newWeightMetridId, setNewWeightMetridId] = useState("");
   const [newWeightIndicatorId, setNewWeightIndicatorId] = useState("");
 
+  const determineChipColor = (metric, indicator) => {
+    if (metric) {
+      const metricId = metric.metric_id;
+      if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
+        return "error";
+      } else if (
+        Math.abs(
+          metricWeights[metricId] - parseFloat(metric.predefined_weight)
+        ) <= 0.0001
+      ) {
+        return "success";
+      } else {
+        // Return orange if weight has been edited
+        return "warning";
+      }
+    } else if (indicator) {
+      const indicatorId = indicator.indicator_id;
+      if (!selectedIndicators.includes(indicatorId)) {
+        return "error";
+      } else if (
+        Math.abs(
+          indicatorWeights[indicatorId] -
+            parseFloat(indicator.predefined_weight)
+        ) <= 0.0001
+      ) {
+        return "success";
+      } else {
+        return "warning";
+      }
+    }
+  };
+
   const openWeightDialog = (metricId, indicatorId) => {
     setIsDialogOpen(true);
     setNewWeightMetridId(metricId);
@@ -207,6 +241,7 @@ function SingleViewSidebar() {
   };
 
   const closeWeightDialog = () => {
+    setNewWeightInput("");
     setIsDialogOpen(false);
   };
 
@@ -399,17 +434,17 @@ function SingleViewSidebar() {
           handleIndicatorChange,
           indicatorWeights,
           toggleMetric,
-          years,
-          handleYearChange,
           remainingExtraIndicators,
           selectedExtraIndicators,
           handleExtraIndicatorsChange,
+          determineChipColor,
         }}
       >
         <FrameworkAccordion
           disabled={!frameworksData}
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
+          frameworksData={frameworksData}
         />
         <MetricsIndicatorsAccordion
           disabled={!frameworksData}
@@ -420,6 +455,8 @@ function SingleViewSidebar() {
           disabled={!frameworksData}
           expanded={expanded.panel3}
           onChange={handleChange("panel3")}
+          years={years}
+          handleYearChange={handleYearChange}
         />
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
@@ -445,4 +482,4 @@ function SingleViewSidebar() {
   );
 }
 
-export default SingleViewSidebar;
+export default SingleSidebar;
