@@ -32,7 +32,7 @@ function StartPage({ page, onSuccess }) {
         sm={8}
         md={8}
         sx={{
-          background: "linear-gradient(135deg, #2C5274, #203A53, #0F2017)",
+          background: "linear-gradient(135deg, #3A719B, #2C5274, #1C365A)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
