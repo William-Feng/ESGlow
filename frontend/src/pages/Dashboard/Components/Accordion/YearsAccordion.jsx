@@ -9,14 +9,23 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-function YearsAccordion({ disabled, expanded, onChange, years, handleYearChange }) {
-
+function YearsAccordion({
+  disabled,
+  expanded,
+  onChange,
+  years,
+  handleYearChange,
+  borderRequired,
+}) {
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel3bh-content"
         id="panel3bh-header"
+        sx={{
+          ...(borderRequired && { borderTop: "1px solid rgba(0, 0, 0, 0.12)" }),
+        }}
       >
         <Typography
           sx={{

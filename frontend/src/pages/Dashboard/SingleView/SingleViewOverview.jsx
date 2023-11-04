@@ -164,13 +164,17 @@ function SingleViewOverview() {
                   title={
                     <Typography variant="body2">
                       {toolTipStringIntro}
-                      {toolTipStringList.map((str) => (
+                      {toolTipStringList.map((str, index) => (
                         <Typography
-                          variant="body3"
-                          sx={{ textIndent: "20px" }}
-                          key={str}
+                          variant="body2"
+                          key={index}
+                          sx={{
+                            display: "block",
+                            marginTop: "4px",
+                            whiteSpace: "nowrap",
+                            textIndent: "8px",
+                          }}
                         >
-                          <br />
                           {str}
                         </Typography>
                       ))}
