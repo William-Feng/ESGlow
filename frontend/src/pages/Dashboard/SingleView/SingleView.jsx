@@ -1,15 +1,9 @@
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
-import SingleViewSearchbar from "./SingleViewSearchbar";
-import SingleViewOverview from "./SingleViewOverview";
-import SingleViewSidebar from "./SingleViewSidebar";
-import SingleViewData from "./SingleViewData";
+import SingleViewSearchbar from "./SingleSearchbar";
+import SingleViewOverview from "./SingleOverview";
+import SingleViewSidebar from "./SingleSidebar";
+import SingleViewData from "./SingleData";
 import {
   useEffect,
   useMemo,
@@ -23,14 +17,11 @@ import { PageContext } from "../Dashboard";
 
 export const SingleViewContext = createContext();
 
-export default function SingleView({ token }) {
-  const {
-    view,
-    setView
-  } = useContext(PageContext);
+function SingleView({ token }) {
+  const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
-  const years = useMemo(() => [2022, 2023], []);
+  const years = useMemo(() => [2018, 2019, 2020, 2021, 2022, 2023], []);
   const yearsString = years.join(",");
 
   const [selectedIndustry, setSelectedIndustry] = useState();
@@ -46,7 +37,6 @@ export default function SingleView({ token }) {
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
   const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
-
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -119,7 +109,6 @@ export default function SingleView({ token }) {
           yearsString
         )
           .then((data) => {
-            console.log("set fixed overview");
             setFixedIndicatorValues(data.values);
           })
           .catch((error) => console.error(error));
@@ -213,7 +202,7 @@ export default function SingleView({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -230,10 +219,10 @@ export default function SingleView({ token }) {
                 selectedCompany,
                 setSelectedCompany,
                 view,
-                setView
+                setView,
               }}
             >
-              <SingleViewSearchbar token={ token }/>
+              <SingleViewSearchbar token={token} />
             </SingleViewContext.Provider>
           </Toolbar>
         </AppBar>
@@ -251,7 +240,7 @@ export default function SingleView({ token }) {
           <Box
             sx={{
               textAlign: "center",
-              maxHeight: "450px",
+              maxHeight: "320px",
             }}
           >
             <SingleViewContext.Provider
@@ -325,5 +314,7 @@ export default function SingleView({ token }) {
         </Box>
       </Box>
     </>
-  )
+  );
 }
+
+export default SingleView;

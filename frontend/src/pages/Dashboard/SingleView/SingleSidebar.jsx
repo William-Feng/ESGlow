@@ -25,7 +25,7 @@ export const SidebarContext = createContext();
   selectedIndicators: Array that contains the selected indicators by ID
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
-function SingleViewSidebar() {
+function SingleSidebar() {
   const {
     selectedCompany,
     frameworksData,
@@ -207,7 +207,11 @@ function SingleViewSidebar() {
       const metricId = metric.metric_id;
       if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
         return "error";
-      } else if (Math.abs(metricWeights[metricId] - parseFloat(metric.predefined_weight)) <= 0.0001) {
+      } else if (
+        Math.abs(
+          metricWeights[metricId] - parseFloat(metric.predefined_weight)
+        ) <= 0.0001
+      ) {
         return "success";
       } else {
         // Return orange if weight has been edited
@@ -217,13 +221,18 @@ function SingleViewSidebar() {
       const indicatorId = indicator.indicator_id;
       if (!selectedIndicators.includes(indicatorId)) {
         return "error";
-      } else if (Math.abs(indicatorWeights[indicatorId] - parseFloat(indicator.predefined_weight)) <= 0.0001) {
+      } else if (
+        Math.abs(
+          indicatorWeights[indicatorId] -
+            parseFloat(indicator.predefined_weight)
+        ) <= 0.0001
+      ) {
         return "success";
       } else {
         return "warning";
       }
     }
-  }
+  };
 
   const openWeightDialog = (metricId, indicatorId) => {
     setIsDialogOpen(true);
@@ -232,7 +241,7 @@ function SingleViewSidebar() {
   };
 
   const closeWeightDialog = () => {
-    setNewWeightInput('');
+    setNewWeightInput("");
     setIsDialogOpen(false);
   };
 
@@ -473,4 +482,4 @@ function SingleViewSidebar() {
   );
 }
 
-export default SingleViewSidebar;
+export default SingleSidebar;

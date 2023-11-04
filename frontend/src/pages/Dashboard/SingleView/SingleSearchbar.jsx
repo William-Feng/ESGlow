@@ -9,14 +9,14 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { SingleViewContext } from "./SingleView";
 
-function SingleViewSearchbar({ token }) {
+function SingleSearchbar({ token }) {
   const {
     selectedIndustry,
     setSelectedIndustry,
     selectedCompany,
     setSelectedCompany,
     view,
-    setView
+    setView,
   } = useContext(SingleViewContext);
 
   const handleView = (_, newView) => {
@@ -169,12 +169,12 @@ function SingleViewSearchbar({ token }) {
             variant="body4"
             textAlign="center"
             sx={{
-              fontSize: "14px", // Default font size
+              fontSize: "14px",
               "@media (min-width: 768px)": {
-                fontSize: "10px", // Adjust font size for screens wider than 768px
+                fontSize: "10px",
               },
               "@media (min-width: 1024px)": {
-                fontSize: "14px", // Adjust font size for screens wider than 1024px
+                fontSize: "14px",
               },
             }}
           >
@@ -186,4 +186,4 @@ function SingleViewSearchbar({ token }) {
   );
 }
 
-export default SingleViewSearchbar;
+export default SingleSearchbar;
