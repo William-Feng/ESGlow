@@ -13,8 +13,7 @@ function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]);
-  const [allIndicators, setAllIndicators] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
 
   return (
@@ -97,8 +96,6 @@ function ComparisonView({ token }) {
                   selectedCompanies,
                   selectedYear,
                   setSelectedYear,
-                  allIndicators,
-                  setAllIndicators,
                   selectedIndicators,
                   setSelectedIndicators,
                 }}

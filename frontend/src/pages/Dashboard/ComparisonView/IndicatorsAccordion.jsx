@@ -6,7 +6,6 @@ import {
   AccordionSummary,
   Box,
   Checkbox,
-  Chip,
   FormControlLabel,
   Tooltip,
   Typography,
@@ -16,12 +15,11 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function IndicatorsAccordion({ disabled, expanded, onChange }) {
   const { 
-    allIndicators, 
+    selectedYear,
+    indicatorsList, 
     selectedIndicators, 
     handleIndicatorsChange,
-    indicatorWeights,
-  } =
-    useContext(ComparisonSidebarContext);
+  } = useContext(ComparisonSidebarContext);
 
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
@@ -49,39 +47,45 @@ function IndicatorsAccordion({ disabled, expanded, onChange }) {
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          {allIndicators.map((indicator) => (
-            <Box
-              key={indicator.indicator_id}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ mb: 1, pl: 2 }}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={
-                      selectedIndicators.includes(indicator.indicator_id) ||
-                      false
-                    }
-                    onChange={() =>
-                      handleIndicatorsChange(indicator.indicator_id)
-                    }
-                  />
-                }
-                label={
-                  <Typography style={{ maxWidth: 200, whiteSpace: "normal" }}>
-                    {indicator.name}
-                  </Typography>
-                }
-              />
-              <Box display="flex" alignItems="center" gap={1}>
-                <Tooltip title={indicator.description}>
-                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                </Tooltip>
+          {selectedYear ? (
+            indicatorsList.map((indicator) => (
+              <Box
+                key={indicator.indicator_id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: 1, pl: 2 }}
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={
+                        selectedIndicators.includes(indicator.indicator_id) ||
+                        false
+                      }
+                      onChange={() =>
+                        handleIndicatorsChange(indicator.indicator_id)
+                      }
+                    />
+                  }
+                  label={
+                    <Typography style={{ maxWidth: 200, whiteSpace: "normal" }}>
+                      {indicator.name}
+                    </Typography>
+                  }
+                />
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Tooltip title={indicator.indicator_description}>
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))
+          ) : (
+            <Typography style={{ color: "red" }}>
+              Select a year to see the associated indicators
+            </Typography>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

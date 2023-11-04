@@ -11,15 +11,16 @@ function ComparisonSidebar({ token }) {
     selectedCompanies,
     selectedYear,
     setSelectedYear,
-    allIndicators,
-    setAllIndicators,
     selectedIndicators,
     setSelectedIndicators,
   } = useContext(ComparisonViewContext);
-
+  
   const [yearsList, setYearsList] = useState([]);
+  const [indicatorsList, setIndicatorsList] = useState([]);
 
   useEffect(() => {
+    console.log(selectedCompanies);
+    // Fetch all available years
     fetch("/api/values/years", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -34,12 +35,18 @@ function ComparisonSidebar({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
-  }, [selectedCompanies]);
 
-  const handleYearChange = (event) => {
-    const year = event.target.value;
-    setSelectedYear(yearsList.find((y) => y === parseInt(year)));
-  };
+    // Fetch all available indicators
+    fetch("/api/indicators/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIndicatorsList(data.indicators);
+      });
+  }, [token, selectedCompanies]);
 
   const [expanded, setExpanded] = useState({
     panel1: false,
@@ -50,21 +57,10 @@ function ComparisonSidebar({ token }) {
     setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
   };
 
-  useEffect(() => {
-    fetch("/api/indicators/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setAllIndicators(data.indicators);
-        const indicatorIds = data.indicators
-          .map((d) => d.indicator_id)
-          .join(",");
-        // Fetch indicator weights
-      });
-  }, [token, selectedCompanies, selectedYear]);
+  const handleYearChange = (event) => {
+    const year = event.target.value;
+    setSelectedYear(yearsList.find((y) => y === parseInt(year)));
+  };
 
   const handleIndicatorsChange = (indicatorId) => {
     setSelectedIndicators((prev) => {
@@ -84,36 +80,38 @@ function ComparisonSidebar({ token }) {
           setYearsList,
           selectedYear,
           handleYearChange,
-          allIndicators,
+          indicatorsList,
           selectedIndicators,
           handleIndicatorsChange,
         }}
       >
         <YearsSingleSelectAccordion
-          disabled={false} // Depending on some sort of selection
+          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
           years={yearsList}
           handleYearChange={handleYearChange}
         />
         <IndicatorsAccordion
-          disabled={false}
+          disabled={selectedCompanies.length === 0}
           expanded={expanded.panel2}
           onChange={handleChange("panel2")}
         />
       </ComparisonSidebarContext.Provider>
-      <Box
-        sx={{
-          mt: 2,
-          mr: 2,
-          display: "flex",
-          justifyContent: "right",
-        }}
-      >
-        <Button variant="contained" color="primary">
-          Save
-        </Button>
-      </Box>
+      {/* {selectedYear && (
+        <Box
+          sx={{
+            mt: 2,
+            mr: 2,
+            display: "flex",
+            justifyContent: "right",
+          }}
+        >
+          <Button variant="contained" color="primary">
+            Save
+          </Button>
+        </Box>
+      )} */}
     </Box>
   );
 }
