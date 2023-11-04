@@ -1,28 +1,16 @@
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
-import ComparisonSearchbar from './ComparisonSearchbar'
-import ComparisonSidebar from './ComparisonSidebar'
-import ComparisonDataDisplay from './ComparisonDataDisplay'
-import {
-  useContext,
-  createContext
-} from "react";
+import ComparisonSearchbar from "./ComparisonSearchbar";
+import ComparisonSidebar from "./ComparisonSidebar";
+import ComparisonDataDisplay from "./ComparisonDataDisplay";
+import { useContext, createContext } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
 
 export const ComparisonViewContext = createContext();
 
 export default function ComparisonView({ token }) {
-  const {
-    view,
-    setView
-  } = useContext(PageContext);
+  const { view, setView } = useContext(PageContext);
 
   return (
     <>
@@ -34,7 +22,7 @@ export default function ComparisonView({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -47,10 +35,10 @@ export default function ComparisonView({ token }) {
             <ComparisonViewContext.Provider
               value={{
                 view,
-                setView
+                setView,
               }}
             >
-              <ComparisonSearchbar token={ token }/>
+              <ComparisonSearchbar token={token} />
             </ComparisonViewContext.Provider>
           </Toolbar>
         </AppBar>
@@ -71,7 +59,7 @@ export default function ComparisonView({ token }) {
               maxHeight: "450px",
             }}
           >
-            <ComparisonOverview/>
+            <ComparisonOverview />
           </Box>
           <Box
             sx={{
@@ -104,5 +92,5 @@ export default function ComparisonView({ token }) {
         </Box>
       </Box>
     </>
-  )
+  );
 }

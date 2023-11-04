@@ -1,10 +1,4 @@
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
 import SingleViewSearchbar from "./SingleViewSearchbar";
 import SingleViewOverview from "./SingleViewOverview";
@@ -24,10 +18,7 @@ import { PageContext } from "../Dashboard";
 export const SingleViewContext = createContext();
 
 export default function SingleView({ token }) {
-  const {
-    view,
-    setView
-  } = useContext(PageContext);
+  const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
   const years = useMemo(() => [2022, 2023], []);
@@ -46,7 +37,6 @@ export default function SingleView({ token }) {
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
   const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
-
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -213,7 +203,7 @@ export default function SingleView({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -230,10 +220,10 @@ export default function SingleView({ token }) {
                 selectedCompany,
                 setSelectedCompany,
                 view,
-                setView
+                setView,
               }}
             >
-              <SingleViewSearchbar token={ token }/>
+              <SingleViewSearchbar token={token} />
             </SingleViewContext.Provider>
           </Toolbar>
         </AppBar>
@@ -325,5 +315,5 @@ export default function SingleView({ token }) {
         </Box>
       </Box>
     </>
-  )
+  );
 }
