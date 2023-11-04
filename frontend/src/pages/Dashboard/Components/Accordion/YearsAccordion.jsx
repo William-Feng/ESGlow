@@ -39,27 +39,31 @@ function YearsAccordion({
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Box flexWrap="wrap" display="flex" width="100%" px={2}>
-          {years.map((y, idx) => (
-            <Box
-              key={y}
-              flex={1}
-              width="50%"
-              display="flex"
-              justifyContent={idx % 2 === 0 ? "flex-start" : "center"}
-              ml={idx % 2 === 0 ? 0 : -2}
-            >
-              <FormControlLabel
-                value={y}
-                control={
-                  <Checkbox
-                    defaultChecked
-                    onChange={() => handleYearChange(y)}
-                  />
-                }
-                label={<Typography fontWeight="bold">{y}</Typography>}
-              />
-            </Box>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 2,
+            width: "100%",
+            px: 2,
+          }}
+        >
+          {years.map((year) => (
+            <FormControlLabel
+              key={year}
+              value={year}
+              control={
+                <Checkbox
+                  defaultChecked
+                  onChange={() => handleYearChange(year)}
+                />
+              }
+              label={<Typography fontWeight="bold">{year}</Typography>}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+              }}
+            />
           ))}
         </Box>
       </AccordionDetails>

@@ -21,7 +21,7 @@ export default function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
-  const years = useMemo(() => [2022, 2023], []);
+  const years = useMemo(() => [2018, 2019, 2020, 2021, 2022, 2023], []);
   const yearsString = years.join(",");
 
   const [selectedIndustry, setSelectedIndustry] = useState();
