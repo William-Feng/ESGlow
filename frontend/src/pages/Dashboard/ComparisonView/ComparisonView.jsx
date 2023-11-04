@@ -56,7 +56,7 @@ export default function ComparisonView({ token }) {
           <Box
             sx={{
               textAlign: "center",
-              maxHeight: "450px",
+              maxHeight: "320px",
             }}
           >
             <ComparisonOverview />

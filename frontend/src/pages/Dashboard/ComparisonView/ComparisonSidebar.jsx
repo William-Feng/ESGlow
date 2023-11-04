@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import YearsAccordion from "../Components/Accordion/YearsAccordion";
 
 /* These are dummy variables for placeholder */
-const years = [2020, 2023];
+const years = [2018, 2019, 2020, 2021, 2022, 2023];
 const dummyFunction = () => {};
 
 export default function ComparisonSidebar() {

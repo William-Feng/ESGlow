@@ -81,18 +81,13 @@ export default function ComparisonOverview() {
                 textAlign: "center",
               }}
             >
-              <Typography variant="h5" color="text.primary" paragraph>
+              <Typography variant="h4" color="text.primary" paragraph>
                 43
               </Typography>
               <Typography variant="h6" color="text.secondary">
                 Industry Mean
               </Typography>
-              <Typography
-                variant="h5"
-                color="text.primary"
-                sx={{ margin: "24px 0px" }}
-                paragraph
-              >
+              <Typography variant="h4" color="text.primary" mt={2} paragraph>
                 24/185
               </Typography>
               <Typography variant="h6" color="text.secondary">
@@ -119,7 +114,7 @@ export default function ComparisonOverview() {
               <Typography
                 variant="h4"
                 color="text.primary"
-                sx={{ mt: "15px" }}
+                sx={{ mt: "16px" }}
                 paragraph
               >
                 20

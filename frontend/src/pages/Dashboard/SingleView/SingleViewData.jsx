@@ -153,7 +153,7 @@ function SingleViewData() {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  fontSize: "1.2em",
+                  fontSize: "1.25em",
                   background: "#D1EFFF",
                   borderRight: "1px solid",
                   borderColor: "divider",
@@ -168,11 +168,11 @@ function SingleViewData() {
                   key={year}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "1.2em",
+                    fontSize: "1.25em",
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "5px",
+                    padding: "10px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
@@ -198,7 +198,7 @@ function SingleViewData() {
                   sx={{
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    fontSize: "1.05em",
+                    fontSize: "1.1em",
                   }}
                 >
                   {row.name}
@@ -210,7 +210,7 @@ function SingleViewData() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
-                      fontSize: "1.05em",
+                      fontSize: "1.1em",
                     }}
                   >
                     {row[year] || null}
