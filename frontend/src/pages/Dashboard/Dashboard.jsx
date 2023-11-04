@@ -9,6 +9,9 @@ function Dashboard({ token }) {
   const defaultTheme = createTheme({
     components: {
       MuiTooltip: {
+        defaultProps: {
+          arrow: true,
+        },
         styleOverrides: {
           tooltip: {
             fontSize: "1rem",

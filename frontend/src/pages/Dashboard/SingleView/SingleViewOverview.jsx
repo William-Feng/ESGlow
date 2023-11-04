@@ -86,9 +86,11 @@ function SingleViewOverview() {
       `The ESG Score was calculated by averaging` +
       ` ${year} data of the following framework scores:\n`;
 
-    const toolTipStringList = filteredFrameworksScores.map(
-      (item) => `- ${item.framework_name}: ${item.score}`
-    );
+    const toolTipStringList = filteredFrameworksScores.map((item, index) => (
+      <span key={index}>
+        - {item.framework_name}: <strong>{item.score}</strong>
+      </span>
+    ));
 
     const mostRecentYearScores = filteredFrameworksScores.map(
       (framework) => framework.score
@@ -162,17 +164,17 @@ function SingleViewOverview() {
                 </Typography>
                 <Tooltip
                   title={
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ fontSize: "1rem" }}>
                       {toolTipStringIntro}
-                      {toolTipStringList.map((str, index) => (
+                      {toolTipStringList.map((str) => (
                         <Typography
                           variant="body2"
-                          key={index}
                           sx={{
                             display: "block",
                             marginTop: "4px",
                             whiteSpace: "nowrap",
-                            textIndent: "8px",
+                            textIndent: "16px",
+                            fontSize: "1rem",
                           }}
                         >
                           {str}
@@ -180,6 +182,13 @@ function SingleViewOverview() {
                       ))}
                     </Typography>
                   }
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        maxWidth: "none",
+                      },
+                    },
+                  }}
                 >
                   <InfoOutlinedIcon
                     style={{ cursor: "pointer", paddingLeft: 3 }}
