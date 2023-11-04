@@ -2,11 +2,9 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-export default function ComparisonOverview() {
-  
+function ComparisonOverview() {
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-
     return (
       <Box
         sx={{
@@ -17,10 +15,11 @@ export default function ComparisonOverview() {
       >
         <Typography
           component="h1"
-          variant="h3"
+          variant="h4"
           color="text.primary"
           gutterBottom
           textAlign="center"
+          fontWeight="bold"
         >
           COMPANY NAME
         </Typography>
@@ -86,18 +85,13 @@ export default function ComparisonOverview() {
               <Typography variant="h4" color="text.primary" paragraph>
                 43
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean
               </Typography>
-              <Typography
-                variant="h5"
-                color="text.primary"
-                sx={{ margin: "24px 0px" }}
-                paragraph
-              >
+              <Typography variant="h4" color="text.primary" mt={3} paragraph>
                 24/185
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Ranking
               </Typography>
             </Box>
@@ -118,7 +112,12 @@ export default function ComparisonOverview() {
               <Typography variant="h6" color="text.secondary">
                 Best Performer
               </Typography>
-              <Typography variant="h4" color="text.primary" sx={{ mt: '15px' }} paragraph>
+              <Typography
+                variant="h4"
+                color="text.primary"
+                sx={{ mt: "16px" }}
+                paragraph
+              >
                 20
               </Typography>
               <Typography variant="h6" color="text.secondary">
@@ -141,7 +140,11 @@ export default function ComparisonOverview() {
     );
   };
 
-  return true // this would use something equivalent to selectedCompany state
-    ? renderCompanyData()
-    : <OverviewPrompt/>;
+  return true ? ( // this would use something equivalent to selectedCompany state
+    renderCompanyData()
+  ) : (
+    <OverviewPrompt />
+  );
 }
+
+export default ComparisonOverview;

@@ -77,12 +77,12 @@ function ComparisonSidebar() {
           justifyContent: "right",
         }}
       >
-        <Button variant="contained" color="primary" >
+        <Button variant="contained" color="primary">
           Save
         </Button>
       </Box>
     </Box>
-  )
+  );
 }
 
 export default ComparisonSidebar;

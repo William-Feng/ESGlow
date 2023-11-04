@@ -9,9 +9,10 @@ import ComparisonOverview from "./ComparisonOverview";
 
 export const ComparisonViewContext = createContext();
 
-export default function ComparisonView({ token }) {
+function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
   const years = useMemo(() => [2022, 2023], []);
   const [selectedYear, setSelectedYear] = useState([]);
   const [allIndicators, setAllIndicators] = useState([]);
@@ -31,7 +32,7 @@ export default function ComparisonView({ token }) {
           .join(",");
         // Fetch indicator values
       });
-  }, [token, selectedYear]);
+  }, [token, selectedCompanies, selectedYear]);
 
   return (
     <>
@@ -43,7 +44,7 @@ export default function ComparisonView({ token }) {
           color="inherit"
           elevation={0}
           sx={{
-            background: "linear-gradient(45deg, #003366 30%, #336699 90%)",
+            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
             height: 128,
             zIndex: (theme) => theme.zIndex.drawer + 1,
@@ -55,6 +56,8 @@ export default function ComparisonView({ token }) {
           <Toolbar sx={{ margin: "auto" }}>
             <ComparisonViewContext.Provider
               value={{
+                selectedCompanies,
+                setSelectedCompanies,
                 view,
                 setView,
               }}
@@ -77,7 +80,7 @@ export default function ComparisonView({ token }) {
           <Box
             sx={{
               textAlign: "center",
-              maxHeight: "450px",
+              maxHeight: "320px",
             }}
           >
             <ComparisonOverview />
@@ -126,3 +129,5 @@ export default function ComparisonView({ token }) {
     </>
   );
 }
+
+export default ComparisonView;

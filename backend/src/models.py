@@ -121,3 +121,35 @@ def framework_metric_indicator_models(api):
     })
 
     return framework_detailed_model, indicator_value_detailed_model
+
+
+def value_calculations(api):
+    """
+    framework_values_model = api.model("FrameworkValue"), {
+        'framework_id' : fields.Integer(required=True, description='The indicator ID of framework', example=12),
+        'score' : fields.Integer(required=True, description='Score of the framework', example = 76)
+    }
+    
+    company_values_value_model = api.model('CompanyValue', {
+        'id' : fields.Integer(required=True, description='The indicator ID of company', example=12),
+        'ESGscore' : fields.Integer(required=True, description='Value of company', example=83),
+        'year': fields.Integer(required=True, description='The year of the indicator', example=2022),
+        'frameworks' : fields.List(fields.Nested(framework_values_model), description="List of framework scores")
+    })
+    
+    
+    company_values_model = api.model('CompanyValues', {
+        'message': fields.String(description='Status message', example='Values for company retrieved!'),
+        'values': fields.List(fields.Nested(company_values_value_model), description = "Company framework value")
+    })
+    """
+    
+    company_values_model = api.model('CompanyValues', {
+        'message': fields.String(description='Status message', example='Values for company retrieved!'),
+        'values': fields.String(description = "Company framework value")
+    })
+    
+    return company_values_model
+    
+    
+    

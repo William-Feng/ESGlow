@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export default function OverviewPrompt() {
+function OverviewPrompt() {
   return (
     <Box
       sx={{
@@ -9,13 +9,13 @@ export default function OverviewPrompt() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "34.5vh",
+        height: "31vh",
         bgcolor: "#f5f5f5",
         mx: "auto",
       }}
     >
       <Typography
-        variant="h4"
+        variant="h5"
         color="text.secondary"
         paragraph
         textAlign="center"
@@ -25,3 +25,5 @@ export default function OverviewPrompt() {
     </Box>
   );
 }
+
+export default OverviewPrompt;
