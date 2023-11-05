@@ -269,7 +269,7 @@ function SingleData() {
           </>
         ) : selectedFramework ? (
           <Typography variant="h5" color="text.secondary">
-            Please make sure selections are saved.
+            Please make sure 'UPDATE SCORE' is clicked.
           </Typography>
         ) : null}
       </Box>
