@@ -121,3 +121,15 @@ def framework_metric_indicator_models(api):
     })
 
     return framework_detailed_model, indicator_value_detailed_model
+
+
+def custom_framework_models(api):
+    custom_framework_model = api.model('CustomFramework', {
+        'framework_name': fields.String(required=True, description='Custom framework name'),
+        'preferences': fields.List(fields.Nested(api.model('Preferences', {
+            'indicator_id': fields.Integer(required=True, description='Indicator ID'),
+            'predefined_weight': fields.Float(required=True, description='Predefined weight of the indicator')
+        })), required=True, description='List of indicator preferences')
+    })
+
+    return custom_framework_model

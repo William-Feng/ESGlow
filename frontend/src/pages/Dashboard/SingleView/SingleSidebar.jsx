@@ -25,7 +25,7 @@ export const SidebarContext = createContext();
   selectedIndicators: Array that contains the selected indicators by ID
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
-function SingleSidebar() {
+function SingleSidebar({ token }) {
   const {
     selectedCompany,
     frameworksData,
@@ -374,6 +374,18 @@ function SingleSidebar() {
     return setSuccessMessage("Preferences saved successfully.");
   };
 
+  // To save the user's custom framework
+  const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
+  const [customFrameworkName, setCustomFrameworkName] = useState("");
+
+  const handleSaveFrameworkDialogToggle = () => {
+    setSaveFrameworkDialogOpen(!saveFrameworkDialogOpen);
+  };
+
+  const handleCustomFrameworkNameChange = (event) => {
+    setCustomFrameworkName(event.target.value);
+  };
+
   return (
     <Box sx={{ paddingBottom: 3 }}>
       <Snackbar
@@ -451,19 +463,20 @@ function SingleSidebar() {
           expanded={expanded.panel2}
           onChange={handleChange("panel2")}
         />
-        <YearsAccordion
+        <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
           onChange={handleChange("panel3")}
-          years={years}
-          handleYearChange={handleYearChange}
         />
-        <AdditionalIndicatorsAccordion
+        <YearsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel4}
           onChange={handleChange("panel4")}
+          years={years}
+          handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
+      {/* TODO: Abstract the buttons below into separate components */}
       {selectedFramework && (
         <Box
           sx={{
@@ -474,8 +487,54 @@ function SingleSidebar() {
           }}
         >
           <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
+            Update Score
           </Button>
+        </Box>
+      )}
+      {(selectedFramework || selectedExtraIndicators.length > 0) && (
+        <Box
+          sx={{
+            mt: 2,
+            ml: 2,
+            display: "flex",
+            justifyContent: "left",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveFrameworkDialogToggle}
+          >
+            Save Custom Framework
+          </Button>
+          <Dialog
+            open={saveFrameworkDialogOpen}
+            onClose={handleSaveFrameworkDialogToggle}
+          >
+            <DialogTitle>Save Custom Framework</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter a name for your custom framework.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="customFrameworkName"
+                label="Unique Custom Framework Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={customFrameworkName}
+                onChange={handleCustomFrameworkNameChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
+              {/* TODO: Add function 'handleSaveFramework' which triggers onClick to
+              execute the POST request that saves the custom framework into the database */}
+              <Button>Save</Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       )}
     </Box>

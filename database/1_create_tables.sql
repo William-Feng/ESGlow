@@ -78,10 +78,11 @@ CREATE TABLE metric_indicators (
 );
 
 CREATE TABLE custom_frameworks (
-    custom_framework_id SERIAL PRIMARY KEY,
+    custom_framework_id SERIAL,
     user_id             UUID REFERENCES users(user_id),
     framework_name      TEXT NOT NULL,
-)
+    PRIMARY KEY (custom_framework_id)
+);
 
 CREATE TABLE custom_framework_preferences (
     custom_framework_id INT REFERENCES custom_frameworks(custom_framework_id),

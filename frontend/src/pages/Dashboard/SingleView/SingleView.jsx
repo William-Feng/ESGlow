@@ -294,7 +294,7 @@ function SingleView({ token }) {
                   setSelectedExtraIndicators,
                 }}
               >
-                <SingleViewSidebar />
+                <SingleViewSidebar token={token} />
               </SingleViewContext.Provider>
             </Drawer>
             <SingleViewContext.Provider

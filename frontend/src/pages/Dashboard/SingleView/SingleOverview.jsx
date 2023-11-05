@@ -81,9 +81,10 @@ function SingleOverview() {
         framework.year === Math.max(...scoreList.map((f) => f.year))
     );
 
-    const year = filteredFrameworksScores[0].year; // Assuming all objects have the same year
+    // Assuming all objects have the same year
+    const year = filteredFrameworksScores[0].year;
     const toolTipStringIntro =
-      `The ESG Score was calculated by averaging` +
+      `The ESG Rating is calculated by averaging` +
       ` ${year} data of the following framework scores:\n`;
 
     const toolTipStringList = filteredFrameworksScores.map((item, index) => (

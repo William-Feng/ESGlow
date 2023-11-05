@@ -46,7 +46,8 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
         <Box>
           <Typography style={{ color: "red", paddingBottom: "24px" }}>
             Note that the following indicators are not included in the selected
-            framework and will not affect the ESG Score.
+            framework and will not affect the ESG Score. The modifiable weights
+            are only included to create a custom framework.
           </Typography>
           {remainingExtraIndicators.map((indicator) => (
             <Box
