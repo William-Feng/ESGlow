@@ -476,6 +476,7 @@ function SingleSidebar({ token }) {
           handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
+      {/* TODO: Abstract the buttons below into separate components */}
       {selectedFramework && (
         <Box
           sx={{
@@ -490,48 +491,52 @@ function SingleSidebar({ token }) {
           </Button>
         </Box>
       )}
-      <Box
-        sx={{
-          mt: 2,
-          ml: 2,
-          display: "flex",
-          justifyContent: "left",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSaveFrameworkDialogToggle}
+      {(selectedFramework || selectedExtraIndicators.length > 0) && (
+        <Box
+          sx={{
+            mt: 2,
+            ml: 2,
+            display: "flex",
+            justifyContent: "left",
+          }}
         >
-          Save Custom Framework
-        </Button>
-        <Dialog
-          open={saveFrameworkDialogOpen}
-          onClose={handleSaveFrameworkDialogToggle}
-        >
-          <DialogTitle>Save Custom Framework</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Please enter a name for your custom framework.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="customFrameworkName"
-              label="Unique Custom Framework Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={customFrameworkName}
-              onChange={handleCustomFrameworkNameChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
-            <Button>Save</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveFrameworkDialogToggle}
+          >
+            Save Custom Framework
+          </Button>
+          <Dialog
+            open={saveFrameworkDialogOpen}
+            onClose={handleSaveFrameworkDialogToggle}
+          >
+            <DialogTitle>Save Custom Framework</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter a name for your custom framework.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="customFrameworkName"
+                label="Unique Custom Framework Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={customFrameworkName}
+                onChange={handleCustomFrameworkNameChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
+              {/* TODO: Add function 'handleSaveFramework' which triggers onClick to
+              execute the POST request that saves the custom framework into the database */}
+              <Button>Save</Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      )}
     </Box>
   );
 }
