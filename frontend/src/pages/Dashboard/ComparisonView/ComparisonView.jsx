@@ -16,6 +16,8 @@ function ComparisonView({ token }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
 
+  console.log(selectedIndicators)
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -103,7 +105,15 @@ function ComparisonView({ token }) {
                 <ComparisonSidebar token={token} />
               </ComparisonViewContext.Provider>
             </Drawer>
-            <ComparisonDataDisplay />
+            <ComparisonViewContext.Provider
+              value={{
+                selectedCompanies,
+                selectedYear,
+                selectedIndicators,
+              }}
+            >
+              <ComparisonDataDisplay token={token}/>
+            </ComparisonViewContext.Provider>
           </Box>
         </Box>
       </Box>

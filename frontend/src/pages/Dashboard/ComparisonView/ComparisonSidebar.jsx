@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
 import YearsSingleSelectAccordion from "../Components/Accordion/YearsSingleSelectAccordion";
 import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
@@ -19,7 +19,6 @@ function ComparisonSidebar({ token }) {
   const [indicatorsList, setIndicatorsList] = useState([]);
 
   useEffect(() => {
-    console.log(selectedCompanies);
     // Fetch all available years
     fetch("/api/values/years", {
       headers: {

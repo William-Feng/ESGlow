@@ -6,10 +6,39 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { createContext, useContext, useEffect, useState } from "react";
+import { ComparisonViewContext } from "./ComparisonView";
+
 const dummyCompanies = ["Google", "Apple"];
 const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
 
-function ComparisonDataDisplay() {
+function ComparisonDataDisplay({ token }) {
+  const {
+    selectedCompanies,
+    selectedYear,
+    selectedIndicators,
+  } = useContext(ComparisonViewContext);
+
+  useEffect(() => {
+    // prepare the indicatorIds list
+    if (selectedCompanies && (selectedYear && selectedIndicators)) {
+      const indicatorIds = selectedIndicators.join(",");
+
+      selectedCompanies.forEach((c) => {
+        fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          // do something with the data
+          console.log(data)
+        })
+      })
+    }
+  }, [token, selectedCompanies, selectedYear, selectedIndicators]);
+
   return (
     <Box
       sx={{
