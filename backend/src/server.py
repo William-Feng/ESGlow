@@ -234,7 +234,7 @@ class IndicatorValues(Resource):
 
 # ===================================================================
 #
-# Company/Framework/Metric/Indicator Selection
+# Custom Frameworks
 #
 # ===================================================================
 
