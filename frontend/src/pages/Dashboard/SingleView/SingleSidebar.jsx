@@ -451,17 +451,17 @@ function SingleSidebar() {
           expanded={expanded.panel2}
           onChange={handleChange("panel2")}
         />
-        <YearsAccordion
+        <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
           onChange={handleChange("panel3")}
-          years={years}
-          handleYearChange={handleYearChange}
         />
-        <AdditionalIndicatorsAccordion
+        <YearsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel4}
           onChange={handleChange("panel4")}
+          years={years}
+          handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
       {selectedFramework && (
