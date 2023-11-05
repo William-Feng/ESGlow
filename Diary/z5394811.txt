@@ -35,3 +35,8 @@ Week 7
 Continued the refactor from Mel's initial work and created/rearranged new components to start Comparison View.
 Wrote child tasks under sprint 3 tickets to break down into manageable tasks and assign between Mel and I.
 Created the skeleton for the Comparison View so there is a holistic view of the page.
+
+Week 8
+Presented Demo B to the tutor and gained feedback. Recorded demo B video on behalf of team to send to client.
+Planned with group members in the tutorial to organize the order of tasks in tackling our next few tickets.
+Implemented the multi-select searchbar for Comparison View and put in UI fixes such as overcrowding the input tab.
