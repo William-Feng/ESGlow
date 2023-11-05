@@ -1,4 +1,4 @@
-from .database import db, Company, Industry, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator
+from .database import db, Company, Industry, Framework, Metric, Indicator, DataValue, CompanyFramework, FrameworkMetric, MetricIndicator, CustomFrameworks, CustomFrameworkPreferences
 from typing import List
 
 
@@ -275,6 +275,34 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
     response = {
         "message": "Indicator values for company successfully retrieved!",
         "values": indicator_values
+    }
+
+    return response, 200
+
+
+def create_custom_framework(data, user):
+    # Create new custom framework instance that is linked to the user
+    new_custom_framework = CustomFrameworks(
+        user_id=user.user_id,
+        framework_name=data['framework_name']
+    )
+    db.session.add(new_custom_framework)
+    db.session.commit()
+
+    # Add preferences to the custom framework
+    for pref in data['preferences']:
+        new_pref = CustomFrameworkPreferences(
+            custom_framework_id=new_custom_framework.custom_framework_id,
+            indicator_id=pref['indicator_id'],
+            predefined_weight=pref['predefined_weight']
+        )
+        db.session.add(new_pref)
+
+    db.session.commit()
+
+    response = {
+        "message": "Custom framework for user created successfully!",
+        "custom_framework_id": new_custom_framework.custom_framework_id
     }
 
     return response, 200
