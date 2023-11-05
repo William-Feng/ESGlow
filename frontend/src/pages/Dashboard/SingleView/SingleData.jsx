@@ -230,7 +230,11 @@ function SingleData() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.1em",
+                  }}
                 >
                   {extraRow.name}
                 </TableCell>
@@ -241,6 +245,7 @@ function SingleData() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.1em",
                     }}
                   >
                     {extraRow[year] || null}
