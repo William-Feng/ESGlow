@@ -30,3 +30,9 @@ Worked on saving the user selection of the sidebar elements and sending
 it to the data display section of the dashboard to calculate the adjusted 
 ESG score. Also refactored the sidebar, modularising the accordion 
 components to make the code less cluttered.
+
+Week 8
+Worked on improving the UI for weight adjustments (changing the weight chip 
+colour depending on whether it is unedited, edited, or deselected),  
+implementing the sidebar in the comparison view, and implementing adjustable 
+weights for the additional indicators.
