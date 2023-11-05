@@ -297,7 +297,6 @@ class CompanyValues(Resource):
 
 @api.route("/api/values/<int:industry_id>")
 class IndustryValues(Resource):
-    # TODO: Model has been removed for error
     @api.response(200, "Values for industry retrieved!")
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid industry id provided")

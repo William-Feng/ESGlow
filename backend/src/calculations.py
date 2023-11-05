@@ -252,7 +252,6 @@ def get_company_industry_ranking(company_id):
     company = db.session.query(Company).filter(Company.company_id == company_id).first()
     if not company:
         return {"message": "Invalid company id supplied!"}, 400
-    print(company)
 
     # Determine all industry rankings...
     company_scores = get_industry_company_values(company.industry_id)
@@ -305,5 +304,4 @@ def get_industry_company_values(industry_id):
             (company_key, framework_scores / len(company_value["frameworks"]))
         )
 
-    print(company_scores)
     return sorted(company_scores, key=lambda x: (-x[1], x[0]))
