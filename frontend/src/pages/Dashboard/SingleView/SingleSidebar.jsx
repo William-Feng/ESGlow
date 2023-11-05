@@ -201,17 +201,21 @@ function SingleSidebar({ token }) {
   const [newWeightInput, setNewWeightInput] = useState("");
   const [newWeightMetridId, setNewWeightMetridId] = useState("");
   const [newWeightIndicatorId, setNewWeightIndicatorId] = useState("");
+  const [newWeightAdditionalIndicatorId, setNewWeightAdditionalIndicatorId] =
+    useState("");
 
   const determineChipColor = (metric, indicator) => {
     if (metric) {
       const metricId = metric.metric_id;
       if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
+        // Return red if weight has been deselected
         return "error";
       } else if (
         Math.abs(
           metricWeights[metricId] - parseFloat(metric.predefined_weight)
         ) <= 0.0001
       ) {
+        // Return green if weight has not been edited
         return "success";
       } else {
         // Return orange if weight has been edited
@@ -234,10 +238,14 @@ function SingleSidebar({ token }) {
     }
   };
 
-  const openWeightDialog = (metricId, indicatorId) => {
+  const openWeightDialog = (metricId, indicatorId, isAdditionalIndicator) => {
     setIsDialogOpen(true);
-    setNewWeightMetridId(metricId);
-    setNewWeightIndicatorId(indicatorId);
+    if (isAdditionalIndicator) {
+      setNewWeightAdditionalIndicatorId(indicatorId);
+    } else {
+      setNewWeightMetridId(metricId);
+      setNewWeightIndicatorId(indicatorId);
+    }
   };
 
   const closeWeightDialog = () => {
@@ -249,16 +257,28 @@ function SingleSidebar({ token }) {
     setNewWeightInput(e.target.value);
   };
 
-  const handleWeightChange = (metricId, indicatorId, e) => {
+  const handleWeightChange = (
+    e,
+    metricId,
+    indicatorId,
+    isAdditionalIndicator
+  ) => {
     e.stopPropagation();
-    openWeightDialog(metricId, indicatorId);
+    openWeightDialog(metricId, indicatorId, isAdditionalIndicator);
   };
 
   const handleWeightSave = () => {
     if (parseFloat(newWeightInput) > 0 && parseFloat(newWeightInput) <= 1) {
-      if (newWeightMetridId) {
-        setMetricWeights((prevMetrics) => ({
-          ...prevMetrics,
+      if (newWeightAdditionalIndicatorId) {
+        setAdditionalIndicatorWeights((prevWeights) => ({
+          ...prevWeights,
+          [newWeightAdditionalIndicatorId]: parseFloat(
+            parseFloat(newWeightInput).toFixed(3)
+          ),
+        }));
+      } else if (newWeightMetridId) {
+        setMetricWeights((prevWeights) => ({
+          ...prevWeights,
           [newWeightMetridId]: parseFloat(
             parseFloat(newWeightInput).toFixed(3)
           ),
@@ -286,6 +306,9 @@ function SingleSidebar({ token }) {
   };
 
   const [remainingExtraIndicators, setRemainingExtraIndicators] = useState([]);
+  const [additionalIndicatorWeights, setAdditionalIndicatorWeights] = useState(
+    []
+  );
 
   // Discover the indicators that are not in the selected framework
   useEffect(() => {
@@ -300,6 +323,11 @@ function SingleSidebar({ token }) {
     );
 
     setRemainingExtraIndicators(filtered_indicators);
+    const filteredIndicatorWeights = {};
+    filtered_indicators.forEach((indicator) => {
+      filteredIndicatorWeights[indicator.indicator_id] = 0;
+    });
+    setAdditionalIndicatorWeights(filteredIndicatorWeights);
   }, [allIndicators, selectedFramework]);
 
   const handleExtraIndicatorsChange = (indicatorId) => {
@@ -450,6 +478,7 @@ function SingleSidebar({ token }) {
           selectedExtraIndicators,
           handleExtraIndicatorsChange,
           determineChipColor,
+          additionalIndicatorWeights,
         }}
       >
         <FrameworkAccordion

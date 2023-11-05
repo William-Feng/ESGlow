@@ -5,10 +5,13 @@ import {
   AccordionSummary,
   Box,
   Checkbox,
+  Chip,
   FormControlLabel,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
 function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
@@ -16,6 +19,8 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
     remainingExtraIndicators,
     selectedExtraIndicators,
     handleExtraIndicatorsChange,
+    additionalIndicatorWeights,
+    handleWeightChange,
   } = useContext(SidebarContext);
 
   return (
@@ -76,6 +81,24 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                   </Typography>
                 }
               />
+              <Box display="flex" alignItems="center" gap={1}>
+                <Tooltip title={indicator.description}>
+                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                </Tooltip>
+                <Chip
+                  label={`${
+                    additionalIndicatorWeights[indicator.indicator_id]
+                  }`}
+                  color={
+                    selectedExtraIndicators.includes(indicator.indicator_id)
+                      ? "primary"
+                      : "default"
+                  }
+                  onClick={(e) =>
+                    handleWeightChange(e, null, indicator.indicator_id, true)
+                  }
+                />
+              </Box>
             </Box>
           ))}
         </Box>
