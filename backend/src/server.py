@@ -25,6 +25,7 @@ from .user import login, register, get_user
 from .calculations import (
     get_company_graph_values,
     get_company_values,
+    get_indicator_graph_values,
     get_industry_values,
     get_company_industry_ranking,
 )
@@ -298,7 +299,6 @@ class CompanyValues(Resource):
 
 @api.route("/api/values/<int:industry_id>")
 class IndustryValues(Resource):
-    # TODO: Model has been removed for error
     @api.response(200, "Values for industry retrieved!")
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid industry id provided")
@@ -326,3 +326,16 @@ class GraphCompanyValues(Resource):
     @jwt_required()
     def get(self, company_id):
         return get_company_graph_values(company_id)
+    
+    
+
+@api.route("/api/values/graph/<int:indicator_id>")
+class GraphIndicatorValues(Resource):
+    @api.response(200, "Graph Values for Indicator Returned!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid indicator id provided")
+    # TODO: Remove and add again
+    #@jwt_required()
+    def get(self, indicator_id):
+        return get_indicator_graph_values(indicator_id)
+
