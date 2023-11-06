@@ -307,7 +307,6 @@ def get_industry_company_values(industry_id):
     return sorted(company_scores, key=lambda x: (-x[1], x[0]))
 
 
-
 def get_company_graph_values(company_id):
     """
     Given a company_id,
@@ -410,12 +409,10 @@ def get_company_year_scores(company):
 
 
 def get_all_years():
-    years = (
-        db.session.query(DataValue.year.distinct())
-        .all()
-    )
+    years = db.session.query(DataValue.year.distinct()).all()
 
     return sorted([year[0] for year in years])
+
 
 def get_indicator_graph_values(indicator_id):
     """
@@ -423,43 +420,49 @@ def get_indicator_graph_values(indicator_id):
 
     Args:
         indicator_id (number):
-        
+
     Return:
         {
             message: ,
             indicator_scores: [(year, score)]
-        }, 
+        },
         HTTP Status Code
     """
-    
+
     # Check if indicator id exists
-    indicator = db.session.query(Indicator).filter(Indicator.indicator_id == indicator_id).first()
+    indicator = (
+        db.session.query(Indicator)
+        .filter(Indicator.indicator_id == indicator_id)
+        .first()
+    )
     if not indicator:
-        return {
-            "message" : "Invalid indicator id provided"
-        }, 400
-        
-    
-    
+        return {"message": "Invalid indicator id provided"}, 400
+
     # This all years...
     years = get_all_years()
     # Get all data Values for indicator?
-    
+
     # For each year, find all DataValues with Indicator.
     indicator_years = []
     for year in years:
-        data_values = db.session.query(DataValue).filter(DataValue.year == year, DataValue.indicator_id == indicator_id).all()
+        data_values = (
+            db.session.query(DataValue)
+            .filter(DataValue.year == year, DataValue.indicator_id == indicator_id)
+            .all()
+        )
         if data_values:
             # Average the values
-            score = sum(data_value.rating for data_value in data_values) / len(data_values)
+            score = sum(data_value.rating for data_value in data_values) / len(
+                data_values
+            )
             indicator_years.append((year, score))
-        
+
     return {
-        "message" : "Graph Values for Indicator Returned!",
-        "indicator_scores" : indicator_years
+        "message": "Graph Values for Indicator Returned!",
+        "indicator_scores": indicator_years,
     }, 200
-    
-    
+
+
 def get_years():
     """
     Retrieve all unique years as a list of years.
