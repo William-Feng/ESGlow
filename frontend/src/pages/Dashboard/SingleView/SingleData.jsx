@@ -63,7 +63,7 @@ function SingleData() {
               if (matchingIndicator) {
                 // Calculate pro-rata adjusted indicator weight
                 const adjustedIndicatorWeight =
-                  matchingIndicator.value * indicator.indicator_weight /
+                  (matchingIndicator.value * indicator.indicator_weight) /
                   metric.metric_weight_total;
 
                 return accumulator + adjustedIndicatorWeight;
@@ -76,7 +76,7 @@ function SingleData() {
 
           // Calculate pro-rata adjusted metric weight
           const adjustedMetricWeight =
-            metricScore * metric.metric_weight / totalMetricWeight;
+            (metricScore * metric.metric_weight) / totalMetricWeight;
 
           return adjustedMetricWeight;
         });

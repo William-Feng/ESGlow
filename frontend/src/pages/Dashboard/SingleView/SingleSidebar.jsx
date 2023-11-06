@@ -376,18 +376,14 @@ function SingleSidebar({ token }) {
             Please enter a value with at most 3 decimal places.
           </DialogContentText>
           <TextField
-            error={
-              isNaN(newWeightInput)
-            }
+            error={isNaN(newWeightInput)}
             helperText={
-              isNaN(newWeightInput)
-                ? "Please enter a valid number."
-                : ""
+              isNaN(newWeightInput) ? "Please enter a valid number." : ""
             }
             value={newWeightInput}
             onChange={handleNewWeightChange}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 e.preventDefault();
                 handleWeightSave();
               }
