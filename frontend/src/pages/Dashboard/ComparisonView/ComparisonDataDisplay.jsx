@@ -9,9 +9,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
-const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
-
-function ComparisonDataDisplay() {
+function ComparisonDataDisplay({ token }) {
   const {
     selectedCompanies,
     selectedYear,
@@ -20,7 +18,51 @@ function ComparisonDataDisplay() {
 
   const [currentData, setCurrentData] = useState({})
 
-  // console.log(currentData)
+  useEffect(() => {
+    if ((!selectedYear || !selectedCompanies) || selectedIndicators.length === 0) {
+      return;
+    }
+    const indicatorIds = selectedIndicators.join(",");
+    const newData = {};
+
+    const promisesList = [];
+    
+    selectedCompanies.forEach((c) => {
+      promisesList.push(
+        fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const dataValues = data.values
+            dataValues.forEach((indicatorInfo) => {
+              if (!newData[indicatorInfo.indicator_id]) {
+                newData[indicatorInfo.indicator_id] = {
+                  name: indicatorInfo.indicator_name,
+                };
+              }
+              newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching indicator values for company:", error);
+          })
+      )
+    });
+
+    Promise.all(promisesList)
+    .then(() => {
+      setCurrentData(newData)
+    })
+    .catch((error) => {
+      console.error("Error fetching all indicator values:", error);
+    })
+
+  }, [token, selectedCompanies, selectedYear, selectedIndicators]);
+
+
 
   return (
     <Box

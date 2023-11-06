@@ -16,7 +16,6 @@ function ComparisonView({ token }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState([]);       // TODO: send it to sidebar
-  const [companyAllIndicatorValues, setCompanyAllIndicatorValues] = useState({});
 
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {
@@ -29,41 +28,7 @@ function ComparisonView({ token }) {
     .then((data) => {
       setIndicatorsList(data.indicators);
     });
-  }, [])
-
-  // useEffect(() => {
-  //   // prepare the indicatorIds list
-  //   if ((selectedYear && selectedCompanies) && indicatorsList.length > 0) {
-  //     const indicatorIds = indicatorsList.join(",");
-  //     const newData = {}; // Create a copy of the currentData object
-
-  //     selectedCompanies.forEach((c) => {
-  //       fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //           const dataValues = data.values
-  //           // Assume that data is an object with indicator IDs as keys and scores
-  //           // Update newData with the fetched data
-  //           dataValues.forEach((indicatorInfo) => {
-  //             if (!newData[indicatorInfo.indicator_id]) {
-  //               newData[indicatorInfo.indicator_id] = {
-  //                 name: indicatorInfo.indicator_name,
-  //               };
-  //             }
-  //             newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error fetching indicator values for company:", error);
-  //         });
-  //     });
-  //   }
-
-  // }, [token, selectedCompanies, selectedYear, indicatorsList]);
+  }, [token])
 
   return (
     <>
