@@ -24,7 +24,7 @@ function ComparisonDataDisplay({ token }) {
     // prepare the indicatorIds list
     if ((selectedYear && selectedCompanies) && selectedIndicators.length > 0) {
       const indicatorIds = selectedIndicators.join(",");
-      const newData = { ...currentData }; // Create a copy of the currentData object
+      const newData = {}; // Create a copy of the currentData object
 
       selectedCompanies.forEach((c) => {
         fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
@@ -34,16 +34,16 @@ function ComparisonDataDisplay({ token }) {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data.values)
+            const dataValues = data.values
             // Assume that data is an object with indicator IDs as keys and scores
             // Update newData with the fetched data
-            data.values.forEach((indicatorInfo) => {
+            dataValues.forEach((indicatorInfo) => {
               if (!newData[indicatorInfo.indicator_id]) {
                 newData[indicatorInfo.indicator_id] = {
                   name: indicatorInfo.indicator_name,
                 };
               }
-              newData[indicatorInfo.indicator_id][c.company_id] = data[indicatorInfo.value];
+              newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
             });
 
             // Set newData in the state
@@ -108,8 +108,7 @@ function ComparisonDataDisplay({ token }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* TODO: We need to repeat this indicator info for all the selected years */}
-            {dummyData.map((row, index) => (
+            {Object.entries(currentData).map(([index, row]) => (
               <TableRow
                 key={index}
                 sx={{
@@ -129,7 +128,6 @@ function ComparisonDataDisplay({ token }) {
                 >
                   {row.name}
                 </TableCell>
-                {/* TODO: This should be the row's company data for the specified year */}
                 {selectedCompanies.map((company) => (
                   <TableCell
                     key={company.company_id}
