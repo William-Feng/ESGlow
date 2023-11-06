@@ -5,6 +5,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
@@ -19,7 +20,7 @@ function ComparisonDataDisplay({ token }) {
   const [currentData, setCurrentData] = useState({})
 
   useEffect(() => {
-    if ((!selectedYear || !selectedCompanies) || selectedIndicators.length === 0) {
+    if ((!selectedYear || selectedCompanies.length === 0) || selectedIndicators.length === 0) {
       return;
     }
     const indicatorIds = selectedIndicators.join(",");
@@ -62,7 +63,28 @@ function ComparisonDataDisplay({ token }) {
 
   }, [token, selectedCompanies, selectedYear, selectedIndicators]);
 
-
+  if (selectedCompanies.length === 0 || !selectedYear || selectedIndicators.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          bgcolor: "#f5f5f5",
+        }}
+      >
+        <Typography variant="h6" color="text.secondary">
+          {selectedCompanies.length === 0
+            ? "Please select one or more companies to see the ESG data."
+            : !selectedYear
+            ? "Please select a year to see the ESG data."
+            : "Please select one or more indicators to see the ESG data"
+          }
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
