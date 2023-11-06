@@ -77,22 +77,16 @@ CREATE TABLE metric_indicators (
     PRIMARY KEY (metric_id, indicator_id)
 );
 
-CREATE TABLE user_metric_preferences (
-    preference_id       SERIAL,
+CREATE TABLE custom_frameworks (
+    custom_framework_id SERIAL,
     user_id             UUID REFERENCES users(user_id),
-    framework_id        INT REFERENCES frameworks(framework_id),
-    metric_id           INT REFERENCES metrics(metric_id),
-    custom_weight       FLOAT CHECK (custom_weight >= 0 AND custom_weight <= 1),
-    saved_date          DATE,
-    PRIMARY KEY (preference_id)
+    framework_name      TEXT NOT NULL,
+    PRIMARY KEY (custom_framework_id)
 );
 
-CREATE TABLE user_indicator_preferences (
-    preference_id       SERIAL,
-    user_id             UUID REFERENCES users(user_id),
-    metric_id           INT REFERENCES metrics(metric_id),
+CREATE TABLE custom_framework_preferences (
+    custom_framework_id INT REFERENCES custom_frameworks(custom_framework_id),
     indicator_id        INT REFERENCES indicators(indicator_id),
-    custom_weight       FLOAT CHECK (custom_weight >= 0 AND custom_weight <= 1),
-    saved_date          DATE,
-    PRIMARY KEY (preference_id)
-);
+    weight              FLOAT CHECK (weight >= 0 AND weight <= 1),
+    PRIMARY KEY (custom_framework_id, indicator_id)
+)

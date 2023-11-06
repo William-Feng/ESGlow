@@ -8,9 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { PageContext } from "../Dashboard";
+import { SingleViewContext } from "./SingleView";
 
-function SingleViewData() {
+function SingleData() {
   const {
     selectedCompany,
     selectedFramework,
@@ -19,7 +19,7 @@ function SingleViewData() {
     savedWeights,
     allIndicatorValues,
     selectedExtraIndicators,
-  } = useContext(PageContext);
+  } = useContext(SingleViewContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
 
   const validIndicatorIds = selectedFramework
@@ -153,7 +153,7 @@ function SingleViewData() {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  fontSize: "1.2em",
+                  fontSize: "1.25em",
                   background: "#D1EFFF",
                   borderRight: "1px solid",
                   borderColor: "divider",
@@ -168,11 +168,11 @@ function SingleViewData() {
                   key={year}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "1.2em",
+                    fontSize: "1.25em",
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "5px",
+                    padding: "10px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
@@ -195,7 +195,11 @@ function SingleViewData() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.1em",
+                  }}
                 >
                   {row.name}
                 </TableCell>
@@ -206,6 +210,7 @@ function SingleViewData() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.1em",
                     }}
                   >
                     {row[year] || null}
@@ -225,7 +230,11 @@ function SingleViewData() {
                 }}
               >
                 <TableCell
-                  sx={{ borderRight: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    borderRight: "1px solid",
+                    borderColor: "divider",
+                    fontSize: "1.1em",
+                  }}
                 >
                   {extraRow.name}
                 </TableCell>
@@ -236,6 +245,7 @@ function SingleViewData() {
                       borderRight: "1px solid",
                       borderColor: "divider",
                       textAlign: "center",
+                      fontSize: "1.1em",
                     }}
                   >
                     {extraRow[year] || null}
@@ -264,7 +274,7 @@ function SingleViewData() {
           </>
         ) : selectedFramework ? (
           <Typography variant="h5" color="text.secondary">
-            Please make sure selections are saved.
+            Please make sure 'UPDATE SCORE' is clicked.
           </Typography>
         ) : null}
       </Box>
@@ -272,4 +282,4 @@ function SingleViewData() {
   );
 }
 
-export default SingleViewData;
+export default SingleData;
