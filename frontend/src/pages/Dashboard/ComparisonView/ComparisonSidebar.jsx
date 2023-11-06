@@ -19,6 +19,14 @@ function ComparisonSidebar({ token }) {
   const [yearsList, setYearsList] = useState([]);
 
   useEffect(() => {
+    // close accordions upon clearing companies selection
+    if (selectedCompanies.length === 0) {
+      setExpanded({
+        panel1: false,
+        panel2: false
+      })
+      return
+    }
     // Fetch all available years
     fetch("/api/values/years", {
       headers: {
@@ -34,6 +42,7 @@ function ComparisonSidebar({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
+    
   }, [token, selectedCompanies]);
 
   const [expanded, setExpanded] = useState({
@@ -86,20 +95,6 @@ function ComparisonSidebar({ token }) {
           onChange={handleChange("panel2")}
         />
       </ComparisonSidebarContext.Provider>
-      {/* {selectedYear && (
-        <Box
-          sx={{
-            mt: 2,
-            mr: 2,
-            display: "flex",
-            justifyContent: "right",
-          }}
-        >
-          <Button variant="contained" color="primary">
-            Save
-          </Button>
-        </Box>
-      )} */}
     </Box>
   );
 }
