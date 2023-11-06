@@ -3,7 +3,7 @@ import Header from "../Header";
 import ComparisonSearchbar from "./ComparisonSearchbar";
 import ComparisonSidebar from "./ComparisonSidebar";
 import ComparisonDataDisplay from "./ComparisonDataDisplay";
-import { useContext, useState, createContext } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 import { PageContext } from "../Dashboard";
 import ComparisonOverview from "./ComparisonOverview";
 
@@ -13,6 +13,30 @@ function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
   const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedIndicators, setSelectedIndicators] = useState([]);
+  const [indicatorsList, setIndicatorsList] = useState([]);       // TODO: send it to sidebar
+
+  // call fetch on all indicator IDs only once upon load
+  useEffect(() => {
+  fetch("/api/indicators/all", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setIndicatorsList(data.indicators);
+    });
+  }, [token])
+
+  // clearing company searchbar clears the sidebar selected
+  useEffect(() => {
+    if (selectedCompanies.length === 0) {
+      setSelectedYear(null)
+      setSelectedIndicators([])
+    }
+  }, [token, selectedCompanies])
 
   return (
     <>
@@ -89,9 +113,28 @@ function ComparisonView({ token }) {
               variant="permanent"
               anchor="left"
             >
-              <ComparisonSidebar />
+              <ComparisonViewContext.Provider
+                value={{
+                  selectedCompanies,
+                  selectedYear,
+                  setSelectedYear,
+                  selectedIndicators,
+                  setSelectedIndicators,
+                  indicatorsList
+                }}
+              >
+                <ComparisonSidebar token={token} />
+              </ComparisonViewContext.Provider>
             </Drawer>
-            <ComparisonDataDisplay />
+            <ComparisonViewContext.Provider
+              value={{
+                selectedCompanies,
+                selectedYear,
+                selectedIndicators,
+              }}
+            >
+              <ComparisonDataDisplay token={token}/>
+            </ComparisonViewContext.Provider>
           </Box>
         </Box>
       </Box>

@@ -5,11 +5,87 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
-const dummyCompanies = ["Google", "Apple"];
-const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
+import { useContext, useEffect, useState } from "react";
+import { ComparisonViewContext } from "./ComparisonView";
 
-function ComparisonDataDisplay() {
+function ComparisonDataDisplay({ token }) {
+  const {
+    selectedCompanies,
+    selectedYear,
+    selectedIndicators,
+  } = useContext(ComparisonViewContext);
+
+  const [currentData, setCurrentData] = useState({})
+
+  useEffect(() => {
+    if ((!selectedYear || selectedCompanies.length === 0) || selectedIndicators.length === 0) {
+      return;
+    }
+    const indicatorIds = selectedIndicators.join(",");
+    const newData = {};
+
+    const promisesList = [];
+    
+    selectedCompanies.forEach((c) => {
+      promisesList.push(
+        fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const dataValues = data.values
+            dataValues.forEach((indicatorInfo) => {
+              if (!newData[indicatorInfo.indicator_id]) {
+                newData[indicatorInfo.indicator_id] = {
+                  name: indicatorInfo.indicator_name,
+                };
+              }
+              newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching indicator values for company:", error);
+          })
+      )
+    });
+
+    Promise.all(promisesList)
+    .then(() => {
+      setCurrentData(newData)
+    })
+    .catch((error) => {
+      console.error("Error fetching all indicator values:", error);
+    })
+
+  }, [token, selectedCompanies, selectedYear, selectedIndicators]);
+
+  if (selectedCompanies.length === 0 || !selectedYear || selectedIndicators.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          bgcolor: "#f5f5f5",
+        }}
+      >
+        <Typography variant="h6" color="text.secondary">
+          {selectedCompanies.length === 0
+            ? "Please select one or more companies to see the ESG data."
+            : !selectedYear
+            ? "Please select a year to see the ESG data."
+            : "Please select one or more indicators to see the ESG data"
+          }
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -40,10 +116,9 @@ function ComparisonDataDisplay() {
               >
                 Indicator
               </TableCell>
-              {/* TODO: We need another column to display the year */}
-              {dummyCompanies.map((company) => (
+              {selectedCompanies.map((company) => (
                 <TableCell
-                  key={company}
+                  key={company.company_id}
                   sx={{
                     fontWeight: "bold",
                     fontSize: "1.25em",
@@ -55,14 +130,13 @@ function ComparisonDataDisplay() {
                     textAlign: "center",
                   }}
                 >
-                  {company}
+                  {company.name}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* TODO: We need to repeat this indicator info for all the selected years */}
-            {dummyData.map((row, index) => (
+            {Object.entries(currentData).map(([index, row]) => (
               <TableRow
                 key={index}
                 sx={{
@@ -82,10 +156,9 @@ function ComparisonDataDisplay() {
                 >
                   {row.name}
                 </TableCell>
-                {/* TODO: This should be the row's company data for the specified year */}
-                {dummyCompanies.map((year) => (
+                {selectedCompanies.map((company) => (
                   <TableCell
-                    key={year}
+                    key={company.company_id}
                     sx={{
                       borderRight: "1px solid",
                       borderColor: "divider",
@@ -93,7 +166,7 @@ function ComparisonDataDisplay() {
                       fontSize: "1.1em",
                     }}
                   >
-                    {row[year] || null}
+                    {row[company.company_id] || null}
                   </TableCell>
                 ))}
               </TableRow>
