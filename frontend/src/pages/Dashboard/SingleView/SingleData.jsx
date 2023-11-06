@@ -36,6 +36,21 @@ function SingleData() {
   useEffect(() => {
     if (savedWeights.metrics) {
       function calculateScore(savedWeights, filteredData) {
+        // Calculate the total sum of metric weights
+        const totalMetricWeight = savedWeights.metrics.reduce(
+          (accumulator, metric) => accumulator + metric.metric_weight,
+          0
+        );
+
+        // Calculate the total sum of indicator weights for each metric
+        savedWeights.metrics.forEach((metric) => {
+          metric.metric_weight_total = metric.indicators.reduce(
+            (accumulator, indicator) =>
+              accumulator + indicator.indicator_weight,
+            0
+          );
+        });
+
         const metricScores = savedWeights.metrics.map((metric) => {
           const metricScore = metric.indicators.reduce(
             (accumulator, indicator) => {
@@ -46,10 +61,12 @@ function SingleData() {
               );
 
               if (matchingIndicator) {
-                return (
-                  accumulator +
-                  matchingIndicator.value * indicator.indicator_weight
-                );
+                // Calculate pro-rata adjusted indicator weight
+                const adjustedIndicatorWeight =
+                  matchingIndicator.value * indicator.indicator_weight /
+                  metric.metric_weight_total;
+
+                return accumulator + adjustedIndicatorWeight;
               }
 
               return accumulator;
@@ -57,13 +74,18 @@ function SingleData() {
             0
           );
 
-          return metricScore * metric.metric_weight;
+          // Calculate pro-rata adjusted metric weight
+          const adjustedMetricWeight =
+            metricScore * metric.metric_weight / totalMetricWeight;
+
+          return adjustedMetricWeight;
         });
 
         const finalScore = metricScores.reduce(
           (accumulator, metricScore) => accumulator + metricScore,
           0
         );
+
         return finalScore;
       }
       setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
