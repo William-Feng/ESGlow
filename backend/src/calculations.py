@@ -460,3 +460,19 @@ def get_indicator_graph_values(indicator_id):
         "message" : "Graph Values for Indicator Returned!",
         "indicator_scores" : indicator_years
     }, 200
+    
+    
+def get_years():
+    """
+    Retrieve all unique years as a list of years.
+    Return:
+        {
+            message: ,
+            years: [2018,2019...]
+        }
+    """
+
+    years = sorted(
+        [year[0] for year in db.session.query(DataValue.year.distinct()).all()]
+    )
+    return {"message": "All years retrieved!", "years": years}

@@ -11,11 +11,11 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import { PageContext } from "../Dashboard";
-import FrameworkAccordion from "../Accordion/FrameworkAccordion";
-import MetricsIndicatorsAccordion from "../Accordion/MetricsIndicatorsAccordion";
-import YearsAccordion from "../Accordion/YearsAccordion";
-import AdditionalIndicatorsAccordion from "../Accordion/AdditionalIndicatorsAccordion";
+import { SingleViewContext } from "./SingleView";
+import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
+import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
+import YearsAccordion from "../Components/Accordion/YearsAccordion";
+import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 
 export const SidebarContext = createContext();
 
@@ -25,7 +25,7 @@ export const SidebarContext = createContext();
   selectedIndicators: Array that contains the selected indicators by ID
     -> selectedIndicators array CHANGES with user selection from the sidebar
 */
-function SingleViewSidebar() {
+function SingleSidebar({ token }) {
   const {
     selectedCompany,
     frameworksData,
@@ -40,7 +40,7 @@ function SingleViewSidebar() {
     allIndicators,
     selectedExtraIndicators,
     setSelectedExtraIndicators,
-  } = useContext(PageContext);
+  } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
   // Note that selected extra indicators remain the same if a new framework is selected
@@ -163,8 +163,10 @@ function SingleViewSidebar() {
     setSelectedMetrics((prevMetrics) => {
       if (!checked) {
         return prevMetrics.filter((m) => m !== metric);
-      } else {
+      } else if (checked && !prevMetrics.includes(metric)) {
         return [...prevMetrics, metric];
+      } else {
+        return [...prevMetrics];
       }
     });
 
@@ -200,6 +202,38 @@ function SingleViewSidebar() {
   const [newWeightMetridId, setNewWeightMetridId] = useState("");
   const [newWeightIndicatorId, setNewWeightIndicatorId] = useState("");
 
+  const determineChipColor = (metric, indicator) => {
+    if (metric) {
+      const metricId = metric.metric_id;
+      if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
+        return "error";
+      } else if (
+        Math.abs(
+          metricWeights[metricId] - parseFloat(metric.predefined_weight)
+        ) <= 0.0001
+      ) {
+        return "success";
+      } else {
+        // Return orange if weight has been edited
+        return "warning";
+      }
+    } else if (indicator) {
+      const indicatorId = indicator.indicator_id;
+      if (!selectedIndicators.includes(indicatorId)) {
+        return "error";
+      } else if (
+        Math.abs(
+          indicatorWeights[indicatorId] -
+            parseFloat(indicator.predefined_weight)
+        ) <= 0.0001
+      ) {
+        return "success";
+      } else {
+        return "warning";
+      }
+    }
+  };
+
   const openWeightDialog = (metricId, indicatorId) => {
     setIsDialogOpen(true);
     setNewWeightMetridId(metricId);
@@ -207,6 +241,7 @@ function SingleViewSidebar() {
   };
 
   const closeWeightDialog = () => {
+    setNewWeightInput("");
     setIsDialogOpen(false);
   };
 
@@ -339,6 +374,18 @@ function SingleViewSidebar() {
     return setSuccessMessage("Preferences saved successfully.");
   };
 
+  // To save the user's custom framework
+  const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
+  const [customFrameworkName, setCustomFrameworkName] = useState("");
+
+  const handleSaveFrameworkDialogToggle = () => {
+    setSaveFrameworkDialogOpen(!saveFrameworkDialogOpen);
+  };
+
+  const handleCustomFrameworkNameChange = (event) => {
+    setCustomFrameworkName(event.target.value);
+  };
+
   return (
     <Box sx={{ paddingBottom: 3 }}>
       <Snackbar
@@ -399,34 +446,37 @@ function SingleViewSidebar() {
           handleIndicatorChange,
           indicatorWeights,
           toggleMetric,
-          years,
-          handleYearChange,
           remainingExtraIndicators,
           selectedExtraIndicators,
           handleExtraIndicatorsChange,
+          determineChipColor,
         }}
       >
         <FrameworkAccordion
           disabled={!frameworksData}
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
+          frameworksData={frameworksData}
         />
         <MetricsIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel2}
           onChange={handleChange("panel2")}
         />
-        <YearsAccordion
+        <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
           onChange={handleChange("panel3")}
         />
-        <AdditionalIndicatorsAccordion
+        <YearsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel4}
           onChange={handleChange("panel4")}
+          years={years}
+          handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
+      {/* TODO: Abstract the buttons below into separate components */}
       {selectedFramework && (
         <Box
           sx={{
@@ -437,12 +487,58 @@ function SingleViewSidebar() {
           }}
         >
           <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
+            Update Score
           </Button>
+        </Box>
+      )}
+      {(selectedFramework || selectedExtraIndicators.length > 0) && (
+        <Box
+          sx={{
+            mt: 2,
+            ml: 2,
+            display: "flex",
+            justifyContent: "left",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveFrameworkDialogToggle}
+          >
+            Save Custom Framework
+          </Button>
+          <Dialog
+            open={saveFrameworkDialogOpen}
+            onClose={handleSaveFrameworkDialogToggle}
+          >
+            <DialogTitle>Save Custom Framework</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter a name for your custom framework.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="customFrameworkName"
+                label="Unique Custom Framework Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={customFrameworkName}
+                onChange={handleCustomFrameworkNameChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
+              {/* TODO: Add function 'handleSaveFramework' which triggers onClick to
+              execute the POST request that saves the custom framework into the database */}
+              <Button>Save</Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       )}
     </Box>
   );
 }
 
-export default SingleViewSidebar;
+export default SingleSidebar;

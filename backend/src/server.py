@@ -11,6 +11,7 @@ from .frameworks import (
     get_framework_info_from_company,
     get_indicator_values,
     get_company_info,
+    create_custom_framework
 )
 from .models import (
     user_authentication_models,
@@ -19,9 +20,11 @@ from .models import (
     specific_industry_company_models,
     framework_metric_indicator_models,
     value_calculations,
+    custom_framework_models
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
+<<<<<<< HEAD
 from .calculations import (
     get_company_graph_values,
     get_company_values,
@@ -29,6 +32,9 @@ from .calculations import (
     get_industry_values,
     get_company_industry_ranking,
 )
+=======
+from .calculations import get_company_values, get_industry_values, get_years
+>>>>>>> 441cf6070bce8c2922a85b4e72c6feef713728b4
 
 api = Api()
 jwt = JWTManager()
@@ -274,10 +280,38 @@ class IndicatorValues(Resource):
 
 # ===================================================================
 #
-# Company/Framework Calculations
+# Custom Frameworks
 #
 # ===================================================================
 
+custom_framework_model = custom_framework_models(api)
+
+
+@api.route("/api/custom-frameworks")
+class CustomFrameworkList(Resource):
+    @api.expect(custom_framework_model, validate=True)
+    @api.response(201, 'Custom framework for user created successfully!')
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'Invalid custom framework input.')
+    @jwt_required()
+    def post(self):
+
+        data = api.payload
+        email = get_jwt_identity()
+
+        # Verify user exists in backend.
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "User not found."}, 400
+
+        return create_custom_framework(data, user)
+
+
+# ===================================================================
+#
+# Overview Values Calculation
+#
+# ===================================================================
 
 company_values_model = value_calculations(api)
 
@@ -335,7 +369,14 @@ class GraphIndicatorValues(Resource):
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid indicator id provided")
     # TODO: Remove and add again
-    #@jwt_required()
+    @jwt_required()
     def get(self, indicator_id):
         return get_indicator_graph_values(indicator_id)
 
+@api.route("/api/values/years")
+class AllYears(Resource):
+    @api.response(200, "All years retrieved!")
+    @api.response(401, "Authentication required. Please log in.")
+    @jwt_required()
+    def get(self):
+        return get_years()
