@@ -30,6 +30,14 @@ function ComparisonView({ token }) {
     });
   }, [token])
 
+  // clearing company searchbar clears the sidebar selected
+  useEffect(() => {
+    if (selectedCompanies.length === 0) {
+      setSelectedYear(null)
+      setSelectedIndicators([])
+    }
+  }, [token, selectedCompanies])
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
