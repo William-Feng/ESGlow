@@ -13,10 +13,10 @@ function ComparisonSidebar({ token }) {
     setSelectedYear,
     selectedIndicators,
     setSelectedIndicators,
+    indicatorsList
   } = useContext(ComparisonViewContext);
 
   const [yearsList, setYearsList] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]);
 
   useEffect(() => {
     // Fetch all available years
@@ -33,17 +33,6 @@ function ComparisonSidebar({ token }) {
         if (error !== "No years found") {
           console.error("There was an error fetching the years.", error);
         }
-      });
-
-    // Fetch all available indicators
-    fetch("/api/indicators/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setIndicatorsList(data.indicators);
       });
   }, [token, selectedCompanies]);
 

@@ -48,7 +48,7 @@ function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
         >
           {yearsList &&
             yearsList.map((year) => (
-              <FormControl fullWidth>
+              <FormControl fullWidth key={year}>
                 <RadioGroup
                   aria-labelledby="demo-controlled-radio-buttons-group"
                   name="controlled-radio-buttons-group"

@@ -11,7 +11,7 @@ import { ComparisonViewContext } from "./ComparisonView";
 
 const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
 
-function ComparisonDataDisplay({ token }) {
+function ComparisonDataDisplay() {
   const {
     selectedCompanies,
     selectedYear,
@@ -20,43 +20,7 @@ function ComparisonDataDisplay({ token }) {
 
   const [currentData, setCurrentData] = useState({})
 
-  useEffect(() => {
-    // prepare the indicatorIds list
-    if ((selectedYear && selectedCompanies) && selectedIndicators.length > 0) {
-      const indicatorIds = selectedIndicators.join(",");
-      const newData = {}; // Create a copy of the currentData object
-
-      selectedCompanies.forEach((c) => {
-        fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const dataValues = data.values
-            // Assume that data is an object with indicator IDs as keys and scores
-            // Update newData with the fetched data
-            dataValues.forEach((indicatorInfo) => {
-              if (!newData[indicatorInfo.indicator_id]) {
-                newData[indicatorInfo.indicator_id] = {
-                  name: indicatorInfo.indicator_name,
-                };
-              }
-              newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
-            });
-
-            // Set newData in the state
-            setCurrentData(newData);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
-      });
-    }
-  }, [token, selectedCompanies, selectedYear, selectedIndicators]);
-
-  console.log(currentData)
+  // console.log(currentData)
 
   return (
     <Box
