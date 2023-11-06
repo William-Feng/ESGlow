@@ -6,10 +6,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
-const dummyCompanies = ["Google", "Apple"];
 const dummyData = [{ name: "Indicator 1", Google: 90, Apple: 100 }];
 
 function ComparisonDataDisplay({ token }) {
@@ -19,10 +18,13 @@ function ComparisonDataDisplay({ token }) {
     selectedIndicators,
   } = useContext(ComparisonViewContext);
 
+  const [currentData, setCurrentData] = useState({})
+
   useEffect(() => {
     // prepare the indicatorIds list
-    if (selectedCompanies && (selectedYear && selectedIndicators)) {
+    if ((selectedYear && selectedCompanies) && selectedIndicators.length > 0) {
       const indicatorIds = selectedIndicators.join(",");
+      const newData = { ...currentData }; // Create a copy of the currentData object
 
       selectedCompanies.forEach((c) => {
         fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
@@ -30,14 +32,31 @@ function ComparisonDataDisplay({ token }) {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then((response) => response.json())
-        .then((data) => {
-          // do something with the data
-          console.log(data)
-        })
-      })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.values)
+            // Assume that data is an object with indicator IDs as keys and scores
+            // Update newData with the fetched data
+            data.values.forEach((indicatorInfo) => {
+              if (!newData[indicatorInfo.indicator_id]) {
+                newData[indicatorInfo.indicator_id] = {
+                  name: indicatorInfo.indicator_name,
+                };
+              }
+              newData[indicatorInfo.indicator_id][c.company_id] = data[indicatorInfo.value];
+            });
+
+            // Set newData in the state
+            setCurrentData(newData);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      });
     }
   }, [token, selectedCompanies, selectedYear, selectedIndicators]);
+
+  console.log(currentData)
 
   return (
     <Box
@@ -69,10 +88,9 @@ function ComparisonDataDisplay({ token }) {
               >
                 Indicator
               </TableCell>
-              {/* TODO: We need another column to display the year */}
-              {dummyCompanies.map((company) => (
+              {selectedCompanies.map((company) => (
                 <TableCell
-                  key={company}
+                  key={company.company_id}
                   sx={{
                     fontWeight: "bold",
                     fontSize: "1.25em",
@@ -84,7 +102,7 @@ function ComparisonDataDisplay({ token }) {
                     textAlign: "center",
                   }}
                 >
-                  {company}
+                  {company.name}
                 </TableCell>
               ))}
             </TableRow>
@@ -112,9 +130,9 @@ function ComparisonDataDisplay({ token }) {
                   {row.name}
                 </TableCell>
                 {/* TODO: This should be the row's company data for the specified year */}
-                {dummyCompanies.map((year) => (
+                {selectedCompanies.map((company) => (
                   <TableCell
-                    key={year}
+                    key={company.company_id}
                     sx={{
                       borderRight: "1px solid",
                       borderColor: "divider",
@@ -122,7 +140,7 @@ function ComparisonDataDisplay({ token }) {
                       fontSize: "1.1em",
                     }}
                   >
-                    {row[year] || null}
+                    {row[company.company_id] || null}
                   </TableCell>
                 ))}
               </TableRow>

@@ -16,7 +16,7 @@ function ComparisonView({ token }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
 
-  console.log(selectedIndicators)
+  // console.log(selectedIndicators)
 
   return (
     <>
