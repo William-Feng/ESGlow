@@ -423,6 +423,8 @@ function SingleSidebar({ token }) {
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
   const [customFrameworkName, setCustomFrameworkName] = useState("");
+  const [customFrameworkDescription, setCustomFrameworkDescription] =
+    useState("");
 
   const handleSaveFrameworkDialogToggle = () => {
     setSaveFrameworkDialogOpen(!saveFrameworkDialogOpen);
@@ -430,6 +432,10 @@ function SingleSidebar({ token }) {
 
   const handleCustomFrameworkNameChange = (event) => {
     setCustomFrameworkName(event.target.value);
+  };
+
+  const handleCustomFrameworkDescriptionChange = (event) => {
+    setCustomFrameworkDescription(event.target.value);
   };
 
   const handleSaveFramework = async () => {
@@ -441,7 +447,8 @@ function SingleSidebar({ token }) {
     }));
 
     const payload = {
-      framework_name: customFrameworkName,
+      name: customFrameworkName,
+      description: customFrameworkDescription || "Custom Framework",
       preferences: preferences,
     };
 
@@ -598,7 +605,7 @@ function SingleSidebar({ token }) {
             <DialogTitle>Save Custom Framework</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Please enter a name for your custom framework.
+                Please enter a name and description for your custom framework.
               </DialogContentText>
               <TextField
                 autoFocus
@@ -607,9 +614,20 @@ function SingleSidebar({ token }) {
                 label="Unique Custom Framework Name"
                 type="text"
                 fullWidth
+                required
                 variant="standard"
                 value={customFrameworkName}
                 onChange={handleCustomFrameworkNameChange}
+              />
+              <TextField
+                margin="dense"
+                id="customFrameworkDescription"
+                label="Description (Optional)"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={customFrameworkDescription}
+                onChange={handleCustomFrameworkDescriptionChange}
               />
             </DialogContent>
             <DialogActions>

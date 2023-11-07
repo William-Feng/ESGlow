@@ -293,7 +293,7 @@ def create_custom_framework(data, user):
     new_custom_framework = CustomFrameworks(
         user_id=user.user_id,
         name=data['name'],
-        description=data.get('description', 'Custom Framework')
+        description=data['description']
     )
     db.session.add(new_custom_framework)
     db.session.commit()
