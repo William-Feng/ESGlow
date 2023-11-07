@@ -66,27 +66,28 @@ CREATE TABLE company_frameworks (
 CREATE TABLE framework_metrics (
     framework_id        INT REFERENCES frameworks(framework_id),
     metric_id           INT REFERENCES metrics(metric_id),
-    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1),
+    predefined_weight   FLOAT CHECK (predefined_weight > 0 AND predefined_weight <= 1),
     PRIMARY KEY (framework_id, metric_id)
 );
 
 CREATE TABLE metric_indicators (
     metric_id           INT REFERENCES metrics(metric_id),
     indicator_id        INT REFERENCES indicators(indicator_id),
-    predefined_weight   FLOAT CHECK (predefined_weight >= 0 AND predefined_weight <= 1),
+    predefined_weight   FLOAT CHECK (predefined_weight > 0 AND predefined_weight <= 1),
     PRIMARY KEY (metric_id, indicator_id)
 );
 
 CREATE TABLE custom_frameworks (
     custom_framework_id SERIAL,
     user_id             UUID REFERENCES users(user_id),
-    framework_name      TEXT NOT NULL,
+    name                TEXT NOT NULL,
+    description         TEXT DEFAULT 'Custom Framework',
     PRIMARY KEY (custom_framework_id)
 );
 
 CREATE TABLE custom_framework_preferences (
     custom_framework_id INT REFERENCES custom_frameworks(custom_framework_id),
     indicator_id        INT REFERENCES indicators(indicator_id),
-    weight              FLOAT CHECK (weight >= 0 AND weight <= 1),
+    weight              FLOAT CHECK (weight > 0 AND weight <= 1),
     PRIMARY KEY (custom_framework_id, indicator_id)
 )

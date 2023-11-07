@@ -108,7 +108,8 @@ class CustomFrameworks(db.Model):
 
     custom_framework_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
-    framework_name = db.Column(db.Text, nullable=False)
+    name = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, default='Custom Framework')
 
 
 class CustomFrameworkPreferences(db.Model):
