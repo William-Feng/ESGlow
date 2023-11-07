@@ -60,15 +60,15 @@ def all_frameworks():
 def all_indicators():
     """
     Summary:
-        Fetches all indicator names and IDs from the database.
+        Fetches all indicator information from the database.
     Args:
         None
     Returns:
-        Dictionary containing a successful message and a list of indicator names & IDs
+        Dictionary containing a successful message and a list of indicator IDs, names & descriptions
         HTTP status code
     """
 
-    indicators = [{'name': indicator.name, 'indicator_id': indicator.indicator_id}
+    indicators = [{'name': indicator.name, 'indicator_id': indicator.indicator_id, 'description': indicator.description}
                   for indicator in Indicator.query.all()]
     if not indicators:
         return {"message": "No indicators found."}, 400
