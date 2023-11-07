@@ -323,15 +323,32 @@ def create_custom_framework(data, user):
 def get_custom_frameworks(user):
     # Get all custom frameworks associated with the user
     custom_frameworks = CustomFrameworks.query.filter_by(
-        user_id=user.user_id).all()
-    custom_frameworks_data = [{
-        'framework_id': cf.custom_framework_id,
-        'framework_name': cf.name,
-        'description': cf.description
-    } for cf in custom_frameworks]
+        user_id=user.user_id
+    ).all()
 
-    response = {"message": "Custom frameworks for user successfully retrieved!",
-                "custom_frameworks": custom_frameworks_data
-                }
+    custom_frameworks_data = []
+    for cf in custom_frameworks:
+        # Get preferences for each custom framework
+        preferences = CustomFrameworkPreferences.query.filter_by(
+            custom_framework_id=cf.custom_framework_id
+        ).all()
+        # Transform preferences into a list of dictionaries
+        preferences_data = [{
+            'indicator_id': pref.indicator_id,
+            'weight': pref.weight
+        } for pref in preferences]
+
+        # Append the framework and its preferences to the custom_frameworks_data list
+        custom_frameworks_data.append({
+            'framework_id': cf.custom_framework_id,
+            'framework_name': cf.name,
+            'description': cf.description,
+            'preferences': preferences_data
+        })
+
+    response = {
+        "message": "Custom frameworks for user successfully retrieved!",
+        "custom_frameworks": custom_frameworks_data
+    }
 
     return response, 200

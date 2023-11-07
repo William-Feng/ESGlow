@@ -66,7 +66,7 @@ function SingleSidebar({ token }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.custom_frameworks);
+        console.log("data", data.custom_frameworks);
         setCustomFrameworks(data.custom_frameworks);
       })
       .catch((error) =>
