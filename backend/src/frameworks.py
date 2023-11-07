@@ -281,6 +281,14 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
 
 
 def create_custom_framework(data, user):
+    # Check for unique custom framework name for the user
+    existing_framework = CustomFrameworks.query.filter_by(
+        user_id=user.user_id,
+        framework_name=data['framework_name']
+    ).first()
+    if existing_framework:
+        return {"message": "Custom framework with this name already exists."}, 400
+
     # Create new custom framework instance that is linked to the user
     new_custom_framework = CustomFrameworks(
         user_id=user.user_id,

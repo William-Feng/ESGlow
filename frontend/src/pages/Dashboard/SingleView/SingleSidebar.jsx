@@ -438,13 +438,16 @@ function SingleSidebar({ token }) {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Network response was not ok");
       }
 
       setSuccessMessage("Custom framework saved successfully.");
     } catch (error) {
       console.error(error);
-      return setErrorMessage("There was an error saving the custom framework");
+      setErrorMessage(
+        error.message || "There was an error saving the custom framework."
+      );
     }
   };
 
