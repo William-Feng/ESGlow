@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required, JWTManager
 from flask_restx import Api, Resource
 
 from .database import User
-from .frameworks import all_industries, all_companies, all_frameworks, all_indicators, get_companies_by_industry, get_framework_info_from_company, get_indicator_values, get_company_info, create_custom_framework
+from .frameworks import all_industries, all_companies, all_frameworks, all_indicators, get_companies_by_industry, get_framework_info_from_company, get_indicator_values, get_company_info, create_custom_framework, get_custom_frameworks
 from .models import user_authentication_models, password_reset_models, all_industry_company_framework_indicator_models, specific_industry_company_models, framework_metric_indicator_models, custom_framework_models
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
@@ -243,12 +243,12 @@ custom_framework_model = custom_framework_models(api)
 
 @api.route("/api/custom-frameworks")
 class CustomFrameworkList(Resource):
+    # Create a new custom framework
     @api.response(201, 'Custom framework for user created successfully!', model=custom_framework_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid custom framework input.')
     @jwt_required()
     def post(self):
-
         data = api.payload
         email = get_jwt_identity()
 
@@ -258,3 +258,17 @@ class CustomFrameworkList(Resource):
             return {"message": "User not found."}, 400
 
         return create_custom_framework(data, user)
+
+    # Retrieve all the custom frameworks associated with a user
+    @api.response(200, 'Custom frameworks retrieved successfully.')
+    @api.response(401, 'Authentication required. Please log in.')
+    @jwt_required()
+    def get(self):
+        email = get_jwt_identity()
+
+        # Verify user exists in backend.
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "User not found."}, 400
+
+        return get_custom_frameworks(user)

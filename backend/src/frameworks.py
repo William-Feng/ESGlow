@@ -318,3 +318,20 @@ def create_custom_framework(data, user):
     }
 
     return response, 200
+
+
+def get_custom_frameworks(user):
+    # Get all custom frameworks associated with the user
+    custom_frameworks = CustomFrameworks.query.filter_by(
+        user_id=user.user_id).all()
+    custom_frameworks_data = [{
+        'framework_id': cf.custom_framework_id,
+        'framework_name': cf.name,
+        'description': cf.description
+    } for cf in custom_frameworks]
+
+    response = {"message": "Custom frameworks for user successfully retrieved!",
+                "custom_frameworks": custom_frameworks_data
+                }
+
+    return response, 200
