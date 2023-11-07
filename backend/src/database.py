@@ -118,4 +118,4 @@ class CustomFrameworkPreferences(db.Model):
         'custom_frameworks.custom_framework_id'), primary_key=True)
     indicator_id = db.Column(db.Integer, db.ForeignKey(
         'indicators.indicator_id'), primary_key=True)
-    predefined_weight = db.Column(db.Float)
+    weight = db.Column(db.Float)

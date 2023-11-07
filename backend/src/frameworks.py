@@ -294,7 +294,7 @@ def create_custom_framework(data, user):
         new_pref = CustomFrameworkPreferences(
             custom_framework_id=new_custom_framework.custom_framework_id,
             indicator_id=pref['indicator_id'],
-            predefined_weight=pref['predefined_weight']
+            weight=pref['weight']
         )
         db.session.add(new_pref)
 

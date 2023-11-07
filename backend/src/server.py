@@ -243,8 +243,7 @@ custom_framework_model = custom_framework_models(api)
 
 @api.route("/api/custom-frameworks")
 class CustomFrameworkList(Resource):
-    @api.expect(custom_framework_model, validate=True)
-    @api.response(201, 'Custom framework for user created successfully!')
+    @api.response(201, 'Custom framework for user created successfully!', model=custom_framework_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid custom framework input.')
     @jwt_required()
