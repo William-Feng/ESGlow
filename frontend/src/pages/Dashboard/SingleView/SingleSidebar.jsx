@@ -441,10 +441,18 @@ function SingleSidebar({ token }) {
   const handleSaveFramework = async () => {
     setSaveFrameworkDialogOpen(false);
 
-    const preferences = selectedExtraIndicators.map((indicatorId) => ({
+    let preferences = selectedExtraIndicators.map((indicatorId) => ({
       indicator_id: indicatorId,
       weight: additionalIndicatorWeights[indicatorId.toString()] || 0,
     }));
+
+    const selectedIndicators = Object.keys(indicatorWeights).map((key) => ({
+      indicator_id: parseInt(key, 10),
+      weight: indicatorWeights[key],
+    }));
+
+    // Merge the selected indicators array with selected additional indicators array
+    preferences = preferences.concat(selectedIndicators);
 
     const payload = {
       name: customFrameworkName,
