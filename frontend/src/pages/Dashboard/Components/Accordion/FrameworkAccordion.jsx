@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -15,8 +15,29 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
 function FrameworkAccordion({ disabled, expanded, onChange }) {
-  const { frameworksData, selectedFramework, handleFrameworkChange } =
-    useContext(SidebarContext);
+  const {
+    frameworksData,
+    customFrameworks,
+    selectedFramework,
+    handleFrameworkChange,
+  } = useContext(SidebarContext);
+
+  // Combine the default frameworks and custom frameworks with differentiation
+  const combinedFrameworksData = useMemo(() => {
+    const defaultFrameworks = (frameworksData || []).map((framework) => ({
+      ...framework,
+      isCustom: false,
+      unique_id: `default-${framework.framework_id}`,
+    }));
+    const customFrameworksWithFlag = (customFrameworks || []).map(
+      (framework) => ({
+        ...framework,
+        isCustom: true,
+        unique_id: `custom-${framework.framework_id}`,
+      })
+    );
+    return [...defaultFrameworks, ...customFrameworksWithFlag];
+  }, [frameworksData, customFrameworks]);
 
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
@@ -42,30 +63,27 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
-            value={
-              selectedFramework ? selectedFramework.framework_id.toString() : ""
-            }
+            value={selectedFramework ? selectedFramework.unique_id : ""}
             onChange={handleFrameworkChange}
           >
-            {frameworksData &&
-              frameworksData.map((framework) => (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  key={framework.framework_id}
-                  justifyContent="space-between"
-                >
-                  <Box display="flex" alignItems="center">
-                    <Radio value={framework.framework_id.toString()} />
-                    <Typography fontWeight="bold">
-                      {framework.framework_name}
-                    </Typography>
-                  </Box>
-                  <Tooltip title={framework.description}>
-                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                  </Tooltip>
+            {combinedFrameworksData.map((framework) => (
+              <Box
+                display="flex"
+                alignItems="center"
+                key={framework.unique_id}
+                justifyContent="space-between"
+              >
+                <Box display="flex" alignItems="center">
+                  <Radio value={framework.framework_id.toString()} />
+                  <Typography fontWeight="bold">
+                    {framework.framework_name}
+                  </Typography>
                 </Box>
-              ))}
+                <Tooltip title={framework.description}>
+                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                </Tooltip>
+              </Box>
+            ))}
           </RadioGroup>
         </FormControl>
       </AccordionDetails>

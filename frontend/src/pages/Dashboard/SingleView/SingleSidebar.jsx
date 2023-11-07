@@ -55,6 +55,29 @@ function SingleSidebar({ token }) {
     setSelectedExtraIndicators,
   ]);
 
+  // Custom Frameworks
+  const [customFrameworks, setCustomFrameworks] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/custom-frameworks", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.custom_frameworks);
+        setCustomFrameworks(data.custom_frameworks);
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the custom frameworks.",
+          error
+        )
+      );
+  }, []);
+
+  // Standard Framework logic below
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const handleFrameworkChange = (event) => {
@@ -532,6 +555,7 @@ function SingleSidebar({ token }) {
       <SidebarContext.Provider
         value={{
           frameworksData,
+          customFrameworks,
           selectedFramework,
           handleFrameworkChange,
           frameworkMetrics,
