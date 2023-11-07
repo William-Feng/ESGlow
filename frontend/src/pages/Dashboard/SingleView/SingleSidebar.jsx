@@ -332,11 +332,29 @@ function SingleSidebar({ token }) {
 
   const handleExtraIndicatorsChange = (indicatorId) => {
     setSelectedExtraIndicators((prev) => {
-      if (prev.includes(indicatorId)) {
-        return prev.filter((id) => id !== indicatorId);
-      } else {
-        return [...prev, indicatorId];
-      }
+      const isIndicatorSelected = prev.includes(indicatorId);
+
+      setAdditionalIndicatorWeights((prevWeights) => {
+        // Update the weight if the indicator is being selected, and it's currently set to 0
+        // Otherwise, if it's being deselected or already has a non-zero weight, leave it unchanged
+        const currentWeight = prevWeights[indicatorId];
+        const newWeight = isIndicatorSelected
+          ? 0
+          : currentWeight === 0
+          ? 0.5
+          : currentWeight;
+
+        return {
+          ...prevWeights,
+          [indicatorId]: newWeight,
+        };
+      });
+
+      // If the indicator is already selected, remove it from the selection
+      // If not, add the indicator to the selection
+      return isIndicatorSelected
+        ? prev.filter((id) => id !== indicatorId)
+        : [...prev, indicatorId];
     });
   };
 
