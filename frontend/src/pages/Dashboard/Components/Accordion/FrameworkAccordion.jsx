@@ -64,7 +64,11 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
-            value={selectedFramework ? selectedFramework.unique_id : ""}
+            value={
+              // selectedFramework ? selectedFramework.unique_id : ""
+              // Note that the line below is bug-prone as the custom framework ID may be the same as some default framework ID
+              selectedFramework ? selectedFramework.framework_id.toString() : ""
+            }
             onChange={handleFrameworkChange}
           >
             {combinedFrameworksData.map((framework) => (
