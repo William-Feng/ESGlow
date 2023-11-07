@@ -281,6 +281,10 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
 
 
 def create_custom_framework(data, user):
+    # Check if the custom framework name is null
+    if data['name'] is '':
+        return {"message": "Custom framework name cannot be empty."}, 400
+
     # Check for unique custom framework name for the user
     existing_framework = CustomFrameworks.query.filter_by(
         user_id=user.user_id,
@@ -311,7 +315,6 @@ def create_custom_framework(data, user):
 
     response = {
         "message": "Custom framework for user created successfully!",
-        "custom_framework_id": new_custom_framework.custom_framework_id
     }
 
     return response, 200
