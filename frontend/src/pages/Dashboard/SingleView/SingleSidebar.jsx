@@ -267,7 +267,7 @@ function SingleSidebar({ token }) {
     openWeightDialog(metricId, indicatorId, isAdditionalIndicator);
   };
 
-  const handleWeightSave = () => {
+  const handleWeightSave = async () => {
     if (parseFloat(newWeightInput) > 0 && parseFloat(newWeightInput) <= 1) {
       if (newWeightAdditionalIndicatorId) {
         setAdditionalIndicatorWeights((prevWeights) => ({
@@ -412,6 +412,40 @@ function SingleSidebar({ token }) {
 
   const handleCustomFrameworkNameChange = (event) => {
     setCustomFrameworkName(event.target.value);
+  };
+
+  const handleSaveFramework = async () => {
+    setSaveFrameworkDialogOpen(false);
+
+    const preferences = selectedExtraIndicators.map((indicatorId) => ({
+      indicator_id: indicatorId,
+      weight: additionalIndicatorWeights[indicatorId.toString()] || 0,
+    }));
+
+    const payload = {
+      framework_name: customFrameworkName,
+      preferences: preferences,
+    };
+
+    try {
+      const response = await fetch("/api/custom-frameworks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      setSuccessMessage("Custom framework saved successfully.");
+    } catch (error) {
+      console.error(error);
+      return setErrorMessage("There was an error saving the custom framework");
+    }
   };
 
   return (
@@ -559,9 +593,7 @@ function SingleSidebar({ token }) {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
-              {/* TODO: Add function 'handleSaveFramework' which triggers onClick to
-              execute the POST request that saves the custom framework into the database */}
-              <Button>Save</Button>
+              <Button onClick={handleSaveFramework}>Save</Button>
             </DialogActions>
           </Dialog>
         </Box>
