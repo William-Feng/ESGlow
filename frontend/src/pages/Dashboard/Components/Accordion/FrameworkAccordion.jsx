@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
 function FrameworkAccordion({ disabled, expanded, onChange }) {
@@ -72,12 +73,35 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
                 alignItems="center"
                 key={framework.unique_id}
                 justifyContent="space-between"
+                sx={{
+                  // Add a border and background colour for the selected framework
+                  border:
+                    selectedFramework &&
+                    selectedFramework.framework_id === framework.framework_id
+                      ? "1px solid rgba(0, 0, 0, 0.12)"
+                      : "none",
+                  bgcolor:
+                    selectedFramework &&
+                    selectedFramework.framework_id === framework.framework_id
+                      ? "action.hover"
+                      : "transparent",
+                  borderRadius: "4px",
+                  p: 0.5,
+                }}
               >
                 <Box display="flex" alignItems="center">
                   <Radio value={framework.framework_id.toString()} />
-                  <Typography fontWeight="bold">
+                  <Typography
+                    fontWeight="bold"
+                    sx={{
+                      color: framework.isCustom ? "#0039a6" : "text.primary",
+                    }}
+                  >
                     {framework.framework_name}
                   </Typography>
+                  {framework.isCustom && (
+                    <StarBorderIcon sx={{ ml: 1, color: "#0039a6" }} />
+                  )}
                 </Box>
                 <Tooltip title={framework.description}>
                   <InfoOutlinedIcon style={{ cursor: "pointer" }} />
