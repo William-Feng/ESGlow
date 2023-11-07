@@ -18,15 +18,10 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 // Max Selection can be changed by variable below
 const maxSelection = 3;
 
-
 function ComparisonSearchbar({ token }) {
-
-  const {
-    selectedCompanies,
-    setSelectedCompanies,
-    view,
-    setView
-  } = useContext(ComparisonViewContext);
+  const { selectedCompanies, setSelectedCompanies, view, setView } = useContext(
+    ComparisonViewContext
+  );
 
   const handleView = (_, newView) => {
     setView(newView);
@@ -56,7 +51,6 @@ function ComparisonSearchbar({ token }) {
       });
   }, [token]);
 
-
   return (
     <Box
       sx={{
@@ -78,7 +72,7 @@ function ComparisonSearchbar({ token }) {
         getOptionLabel={(company) => company.name}
         renderOption={(props, company, { selected }) => (
           // eslint-disable-next-line
-          <li {...props} aria-disabled={!selected&&isMaxSelectionReached}>
+          <li {...props} aria-disabled={!selected && isMaxSelectionReached}>
             <Checkbox
               icon={icon}
               checkedIcon={checkedIcon}
@@ -91,7 +85,7 @@ function ComparisonSearchbar({ token }) {
         noOptionsText={"No options available"}
         sx={{
           width: "340px",
-          backgroundColor: "#E8E8E8",
+          backgroundColor: "white",
           borderRadius: 1,
         }}
         renderInput={(params) => <TextField {...params} label="Company" />}
@@ -102,7 +96,7 @@ function ComparisonSearchbar({ token }) {
         onChange={handleView}
         aria-label="company view"
         sx={{
-          backgroundColor: "#E8E8E8",
+          backgroundColor: "white",
         }}
       >
         <ToggleButton
