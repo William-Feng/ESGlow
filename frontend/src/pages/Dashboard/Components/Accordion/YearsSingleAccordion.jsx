@@ -12,7 +12,7 @@ import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
 
-function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
+function YearsSingleAccordion({ disabled, expanded, onChange }) {
   const { yearsList, selectedYear, handleYearChange } = useContext(
     ComparisonSidebarContext
   );
@@ -75,4 +75,4 @@ function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
   );
 }
 
-export default YearsSingleSelectAccordion;
+export default YearsSingleAccordion;

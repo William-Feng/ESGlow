@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-function YearsAccordion({
+function YearsMultiAccordion({
   disabled,
   expanded,
   onChange,
@@ -71,4 +71,4 @@ function YearsAccordion({
   );
 }
 
-export default YearsAccordion;
+export default YearsMultiAccordion;

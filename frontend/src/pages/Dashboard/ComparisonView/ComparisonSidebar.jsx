@@ -5,7 +5,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
-import YearsSingleSelectAccordion from "../Components/Accordion/YearsSingleSelectAccordion";
+import YearsSingleAccordion from "../Components/Accordion/YearsSingleAccordion";
 import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
 import { ComparisonViewContext } from "./ComparisonView";
 
@@ -125,8 +125,7 @@ function ComparisonSidebar({ token }) {
             </Typography>
           </ToggleButton>
         </ToggleButtonGroup>
-
-        <YearsSingleSelectAccordion
+        <YearsSingleAccordion
           disabled={selectedCompanies.length === 0} // Depending on some sort of selection
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
