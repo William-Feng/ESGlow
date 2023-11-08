@@ -6,7 +6,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:54321/esglow
+      - DATABASE_URL=postgresql://postgres:postgres@db:54321/esglow
     depends_on:
       - db
 
