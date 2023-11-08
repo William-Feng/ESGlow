@@ -28,10 +28,6 @@ function ComparisonSearchbar({ token }) {
     setView
   } = useContext(ComparisonViewContext);
 
-  const handleView = (_, newView) => {
-    setView(newView);
-  };
-
   const [companyList, setCompanyList] = useState([]);
 
   const isMaxSelectionReached = selectedCompanies.length >= maxSelection;
@@ -99,7 +95,7 @@ function ComparisonSearchbar({ token }) {
       <ToggleButtonGroup
         value={view}
         exclusive
-        onChange={handleView}
+        onChange={(e) => setView(e.currentTarget.value)}
         aria-label="company view"
         sx={{
           backgroundColor: "#E8E8E8",

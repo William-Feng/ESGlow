@@ -15,7 +15,7 @@ function ComparisonView({ token }) {
   const [selectedCompanies, setSelectedCompanies] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]);       // TODO: send it to sidebar
+  const [indicatorsList, setIndicatorsList] = useState([]);
 
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {

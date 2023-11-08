@@ -6,9 +6,13 @@ import {
   TableHead,
   TableRow,
   Typography,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, createContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+
+export const ComparisonDataViewContext = createContext();
 
 function ComparisonDataDisplay({ token }) {
   const {
@@ -18,6 +22,7 @@ function ComparisonDataDisplay({ token }) {
   } = useContext(ComparisonViewContext);
 
   const [currentData, setCurrentData] = useState({})
+  const [dataView, setDataView] = useState("table")
 
   useEffect(() => {
     if ((!selectedYear || selectedCompanies.length === 0) || selectedIndicators.length === 0) {
@@ -94,6 +99,42 @@ function ComparisonDataDisplay({ token }) {
         width: "100%",
       }}
     >
+      <ToggleButtonGroup
+        value={dataView}
+        exclusive
+        onChange={(e) => setDataView(e.currentTarget.value)}
+        aria-label="table view"
+        sx={{
+          backgroundColor: "#E8E8E8",
+        }}
+      >
+        <ToggleButton
+          value="table"
+          sx={{
+            backgroundColor: dataView === "table" ? "#B0C4DE !important" : "",
+          }}
+        >
+          <Typography
+            variant="body4"
+            textAlign="center"
+          >
+            Table View
+          </Typography>
+        </ToggleButton>
+        <ToggleButton
+          value="graph"
+          sx={{
+            backgroundColor: dataView === "graph" ? "#B0C4DE !important" : "",
+          }}
+        >
+          <Typography
+            variant="body4"
+            textAlign="center"
+          >
+            Graph View
+          </Typography>
+        </ToggleButton>
+      </ToggleButtonGroup>
       <Box
         sx={{
           border: "1px solid",
