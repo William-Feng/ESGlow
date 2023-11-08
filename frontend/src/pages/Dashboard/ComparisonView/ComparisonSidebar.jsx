@@ -1,4 +1,9 @@
-import { Box } from "@mui/material";
+import {
+  Box,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
 import YearsSingleSelectAccordion from "../Components/Accordion/YearsSingleSelectAccordion";
 import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
@@ -13,7 +18,9 @@ function ComparisonSidebar({ token }) {
     setSelectedYear,
     selectedIndicators,
     setSelectedIndicators,
-    indicatorsList
+    indicatorsList,
+    dataView,
+    setDataView
   } = useContext(ComparisonViewContext);
 
   const [yearsList, setYearsList] = useState([]);
@@ -82,6 +89,43 @@ function ComparisonSidebar({ token }) {
           handleIndicatorsChange,
         }}
       >
+        <ToggleButtonGroup
+          value={dataView}
+          exclusive
+          onChange={(e) => setDataView(e.currentTarget.value)}
+          aria-label="table view"
+          sx={{
+            backgroundColor: "#E8E8E8",
+          }}
+        >
+          <ToggleButton
+            value="table"
+            sx={{
+              backgroundColor: dataView === "table" ? "#B0C4DE !important" : "",
+            }}
+          >
+            <Typography
+              variant="body4"
+              textAlign="center"
+            >
+              Table View
+            </Typography>
+          </ToggleButton>
+          <ToggleButton
+            value="graph"
+            sx={{
+              backgroundColor: dataView === "graph" ? "#B0C4DE !important" : "",
+            }}
+          >
+            <Typography
+              variant="body4"
+              textAlign="center"
+            >
+              Graph View
+            </Typography>
+          </ToggleButton>
+        </ToggleButtonGroup>
+
         <YearsSingleSelectAccordion
           disabled={selectedCompanies.length === 0} // Depending on some sort of selection
           expanded={expanded.panel1}

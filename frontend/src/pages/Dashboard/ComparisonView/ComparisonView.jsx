@@ -12,6 +12,7 @@ export const ComparisonViewContext = createContext();
 function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
+  const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
@@ -120,7 +121,9 @@ function ComparisonView({ token }) {
                   setSelectedYear,
                   selectedIndicators,
                   setSelectedIndicators,
-                  indicatorsList
+                  indicatorsList,
+                  dataView,
+                  setDataView
                 }}
               >
                 <ComparisonSidebar token={token} />
