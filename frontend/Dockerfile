@@ -43,15 +43,21 @@ RUN npm ci
 # Copy the rest of the application's code
 COPY . .
 
-# Build the application
-RUN npm run build
-
-# Install serve - a static server to serve the React application
-RUN npm install -g serve
-
-# Command to run the static server
-CMD ["serve", "-s", "build", "-l", "3000"]
-
 # Inform Docker that the container listens on the specified port at runtime.
 EXPOSE 3000
+
+# Command to run the application using the development server
+CMD ["npm", "start"]
+
+# # Build the application
+# RUN npm run build
+
+# # Install serve - a static server to serve the React application
+# RUN npm install -g serve
+
+# # Command to run the static server
+# CMD ["serve", "-s", "build", "-l", "3000"]
+
+# # Inform Docker that the container listens on the specified port at runtime.
+# EXPOSE 3000
 
