@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-from .config import JWT_EXAMPLE
+from .config import Config
 
 
 def user_authentication_models(api):
@@ -11,12 +11,12 @@ def user_authentication_models(api):
 
     register_model = api.model('LoginResponse', {
         'message': fields.String(description='Status message', example='User successfully registered.'),
-        'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
+        'token': fields.String(description='JWT access token', example=f'{Config.JWT_EXAMPLE}')
     })
 
     login_model = api.model('LoginResponse', {
         'message': fields.String(description='Status message', example='Login successful.'),
-        'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
+        'token': fields.String(description='JWT access token', example=f'{Config.JWT_EXAMPLE}')
     })
 
     return user_model, register_model, login_model
