@@ -86,6 +86,7 @@ def all_indicators():
             "name": indicator.name,
             "indicator_id": indicator.indicator_id,
             "indicator_description": indicator.description,
+            "indicator_source": indicator.source,
         }
         for indicator in Indicator.query.all()
     ]
@@ -313,18 +314,17 @@ def get_indicator_values(
 def create_custom_framework(data, user):
     # Create new custom framework instance that is linked to the user
     new_custom_framework = CustomFrameworks(
-        user_id=user.user_id,
-        framework_name=data['framework_name']
+        user_id=user.user_id, framework_name=data["framework_name"]
     )
     db.session.add(new_custom_framework)
     db.session.commit()
 
     # Add preferences to the custom framework
-    for pref in data['preferences']:
+    for pref in data["preferences"]:
         new_pref = CustomFrameworkPreferences(
             custom_framework_id=new_custom_framework.custom_framework_id,
-            indicator_id=pref['indicator_id'],
-            predefined_weight=pref['predefined_weight']
+            indicator_id=pref["indicator_id"],
+            predefined_weight=pref["predefined_weight"],
         )
         db.session.add(new_pref)
 
@@ -332,7 +332,7 @@ def create_custom_framework(data, user):
 
     response = {
         "message": "Custom framework for user created successfully!",
-        "custom_framework_id": new_custom_framework.custom_framework_id
+        "custom_framework_id": new_custom_framework.custom_framework_id,
     }
 
     return response, 200
