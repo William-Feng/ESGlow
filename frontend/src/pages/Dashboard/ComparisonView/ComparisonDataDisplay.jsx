@@ -5,10 +5,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function ComparisonDataDisplay({ token }) {
   const {
@@ -155,6 +157,10 @@ function ComparisonDataDisplay({ token }) {
                   }}
                 >
                   {row.name}
+                  <Tooltip>
+                  {/* <Tooltip title={row.name.data_source}> */}
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
                 </TableCell>
                 {selectedCompanies.map((company) => (
                   <TableCell
