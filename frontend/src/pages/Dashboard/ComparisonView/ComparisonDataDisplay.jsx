@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
@@ -17,19 +17,24 @@ function ComparisonDataDisplay({ token }) {
     selectedCompanies,
     selectedYear,
     selectedIndicators,
+    indicatorsList,
   } = useContext(ComparisonViewContext);
 
-  const [currentData, setCurrentData] = useState({})
+  const [currentData, setCurrentData] = useState({});
 
   useEffect(() => {
-    if ((!selectedYear || selectedCompanies.length === 0) || selectedIndicators.length === 0) {
+    if (
+      !selectedYear ||
+      selectedCompanies.length === 0 ||
+      selectedIndicators.length === 0
+    ) {
       return;
     }
     const indicatorIds = selectedIndicators.join(",");
     const newData = {};
 
     const promisesList = [];
-    
+
     selectedCompanies.forEach((c) => {
       promisesList.push(
         fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
@@ -39,33 +44,46 @@ function ComparisonDataDisplay({ token }) {
         })
           .then((response) => response.json())
           .then((data) => {
-            const dataValues = data.values
+            const dataValues = data.values;
             dataValues.forEach((indicatorInfo) => {
               if (!newData[indicatorInfo.indicator_id]) {
+                const indicator_source = indicatorsList.find(
+                  (indicator) =>
+                    indicator.indicator_id === indicatorInfo.indicator_id
+                ).indicator_source;
                 newData[indicatorInfo.indicator_id] = {
                   name: indicatorInfo.indicator_name,
+                  source: indicator_source,
                 };
               }
-              newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
+              newData[indicatorInfo.indicator_id][c.company_id] =
+                indicatorInfo.value;
             });
           })
           .catch((error) => {
-            console.error("Error fetching indicator values for company:", error);
+            console.error(
+              "Error fetching indicator values for company:",
+              error
+            );
           })
-      )
+      );
     });
 
     Promise.all(promisesList)
-    .then(() => {
-      setCurrentData(newData)
-    })
-    .catch((error) => {
-      console.error("Error fetching all indicator values:", error);
-    })
-
+      .then(() => {
+        setCurrentData(newData);
+      })
+      .catch((error) => {
+        console.error("Error fetching all indicator values:", error);
+      });
+      // eslint-disable-next-line
   }, [token, selectedCompanies, selectedYear, selectedIndicators]);
 
-  if (selectedCompanies.length === 0 || !selectedYear || selectedIndicators.length === 0) {
+  if (
+    selectedCompanies.length === 0 ||
+    !selectedYear ||
+    selectedIndicators.length === 0
+  ) {
     return (
       <Box
         sx={{
@@ -81,8 +99,7 @@ function ComparisonDataDisplay({ token }) {
             ? "Please select one or more companies to see the ESG data."
             : !selectedYear
             ? "Please select a year to see the ESG data."
-            : "Please select one or more indicators to see the ESG data"
-          }
+            : "Please select one or more indicators to see the ESG data"}
         </Typography>
       </Box>
     );
@@ -154,11 +171,21 @@ function ComparisonDataDisplay({ token }) {
                     borderRight: "1px solid",
                     borderColor: "divider",
                     fontSize: "1.1em",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
                   {row.name}
-                  <Tooltip>
-                  {/* <Tooltip title={row.name.data_source}> */}
+                  <Tooltip
+                    title={row.source.split(";").map((source, index) => (
+                      // Add line break to separate sources
+                      <React.Fragment key={index}>
+                        {source}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                    sx={{ marginLeft: "4px" }}
+                  >
                     <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                   </Tooltip>
                 </TableCell>

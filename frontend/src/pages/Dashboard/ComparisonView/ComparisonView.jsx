@@ -15,28 +15,28 @@ function ComparisonView({ token }) {
   const [selectedCompanies, setSelectedCompanies] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]);       // TODO: send it to sidebar
+  const [indicatorsList, setIndicatorsList] = useState([]); // TODO: send it to sidebar
 
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {
-  fetch("/api/indicators/all", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      setIndicatorsList(data.indicators);
-    });
-  }, [token])
+    fetch("/api/indicators/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIndicatorsList(data.indicators);
+      });
+  }, [token]);
 
   // clearing company searchbar clears the sidebar selected
   useEffect(() => {
     if (selectedCompanies.length === 0) {
-      setSelectedYear(null)
-      setSelectedIndicators([])
+      setSelectedYear(null);
+      setSelectedIndicators([]);
     }
-  }, [token, selectedCompanies])
+  }, [token, selectedCompanies]);
 
   return (
     <>
@@ -120,7 +120,6 @@ function ComparisonView({ token }) {
                   setSelectedYear,
                   selectedIndicators,
                   setSelectedIndicators,
-                  indicatorsList
                 }}
               >
                 <ComparisonSidebar token={token} />
@@ -131,9 +130,10 @@ function ComparisonView({ token }) {
                 selectedCompanies,
                 selectedYear,
                 selectedIndicators,
+                indicatorsList,
               }}
             >
-              <ComparisonDataDisplay token={token}/>
+              <ComparisonDataDisplay token={token} />
             </ComparisonViewContext.Provider>
           </Box>
         </Box>
