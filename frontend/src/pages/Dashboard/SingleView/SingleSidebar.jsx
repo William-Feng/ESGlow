@@ -59,29 +59,6 @@ function SingleSidebar({ token }) {
     setSelectedAdditionalIndicators,
   ]);
 
-  // Custom Frameworks
-  const [customFrameworks, setCustomFrameworks] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/custom-frameworks", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data", data.custom_frameworks);
-        setCustomFrameworks(data.custom_frameworks);
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the custom frameworks.",
-          error
-        )
-      );
-  }, [token]);
-
-  // Standard Framework logic below
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const handleFrameworkChange = (event) => {
@@ -368,6 +345,7 @@ function SingleSidebar({ token }) {
         filteredIndicatorWeights[indicator.indicator_id] = 0;
       });
       setAdditionalIndicatorWeights(filteredIndicatorWeights);
+      setSelectedAdditionalIndicators([]);
     } else if (selectedCustomFramework) {
       // All indicators should be displayed if a custom framework is selected
       setAdditionalIndicators(allIndicators);
@@ -383,10 +361,15 @@ function SingleSidebar({ token }) {
         indicatorWeights[preference.indicator_id] = preference.weight;
       });
       setAdditionalIndicatorWeights(indicatorWeights);
+      setSelectedAdditionalIndicators(
+        selectedCustomFramework.preferences.map(
+          (preference) => preference.indicator_id
+        )
+      );
     }
   }, [allIndicators, selectedFramework, selectedCustomFramework]);
 
-  const handleAdditionalIndicatorssChange = (indicatorId) => {
+  const handleAdditionalIndicatorsChange = (indicatorId) => {
     setSelectedAdditionalIndicators((prev) => {
       const isIndicatorSelected = prev.includes(indicatorId);
 
@@ -540,6 +523,28 @@ function SingleSidebar({ token }) {
     }
   };
 
+  // Retrieve custom Frameworks
+  const [customFrameworks, setCustomFrameworks] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/custom-frameworks", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data", data.custom_frameworks);
+        setCustomFrameworks(data.custom_frameworks);
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the custom frameworks.",
+          error
+        )
+      );
+  }, [token, handleSaveFramework]);
+
   return (
     <Box sx={{ paddingBottom: 3 }}>
       <Snackbar
@@ -604,7 +609,7 @@ function SingleSidebar({ token }) {
           toggleMetric,
           additionalIndicators,
           selectedAdditionalIndicators,
-          handleAdditionalIndicatorssChange,
+          handleAdditionalIndicatorsChange,
           determineChipColor,
           additionalIndicatorWeights,
         }}

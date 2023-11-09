@@ -18,7 +18,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
   const {
     additionalIndicators,
     selectedAdditionalIndicators,
-    handleAdditionalIndicatorssChange,
+    handleAdditionalIndicatorsChange,
     additionalIndicatorWeights,
     handleWeightChange,
   } = useContext(SidebarContext);
@@ -49,11 +49,6 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          <Typography style={{ color: "red", paddingBottom: "24px" }}>
-            Note that the following indicators are not included in the selected
-            framework and will not affect the ESG Score of the table. The
-            adjustable weights are solely for creating a custom framework.
-          </Typography>
           {additionalIndicators.map((indicator) => (
             <Box
               key={indicator.indicator_id}
@@ -71,7 +66,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                       ) || false
                     }
                     onChange={() =>
-                      handleAdditionalIndicatorssChange(indicator.indicator_id)
+                      handleAdditionalIndicatorsChange(indicator.indicator_id)
                     }
                   />
                 }
