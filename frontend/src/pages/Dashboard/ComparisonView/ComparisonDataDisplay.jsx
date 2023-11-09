@@ -76,7 +76,7 @@ function ComparisonDataDisplay({ token }) {
       .catch((error) => {
         console.error("Error fetching all indicator values:", error);
       });
-      // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [token, selectedCompanies, selectedYear, selectedIndicators]);
 
   if (
@@ -171,8 +171,6 @@ function ComparisonDataDisplay({ token }) {
                     borderRight: "1px solid",
                     borderColor: "divider",
                     fontSize: "1.1em",
-                    display: "flex",
-                    alignItems: "center",
                   }}
                 >
                   {row.name}
