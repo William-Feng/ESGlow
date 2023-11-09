@@ -83,13 +83,21 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
                 sx={{
                   // Add a border and background colour for the selected framework
                   border:
-                    selectedFramework &&
-                    selectedFramework.framework_id === framework.framework_id
+                    (selectedFramework &&
+                      selectedFramework.framework_id ===
+                        framework.framework_id) ||
+                    (selectedCustomFramework &&
+                      selectedCustomFramework.framework_id ===
+                        framework.framework_id)
                       ? "1px solid rgba(0, 0, 0, 0.12)"
                       : "none",
                   bgcolor:
-                    selectedFramework &&
-                    selectedFramework.framework_id === framework.framework_id
+                    (selectedFramework &&
+                      selectedFramework.framework_id ===
+                        framework.framework_id) ||
+                    (selectedCustomFramework &&
+                      selectedCustomFramework.framework_id ===
+                        framework.framework_id)
                       ? "action.hover"
                       : "transparent",
                   borderRadius: "4px",
@@ -111,7 +119,12 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
                   )}
                 </Box>
                 <Tooltip title={framework.description}>
-                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  <InfoOutlinedIcon
+                    style={{
+                      cursor: "pointer",
+                      color: framework.isCustom ? "#0039a6" : "text.primary",
+                    }}
+                  />
                 </Tooltip>
               </Box>
             ))}
