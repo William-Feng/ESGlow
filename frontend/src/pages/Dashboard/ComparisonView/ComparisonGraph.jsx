@@ -1,43 +1,88 @@
 import * as React from 'react';
-import { ChartContainer } from '@mui/x-charts';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { useContext, useEffect, useState } from "react";
+import { ComparisonViewContext } from "./ComparisonView";
+import { CircularProgress } from '@mui/material';
 
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const xLabels = [
-  'Page A',
-  'Page B',
-  'Page C',
-  'Page D',
-  'Page E',
-  'Page F',
-  'Page G',
-];
+export default function ComparisonGraph({ token }) {
+  const {
+    selectedCompanies,
+    selectedYear,
+    selectedIndicators,
+  } = useContext(ComparisonViewContext);
 
-function ComparisonGraph() {
+  const [currentData, setCurrentData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (selectedCompanies.length === 0 || selectedIndicators.length === 0) {
+      return;
+    }
+    const indicatorIds = selectedIndicators.join(",");
+    let yearsListString = selectedYear.join(",");
+
+    const newData = [];
+    const promisesList = []
+    // Create an object to store data for each indicator_id
+    setIsLoading(true)
+    selectedCompanies.forEach((c) => {
+      promisesList.push(
+        fetch(`/api/values/${c.company_id}/${indicatorIds}/${yearsListString}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const dataValues = data.values;
+
+            const indicatorData = {};
+            // Initialize the indicatorData object
+            selectedIndicators.forEach((indicatorId) => {
+              indicatorData[indicatorId] = {
+                label: `${c.name} #${indicatorId}`,
+                data: [],
+              };
+            });
+
+            dataValues.forEach((dataValue) => {
+              indicatorData[dataValue.indicator_id].data.push(dataValue.value);
+            });
+            
+            selectedIndicators.forEach((indicatorId) => {
+              newData.push(indicatorData[indicatorId]);
+            });
+
+          })
+          .catch((error) => {
+            console.error("Error fetching indicator values for company:", error);
+          })
+      )
+    });
+
+    Promise.all(promisesList)
+    .then(() => {
+      setCurrentData(newData)
+      setIsLoading(false)
+    })
+    .catch((error) => {
+      console.error("Error fetching all indicator values:", error);
+    })
+
+  }, [token, selectedCompanies, selectedIndicators, selectedYear]);
+
+  console.log(selectedYear)
+
   return (
-    <ChartContainer
-      width={500}
-      height={300}
-      series={[{ type: 'line', data: pData }]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      sx={{
-        '.MuiLineElement-root': {
-          stroke: '#8884d8',
-          strokeWidth: 2,
-        },
-        '.MuiMarkElement-root': {
-          stroke: '#8884d8',
-          scale: '0.6',
-          fill: '#fff',
-          strokeWidth: 2,
-        },
-      }}
-      disableAxisListener
-    >
-      <LinePlot />
-      <MarkPlot />
-    </ChartContainer>
+    <>
+    {isLoading ?
+      <CircularProgress />
+      :
+      <LineChart
+        series={currentData}
+        xAxis={[{ scaleType: 'point', data: selectedYear }]}
+      />
+    }
+    </>
   );
 }
-
-export default ComparisonGraph;

@@ -30,7 +30,6 @@ function ComparisonDataDisplay({ token }) {
       yearsListString = selectedYear[0]
     }
     const newData = {};
-
     const promisesList = [];
     
     selectedCompanies.forEach((c) => {
@@ -43,7 +42,6 @@ function ComparisonDataDisplay({ token }) {
           .then((response) => response.json())
           .then((data) => {
             const dataValues = data.values
-            console.log(dataValues)
             dataValues.forEach((indicatorInfo) => {
               if (!newData[indicatorInfo.indicator_id]) {
                 newData[indicatorInfo.indicator_id] = {
@@ -103,7 +101,7 @@ function ComparisonDataDisplay({ token }) {
       {dataView === 'table' ? (
         <ComparisonTable selectedCompanies={selectedCompanies} currentData={currentData}/>
       ) : (
-        <ComparisonGraph />
+        <ComparisonGraph token={token}/>
       )}
     </Box>
   );
