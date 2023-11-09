@@ -120,6 +120,7 @@ function ComparisonView({ token }) {
                   setSelectedYear,
                   selectedIndicators,
                   setSelectedIndicators,
+                  indicatorsList,
                 }}
               >
                 <ComparisonSidebar token={token} />

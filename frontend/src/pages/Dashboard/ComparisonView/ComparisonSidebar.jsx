@@ -13,7 +13,7 @@ function ComparisonSidebar({ token }) {
     setSelectedYear,
     selectedIndicators,
     setSelectedIndicators,
-    indicatorsList
+    indicatorsList,
   } = useContext(ComparisonViewContext);
 
   const [yearsList, setYearsList] = useState([]);
@@ -23,9 +23,9 @@ function ComparisonSidebar({ token }) {
     if (selectedCompanies.length === 0) {
       setExpanded({
         panel1: false,
-        panel2: false
-      })
-      return
+        panel2: false,
+      });
+      return;
     }
     // Fetch all available years
     fetch("/api/values/years", {
@@ -42,7 +42,6 @@ function ComparisonSidebar({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
-    
   }, [token, selectedCompanies]);
 
   const [expanded, setExpanded] = useState({
@@ -83,7 +82,7 @@ function ComparisonSidebar({ token }) {
         }}
       >
         <YearsSingleSelectAccordion
-          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          disabled={selectedCompanies.length === 0} // Disable on no selected companies
           expanded={expanded.panel1}
           onChange={handleChange("panel1")}
           years={yearsList}
