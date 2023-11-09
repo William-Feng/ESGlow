@@ -16,9 +16,9 @@ import { SidebarContext } from "../../SingleView/SingleSidebar";
 
 function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
   const {
-    remainingExtraIndicators,
-    selectedExtraIndicators,
-    handleExtraIndicatorsChange,
+    additionalIndicators,
+    selectedAdditionalIndicators,
+    handleAdditionalIndicatorssChange,
     additionalIndicatorWeights,
     handleWeightChange,
   } = useContext(SidebarContext);
@@ -54,7 +54,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
             framework and will not affect the ESG Score of the table. The
             adjustable weights are solely for creating a custom framework.
           </Typography>
-          {remainingExtraIndicators.map((indicator) => (
+          {additionalIndicators.map((indicator) => (
             <Box
               key={indicator.indicator_id}
               display="flex"
@@ -66,12 +66,12 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                 control={
                   <Checkbox
                     checked={
-                      selectedExtraIndicators.includes(
+                      selectedAdditionalIndicators.includes(
                         indicator.indicator_id
                       ) || false
                     }
                     onChange={() =>
-                      handleExtraIndicatorsChange(indicator.indicator_id)
+                      handleAdditionalIndicatorssChange(indicator.indicator_id)
                     }
                   />
                 }
@@ -90,7 +90,9 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                     additionalIndicatorWeights[indicator.indicator_id]
                   }`}
                   color={
-                    selectedExtraIndicators.includes(indicator.indicator_id)
+                    selectedAdditionalIndicators.includes(
+                      indicator.indicator_id
+                    )
                       ? "primary"
                       : "default"
                   }

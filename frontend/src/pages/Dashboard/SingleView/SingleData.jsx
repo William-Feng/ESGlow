@@ -18,7 +18,7 @@ function SingleData() {
     indicatorValues,
     savedWeights,
     allIndicatorValues,
-    selectedExtraIndicators,
+    selectedAdditionalIndicators,
   } = useContext(SingleViewContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
 
@@ -86,19 +86,19 @@ function SingleData() {
   }, [filteredData]);
 
   // Retrieve the additional indicators and data selected by the user
-  const extraIndicatorData = useMemo(
+  const additionalIndicatorsData = useMemo(
     () =>
       allIndicatorValues.filter((indicator) =>
-        selectedExtraIndicators.includes(indicator.indicator_id)
+        selectedAdditionalIndicators.includes(indicator.indicator_id)
       ),
-    [selectedExtraIndicators, allIndicatorValues]
+    [selectedAdditionalIndicators, allIndicatorValues]
   );
 
-  // Convert the extra indicator data into a format that can be displayed in the table
+  // Convert the additional indicator data into a format that can be displayed in the table
   const structuredExtraData = useMemo(() => {
     const dataMap = {};
 
-    extraIndicatorData.forEach((row) => {
+    additionalIndicatorsData.forEach((row) => {
       if (!dataMap[row.indicator_id]) {
         dataMap[row.indicator_id] = { name: row.indicator_name };
       }
@@ -106,7 +106,7 @@ function SingleData() {
     });
 
     return Object.values(dataMap);
-  }, [extraIndicatorData]);
+  }, [additionalIndicatorsData]);
 
   const hasDataToShow = useMemo(
     () => selectedFramework || structuredExtraData.length > 0,

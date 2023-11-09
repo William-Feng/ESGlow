@@ -37,7 +37,8 @@ function SingleView({ token }) {
 
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
-  const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
+  const [selectedAdditionalIndicators, setSelectedAdditionalIndicators] =
+    useState([]);
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -293,8 +294,8 @@ function SingleView({ token }) {
                   setSelectedYears,
                   setSavedWeights,
                   allIndicators,
-                  selectedExtraIndicators,
-                  setSelectedExtraIndicators,
+                  selectedAdditionalIndicators,
+                  setSelectedAdditionalIndicators,
                 }}
               >
                 <SingleViewSidebar token={token} />
@@ -308,7 +309,7 @@ function SingleView({ token }) {
                 indicatorValues,
                 savedWeights,
                 allIndicatorValues,
-                selectedExtraIndicators,
+                selectedAdditionalIndicators,
               }}
             >
               <SingleViewData />
