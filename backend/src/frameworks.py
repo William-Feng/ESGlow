@@ -282,7 +282,7 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
 
 def create_custom_framework(data, user):
     # Check if the custom framework name is null
-    if data['name'] is '':
+    if data['name'] == '':
         return {"message": "Custom framework name cannot be empty."}, 400
 
     # Check for unique custom framework name for the user
