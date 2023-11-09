@@ -1,38 +1,38 @@
 import {
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Typography
 } from "@mui/material";
 import { useContext, createContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import ComparisonTable from "./ComparisonTable";
+import ComparisonGraph from "./ComparisonGraph";
 
 export const ComparisonDataViewContext = createContext();
 
 function ComparisonDataDisplay({ token }) {
   const {
+    dataView,
     selectedCompanies,
     selectedYear,
     selectedIndicators,
+    yearsList
   } = useContext(ComparisonViewContext);
 
   const [currentData, setCurrentData] = useState({})
 
   useEffect(() => {
-    if ((!selectedYear || selectedCompanies.length === 0) || selectedIndicators.length === 0) {
+    if (selectedCompanies.length === 0 || selectedIndicators.length === 0) {
       return;
     }
     const indicatorIds = selectedIndicators.join(",");
+    const yearsListString = yearsList.join(",");
     const newData = {};
 
     const promisesList = [];
     
     selectedCompanies.forEach((c) => {
       promisesList.push(
-        fetch(`/api/values/${c.company_id}/${indicatorIds}/${selectedYear}`, {
+        fetch(`/api/values/${c.company_id}/${indicatorIds}/${yearsListString}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -63,9 +63,9 @@ function ComparisonDataDisplay({ token }) {
       console.error("Error fetching all indicator values:", error);
     })
 
-  }, [token, selectedCompanies, selectedYear, selectedIndicators]);
+  }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  if (selectedCompanies.length === 0 || !selectedYear || selectedIndicators.length === 0) {
+  if (selectedCompanies.length === 0 || selectedYear.length === 0 || selectedIndicators.length === 0) {
     return (
       <Box
         sx={{
@@ -96,86 +96,11 @@ function ComparisonDataDisplay({ token }) {
         width: "100%",
       }}
     >
-      <Box
-        sx={{
-          border: "1px solid",
-          borderColor: "divider",
-        }}
-      >
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: "1.25em",
-                  background: "#D1EFFF",
-                  borderRight: "1px solid",
-                  borderColor: "divider",
-                  padding: "15px",
-                  borderBottom: "2px solid",
-                }}
-              >
-                Indicator
-              </TableCell>
-              {selectedCompanies.map((company) => (
-                <TableCell
-                  key={company.company_id}
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: "1.25em",
-                    background: "#D1EFFF",
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    padding: "10px",
-                    borderBottom: "2px solid",
-                    textAlign: "center",
-                  }}
-                >
-                  {company.name}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Object.entries(currentData).map(([index, row]) => (
-              <TableRow
-                key={index}
-                sx={{
-                  backgroundColor: index % 2 === 0 ? "#FAFAFA" : "#F5F5F5",
-                  borderTop: "1px solid #E0E0E0",
-                  "&:hover": {
-                    backgroundColor: "#E5E5E5",
-                  },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    fontSize: "1.1em",
-                  }}
-                >
-                  {row.name}
-                </TableCell>
-                {selectedCompanies.map((company) => (
-                  <TableCell
-                    key={company.company_id}
-                    sx={{
-                      borderRight: "1px solid",
-                      borderColor: "divider",
-                      textAlign: "center",
-                      fontSize: "1.1em",
-                    }}
-                  >
-                    {row[company.company_id] || null}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Box>
+      {dataView === 'table' ? (
+        <ComparisonTable selectedCompanies={selectedCompanies} currentData={currentData}/>
+      ) : (
+        <ComparisonGraph />
+      )}
     </Box>
   );
 }

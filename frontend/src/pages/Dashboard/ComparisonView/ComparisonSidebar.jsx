@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
 import YearsSingleAccordion from "../Components/Accordion/YearsSingleAccordion";
+import YearsRangeAccordion from "../Components/Accordion/YearsRangeAccordion";
 import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
 import { ComparisonViewContext } from "./ComparisonView";
 
@@ -20,10 +21,10 @@ function ComparisonSidebar({ token }) {
     setSelectedIndicators,
     indicatorsList,
     dataView,
+    yearsList,
     setDataView
   } = useContext(ComparisonViewContext);
 
-  const [yearsList, setYearsList] = useState([]);
 
   useEffect(() => {
     // close accordions upon clearing companies selection
@@ -34,22 +35,6 @@ function ComparisonSidebar({ token }) {
       })
       return
     }
-    // Fetch all available years
-    fetch("/api/values/years", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setYearsList(data.years);
-      })
-      .catch((error) => {
-        if (error !== "No years found") {
-          console.error("There was an error fetching the years.", error);
-        }
-      });
-    
   }, [token, selectedCompanies]);
 
   const [expanded, setExpanded] = useState({
@@ -59,11 +44,6 @@ function ComparisonSidebar({ token }) {
 
   const handleChange = (panel) => (_, isExpanded) => {
     setExpanded((prev) => ({ ...prev, [panel]: isExpanded }));
-  };
-
-  const handleYearChange = (event) => {
-    const year = event.target.value;
-    setSelectedYear(yearsList.find((y) => y === parseInt(year)));
   };
 
   const handleIndicatorsChange = (indicatorId) => {
@@ -81,9 +61,8 @@ function ComparisonSidebar({ token }) {
       <ComparisonSidebarContext.Provider
         value={{
           yearsList,
-          setYearsList,
+          setSelectedYear,
           selectedYear,
-          handleYearChange,
           indicatorsList,
           selectedIndicators,
           handleIndicatorsChange,
@@ -125,13 +104,19 @@ function ComparisonSidebar({ token }) {
             </Typography>
           </ToggleButton>
         </ToggleButtonGroup>
-        <YearsSingleAccordion
-          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
-          expanded={expanded.panel1}
-          onChange={handleChange("panel1")}
-          years={yearsList}
-          handleYearChange={handleYearChange}
-        />
+        { dataView === 'graph' ? (
+          <YearsRangeAccordion
+            disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+            expanded={expanded.panel1}
+            onChange={handleChange("panel1")}
+          />
+        ) : (
+          <YearsSingleAccordion
+            disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+            expanded={expanded.panel1}
+            onChange={handleChange("panel1")}
+          />
+        )}
         <IndicatorsAccordion
           disabled={selectedCompanies.length === 0}
           expanded={expanded.panel2}

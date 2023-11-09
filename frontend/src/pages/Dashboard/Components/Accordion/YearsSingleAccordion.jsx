@@ -13,9 +13,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
 
 function YearsSingleAccordion({ disabled, expanded, onChange }) {
-  const { yearsList, selectedYear, handleYearChange } = useContext(
-    ComparisonSidebarContext
-  );
+  const {
+    yearsList,
+    selectedYear,
+    setSelectedYear
+  } = useContext(ComparisonSidebarContext);
+  
+  const handleYearSelect = (_, value) => {
+    setSelectedYear([parseInt(value)]);
+  }
 
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
@@ -52,8 +58,8 @@ function YearsSingleAccordion({ disabled, expanded, onChange }) {
                 <RadioGroup
                   aria-labelledby="demo-controlled-radio-buttons-group"
                   name="controlled-radio-buttons-group"
-                  value={selectedYear ? selectedYear.toString() : ""}
-                  onChange={handleYearChange}
+                  value={selectedYear[0] ? selectedYear[0].toString() : ""}
+                  onChange={handleYearSelect}
                 >
                   <Box
                     display="flex"

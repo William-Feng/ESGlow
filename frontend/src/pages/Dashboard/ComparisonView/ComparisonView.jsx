@@ -14,10 +14,11 @@ function ComparisonView({ token }) {
 
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedYear, setSelectedYear] = useState([]); // user selected year; single select is still contained in a list
+  const [yearsList, setYearsList] = useState([]);         // range of years data available for the selected companies
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState([]);
-  
+
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {
   fetch("/api/indicators/all", {
@@ -31,12 +32,28 @@ function ComparisonView({ token }) {
     });
   }, [token])
 
-  // clearing company searchbar clears the sidebar selected
+  // for every new company selection:
   useEffect(() => {
+    // clearing company searchbar clears the sidebar selected
     if (selectedCompanies.length === 0) {
-      setSelectedYear(null)
+      setSelectedYear([])
       setSelectedIndicators([])
     }
+    // Fetch all available years of data
+    fetch("/api/values/years", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setYearsList(data.years);
+      })
+      .catch((error) => {
+        if (error !== "No years found") {
+          console.error("There was an error fetching the years.", error);
+        }
+      });
   }, [token, selectedCompanies])
 
   return (
@@ -122,6 +139,7 @@ function ComparisonView({ token }) {
                   selectedIndicators,
                   setSelectedIndicators,
                   indicatorsList,
+                  yearsList,
                   dataView,
                   setDataView
                 }}
@@ -131,9 +149,11 @@ function ComparisonView({ token }) {
             </Drawer>
             <ComparisonViewContext.Provider
               value={{
+                dataView,
                 selectedCompanies,
                 selectedYear,
                 selectedIndicators,
+                yearsList
               }}
             >
               <ComparisonDataDisplay token={token}/>
