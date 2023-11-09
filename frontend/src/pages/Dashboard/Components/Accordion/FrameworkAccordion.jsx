@@ -20,6 +20,7 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
     frameworksData,
     customFrameworks,
     selectedFramework,
+    selectedCustomFramework,
     handleFrameworkChange,
   } = useContext(SidebarContext);
 
@@ -65,9 +66,11 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={
-              // selectedFramework ? selectedFramework.unique_id : ""
-              // Note that the line below is bug-prone as the custom framework ID may be the same as some default framework ID
-              selectedFramework ? selectedFramework.framework_id.toString() : ""
+              selectedFramework
+                ? `default-${selectedFramework.framework_id}`
+                : selectedCustomFramework
+                ? `custom-${selectedCustomFramework.framework_id}`
+                : ""
             }
             onChange={handleFrameworkChange}
           >
@@ -94,7 +97,7 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
                 }}
               >
                 <Box display="flex" alignItems="center">
-                  <Radio value={framework.framework_id.toString()} />
+                  <Radio value={framework.unique_id} />
                   <Typography
                     fontWeight="bold"
                     sx={{

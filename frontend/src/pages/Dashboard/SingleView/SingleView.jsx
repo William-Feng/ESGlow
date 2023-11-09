@@ -28,6 +28,7 @@ function SingleView({ token }) {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
+  const [selectedCustomFramework, setSelectedCustomFramework] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
@@ -284,6 +285,8 @@ function SingleView({ token }) {
                   years,
                   selectedFramework,
                   setSelectedFramework,
+                  selectedCustomFramework,
+                  setSelectedCustomFramework,
                   selectedIndicators,
                   setSelectedIndicators,
                   selectedYears,

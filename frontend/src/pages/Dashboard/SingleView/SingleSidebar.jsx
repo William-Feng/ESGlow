@@ -32,6 +32,8 @@ function SingleSidebar({ token }) {
     years,
     selectedFramework,
     setSelectedFramework,
+    selectedCustomFramework,
+    setSelectedCustomFramework,
     selectedIndicators,
     setSelectedIndicators,
     selectedYears,
@@ -46,11 +48,13 @@ function SingleSidebar({ token }) {
   // Note that selected extra indicators remain the same if a new framework is selected
   useEffect(() => {
     setSelectedFramework(null);
+    setSelectedCustomFramework(null);
     setSelectedIndicators([]);
     setSelectedExtraIndicators([]);
   }, [
     selectedCompany,
     setSelectedFramework,
+    setSelectedCustomFramework,
     setSelectedIndicators,
     setSelectedExtraIndicators,
   ]);
@@ -75,23 +79,35 @@ function SingleSidebar({ token }) {
           error
         )
       );
-  }, []);
+  }, [token]);
 
   // Standard Framework logic below
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const handleFrameworkChange = (event) => {
-    const frameworkId = event.target.value;
-    setSelectedFramework(
-      frameworksData.find((f) => f.framework_id === parseInt(frameworkId))
-    );
-    setSelectedIndicators(
-      frameworksData.flatMap((framework) =>
-        framework.metrics.flatMap((metric) =>
-          metric.indicators.map((indicator) => indicator.indicator_id)
+    const frameworkValue = event.target.value;
+    const [type, frameworkIdString] = frameworkValue.split("-");
+    const frameworkId = parseInt(frameworkIdString, 10);
+
+    if (type === "custom") {
+      setSelectedCustomFramework(
+        customFrameworks.find((f) => f.framework_id === frameworkId)
+      );
+      setSelectedFramework(null);
+      // Set indicators for custom framework
+    } else {
+      setSelectedFramework(
+        frameworksData.find((f) => f.framework_id === frameworkId)
+      );
+      setSelectedCustomFramework(null);
+      setSelectedIndicators(
+        frameworksData.flatMap((framework) =>
+          framework.metrics.flatMap((metric) =>
+            metric.indicators.map((indicator) => indicator.indicator_id)
+          )
         )
-      )
-    );
+      );
+    }
   };
 
   const [selectedMetrics, setSelectedMetrics] = useState([]);
@@ -557,6 +573,7 @@ function SingleSidebar({ token }) {
           frameworksData,
           customFrameworks,
           selectedFramework,
+          selectedCustomFramework,
           handleFrameworkChange,
           frameworkMetrics,
           howManyIndicatorsChecked,
@@ -581,11 +598,13 @@ function SingleSidebar({ token }) {
           onChange={handleChange("panel1")}
           frameworksData={frameworksData}
         />
-        <MetricsIndicatorsAccordion
-          disabled={!frameworksData}
-          expanded={expanded.panel2}
-          onChange={handleChange("panel2")}
-        />
+        {!selectedCustomFramework && (
+          <MetricsIndicatorsAccordion
+            disabled={!frameworksData}
+            expanded={expanded.panel2}
+            onChange={handleChange("panel2")}
+          />
+        )}
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
