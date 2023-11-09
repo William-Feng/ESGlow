@@ -7,7 +7,8 @@ import {
   TableRow,
 } from "@mui/material";
 
-export default function ComparisonTable({ selectedCompanies, currentData}) {
+export default function ComparisonTable({ selectedCompanies, currentData }) {
+  console.log(currentData)
   return (
     <>
       <Box

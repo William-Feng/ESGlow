@@ -25,7 +25,10 @@ function ComparisonDataDisplay({ token }) {
       return;
     }
     const indicatorIds = selectedIndicators.join(",");
-    const yearsListString = yearsList.join(",");
+    let yearsListString = yearsList.join(",");
+    if (dataView === 'table') {
+      yearsListString = selectedYear[0]
+    }
     const newData = {};
 
     const promisesList = [];
@@ -40,6 +43,7 @@ function ComparisonDataDisplay({ token }) {
           .then((response) => response.json())
           .then((data) => {
             const dataValues = data.values
+            console.log(dataValues)
             dataValues.forEach((indicatorInfo) => {
               if (!newData[indicatorInfo.indicator_id]) {
                 newData[indicatorInfo.indicator_id] = {
@@ -63,7 +67,7 @@ function ComparisonDataDisplay({ token }) {
       console.error("Error fetching all indicator values:", error);
     })
 
-  }, [token, selectedCompanies, selectedIndicators, yearsList]);
+  }, [token, selectedCompanies, selectedIndicators, selectedYear, yearsList, dataView]);
 
   if (selectedCompanies.length === 0 || selectedYear.length === 0 || selectedIndicators.length === 0) {
     return (
@@ -79,7 +83,7 @@ function ComparisonDataDisplay({ token }) {
         <Typography variant="h6" color="text.secondary">
           {selectedCompanies.length === 0
             ? "Please select one or more companies to see the ESG data."
-            : !selectedYear
+            : selectedYear.length === 0
             ? "Please select a year to see the ESG data."
             : "Please select one or more indicators to see the ESG data"
           }

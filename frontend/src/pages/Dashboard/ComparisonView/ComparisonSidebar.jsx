@@ -25,6 +25,11 @@ function ComparisonSidebar({ token }) {
     setDataView
   } = useContext(ComparisonViewContext);
 
+  // useEffect(() => {
+  //   if (dataView === 'graph') {
+  //     setSelectedYear([Math.min(...yearsList), Math.max(...yearsList)])
+  //   }
+  // }, [dataView])
 
   useEffect(() => {
     // close accordions upon clearing companies selection
