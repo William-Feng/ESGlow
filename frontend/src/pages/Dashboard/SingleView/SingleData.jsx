@@ -5,10 +5,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import { useState, useEffect, useMemo, useContext } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { SingleViewContext } from "./SingleView";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function SingleData() {
   const {
@@ -17,6 +19,7 @@ function SingleData() {
     selectedYears,
     indicatorValues,
     savedWeights,
+    allIndicators,
     allIndicatorValues,
     selectedExtraIndicators,
   } = useContext(SingleViewContext);
@@ -98,8 +101,15 @@ function SingleData() {
     const dataMap = {};
 
     filteredData.forEach((row) => {
+      console.log(row);
       if (!dataMap[row.indicator_id]) {
-        dataMap[row.indicator_id] = { name: row.indicator_name };
+        const indicator_source = allIndicators.find(
+          (indicator) => indicator.indicator_id === row.indicator_id
+        ).indicator_source;
+        dataMap[row.indicator_id] = {
+          name: row.indicator_name,
+          source: indicator_source,
+        };
       }
       dataMap[row.indicator_id][row.year] = row.value;
     });
@@ -224,6 +234,18 @@ function SingleData() {
                   }}
                 >
                   {row.name}
+                  <Tooltip
+                    title={row.source.split(";").map((source, index) => (
+                      // Add line break to separate sources
+                      <React.Fragment key={index}>
+                        {source}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                    sx={{ marginLeft: "4px" }}
+                  >
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
                 </TableCell>
                 {selectedYears.map((year) => (
                   <TableCell
