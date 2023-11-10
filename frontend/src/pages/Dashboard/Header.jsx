@@ -14,7 +14,7 @@ function Header(token) {
       },
     })
       .then((response) => {
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 500) {
           localStorage.removeItem("token");
           navigate("/");
           return;

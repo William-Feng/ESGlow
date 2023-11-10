@@ -55,7 +55,6 @@ export default function ComparisonGraph({ token }) {
             selectedIndicators.forEach((indicatorId) => {
               newData.push(indicatorData[indicatorId]);
             });
-            console.log(newData)
           })
           .catch((error) => {
             console.error("Error fetching indicator values for company:", error);

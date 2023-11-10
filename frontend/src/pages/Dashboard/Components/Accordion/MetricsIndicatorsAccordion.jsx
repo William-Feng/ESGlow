@@ -91,7 +91,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
                       label={`${metricWeights[metric.metric_id]}`}
                       color={determineChipColor(metric, null)}
                       onClick={(e) =>
-                        handleWeightChange(metric.metric_id, null, e)
+                        handleWeightChange(e, metric.metric_id, null, false)
                       }
                     />
                     <ExpandMoreIcon />
@@ -138,9 +138,10 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
                             color={determineChipColor(null, indicator)}
                             onClick={(e) =>
                               handleWeightChange(
+                                e,
                                 null,
                                 indicator.indicator_id,
-                                e
+                                false
                               )
                             }
                           />

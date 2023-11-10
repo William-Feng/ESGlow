@@ -21,8 +21,6 @@ export default function ComparisonTable({ token }) {
 
   const [currentData, setCurrentData] = useState({})
 
-  console.log('selected Year', selectedYear)
-
   useEffect(() => {
     if (selectedCompanies.length === 0 || selectedIndicators.length === 0) {
       return;

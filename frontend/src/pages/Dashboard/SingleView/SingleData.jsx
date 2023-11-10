@@ -21,7 +21,8 @@ function SingleData() {
     savedWeights,
     allIndicators,
     allIndicatorValues,
-    selectedExtraIndicators,
+    selectedAdditionalIndicators,
+    savedAdditionalIndicatorWeights,
   } = useContext(SingleViewContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
 
@@ -35,73 +36,11 @@ function SingleData() {
     validIndicatorIds.includes(row.indicator_id)
   );
 
-  // Display the new adjusted ESG score based on savedWeights
-  useEffect(() => {
-    if (savedWeights.metrics) {
-      function calculateScore(savedWeights, filteredData) {
-        // Calculate the total sum of metric weights
-        const totalMetricWeight = savedWeights.metrics.reduce(
-          (accumulator, metric) => accumulator + metric.metric_weight,
-          0
-        );
-
-        // Calculate the total sum of indicator weights for each metric
-        savedWeights.metrics.forEach((metric) => {
-          metric.metric_weight_total = metric.indicators.reduce(
-            (accumulator, indicator) =>
-              accumulator + indicator.indicator_weight,
-            0
-          );
-        });
-
-        const metricScores = savedWeights.metrics.map((metric) => {
-          const metricScore = metric.indicators.reduce(
-            (accumulator, indicator) => {
-              const matchingIndicator = filteredData.find(
-                (data) =>
-                  data.indicator_id === indicator.indicator_id &&
-                  data.year === savedWeights.year
-              );
-
-              if (matchingIndicator) {
-                // Calculate pro-rata adjusted indicator weight
-                const adjustedIndicatorWeight =
-                  (matchingIndicator.value * indicator.indicator_weight) /
-                  metric.metric_weight_total;
-
-                return accumulator + adjustedIndicatorWeight;
-              }
-
-              return accumulator;
-            },
-            0
-          );
-
-          // Calculate pro-rata adjusted metric weight
-          const adjustedMetricWeight =
-            (metricScore * metric.metric_weight) / totalMetricWeight;
-
-          return adjustedMetricWeight;
-        });
-
-        const finalScore = metricScores.reduce(
-          (accumulator, metricScore) => accumulator + metricScore,
-          0
-        );
-
-        return finalScore;
-      }
-      setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
-    }
-    // eslint-disable-next-line
-  }, [savedWeights]);
-
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
     const dataMap = {};
 
     filteredData.forEach((row) => {
-      console.log(row);
       if (!dataMap[row.indicator_id]) {
         const indicator_source = allIndicators.find(
           (indicator) => indicator.indicator_id === row.indicator_id
@@ -115,35 +54,129 @@ function SingleData() {
     });
 
     return Object.values(dataMap);
-  }, [filteredData]);
+  }, [allIndicators, filteredData]);
 
   // Retrieve the additional indicators and data selected by the user
-  const extraIndicatorData = useMemo(
+  const additionalIndicatorsData = useMemo(
     () =>
       allIndicatorValues.filter((indicator) =>
-        selectedExtraIndicators.includes(indicator.indicator_id)
+        selectedAdditionalIndicators.includes(indicator.indicator_id)
       ),
-    [selectedExtraIndicators, allIndicatorValues]
+    [selectedAdditionalIndicators, allIndicatorValues]
   );
 
-  // Convert the extra indicator data into a format that can be displayed in the table
+  // Convert the additional indicator data into a format that can be displayed in the table
   const structuredExtraData = useMemo(() => {
     const dataMap = {};
 
-    extraIndicatorData.forEach((row) => {
+    additionalIndicatorsData.forEach((row) => {
       if (!dataMap[row.indicator_id]) {
-        dataMap[row.indicator_id] = { name: row.indicator_name };
+        const indicator_source = allIndicators.find(
+          (indicator) => indicator.indicator_id === row.indicator_id
+        ).indicator_source;
+        dataMap[row.indicator_id] = {
+          name: row.indicator_name,
+          source: indicator_source,
+        };
       }
       dataMap[row.indicator_id][row.year] = row.value;
     });
 
     return Object.values(dataMap);
-  }, [extraIndicatorData]);
+  }, [allIndicators, additionalIndicatorsData]);
 
   const hasDataToShow = useMemo(
     () => selectedFramework || structuredExtraData.length > 0,
     [selectedFramework, structuredExtraData]
   );
+
+  // Adjusted ESG Score Calculation
+  function calculateScore(
+    savedWeights,
+    filteredData,
+    savedAdditionalIndicatorWeights,
+    additionalIndicatorsData
+  ) {
+    let totalWeightSum = 0;
+    let frameworkScore = 0;
+    let additionalScore = 0;
+
+    // Calculate total weight sum from savedWeights, and add the weights from the additional indicators
+    if (savedWeights && savedWeights.metrics) {
+      totalWeightSum += savedWeights.metrics.reduce(
+        (accumulator, metric) => accumulator + metric.metric_weight,
+        0
+      );
+    }
+
+    Object.values(savedAdditionalIndicatorWeights).forEach((weight) => {
+      totalWeightSum += weight;
+    });
+
+    // Calculate scores for the default framework
+    // For each indicator within a metric, the score contribution is its value multiplied by its relative weight
+    // within the metric, then multiplied by the metric's weight relative to the total weight sum.
+    if (savedWeights && savedWeights.metrics) {
+      frameworkScore = savedWeights.metrics.reduce((accumulator, metric) => {
+        const totalIndicatorWeight = metric.indicators.reduce(
+          (acc, indicator) => acc + indicator.indicator_weight,
+          0
+        );
+
+        const metricScore = metric.indicators.reduce((acc, indicator) => {
+          const matchingIndicator = filteredData.find(
+            (data) =>
+              data.indicator_id === indicator.indicator_id &&
+              data.year === savedWeights.year
+          );
+
+          if (matchingIndicator) {
+            const indicatorRelativeWeight =
+              indicator.indicator_weight / totalIndicatorWeight;
+            const indicatorScore =
+              matchingIndicator.value *
+              indicatorRelativeWeight *
+              (metric.metric_weight / totalWeightSum);
+            return acc + indicatorScore;
+          }
+          return acc;
+        }, 0);
+
+        return accumulator + metricScore;
+      }, 0);
+    }
+
+    // Calculate scores for the additional indicators (note that these are not grouped into metrics)
+    // For each, the score contribution is its value multiplied by its relative weight in the total weight sum.
+    if (Object.keys(savedAdditionalIndicatorWeights).length > 0) {
+      additionalScore = additionalIndicatorsData.reduce((accumulator, data) => {
+        if (!savedWeights || savedWeights.year === data.year) {
+          const weight =
+            savedAdditionalIndicatorWeights[data.indicator_id.toString()] || 0;
+          const normalizedWeight = weight / totalWeightSum;
+          const indicatorScore = data.value * normalizedWeight;
+          return accumulator + indicatorScore;
+        }
+        return accumulator;
+      }, 0);
+    }
+
+    return frameworkScore + additionalScore;
+  }
+
+  // Invoke the score calculation function upon pressing the 'Update Score' button
+  useEffect(() => {
+    if (savedWeights || savedAdditionalIndicatorWeights) {
+      const score = calculateScore(
+        savedWeights,
+        filteredData,
+        savedAdditionalIndicatorWeights,
+        additionalIndicatorsData
+      );
+      setAdjustedScore(score.toFixed(1));
+    }
+    // eslint-disable-next-line
+  }, [savedWeights, savedAdditionalIndicatorWeights, additionalIndicatorsData]);
 
   if (!selectedCompany || !hasDataToShow) {
     return (
@@ -179,6 +212,7 @@ function SingleData() {
           borderColor: "divider",
         }}
       >
+        {/* TODO: There is duplication between normal data and the additional data, abstract into separate component */}
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -231,17 +265,50 @@ function SingleData() {
                     borderRight: "1px solid",
                     borderColor: "divider",
                     fontSize: "1.1em",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
                   {row.name}
                   <Tooltip
-                    title={row.source.split(";").map((source, index) => (
-                      // Add line break to separate sources
-                      <React.Fragment key={index}>
-                        {source}
-                        <br />
+                    title={
+                      <React.Fragment>
+                        {row.source.split(";").map((source, index) => {
+                          // Splitting the source string into three parts: the source number, name and description
+                          const [sourceNumber, sourceRest] =
+                            source.split(/:(.+)/);
+                          const [sourceName, sourceDescription] =
+                            sourceRest.split(/\((.+)/);
+
+                          return (
+                            <div
+                              key={index}
+                              style={{
+                                marginBottom:
+                                  index < row.source.split(";").length - 1
+                                    ? 10
+                                    : 0,
+                              }}
+                            >
+                              <Typography
+                                component="span"
+                                style={{ fontStyle: "italic" }}
+                              >
+                                {sourceNumber.trim()}:
+                              </Typography>{" "}
+                              <Typography
+                                component="span"
+                                style={{ fontWeight: "bold" }}
+                              >
+                                {sourceName.trim()}
+                              </Typography>
+                              {" (" + sourceDescription.trim()}
+                            </div>
+                          );
+                        })}
                       </React.Fragment>
-                    ))}
+                    }
                     sx={{ marginLeft: "4px" }}
                   >
                     <InfoOutlinedIcon style={{ cursor: "pointer" }} />
@@ -278,9 +345,54 @@ function SingleData() {
                     borderRight: "1px solid",
                     borderColor: "divider",
                     fontSize: "1.1em",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
                   {extraRow.name}
+                  <Tooltip
+                    title={
+                      <React.Fragment>
+                        {extraRow.source.split(";").map((source, index) => {
+                          // Splitting the source string into three parts: the source number, name and description
+                          const [sourceNumber, sourceRest] =
+                            source.split(/:(.+)/);
+                          const [sourceName, sourceDescription] =
+                            sourceRest.split(/\((.+)/);
+
+                          return (
+                            <div
+                              key={index}
+                              style={{
+                                marginBottom:
+                                  index < extraRow.source.split(";").length - 1
+                                    ? 10
+                                    : 0,
+                              }}
+                            >
+                              <Typography
+                                component="span"
+                                style={{ fontStyle: "italic" }}
+                              >
+                                {sourceNumber.trim()}:
+                              </Typography>{" "}
+                              <Typography
+                                component="span"
+                                style={{ fontWeight: "bold" }}
+                              >
+                                {sourceName.trim()}
+                              </Typography>
+                              {" (" + sourceDescription.trim()}
+                            </div>
+                          );
+                        })}
+                      </React.Fragment>
+                    }
+                    sx={{ marginLeft: "4px" }}
+                  >
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
                 </TableCell>
                 {selectedYears.map((year) => (
                   <TableCell
@@ -307,7 +419,7 @@ function SingleData() {
           float: "right",
         }}
       >
-        {selectedFramework && adjustedScore ? (
+        {adjustedScore && adjustedScore !== "0.0" ? (
           <>
             <Typography variant="h5" color="text.secondary">
               Adjusted ESG Score:
@@ -316,7 +428,7 @@ function SingleData() {
               {adjustedScore}
             </Typography>
           </>
-        ) : selectedFramework ? (
+        ) : hasDataToShow ? (
           <Typography variant="h5" color="text.secondary">
             Please make sure 'UPDATE SCORE' is clicked.
           </Typography>
