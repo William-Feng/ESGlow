@@ -427,6 +427,28 @@ function SingleSidebar({ token }) {
     return setSuccessMessage("Preferences saved successfully.");
   };
 
+  // Show the user's custom frameworks
+  const [customFrameworks, setCustomFrameworks] = useState([]);
+
+  const fetchCustomFrameworks = () => {
+    fetch("/api/custom-frameworks", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCustomFrameworks(data.custom_frameworks);
+      })
+      .catch((error) =>
+        console.error("Error fetching custom frameworks", error)
+      );
+  };
+
+  useEffect(() => {
+    fetchCustomFrameworks();
+  }, [token]);
+
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
   const [customFrameworkName, setCustomFrameworkName] = useState("");
@@ -483,6 +505,7 @@ function SingleSidebar({ token }) {
       }
 
       setSuccessMessage("Custom framework saved successfully.");
+      fetchCustomFrameworks();
     } catch (error) {
       console.error(error);
       setErrorMessage(
@@ -490,28 +513,6 @@ function SingleSidebar({ token }) {
       );
     }
   };
-
-  // Retrieve custom Frameworks
-  const [customFrameworks, setCustomFrameworks] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/custom-frameworks", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data", data.custom_frameworks);
-        setCustomFrameworks(data.custom_frameworks);
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the custom frameworks.",
-          error
-        )
-      );
-  }, [token, handleSaveFramework]);
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
