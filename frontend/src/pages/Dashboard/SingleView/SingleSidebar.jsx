@@ -283,18 +283,11 @@ function SingleSidebar({ token }) {
     openWeightDialog(metricId, indicatorId, isAdditionalIndicator);
   };
 
-  const handleWeightSave = async () => {
-    if (parseFloat(newWeightInput) > 0 && parseFloat(newWeightInput) <= 1) {
-      if (newWeightAdditionalIndicatorId) {
-        setAdditionalIndicatorWeights((prevWeights) => ({
-          ...prevWeights,
-          [newWeightAdditionalIndicatorId]: parseFloat(
-            parseFloat(newWeightInput).toFixed(3)
-          ),
-        }));
-      } else if (newWeightMetridId) {
-        setMetricWeights((prevWeights) => ({
-          ...prevWeights,
+  const handleWeightSave = () => {
+    if (!isNaN(newWeightInput)) {
+      if (newWeightMetridId) {
+        setMetricWeights((prevMetrics) => ({
+          ...prevMetrics,
           [newWeightMetridId]: parseFloat(
             parseFloat(newWeightInput).toFixed(3)
           ),
@@ -397,41 +390,15 @@ function SingleSidebar({ token }) {
     });
   };
 
-  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleCloseSnackbar = () => {
-    setErrorMessage("");
     setSuccessMessage("");
   };
 
   const handleSave = () => {
-    const totalMetricWeight = selectedMetrics.reduce(
-      (total, metric) => total + metricWeights[metric.metric_id],
-      0
-    );
-    if (Math.abs(totalMetricWeight - 1) > 0.0001) {
-      return setErrorMessage("Metric weights do not add up to 1.");
-    }
-
-    const hasError = selectedMetrics.some((metric) => {
-      const totalIndicatorWeight = metric.indicators.reduce(
-        (total, indicator) => {
-          return selectedIndicators.includes(indicator.indicator_id)
-            ? total + indicatorWeights[indicator.indicator_id]
-            : total;
-        },
-        0
-      );
-      return Math.abs(totalIndicatorWeight - 1) > 0.001;
-    });
-    if (hasError) {
-      return setErrorMessage(
-        "Indicator weights for some metrics do not add up to 1."
-      );
-    }
-
-    // Update savedWeights
+    // Update savedWeights with indicator and metric weights
     const newSavedWeights = {};
     const savedMetricsList = [];
     selectedMetrics.forEach((metric) => {
@@ -549,14 +516,6 @@ function SingleSidebar({ token }) {
     <Box sx={{ paddingBottom: 3 }}>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={!!errorMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={!!successMessage}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
@@ -567,19 +526,21 @@ function SingleSidebar({ token }) {
         <DialogTitle>Enter New Weight</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter a value between 0 and 1 with at most 3 decimal places.
+            Please enter a value with at most 3 decimal places.
           </DialogContentText>
           <TextField
-            error={
-              parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1
-            }
+            error={isNaN(newWeightInput)}
             helperText={
-              parseFloat(newWeightInput) <= 0 || parseFloat(newWeightInput) > 1
-                ? "Value must be between 0 and 1."
-                : ""
+              isNaN(newWeightInput) ? "Please enter a valid number." : ""
             }
             value={newWeightInput}
             onChange={handleNewWeightChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleWeightSave();
+              }
+            }}
             fullWidth
           />
         </DialogContent>

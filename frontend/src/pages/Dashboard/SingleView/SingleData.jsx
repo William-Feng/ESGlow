@@ -5,10 +5,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import { useState, useEffect, useMemo, useContext } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { SingleViewContext } from "./SingleView";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function SingleData() {
   const {
@@ -17,6 +19,7 @@ function SingleData() {
     selectedYears,
     indicatorValues,
     savedWeights,
+    allIndicators,
     allIndicatorValues,
     selectedAdditionalIndicators,
   } = useContext(SingleViewContext);
@@ -36,6 +39,21 @@ function SingleData() {
   useEffect(() => {
     if (savedWeights.metrics) {
       function calculateScore(savedWeights, filteredData) {
+        // Calculate the total sum of metric weights
+        const totalMetricWeight = savedWeights.metrics.reduce(
+          (accumulator, metric) => accumulator + metric.metric_weight,
+          0
+        );
+
+        // Calculate the total sum of indicator weights for each metric
+        savedWeights.metrics.forEach((metric) => {
+          metric.metric_weight_total = metric.indicators.reduce(
+            (accumulator, indicator) =>
+              accumulator + indicator.indicator_weight,
+            0
+          );
+        });
+
         const metricScores = savedWeights.metrics.map((metric) => {
           const metricScore = metric.indicators.reduce(
             (accumulator, indicator) => {
@@ -46,10 +64,12 @@ function SingleData() {
               );
 
               if (matchingIndicator) {
-                return (
-                  accumulator +
-                  matchingIndicator.value * indicator.indicator_weight
-                );
+                // Calculate pro-rata adjusted indicator weight
+                const adjustedIndicatorWeight =
+                  (matchingIndicator.value * indicator.indicator_weight) /
+                  metric.metric_weight_total;
+
+                return accumulator + adjustedIndicatorWeight;
               }
 
               return accumulator;
@@ -57,13 +77,18 @@ function SingleData() {
             0
           );
 
-          return metricScore * metric.metric_weight;
+          // Calculate pro-rata adjusted metric weight
+          const adjustedMetricWeight =
+            (metricScore * metric.metric_weight) / totalMetricWeight;
+
+          return adjustedMetricWeight;
         });
 
         const finalScore = metricScores.reduce(
           (accumulator, metricScore) => accumulator + metricScore,
           0
         );
+
         return finalScore;
       }
       setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
@@ -76,8 +101,15 @@ function SingleData() {
     const dataMap = {};
 
     filteredData.forEach((row) => {
+      console.log(row);
       if (!dataMap[row.indicator_id]) {
-        dataMap[row.indicator_id] = { name: row.indicator_name };
+        const indicator_source = allIndicators.find(
+          (indicator) => indicator.indicator_id === row.indicator_id
+        ).indicator_source;
+        dataMap[row.indicator_id] = {
+          name: row.indicator_name,
+          source: indicator_source,
+        };
       }
       dataMap[row.indicator_id][row.year] = row.value;
     });
@@ -202,6 +234,18 @@ function SingleData() {
                   }}
                 >
                   {row.name}
+                  <Tooltip
+                    title={row.source.split(";").map((source, index) => (
+                      // Add line break to separate sources
+                      <React.Fragment key={index}>
+                        {source}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                    sx={{ marginLeft: "4px" }}
+                  >
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
                 </TableCell>
                 {selectedYears.map((year) => (
                   <TableCell

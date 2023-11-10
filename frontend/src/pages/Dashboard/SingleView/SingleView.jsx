@@ -308,6 +308,7 @@ function SingleView({ token }) {
                 selectedYears,
                 indicatorValues,
                 savedWeights,
+                allIndicators,
                 allIndicatorValues,
                 selectedAdditionalIndicators,
               }}

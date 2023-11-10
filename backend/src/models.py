@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-from .config import JWT_EXAMPLE
+from .config import Config
 
 
 def user_authentication_models(api):
@@ -11,12 +11,12 @@ def user_authentication_models(api):
 
     register_model = api.model('LoginResponse', {
         'message': fields.String(description='Status message', example='User successfully registered.'),
-        'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
+        'token': fields.String(description='JWT access token', example=f'{Config.JWT_EXAMPLE}')
     })
 
     login_model = api.model('LoginResponse', {
         'message': fields.String(description='Status message', example='Login successful.'),
-        'token': fields.String(description='JWT access token', example=f'{JWT_EXAMPLE}')
+        'token': fields.String(description='JWT access token', example=f'{Config.JWT_EXAMPLE}')
     })
 
     return user_model, register_model, login_model
@@ -123,6 +123,35 @@ def framework_metric_indicator_models(api):
     return framework_detailed_model, indicator_value_detailed_model
 
 
+def value_calculations(api):
+    """
+    framework_values_model = api.model("FrameworkValue"), {
+        'framework_id' : fields.Integer(required=True, description='The indicator ID of framework', example=12),
+        'score' : fields.Integer(required=True, description='Score of the framework', example = 76)
+    }
+    
+    company_values_value_model = api.model('CompanyValue', {
+        'id' : fields.Integer(required=True, description='The indicator ID of company', example=12),
+        'ESGscore' : fields.Integer(required=True, description='Value of company', example=83),
+        'year': fields.Integer(required=True, description='The year of the indicator', example=2022),
+        'frameworks' : fields.List(fields.Nested(framework_values_model), description="List of framework scores")
+    })
+    
+    
+    company_values_model = api.model('CompanyValues', {
+        'message': fields.String(description='Status message', example='Values for company retrieved!'),
+        'values': fields.List(fields.Nested(company_values_value_model), description = "Company framework value")
+    })
+    """
+    
+    company_values_model = api.model('CompanyValues', {
+        'message': fields.String(description='Status message', example='Values for company retrieved!'),
+        'values': fields.String(description = "Company framework value")
+    })
+    
+    return company_values_model
+
+    
 def custom_framework_models(api):
     custom_framework_model = api.model('CustomFramework', {
         'framework_name': fields.String(required=True, description='Custom framework name'),
