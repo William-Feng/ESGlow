@@ -74,14 +74,14 @@ export default function ComparisonGraph({ token }) {
 
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  console.log(selectedYearRange)
-
   return (
     <>
       {isLoading ? (
         <CircularProgress />
       ) : (
         <LineChart
+          height={380}
+          margin={{ bottom: 100 }}
           series={currentData.map(item => ({
             label: item.label,
             data: item.data.filter((_, index) =>
@@ -89,6 +89,13 @@ export default function ComparisonGraph({ token }) {
             ),
           }))}
           xAxis={[{ scaleType: 'point', data: selectedYearRange }]}
+          slotProps={{
+            legend: {
+              direction: 'row',
+              position: { vertical: 'bottom', horizontal: 'middle' },
+              margin: '70px 0'
+            },
+          }}
         />
       )}
     </>
