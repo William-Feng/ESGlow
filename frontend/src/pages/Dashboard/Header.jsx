@@ -1,16 +1,17 @@
 import { Box, Typography, Button, Avatar, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ManageCustomFrameworks from "./Components/ManageCustomFrameworks";
 import Logo from "../../assets/Logo.png";
 
-function Header(token) {
+function Header({ token }) {
   const navigate = useNavigate();
   const [name, setName] = useState("");
 
   useEffect(() => {
     fetch("/api/user", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -40,6 +41,17 @@ function Header(token) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const [isFrameworksDialogOpen, setIsFrameworksDialogOpen] = useState(false);
+
+  const handleOpenFrameworksDialog = () => {
+    setAnchorElUser(null);
+    setIsFrameworksDialogOpen(true);
+  };
+
+  const handleCloseFrameworksDialog = () => {
+    setIsFrameworksDialogOpen(false);
   };
 
   const handleLogout = () => {
@@ -87,10 +99,19 @@ function Header(token) {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
+          <MenuItem key="ManageFrameworks" onClick={handleOpenFrameworksDialog}>
+            <Typography textAlign="center">Manage Custom Frameworks</Typography>
+          </MenuItem>
           <MenuItem key="Logout" onClick={handleLogout}>
             <Typography textAlign="center">Logout</Typography>
           </MenuItem>
         </Menu>
+
+        <ManageCustomFrameworks
+          open={isFrameworksDialogOpen}
+          onClose={handleCloseFrameworksDialog}
+          token={token}
+        />
       </Box>
     </Box>
   );
