@@ -702,6 +702,12 @@ function SingleSidebar({ token }) {
                 variant="standard"
                 value={customFrameworkDescription}
                 onChange={handleCustomFrameworkDescriptionChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSaveFramework();
+                  }
+                }}
               />
             </DialogContent>
             <DialogActions>
