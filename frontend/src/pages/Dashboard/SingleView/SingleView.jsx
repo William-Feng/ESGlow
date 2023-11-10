@@ -29,6 +29,8 @@ function SingleView({ token }) {
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
   const [selectedCustomFramework, setSelectedCustomFramework] = useState(null);
+  const [isCustomFrameworksDialogOpen, setIsCustomFrameworksDialogOpen] =
+    useState(false);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
@@ -193,7 +195,11 @@ function SingleView({ token }) {
           }}
         >
           <Toolbar>
-            <Header token={token} />
+            <Header
+              token={token}
+              isCustomFrameworksDialogOpen={isCustomFrameworksDialogOpen}
+              setIsCustomFrameworksDialogOpen={setIsCustomFrameworksDialogOpen}
+            />
           </Toolbar>
           <Toolbar sx={{ margin: "auto" }}>
             <SingleViewContext.Provider
@@ -270,6 +276,7 @@ function SingleView({ token }) {
                   setSelectedFramework,
                   selectedCustomFramework,
                   setSelectedCustomFramework,
+                  isCustomFrameworksDialogOpen,
                   selectedIndicators,
                   setSelectedIndicators,
                   selectedYears,

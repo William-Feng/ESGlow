@@ -12,7 +12,8 @@ from .frameworks import (
     get_indicator_values,
     get_company_info,
     create_custom_framework,
-    get_custom_frameworks
+    get_custom_frameworks,
+    delete_custom_framework
 )
 from .models import (
     user_authentication_models,
@@ -327,7 +328,7 @@ custom_framework_model = custom_framework_models(api)
 
 @api.route("/api/custom-frameworks")
 class CustomFrameworkList(Resource):
-    # Create a new custom framework
+    # Create a new custom framework for a user
     @api.response(201, 'Custom framework for user created successfully!', model=custom_framework_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid custom framework input.')
@@ -356,3 +357,20 @@ class CustomFrameworkList(Resource):
             return {"message": "User not found."}, 400
 
         return get_custom_frameworks(user)
+
+
+@api.route("/api/custom-frameworks/<int:framework_id>")
+class CustomFramework(Resource):
+    @api.response(200, 'Custom framework deleted successfully.')
+    @api.response(400, 'Custom framework not found.')
+    @api.response(401, 'Authentication required. Please log in.')
+    @jwt_required()
+    def delete(self, framework_id):
+        email = get_jwt_identity()
+
+        # Verify user exists in backend.
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "User not found."}, 400
+
+        return delete_custom_framework(user, framework_id)
