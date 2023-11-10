@@ -549,14 +549,6 @@ function SingleSidebar({ token }) {
     }
   };
 
-  useEffect(() => {
-    console.log("Selected Framework:", selectedFramework);
-    console.log(
-      "Selected Additional Indicators:",
-      selectedAdditionalIndicators
-    );
-  }, [selectedFramework, selectedAdditionalIndicators]);
-
   return (
     <Box sx={{ paddingBottom: 3 }}>
       <Snackbar
@@ -654,77 +646,82 @@ function SingleSidebar({ token }) {
           handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
-      {/* TODO: Abstract the buttons below into separate components */}
       {(selectedFramework || selectedAdditionalIndicators.length > 0) && (
-        <>
-          <Box
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingX: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSaveFrameworkDialogToggle}
             sx={{
-              mt: 2,
-              mr: 2,
-              display: "flex",
-              justifyContent: "right",
+              width: "150px",
+              height: "55px",
+              whiteSpace: "normal",
+              textAlign: "center",
             }}
           >
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Update Score
-            </Button>
-          </Box>
-          <Box
+            Save Custom Framework
+          </Button>
+
+          <Dialog
+            open={saveFrameworkDialogOpen}
+            onClose={handleSaveFrameworkDialogToggle}
+          >
+            <DialogTitle>Save Custom Framework</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter a name and description for your custom framework.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="customFrameworkName"
+                label="Unique Custom Framework Name"
+                type="text"
+                fullWidth
+                required
+                variant="standard"
+                value={customFrameworkName}
+                onChange={handleCustomFrameworkNameChange}
+              />
+              <TextField
+                margin="dense"
+                id="customFrameworkDescription"
+                label="Description (Optional)"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={customFrameworkDescription}
+                onChange={handleCustomFrameworkDescriptionChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
+              <Button onClick={handleSaveFramework}>Save</Button>
+            </DialogActions>
+          </Dialog>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
             sx={{
-              mt: 2,
-              ml: 2,
-              display: "flex",
-              justifyContent: "left",
+              width: "150px",
+              height: "55px",
+              whiteSpace: "normal",
+              textAlign: "center",
             }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSaveFrameworkDialogToggle}
-            >
-              Save Custom Framework
-            </Button>
-            <Dialog
-              open={saveFrameworkDialogOpen}
-              onClose={handleSaveFrameworkDialogToggle}
-            >
-              <DialogTitle>Save Custom Framework</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Please enter a name and description for your custom framework.
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="customFrameworkName"
-                  label="Unique Custom Framework Name"
-                  type="text"
-                  fullWidth
-                  required
-                  variant="standard"
-                  value={customFrameworkName}
-                  onChange={handleCustomFrameworkNameChange}
-                />
-                <TextField
-                  margin="dense"
-                  id="customFrameworkDescription"
-                  label="Description (Optional)"
-                  type="text"
-                  fullWidth
-                  variant="standard"
-                  value={customFrameworkDescription}
-                  onChange={handleCustomFrameworkDescriptionChange}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleSaveFrameworkDialogToggle}>
-                  Cancel
-                </Button>
-                <Button onClick={handleSaveFramework}>Save</Button>
-              </DialogActions>
-            </Dialog>
-          </Box>
-        </>
+            Update Score
+          </Button>
+        </Box>
       )}
     </Box>
   );

@@ -77,7 +77,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                 }
               />
               <Box display="flex" alignItems="center" gap={1}>
-                <Tooltip title={indicator.description}>
+                <Tooltip title={indicator.indicator_description}>
                   <InfoOutlinedIcon style={{ cursor: "pointer" }} />
                 </Tooltip>
                 <Chip
