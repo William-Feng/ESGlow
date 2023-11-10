@@ -55,42 +55,45 @@ function ComparisonSidebar({ token }) {
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
-      <ToggleButtonGroup
-        value={dataView}
-        exclusive
-        onChange={(e) => setDataView(e.currentTarget.value)}
-        aria-label="table view"
-        sx={{
-          backgroundColor: "#E8E8E8",
-        }}
-      >
-        <ToggleButton
-          value="table"
+      <Box sx={{ textAlign: 'center' }}>
+        <ToggleButtonGroup
+          value={dataView}
+          exclusive
+          onChange={(e) => setDataView(e.currentTarget.value)}
+          aria-label="table view"
           sx={{
-            backgroundColor: dataView === "table" ? "#B0C4DE !important" : "",
+            backgroundColor: "#E8E8E8",
+            m: 'auto'
           }}
         >
-          <Typography
-            variant="body4"
-            textAlign="center"
+          <ToggleButton
+            value="table"
+            sx={{
+              backgroundColor: dataView === "table" ? "#B0C4DE !important" : "",
+            }}
           >
-            Table View
-          </Typography>
-        </ToggleButton>
-        <ToggleButton
-          value="graph"
-          sx={{
-            backgroundColor: dataView === "graph" ? "#B0C4DE !important" : "",
-          }}
-        >
-          <Typography
-            variant="body4"
-            textAlign="center"
+            <Typography
+              variant="body4"
+              textAlign="center"
+            >
+              Table View
+            </Typography>
+          </ToggleButton>
+          <ToggleButton
+            value="graph"
+            sx={{
+              backgroundColor: dataView === "graph" ? "#B0C4DE !important" : "",
+            }}
           >
-            Graph View
-          </Typography>
-        </ToggleButton>
-      </ToggleButtonGroup>
+            <Typography
+              variant="body4"
+              textAlign="center"
+            >
+              Graph View
+            </Typography>
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
         { dataView === 'graph' ? (
           <YearsRangeAccordion
             disabled={selectedCompanies.length === 0} // Depending on some sort of selection
