@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import ManageCustomFrameworks from "./Components/ManageCustomFrameworks";
 import Logo from "../../assets/Logo.png";
 
-function Header({ token }) {
+function Header({
+  token,
+  isCustomFrameworksDialogOpen,
+  setIsCustomFrameworksDialogOpen,
+}) {
   const navigate = useNavigate();
   const [name, setName] = useState("");
 
@@ -43,15 +47,14 @@ function Header({ token }) {
     setAnchorElUser(null);
   };
 
-  const [isFrameworksDialogOpen, setIsFrameworksDialogOpen] = useState(false);
-
   const handleOpenFrameworksDialog = () => {
     setAnchorElUser(null);
-    setIsFrameworksDialogOpen(true);
+    setIsCustomFrameworksDialogOpen(true);
   };
 
   const handleCloseFrameworksDialog = () => {
-    setIsFrameworksDialogOpen(false);
+    setIsCustomFrameworksDialogOpen(false);
+    console.log("This has been set to false");
   };
 
   const handleLogout = () => {
@@ -108,7 +111,7 @@ function Header({ token }) {
         </Menu>
 
         <ManageCustomFrameworks
-          open={isFrameworksDialogOpen}
+          open={isCustomFrameworksDialogOpen}
           onClose={handleCloseFrameworksDialog}
           token={token}
         />

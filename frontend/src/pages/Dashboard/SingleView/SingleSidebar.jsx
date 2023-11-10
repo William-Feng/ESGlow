@@ -34,6 +34,7 @@ function SingleSidebar({ token }) {
     setSelectedFramework,
     selectedCustomFramework,
     setSelectedCustomFramework,
+    isCustomFrameworksDialogOpen,
     selectedIndicators,
     setSelectedIndicators,
     selectedYears,
@@ -482,7 +483,7 @@ function SingleSidebar({ token }) {
   useEffect(() => {
     fetchCustomFrameworks();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, isCustomFrameworksDialogOpen]);
 
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
