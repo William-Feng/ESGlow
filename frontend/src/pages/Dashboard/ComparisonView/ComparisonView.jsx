@@ -14,8 +14,9 @@ function ComparisonView({ token }) {
 
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]); // user selected year; single select is still contained in a list
-  const [yearsList, setYearsList] = useState([]);         // range of years data available for the selected companies
+  const [selectedYear, setSelectedYear] = useState([]);               // user selected single year ; TABLE VIEW
+  const [selectedYearRange, setSelectedYearRange] = useState([]); // user selected year range; GRAPH VIEW
+  const [yearsList, setYearsList] = useState([]);                 // SET range of years data available for the companies
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState([]);
 
@@ -48,6 +49,7 @@ function ComparisonView({ token }) {
       .then((response) => response.json())
       .then((data) => {
         setYearsList(data.years);
+        setSelectedYearRange(data.years);
       })
       .catch((error) => {
         if (error !== "No years found") {
@@ -136,6 +138,8 @@ function ComparisonView({ token }) {
                   selectedCompanies,
                   selectedYear,
                   setSelectedYear,
+                  selectedYearRange,
+                  setSelectedYearRange,
                   selectedIndicators,
                   setSelectedIndicators,
                   indicatorsList,
@@ -152,6 +156,7 @@ function ComparisonView({ token }) {
                 dataView,
                 selectedCompanies,
                 selectedYear,
+                selectedYearRange,
                 selectedIndicators,
                 yearsList
               }}

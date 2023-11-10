@@ -14,12 +14,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
-function FrameworkAccordion({ disabled, expanded, onChange }) {
+function FrameworkAccordion({ disabled, expanded, onToggleDropdown }) {
   const { frameworksData, selectedFramework, handleFrameworkChange } =
     useContext(SidebarContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"

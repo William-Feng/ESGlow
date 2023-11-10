@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
 import {
   Accordion,
   AccordionDetails,
@@ -12,17 +11,18 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
 
-function IndicatorsAccordion({ disabled, expanded, onChange }) {
+function IndicatorsAccordion({ disabled, expanded, onToggleDropdown, handleIndicatorsChange }) {
   const {
     selectedYear,
+    selectedYearRange,
     indicatorsList,
     selectedIndicators,
-    handleIndicatorsChange,
-  } = useContext(ComparisonSidebarContext);
+  } = useContext(ComparisonViewContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
@@ -47,7 +47,7 @@ function IndicatorsAccordion({ disabled, expanded, onChange }) {
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          {selectedYear ? (
+          {selectedYear.length || selectedYearRange.length ? (
             indicatorsList.map((indicator) => (
               <Box
                 key={indicator.indicator_id}

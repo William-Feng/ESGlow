@@ -422,23 +422,23 @@ function SingleSidebar({ token }) {
         <FrameworkAccordion
           disabled={!frameworksData}
           expanded={expanded.panel1}
-          onChange={handleChange("panel1")}
+          onToggleDropdown={handleChange("panel1")}
           frameworksData={frameworksData}
         />
         <MetricsIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel2}
-          onChange={handleChange("panel2")}
+          onToggleDropdown={handleChange("panel2")}
         />
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
-          onChange={handleChange("panel3")}
+          onToggleDropdown={handleChange("panel3")}
         />
         <YearsMultiAccordion
           disabled={!frameworksData}
           expanded={expanded.panel4}
-          onChange={handleChange("panel4")}
+          onToggleDropdown={handleChange("panel4")}
           years={years}
           handleYearChange={handleYearChange}
         />
@@ -492,7 +492,7 @@ function SingleSidebar({ token }) {
                 fullWidth
                 variant="standard"
                 value={customFrameworkName}
-                onChange={handleCustomFrameworkNameChange}
+                onToggleDropdown={handleCustomFrameworkNameChange}
               />
             </DialogContent>
             <DialogActions>

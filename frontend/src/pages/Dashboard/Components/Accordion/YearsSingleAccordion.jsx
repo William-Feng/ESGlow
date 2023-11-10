@@ -10,21 +10,21 @@ import {
 } from "@mui/material";
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
+import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
 
-function YearsSingleAccordion({ disabled, expanded, onChange }) {
+function YearsSingleAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
     yearsList,
     selectedYear,
     setSelectedYear
-  } = useContext(ComparisonSidebarContext);
+  } = useContext(ComparisonViewContext);
   
   const handleYearSelect = (_, value) => {
     setSelectedYear([parseInt(value)]);
   }
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"

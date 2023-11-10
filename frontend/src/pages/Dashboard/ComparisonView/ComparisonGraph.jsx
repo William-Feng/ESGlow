@@ -7,24 +7,27 @@ import { CircularProgress } from '@mui/material';
 export default function ComparisonGraph({ token }) {
   const {
     selectedCompanies,
-    selectedYear,
+    yearsList,
+    selectedYearRange,
     selectedIndicators,
   } = useContext(ComparisonViewContext);
 
   const [currentData, setCurrentData] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
+
     if (selectedCompanies.length === 0 || selectedIndicators.length === 0) {
+      setIsLoading(false)
       return;
     }
-    const indicatorIds = selectedIndicators.join(",");
-    let yearsListString = selectedYear.join(",");
 
+    const indicatorIds = selectedIndicators.join(",");
+    let yearsListString = yearsList.join(",");
     const newData = [];
     const promisesList = []
-    // Create an object to store data for each indicator_id
-    setIsLoading(true)
+
     selectedCompanies.forEach((c) => {
       promisesList.push(
         fetch(`/api/values/${c.company_id}/${indicatorIds}/${yearsListString}`, {
@@ -52,7 +55,7 @@ export default function ComparisonGraph({ token }) {
             selectedIndicators.forEach((indicatorId) => {
               newData.push(indicatorData[indicatorId]);
             });
-
+            console.log(newData)
           })
           .catch((error) => {
             console.error("Error fetching indicator values for company:", error);
@@ -69,20 +72,25 @@ export default function ComparisonGraph({ token }) {
       console.error("Error fetching all indicator values:", error);
     })
 
-  }, [token, selectedCompanies, selectedIndicators, selectedYear]);
+  }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  console.log(selectedYear)
+  console.log(selectedYearRange)
 
   return (
     <>
-    {isLoading ?
-      <CircularProgress />
-      :
-      <LineChart
-        series={currentData}
-        xAxis={[{ scaleType: 'point', data: selectedYear }]}
-      />
-    }
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <LineChart
+          series={currentData.map(item => ({
+            label: item.label,
+            data: item.data.filter((_, index) =>
+              selectedYearRange.includes(yearsList[index])
+            ),
+          }))}
+          xAxis={[{ scaleType: 'point', data: selectedYearRange }]}
+        />
+      )}
     </>
   );
 }
