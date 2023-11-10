@@ -26,7 +26,7 @@ function SingleView({ token }) {
 
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [industryMean, setIndustryMean] = useState(0);
-  const [industryRanking, setIndustryRanking] = useState(0);
+  const [industryRanking, setIndustryRanking] = useState("");
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
@@ -68,21 +68,46 @@ function SingleView({ token }) {
     [token, navigate]
   );
 
-  console.log(selectedIndustry);
   useEffect(() => {
-    if (selectedIndustry) {
-      fetch(`/api/values/ranking/company/${selectedCompany}`, {
+    const industryId = 0;
+    fetch("/api/industries/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        industryId = data.industries.indexOf(selectedIndustry) + 1;
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the industry information.",
+          error
+        )
+      );
+    fetch(`/api/values/${industryId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setIndustryMean(data.average_score);
+      });
+
+    if (selectedCompany) {
+      fetch(`/api/values/ranking/company/${selectedCompany.company_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          setIndustryRanking(data.ranking);
+          setIndustryRanking(`${data.ranking}/${data.industry_company_count}`);
         });
     }
-  }, [selectedIndustry]);
+  }, [selectedIndustry, selectedCompany]);
 
   useEffect(() => {
     // New selection of company wipes data display to blank
@@ -264,12 +289,13 @@ function SingleView({ token }) {
             <SingleViewContext.Provider
               value={{
                 industryMean,
+                industryRanking,
                 selectedCompany,
                 frameworksData,
                 fixedIndicatorValues,
               }}
             >
-              <SingleViewOverview token={token} />
+              <SingleViewOverview />
             </SingleViewContext.Provider>
           </Box>
           <Box

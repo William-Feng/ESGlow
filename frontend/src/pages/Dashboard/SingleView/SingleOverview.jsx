@@ -1,11 +1,11 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-function SingleOverview({ token }) {
-  const { industryMean, selectedCompany, frameworksData, fixedIndicatorValues, ind } =
+function SingleOverview() {
+  const { industryMean, industryRanking, selectedCompany, frameworksData, fixedIndicatorValues, ind } =
     useContext(SingleViewContext);
   
   const getRecentESGScores = () => {
@@ -217,7 +217,7 @@ function SingleOverview({ token }) {
                 Industry Mean
               </Typography>
               <Typography variant="h4" color="text.primary" mt={3} paragraph>
-                24/185
+                {industryRanking}
               </Typography>
               <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Ranking
