@@ -539,6 +539,8 @@ function SingleSidebar({ token }) {
         throw new Error(errorData.message || "Network response was not ok");
       }
 
+      setCustomFrameworkName("");
+      setCustomFrameworkDescription("");
       setSuccessMessage("Custom framework saved successfully.");
       fetchCustomFrameworks();
     } catch (error) {
