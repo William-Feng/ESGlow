@@ -26,12 +26,16 @@ function ComparisonSidebar({ token }) {
         panel1: false,
         panel2: false,
       });
-      return;
+    } else {
+      setExpanded({
+        panel1: true,
+        panel2: false,
+      });
     }
   }, [token, selectedCompanies]);
 
   const [expanded, setExpanded] = useState({
-    panel1: false,
+    panel1: true,
     panel2: false,
   });
 
