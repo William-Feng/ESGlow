@@ -25,6 +25,8 @@ function SingleView({ token }) {
   const yearsString = years.join(",");
 
   const [selectedIndustry, setSelectedIndustry] = useState();
+  const [industryMean, setIndustryMean] = useState(0);
+  const [industryRanking, setIndustryRanking] = useState(0);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
@@ -65,6 +67,22 @@ function SingleView({ token }) {
     },
     [token, navigate]
   );
+
+  console.log(selectedIndustry);
+  useEffect(() => {
+    if (selectedIndustry) {
+      fetch(`/api/values/ranking/company/${selectedCompany}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setIndustryRanking(data.ranking);
+        });
+    }
+  }, [selectedIndustry]);
 
   useEffect(() => {
     // New selection of company wipes data display to blank
@@ -245,12 +263,13 @@ function SingleView({ token }) {
           >
             <SingleViewContext.Provider
               value={{
+                industryMean,
                 selectedCompany,
                 frameworksData,
                 fixedIndicatorValues,
               }}
             >
-              <SingleViewOverview />
+              <SingleViewOverview token={token} />
             </SingleViewContext.Provider>
           </Box>
           <Box
