@@ -42,3 +42,7 @@ Week 8:
 Week 8 was our second project demonstration of the project, showing off the features and corresponding user stories we had assigned for the second sprint. In the demonstration, I talked about the way we generated data for our website to use, whether that be for the actual deployed frontend or backend testing with Pytest.
 
 Since we were officially starting Sprint 3 as well, we spent time in the tutorial going over what user stories and tickets were required for each members, assigning and distributing new child issues and branches for each member. For myself I continued to receive backend tickets, with the potential to swap over to frontend later on.
+
+
+Week 9:
+This week I worked on further backend functionalities, particularly the transferring of ESG Score calculations from Frontend to Backend, in order to find the average, maximum and minimum scores of industries, individual company scores and their rankings in their particular industries, as well as constructing Year-to-Score values for usage and display in the frontend comparison graphs. I also assisted in modifying existing endpoints and their functionalities when the occasion rose, including modifying the indicator endpoints to return extra content. Apart from that, I also began work on our final report.
