@@ -3,8 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-from .config import VERIFICATION_CODE_LENGTH
-
+from .config import Config
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -18,7 +17,7 @@ class User(db.Model):
     name = db.Column(db.Text, nullable=False)
     email = db.Column(db.Text, unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
-    verification_code = db.Column(db.String(length=VERIFICATION_CODE_LENGTH))
+    verification_code = db.Column(db.String(length=Config.VERIFICATION_CODE_LENGTH))
 
 
 class Industry(db.Model):

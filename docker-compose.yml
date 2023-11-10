@@ -1,6 +1,24 @@
 version: "3.8"
 
 services:
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/esglow
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    environment:
+      REACT_APP_BACKEND_URL: http://backend:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
   db:
     image: postgres
     container_name: postgres

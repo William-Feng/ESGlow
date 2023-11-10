@@ -24,9 +24,9 @@ function ComparisonSidebar({ token }) {
     if (selectedCompanies.length === 0) {
       setExpanded({
         panel1: false,
-        panel2: false
-      })
-      return
+        panel2: false,
+      });
+      return;
     }
   }, [token, selectedCompanies]);
 

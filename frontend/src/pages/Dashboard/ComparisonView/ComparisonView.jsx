@@ -22,16 +22,16 @@ function ComparisonView({ token }) {
 
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {
-  fetch("/api/indicators/all", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      setIndicatorsList(data.indicators);
-    });
-  }, [token])
+    fetch("/api/indicators/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIndicatorsList(data.indicators);
+      });
+  }, [token]);
 
   // for every new company selection:
   useEffect(() => {
@@ -161,7 +161,7 @@ function ComparisonView({ token }) {
                 yearsList
               }}
             >
-              <ComparisonDataDisplay token={token}/>
+              <ComparisonDataDisplay token={token} />
             </ComparisonViewContext.Provider>
           </Box>
         </Box>
