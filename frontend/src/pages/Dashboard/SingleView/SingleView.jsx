@@ -34,6 +34,8 @@ function SingleView({ token }) {
   const [indicatorValues, setIndicatorValues] = useState([]);
   const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
+  const [savedAdditionalIndicatorWeights, setSavedAdditionalIndicatorWeights] =
+    useState({});
 
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
@@ -296,6 +298,7 @@ function SingleView({ token }) {
                   allIndicators,
                   selectedAdditionalIndicators,
                   setSelectedAdditionalIndicators,
+                  setSavedAdditionalIndicatorWeights,
                 }}
               >
                 <SingleViewSidebar token={token} />
@@ -311,6 +314,7 @@ function SingleView({ token }) {
                 allIndicators,
                 allIndicatorValues,
                 selectedAdditionalIndicators,
+                savedAdditionalIndicatorWeights,
               }}
             >
               <SingleViewData />

@@ -22,6 +22,7 @@ function SingleData() {
     allIndicators,
     allIndicatorValues,
     selectedAdditionalIndicators,
+    savedAdditionalIndicatorWeights,
   } = useContext(SingleViewContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
 
@@ -35,73 +36,11 @@ function SingleData() {
     validIndicatorIds.includes(row.indicator_id)
   );
 
-  // Display the new adjusted ESG score based on savedWeights
-  useEffect(() => {
-    if (savedWeights.metrics) {
-      function calculateScore(savedWeights, filteredData) {
-        // Calculate the total sum of metric weights
-        const totalMetricWeight = savedWeights.metrics.reduce(
-          (accumulator, metric) => accumulator + metric.metric_weight,
-          0
-        );
-
-        // Calculate the total sum of indicator weights for each metric
-        savedWeights.metrics.forEach((metric) => {
-          metric.metric_weight_total = metric.indicators.reduce(
-            (accumulator, indicator) =>
-              accumulator + indicator.indicator_weight,
-            0
-          );
-        });
-
-        const metricScores = savedWeights.metrics.map((metric) => {
-          const metricScore = metric.indicators.reduce(
-            (accumulator, indicator) => {
-              const matchingIndicator = filteredData.find(
-                (data) =>
-                  data.indicator_id === indicator.indicator_id &&
-                  data.year === savedWeights.year
-              );
-
-              if (matchingIndicator) {
-                // Calculate pro-rata adjusted indicator weight
-                const adjustedIndicatorWeight =
-                  (matchingIndicator.value * indicator.indicator_weight) /
-                  metric.metric_weight_total;
-
-                return accumulator + adjustedIndicatorWeight;
-              }
-
-              return accumulator;
-            },
-            0
-          );
-
-          // Calculate pro-rata adjusted metric weight
-          const adjustedMetricWeight =
-            (metricScore * metric.metric_weight) / totalMetricWeight;
-
-          return adjustedMetricWeight;
-        });
-
-        const finalScore = metricScores.reduce(
-          (accumulator, metricScore) => accumulator + metricScore,
-          0
-        );
-
-        return finalScore;
-      }
-      setAdjustedScore(calculateScore(savedWeights, filteredData).toFixed(1));
-    }
-    // eslint-disable-next-line
-  }, [savedWeights]);
-
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
     const dataMap = {};
 
     filteredData.forEach((row) => {
-      console.log(row);
       if (!dataMap[row.indicator_id]) {
         const indicator_source = allIndicators.find(
           (indicator) => indicator.indicator_id === row.indicator_id
@@ -144,6 +83,94 @@ function SingleData() {
     () => selectedFramework || structuredExtraData.length > 0,
     [selectedFramework, structuredExtraData]
   );
+
+  // Adjusted ESG Score Calculation
+  function calculateScore(
+    savedWeights,
+    filteredData,
+    savedAdditionalIndicatorWeights,
+    additionalIndicatorsData
+  ) {
+    let totalWeightSum = 0;
+    let frameworkScore = 0;
+    let additionalScore = 0;
+
+    // Calculate total weight sum from savedWeights, and add the weights from the additional indicators
+    if (savedWeights && savedWeights.metrics) {
+      totalWeightSum += savedWeights.metrics.reduce(
+        (accumulator, metric) => accumulator + metric.metric_weight,
+        0
+      );
+    }
+
+    Object.values(savedAdditionalIndicatorWeights).forEach((weight) => {
+      totalWeightSum += weight;
+    });
+
+    // Calculate scores for the default framework
+    // For each indicator within a metric, the score contribution is its value multiplied by its relative weight
+    // within the metric, then multiplied by the metric's weight relative to the total weight sum.
+    if (savedWeights && savedWeights.metrics) {
+      frameworkScore = savedWeights.metrics.reduce((accumulator, metric) => {
+        const totalIndicatorWeight = metric.indicators.reduce(
+          (acc, indicator) => acc + indicator.indicator_weight,
+          0
+        );
+
+        const metricScore = metric.indicators.reduce((acc, indicator) => {
+          const matchingIndicator = filteredData.find(
+            (data) =>
+              data.indicator_id === indicator.indicator_id &&
+              data.year === savedWeights.year
+          );
+
+          if (matchingIndicator) {
+            const indicatorRelativeWeight =
+              indicator.indicator_weight / totalIndicatorWeight;
+            const indicatorScore =
+              matchingIndicator.value *
+              indicatorRelativeWeight *
+              (metric.metric_weight / totalWeightSum);
+            return acc + indicatorScore;
+          }
+          return acc;
+        }, 0);
+
+        return accumulator + metricScore;
+      }, 0);
+    }
+
+    // Calculate scores for the additional indicators (note that these are not grouped into metrics)
+    // For each, the score contribution is its value multiplied by its relative weight in the total weight sum.
+    if (Object.keys(savedAdditionalIndicatorWeights).length > 0) {
+      additionalScore = additionalIndicatorsData.reduce((accumulator, data) => {
+        if (!savedWeights || savedWeights.year === data.year) {
+          const weight =
+            savedAdditionalIndicatorWeights[data.indicator_id.toString()] || 0;
+          const normalizedWeight = weight / totalWeightSum;
+          const indicatorScore = data.value * normalizedWeight;
+          return accumulator + indicatorScore;
+        }
+        return accumulator;
+      }, 0);
+    }
+
+    return frameworkScore + additionalScore;
+  }
+
+  // Invoke the score calculation function upon pressing the 'Update Score' button
+  useEffect(() => {
+    if (savedWeights || savedAdditionalIndicatorWeights) {
+      const score = calculateScore(
+        savedWeights,
+        filteredData,
+        savedAdditionalIndicatorWeights,
+        additionalIndicatorsData
+      );
+      setAdjustedScore(score.toFixed(1));
+    }
+    // eslint-disable-next-line
+  }, [savedWeights, savedAdditionalIndicatorWeights, additionalIndicatorsData]);
 
   if (!selectedCompany || !hasDataToShow) {
     return (
@@ -307,7 +334,7 @@ function SingleData() {
           float: "right",
         }}
       >
-        {selectedFramework && adjustedScore ? (
+        {adjustedScore ? (
           <>
             <Typography variant="h5" color="text.secondary">
               Adjusted ESG Score:
