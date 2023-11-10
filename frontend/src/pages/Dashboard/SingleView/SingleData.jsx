@@ -71,13 +71,19 @@ function SingleData() {
 
     additionalIndicatorsData.forEach((row) => {
       if (!dataMap[row.indicator_id]) {
-        dataMap[row.indicator_id] = { name: row.indicator_name };
+        const indicator_source = allIndicators.find(
+          (indicator) => indicator.indicator_id === row.indicator_id
+        ).indicator_source;
+        dataMap[row.indicator_id] = {
+          name: row.indicator_name,
+          source: indicator_source,
+        };
       }
       dataMap[row.indicator_id][row.year] = row.value;
     });
 
     return Object.values(dataMap);
-  }, [additionalIndicatorsData]);
+  }, [allIndicators, additionalIndicatorsData]);
 
   const hasDataToShow = useMemo(
     () => selectedFramework || structuredExtraData.length > 0,
@@ -206,6 +212,7 @@ function SingleData() {
           borderColor: "divider",
         }}
       >
+        {/* TODO: There is duplication between normal data and the additional data, abstract into separate component */}
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -338,9 +345,54 @@ function SingleData() {
                     borderRight: "1px solid",
                     borderColor: "divider",
                     fontSize: "1.1em",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
                   {extraRow.name}
+                  <Tooltip
+                    title={
+                      <React.Fragment>
+                        {extraRow.source.split(";").map((source, index) => {
+                          // Splitting the source string into three parts: the source number, name and description
+                          const [sourceNumber, sourceRest] =
+                            source.split(/:(.+)/);
+                          const [sourceName, sourceDescription] =
+                            sourceRest.split(/\((.+)/);
+
+                          return (
+                            <div
+                              key={index}
+                              style={{
+                                marginBottom:
+                                  index < extraRow.source.split(";").length - 1
+                                    ? 10
+                                    : 0,
+                              }}
+                            >
+                              <Typography
+                                component="span"
+                                style={{ fontStyle: "italic" }}
+                              >
+                                {sourceNumber.trim()}:
+                              </Typography>{" "}
+                              <Typography
+                                component="span"
+                                style={{ fontWeight: "bold" }}
+                              >
+                                {sourceName.trim()}
+                              </Typography>
+                              {" (" + sourceDescription.trim()}
+                            </div>
+                          );
+                        })}
+                      </React.Fragment>
+                    }
+                    sx={{ marginLeft: "4px" }}
+                  >
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
                 </TableCell>
                 {selectedYears.map((year) => (
                   <TableCell

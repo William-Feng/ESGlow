@@ -57,7 +57,7 @@ function SingleView({ token }) {
           console.error("Error fetching indicator values:", error)
         );
     },
-    [token, navigate]
+    [token]
   );
 
   useEffect(() => {
