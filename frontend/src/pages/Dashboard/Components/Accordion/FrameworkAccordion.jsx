@@ -83,21 +83,17 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
                 sx={{
                   // Add a border and background colour for the selected framework
                   border:
-                    (selectedFramework &&
-                      selectedFramework.framework_id ===
-                        framework.framework_id) ||
-                    (selectedCustomFramework &&
-                      selectedCustomFramework.framework_id ===
-                        framework.framework_id)
+                    `default-${selectedFramework?.framework_id}` ===
+                      framework.unique_id ||
+                    `custom-${selectedCustomFramework?.framework_id}` ===
+                      framework.unique_id
                       ? "1px solid rgba(0, 0, 0, 0.12)"
                       : "none",
                   bgcolor:
-                    (selectedFramework &&
-                      selectedFramework.framework_id ===
-                        framework.framework_id) ||
-                    (selectedCustomFramework &&
-                      selectedCustomFramework.framework_id ===
-                        framework.framework_id)
+                    `default-${selectedFramework?.framework_id}` ===
+                      framework.unique_id ||
+                    `custom-${selectedCustomFramework?.framework_id}` ===
+                      framework.unique_id
                       ? "action.hover"
                       : "transparent",
                   borderRadius: "4px",
