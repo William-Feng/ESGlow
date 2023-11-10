@@ -395,6 +395,7 @@ function SingleSidebar({ token }) {
 
   const handleCloseSnackbar = () => {
     setSuccessMessage("");
+    setErrorMessage("");
   };
 
   const handleSave = () => {
@@ -514,6 +515,14 @@ function SingleSidebar({ token }) {
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={!!successMessage}
