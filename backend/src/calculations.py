@@ -233,6 +233,236 @@ def get_industry_values(industry_id):
     )
 
 
+def get_company_industry_ranking(company_id):
+    """
+    Given a company_id, search thru it's industry, and determine it's ranking.
+
+    Args:
+        company_id (int):
+    Return:
+        {
+            message: string,
+            ranking: int
+        },
+        HTTP Status Code
+
+    """
+
+    # Grab Company Object
+    company = db.session.query(Company).filter(Company.company_id == company_id).first()
+    if not company:
+        return {"message": "Invalid company id supplied!"}, 400
+
+    # Determine all industry rankings...
+    company_scores = get_industry_company_values(company.industry_id)
+
+    # Brute Force Method
+    ranking = -1
+    company_score = -1
+    for index, (id, score) in enumerate(company_scores):
+        if id == company_id:
+            ranking = index + 1
+            company_score = score
+            break
+
+    return {
+        "message": "Ranking in industry determined!",
+        "ranking": ranking,
+        "company_score": company_score,
+        "industry_company_count": len(company_scores),
+    }, 200
+
+
+def get_industry_company_values(industry_id):
+    """
+    Given an industry id, find all of the companies associated with that industry.
+    Return all of these companies with their scores.
+
+    Args:
+        industry_id (number)
+    Return:
+        [(company_id, company_score)], descending order
+    """
+
+    company_scores = []
+
+    companies = [
+        company[0]
+        for company in db.session.query(Company.company_id).filter(
+            Company.industry_id == industry_id
+        )
+    ]
+
+    values = get_company_values(companies)
+    for company_key in values:
+        # Calculate value of all framework_scores
+        company_value = values[company_key]["value"]
+        framework_scores = sum(
+            [framework["score"] for framework in company_value["frameworks"]]
+        )
+        company_scores.append(
+            (company_key, framework_scores / len(company_value["frameworks"]))
+        )
+
+    return sorted(company_scores, key=lambda x: (-x[1], x[0]))
+
+
+def get_company_graph_values(company_id):
+    """
+    Given a company_id,
+    Return a list of tuples containing years and values for that year.
+
+    Args:
+        company_id (int)
+    Return:
+        {
+            message:
+            year_values: [(year, score)]
+        },
+        HTTP Status Code
+    """
+    company = db.session.query(Company).filter(Company.company_id == company_id).first()
+    if not company:
+        return {"message": "Invalid company id supplied!"}, 400
+
+    year_values = get_company_year_scores(company_id)
+
+    return {
+        "message": "Graph Values for Company Returned!",
+        "year_values": year_values,
+    }, 200
+
+
+def get_company_year_scores(company):
+    """
+    Given a company id, return a list of (year, score) tuples
+
+    Args:
+        company (int)
+    Return:
+        [(year, score)]
+    """
+    year_scores = []
+    frameworks = (
+        db.session.query(Framework)
+        .join(CompanyFramework, Framework.framework_id == CompanyFramework.framework_id)
+        .filter(CompanyFramework.company_id == company)
+        .all()
+    )
+
+    metrics = (
+        db.session.query(Metric)
+        .join(FrameworkMetric, Metric.metric_id == FrameworkMetric.metric_id)
+        .filter(
+            FrameworkMetric.framework_id.in_(
+                [framework.framework_id for framework in frameworks]
+            )
+        )
+        .all()
+    )
+
+    indicators = (
+        db.session.query(Indicator)
+        .join(MetricIndicator, Indicator.indicator_id == MetricIndicator.indicator_id)
+        .filter(MetricIndicator.metric_id.in_([metric.metric_id for metric in metrics]))
+        .all()
+    )
+
+    # For each year,find
+    years = (
+        db.session.query(DataValue.year.distinct())
+        .filter(
+            DataValue.company_id == company,
+            DataValue.indicator_id.in_(
+                [indicator.indicator_id for indicator in indicators]
+            ),
+        )
+        .all()
+    )
+
+    years = sorted([year[0] for year in years])
+    print(years)
+    # Calculate the data values of each indicator, then the data values of all metrics.
+    for year in years:
+        metric_values = {}
+        for metric in metrics:
+            metric_values[metric.metric_id] = calculate_metric(metric, year, company)
+
+        # Calculate the value of each framework.
+        framework_values = {}
+        for framework in frameworks:
+            framework_values[framework.framework_id] = {
+                "framework_id": framework.framework_id,
+                "name": framework.name,
+                "score": calculate_framework(framework, metric_values),
+            }
+
+        year_scores.append(
+            (
+                year,
+                sum([framework["score"] for framework in framework_values.values()])
+                / len(framework_values),
+            )
+        )
+
+    return year_scores
+
+
+def get_all_years():
+    years = db.session.query(DataValue.year.distinct()).all()
+
+    return sorted([year[0] for year in years])
+
+
+def get_indicator_graph_values(indicator_id):
+    """
+    Given an indicator ID, return the value for it each year.
+
+    Args:
+        indicator_id (number):
+
+    Return:
+        {
+            message: ,
+            indicator_scores: [(year, score)]
+        },
+        HTTP Status Code
+    """
+
+    # Check if indicator id exists
+    indicator = (
+        db.session.query(Indicator)
+        .filter(Indicator.indicator_id == indicator_id)
+        .first()
+    )
+    if not indicator:
+        return {"message": "Invalid indicator id provided"}, 400
+
+    # This all years...
+    years = get_all_years()
+    # Get all data Values for indicator?
+
+    # For each year, find all DataValues with Indicator.
+    indicator_years = []
+    for year in years:
+        data_values = (
+            db.session.query(DataValue)
+            .filter(DataValue.year == year, DataValue.indicator_id == indicator_id)
+            .all()
+        )
+        if data_values:
+            # Average the values
+            score = sum(data_value.rating for data_value in data_values) / len(
+                data_values
+            )
+            indicator_years.append((year, score))
+
+    return {
+        "message": "Graph Values for Indicator Returned!",
+        "indicator_scores": indicator_years,
+    }, 200
+
+
 def get_years():
     """
     Retrieve all unique years as a list of years.
@@ -246,5 +476,4 @@ def get_years():
     years = sorted(
         [year[0] for year in db.session.query(DataValue.year.distinct()).all()]
     )
-    print(years)
     return {"message": "All years retrieved!", "years": years}
