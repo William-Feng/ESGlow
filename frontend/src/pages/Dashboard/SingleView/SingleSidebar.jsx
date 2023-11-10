@@ -51,12 +51,19 @@ function SingleSidebar({ token }) {
     setSelectedCustomFramework(null);
     setSelectedIndicators([]);
     setSelectedAdditionalIndicators([]);
+    // Set the weights to 0
+    const weights = {};
+    allIndicators.forEach((indicator) => {
+      weights[indicator.indicator_id] = 0;
+    });
+    setAdditionalIndicatorWeights(weights);
   }, [
     selectedCompany,
     setSelectedFramework,
     setSelectedCustomFramework,
     setSelectedIndicators,
     setSelectedAdditionalIndicators,
+    allIndicators,
   ]);
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
@@ -71,7 +78,6 @@ function SingleSidebar({ token }) {
         customFrameworks.find((f) => f.framework_id === frameworkId)
       );
       setSelectedFramework(null);
-      // Set indicators for custom framework
     } else {
       setSelectedFramework(
         frameworksData.find((f) => f.framework_id === frameworkId)
@@ -321,25 +327,7 @@ function SingleSidebar({ token }) {
 
   // Discover the indicators that should be displayed in the Additional Indicators accordion
   useEffect(() => {
-    if (selectedFramework) {
-      const frameworkIndicatorIds = selectedFramework.metrics
-        .reduce((acc, metric) => acc.concat(metric.indicators), [])
-        .map((indicator) => indicator.indicator_id);
-
-      // Discover all the indicators that are not in the selected default framework
-      const filtered_indicators = allIndicators.filter(
-        (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
-      );
-      setAdditionalIndicators(filtered_indicators);
-
-      // Set the weights to 0
-      const filteredIndicatorWeights = {};
-      filtered_indicators.forEach((indicator) => {
-        filteredIndicatorWeights[indicator.indicator_id] = 0;
-      });
-      setAdditionalIndicatorWeights(filteredIndicatorWeights);
-      setSelectedAdditionalIndicators([]);
-    } else if (selectedCustomFramework) {
+    if (selectedCustomFramework) {
       // All indicators should be displayed if a custom framework is selected
       setAdditionalIndicators(allIndicators);
 
@@ -359,6 +347,27 @@ function SingleSidebar({ token }) {
           (preference) => preference.indicator_id
         )
       );
+    } else {
+      // If a default framework is selected, only display the indicators that are not in the framework
+      // Otherwise, display all indicators
+      const frameworkIndicatorIds = selectedFramework
+        ? selectedFramework.metrics
+            .reduce((acc, metric) => acc.concat(metric.indicators), [])
+            .map((indicator) => indicator.indicator_id)
+        : [];
+
+      const filtered_indicators = allIndicators.filter(
+        (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
+      );
+      setAdditionalIndicators(filtered_indicators);
+
+      // Set the weights to 0
+      const filteredIndicatorWeights = {};
+      filtered_indicators.forEach((indicator) => {
+        filteredIndicatorWeights[indicator.indicator_id] = 0;
+      });
+      setAdditionalIndicatorWeights(filteredIndicatorWeights);
+      setSelectedAdditionalIndicators([]);
     }
   }, [
     allIndicators,
