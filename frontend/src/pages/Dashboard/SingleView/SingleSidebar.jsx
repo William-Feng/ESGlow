@@ -14,7 +14,7 @@ import {
 import { SingleViewContext } from "./SingleView";
 import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
-import YearsAccordion from "../Components/Accordion/YearsAccordion";
+import YearsMultiAccordion from "../Components/Accordion/YearsMultiAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 
 export const SidebarContext = createContext();
@@ -623,25 +623,25 @@ function SingleSidebar({ token }) {
         <FrameworkAccordion
           disabled={!frameworksData}
           expanded={expanded.panel1}
-          onChange={handleChange("panel1")}
+          onToggleDropdown={handleChange("panel1")}
           frameworksData={frameworksData}
         />
         {!selectedCustomFramework && (
           <MetricsIndicatorsAccordion
             disabled={!frameworksData}
             expanded={expanded.panel2}
-            onChange={handleChange("panel2")}
+            onToggleDropdown={handleChange("panel2")}
           />
         )}
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
-          onChange={handleChange("panel3")}
+          onToggleDropdown={handleChange("panel3")}
         />
-        <YearsAccordion
+        <YearsMultiAccordion
           disabled={!frameworksData}
           expanded={expanded.panel4}
-          onChange={handleChange("panel4")}
+          onToggleDropdown={handleChange("panel4")}
           years={years}
           handleYearChange={handleYearChange}
         />

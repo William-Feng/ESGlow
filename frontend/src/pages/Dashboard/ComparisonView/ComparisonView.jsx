@@ -12,10 +12,13 @@ export const ComparisonViewContext = createContext();
 function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
 
+  const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedYear, setSelectedYear] = useState([]);               // user selected single year ; TABLE VIEW
+  const [selectedYearRange, setSelectedYearRange] = useState([]); // user selected year range; GRAPH VIEW
+  const [yearsList, setYearsList] = useState([]);                 // SET range of years data available for the companies
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]); // TODO: send it to sidebar
+  const [indicatorsList, setIndicatorsList] = useState([]);
 
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {
@@ -30,13 +33,30 @@ function ComparisonView({ token }) {
       });
   }, [token]);
 
-  // clearing company searchbar clears the sidebar selected
+  // for every new company selection:
   useEffect(() => {
+    // clearing company searchbar clears the sidebar selected
     if (selectedCompanies.length === 0) {
-      setSelectedYear(null);
-      setSelectedIndicators([]);
+      setSelectedYear([])
+      setSelectedIndicators([])
     }
-  }, [token, selectedCompanies]);
+    // Fetch all available years of data
+    fetch("/api/values/years", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setYearsList(data.years);
+        setSelectedYearRange(data.years);
+      })
+      .catch((error) => {
+        if (error !== "No years found") {
+          console.error("There was an error fetching the years.", error);
+        }
+      });
+  }, [token, selectedCompanies])
 
   return (
     <>
@@ -118,9 +138,14 @@ function ComparisonView({ token }) {
                   selectedCompanies,
                   selectedYear,
                   setSelectedYear,
+                  selectedYearRange,
+                  setSelectedYearRange,
                   selectedIndicators,
                   setSelectedIndicators,
                   indicatorsList,
+                  yearsList,
+                  dataView,
+                  setDataView
                 }}
               >
                 <ComparisonSidebar token={token} />
@@ -128,10 +153,12 @@ function ComparisonView({ token }) {
             </Drawer>
             <ComparisonViewContext.Provider
               value={{
+                dataView,
                 selectedCompanies,
                 selectedYear,
+                selectedYearRange,
                 selectedIndicators,
-                indicatorsList,
+                yearsList
               }}
             >
               <ComparisonDataDisplay token={token} />

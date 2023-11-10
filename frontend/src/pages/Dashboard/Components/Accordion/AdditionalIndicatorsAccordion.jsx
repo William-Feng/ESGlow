@@ -14,7 +14,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
-function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
+function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
     additionalIndicators,
     selectedAdditionalIndicators,
@@ -24,7 +24,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
   } = useContext(SidebarContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
