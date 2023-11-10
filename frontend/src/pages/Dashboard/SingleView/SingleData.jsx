@@ -419,7 +419,7 @@ function SingleData() {
           float: "right",
         }}
       >
-        {adjustedScore ? (
+        {adjustedScore && adjustedScore !== "0.0" ? (
           <>
             <Typography variant="h5" color="text.secondary">
               Adjusted ESG Score:
@@ -428,7 +428,7 @@ function SingleData() {
               {adjustedScore}
             </Typography>
           </>
-        ) : selectedFramework ? (
+        ) : hasDataToShow ? (
           <Typography variant="h5" color="text.secondary">
             Please make sure 'UPDATE SCORE' is clicked.
           </Typography>
