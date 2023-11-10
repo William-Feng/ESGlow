@@ -52,17 +52,7 @@ function SingleView({ token }) {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => {
-          if (response.status === 401) {
-            localStorage.removeItem("token");
-            navigate("/");
-            return;
-          }
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
+        .then((response) => response.json())
         .catch((error) =>
           console.error("Error fetching indicator values:", error)
         );
@@ -84,17 +74,7 @@ function SingleView({ token }) {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => {
-        if (response.status === 401) {
-          localStorage.removeItem("token");
-          navigate("/");
-          return;
-        }
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         setFrameworksData(data.frameworks);
         // Selection is refreshed
