@@ -306,6 +306,13 @@ function SingleSidebar({ token }) {
             parseFloat(newWeightInput).toFixed(3)
           ),
         }));
+      } else if (newWeightAdditionalIndicatorId) {
+        setAdditionalIndicatorWeights((prevWeights) => ({
+          ...prevWeights,
+          [newWeightAdditionalIndicatorId]: parseFloat(
+            parseFloat(newWeightInput).toFixed(3)
+          ),
+        }));
       }
       closeWeightDialog();
     }
