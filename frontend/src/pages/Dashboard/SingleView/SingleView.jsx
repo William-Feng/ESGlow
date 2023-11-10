@@ -68,8 +68,8 @@ function SingleView({ token }) {
     [token, navigate]
   );
 
+  // Fetch industry mean and ranking
   useEffect(() => {
-    const industryId = 0;
     fetch("/api/industries/all", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -77,7 +77,16 @@ function SingleView({ token }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        industryId = data.industries.indexOf(selectedIndustry) + 1;
+        const industryId = data.industries.indexOf(selectedIndustry) + 1;
+        fetch(`/api/values/${industryId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setIndustryMean(data.average_score);
+          });
       })
       .catch((error) =>
         console.error(
@@ -85,16 +94,6 @@ function SingleView({ token }) {
           error
         )
       );
-    fetch(`/api/values/${industryId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setIndustryMean(data.average_score);
-      });
 
     if (selectedCompany) {
       fetch(`/api/values/ranking/company/${selectedCompany.company_id}`, {
@@ -107,7 +106,7 @@ function SingleView({ token }) {
           setIndustryRanking(`${data.ranking}/${data.industry_company_count}`);
         });
     }
-  }, [selectedIndustry, selectedCompany]);
+  }, [selectedCompany]);
 
   useEffect(() => {
     // New selection of company wipes data display to blank
