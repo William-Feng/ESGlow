@@ -32,43 +32,66 @@ function SingleSidebar({ token }) {
     years,
     selectedFramework,
     setSelectedFramework,
+    selectedCustomFramework,
+    setSelectedCustomFramework,
     selectedIndicators,
     setSelectedIndicators,
     selectedYears,
     setSelectedYears,
     setSavedWeights,
     allIndicators,
-    selectedExtraIndicators,
-    setSelectedExtraIndicators,
+    selectedAdditionalIndicators,
+    setSelectedAdditionalIndicators,
+    setSavedAdditionalIndicatorWeights,
   } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
-  // Note that selected extra indicators remain the same if a new framework is selected
+  // Note that selected additional indicators remain the same if a new framework is selected
   useEffect(() => {
     setSelectedFramework(null);
+    setSelectedCustomFramework(null);
     setSelectedIndicators([]);
-    setSelectedExtraIndicators([]);
+    setSelectedAdditionalIndicators([]);
+    // Set the weights to 0
+    const weights = {};
+    allIndicators.forEach((indicator) => {
+      weights[indicator.indicator_id] = 0;
+    });
+    setAdditionalIndicatorWeights(weights);
   }, [
     selectedCompany,
     setSelectedFramework,
+    setSelectedCustomFramework,
     setSelectedIndicators,
-    setSelectedExtraIndicators,
+    setSelectedAdditionalIndicators,
+    allIndicators,
   ]);
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
 
   const handleFrameworkChange = (event) => {
-    const frameworkId = event.target.value;
-    setSelectedFramework(
-      frameworksData.find((f) => f.framework_id === parseInt(frameworkId))
-    );
-    setSelectedIndicators(
-      frameworksData.flatMap((framework) =>
-        framework.metrics.flatMap((metric) =>
-          metric.indicators.map((indicator) => indicator.indicator_id)
+    const frameworkValue = event.target.value;
+    const [type, frameworkIdString] = frameworkValue.split("-");
+    const frameworkId = parseInt(frameworkIdString, 10);
+
+    if (type === "custom") {
+      setSelectedCustomFramework(
+        customFrameworks.find((f) => f.framework_id === frameworkId)
+      );
+      setSelectedFramework(null);
+    } else {
+      setSelectedFramework(
+        frameworksData.find((f) => f.framework_id === frameworkId)
+      );
+      setSelectedCustomFramework(null);
+      setSelectedIndicators(
+        frameworksData.flatMap((framework) =>
+          framework.metrics.flatMap((metric) =>
+            metric.indicators.map((indicator) => indicator.indicator_id)
+          )
         )
-      )
-    );
+      );
+    }
   };
 
   const [selectedMetrics, setSelectedMetrics] = useState([]);
@@ -201,17 +224,21 @@ function SingleSidebar({ token }) {
   const [newWeightInput, setNewWeightInput] = useState("");
   const [newWeightMetridId, setNewWeightMetridId] = useState("");
   const [newWeightIndicatorId, setNewWeightIndicatorId] = useState("");
+  const [newWeightAdditionalIndicatorId, setNewWeightAdditionalIndicatorId] =
+    useState("");
 
   const determineChipColor = (metric, indicator) => {
     if (metric) {
       const metricId = metric.metric_id;
       if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
+        // Return red if weight has been deselected
         return "error";
       } else if (
         Math.abs(
           metricWeights[metricId] - parseFloat(metric.predefined_weight)
         ) <= 0.0001
       ) {
+        // Return green if weight has not been edited
         return "success";
       } else {
         // Return orange if weight has been edited
@@ -234,10 +261,14 @@ function SingleSidebar({ token }) {
     }
   };
 
-  const openWeightDialog = (metricId, indicatorId) => {
+  const openWeightDialog = (metricId, indicatorId, isAdditionalIndicator) => {
     setIsDialogOpen(true);
-    setNewWeightMetridId(metricId);
-    setNewWeightIndicatorId(indicatorId);
+    if (isAdditionalIndicator) {
+      setNewWeightAdditionalIndicatorId(indicatorId);
+    } else {
+      setNewWeightMetridId(metricId);
+      setNewWeightIndicatorId(indicatorId);
+    }
   };
 
   const closeWeightDialog = () => {
@@ -249,9 +280,14 @@ function SingleSidebar({ token }) {
     setNewWeightInput(e.target.value);
   };
 
-  const handleWeightChange = (metricId, indicatorId, e) => {
+  const handleWeightChange = (
+    e,
+    metricId,
+    indicatorId,
+    isAdditionalIndicator
+  ) => {
     e.stopPropagation();
-    openWeightDialog(metricId, indicatorId);
+    openWeightDialog(metricId, indicatorId, isAdditionalIndicator);
   };
 
   const handleWeightSave = () => {
@@ -270,6 +306,13 @@ function SingleSidebar({ token }) {
             parseFloat(newWeightInput).toFixed(3)
           ),
         }));
+      } else if (newWeightAdditionalIndicatorId) {
+        setAdditionalIndicatorWeights((prevWeights) => ({
+          ...prevWeights,
+          [newWeightAdditionalIndicatorId]: parseFloat(
+            parseFloat(newWeightInput).toFixed(3)
+          ),
+        }));
       }
       closeWeightDialog();
     }
@@ -285,41 +328,104 @@ function SingleSidebar({ token }) {
     });
   };
 
-  const [remainingExtraIndicators, setRemainingExtraIndicators] = useState([]);
+  const [additionalIndicators, setAdditionalIndicators] = useState([]);
+  const [additionalIndicatorWeights, setAdditionalIndicatorWeights] = useState(
+    []
+  );
 
-  // Discover the indicators that are not in the selected framework
+  // Discover the indicators that should be displayed in the Additional Indicators accordion
   useEffect(() => {
-    const frameworkIndicatorIds = selectedFramework
-      ? selectedFramework.metrics
-          .reduce((acc, metric) => acc.concat(metric.indicators), [])
-          .map((indicator) => indicator.indicator_id)
-      : [];
+    if (selectedCustomFramework) {
+      // All indicators should be displayed if a custom framework is selected
+      setAdditionalIndicators(allIndicators);
 
-    const filtered_indicators = allIndicators.filter(
-      (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
-    );
+      // Set the predefined weights for the indicators within the custom framework
+      // Otherwise, the weights will be set to 0
+      const indicatorWeights = {};
+      allIndicators.forEach((indicator) => {
+        indicatorWeights[indicator.indicator_id] = 0;
+      });
 
-    setRemainingExtraIndicators(filtered_indicators);
-  }, [allIndicators, selectedFramework]);
+      selectedCustomFramework.preferences.forEach((preference) => {
+        indicatorWeights[preference.indicator_id] = preference.weight;
+      });
+      setAdditionalIndicatorWeights(indicatorWeights);
+      setSelectedAdditionalIndicators(
+        selectedCustomFramework.preferences.map(
+          (preference) => preference.indicator_id
+        )
+      );
+    } else {
+      // If a default framework is selected, only display the indicators that are not in the framework
+      // Otherwise, display all indicators
+      const frameworkIndicatorIds = selectedFramework
+        ? selectedFramework.metrics
+            .reduce((acc, metric) => acc.concat(metric.indicators), [])
+            .map((indicator) => indicator.indicator_id)
+        : [];
 
-  const handleExtraIndicatorsChange = (indicatorId) => {
-    setSelectedExtraIndicators((prev) => {
-      if (prev.includes(indicatorId)) {
-        return prev.filter((id) => id !== indicatorId);
-      } else {
-        return [...prev, indicatorId];
-      }
+      const filtered_indicators = allIndicators.filter(
+        (indicator) => !frameworkIndicatorIds.includes(indicator.indicator_id)
+      );
+      setAdditionalIndicators(filtered_indicators);
+
+      // Set the weights to 0
+      const filteredIndicatorWeights = {};
+      filtered_indicators.forEach((indicator) => {
+        filteredIndicatorWeights[indicator.indicator_id] = 0;
+      });
+      setAdditionalIndicatorWeights(filteredIndicatorWeights);
+      setSelectedAdditionalIndicators([]);
+    }
+  }, [
+    allIndicators,
+    selectedFramework,
+    selectedCustomFramework,
+    setSelectedAdditionalIndicators,
+  ]);
+
+  const handleAdditionalIndicatorsChange = (indicatorId) => {
+    setSelectedAdditionalIndicators((prev) => {
+      const isIndicatorSelected = prev.includes(indicatorId);
+
+      setAdditionalIndicatorWeights((prevWeights) => {
+        // Update the weight if the indicator is being selected, and it's currently set to 0
+        // Otherwise, if it's being deselected or already has a non-zero weight, leave it unchanged
+        const currentWeight = prevWeights[indicatorId];
+        const newWeight = isIndicatorSelected
+          ? 0
+          : currentWeight === 0
+          ? 0.5
+          : currentWeight;
+
+        return {
+          ...prevWeights,
+          [indicatorId]: newWeight,
+        };
+      });
+
+      // If the indicator is already selected, remove it from the selection
+      // If not, add the indicator to the selection
+      return isIndicatorSelected
+        ? prev.filter((id) => id !== indicatorId)
+        : [...prev, indicatorId];
     });
   };
 
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleCloseSnackbar = () => {
     setSuccessMessage("");
+    setErrorMessage("");
   };
 
   const handleSave = () => {
-    // Update savedWeights with indicator and metric weights
+    if (selectedYears.length === 0) {
+      return setErrorMessage("Please select at least one year.");
+    }
+
+    // Update savedWeights with indicator and metric weights from default framework
     const newSavedWeights = {};
     const savedMetricsList = [];
     selectedMetrics.forEach((metric) => {
@@ -344,12 +450,45 @@ function SingleSidebar({ token }) {
     newSavedWeights["year"] = Math.max(...selectedYears);
     setSavedWeights(newSavedWeights);
 
+    // Include the weights from the additional indicators
+    const newSavedAdditionalWeights = {};
+    selectedAdditionalIndicators.forEach((indicatorId) => {
+      newSavedAdditionalWeights[indicatorId] =
+        additionalIndicatorWeights[indicatorId];
+    });
+    setSavedAdditionalIndicatorWeights(newSavedAdditionalWeights);
+
     return setSuccessMessage("Preferences saved successfully.");
   };
+
+  // Show the user's custom frameworks
+  const [customFrameworks, setCustomFrameworks] = useState([]);
+
+  const fetchCustomFrameworks = () => {
+    fetch("/api/custom-frameworks", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCustomFrameworks(data.custom_frameworks);
+      })
+      .catch((error) =>
+        console.error("Error fetching custom frameworks", error)
+      );
+  };
+
+  useEffect(() => {
+    fetchCustomFrameworks();
+    // eslint-disable-next-line
+  }, [token]);
 
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
   const [customFrameworkName, setCustomFrameworkName] = useState("");
+  const [customFrameworkDescription, setCustomFrameworkDescription] =
+    useState("");
 
   const handleSaveFrameworkDialogToggle = () => {
     setSaveFrameworkDialogOpen(!saveFrameworkDialogOpen);
@@ -359,8 +498,67 @@ function SingleSidebar({ token }) {
     setCustomFrameworkName(event.target.value);
   };
 
+  const handleCustomFrameworkDescriptionChange = (event) => {
+    setCustomFrameworkDescription(event.target.value);
+  };
+
+  const handleSaveFramework = async () => {
+    setSaveFrameworkDialogOpen(false);
+
+    let preferences = selectedAdditionalIndicators.map((indicatorId) => ({
+      indicator_id: indicatorId,
+      weight: additionalIndicatorWeights[indicatorId.toString()] || 0,
+    }));
+
+    const selectedIndicators = Object.keys(indicatorWeights).map((key) => ({
+      indicator_id: parseInt(key, 10),
+      weight: indicatorWeights[key],
+    }));
+
+    // Merge the selected indicators array with selected additional indicators array
+    preferences = preferences.concat(selectedIndicators);
+
+    const payload = {
+      name: customFrameworkName,
+      description: customFrameworkDescription || "Custom Framework",
+      preferences: preferences,
+    };
+
+    try {
+      const response = await fetch("/api/custom-frameworks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Network response was not ok");
+      }
+
+      setSuccessMessage("Custom framework saved successfully.");
+      fetchCustomFrameworks();
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error.message || "There was an error saving the custom framework."
+      );
+    }
+  };
+
   return (
     <Box sx={{ paddingBottom: 3 }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={!!successMessage}
@@ -401,7 +599,9 @@ function SingleSidebar({ token }) {
       <SidebarContext.Provider
         value={{
           frameworksData,
+          customFrameworks,
           selectedFramework,
+          selectedCustomFramework,
           handleFrameworkChange,
           frameworkMetrics,
           howManyIndicatorsChecked,
@@ -413,10 +613,11 @@ function SingleSidebar({ token }) {
           handleIndicatorChange,
           indicatorWeights,
           toggleMetric,
-          remainingExtraIndicators,
-          selectedExtraIndicators,
-          handleExtraIndicatorsChange,
+          additionalIndicators,
+          selectedAdditionalIndicators,
+          handleAdditionalIndicatorsChange,
           determineChipColor,
+          additionalIndicatorWeights,
         }}
       >
         <FrameworkAccordion
@@ -425,11 +626,13 @@ function SingleSidebar({ token }) {
           onChange={handleChange("panel1")}
           frameworksData={frameworksData}
         />
-        <MetricsIndicatorsAccordion
-          disabled={!frameworksData}
-          expanded={expanded.panel2}
-          onChange={handleChange("panel2")}
-        />
+        {!selectedCustomFramework && (
+          <MetricsIndicatorsAccordion
+            disabled={!frameworksData}
+            expanded={expanded.panel2}
+            onChange={handleChange("panel2")}
+          />
+        )}
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
@@ -443,37 +646,30 @@ function SingleSidebar({ token }) {
           handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
-      {/* TODO: Abstract the buttons below into separate components */}
-      {selectedFramework && (
+      {(selectedFramework || selectedAdditionalIndicators.length > 0) && (
         <Box
           sx={{
             mt: 2,
-            mr: 2,
             display: "flex",
-            justifyContent: "right",
-          }}
-        >
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Update Score
-          </Button>
-        </Box>
-      )}
-      {(selectedFramework || selectedExtraIndicators.length > 0) && (
-        <Box
-          sx={{
-            mt: 2,
-            ml: 2,
-            display: "flex",
-            justifyContent: "left",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingX: 2,
           }}
         >
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={handleSaveFrameworkDialogToggle}
+            sx={{
+              width: "150px",
+              height: "55px",
+              whiteSpace: "normal",
+              textAlign: "center",
+            }}
           >
             Save Custom Framework
           </Button>
+
           <Dialog
             open={saveFrameworkDialogOpen}
             onClose={handleSaveFrameworkDialogToggle}
@@ -481,7 +677,7 @@ function SingleSidebar({ token }) {
             <DialogTitle>Save Custom Framework</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Please enter a name for your custom framework.
+                Please enter a name and description for your custom framework.
               </DialogContentText>
               <TextField
                 autoFocus
@@ -490,18 +686,41 @@ function SingleSidebar({ token }) {
                 label="Unique Custom Framework Name"
                 type="text"
                 fullWidth
+                required
                 variant="standard"
                 value={customFrameworkName}
                 onChange={handleCustomFrameworkNameChange}
               />
+              <TextField
+                margin="dense"
+                id="customFrameworkDescription"
+                label="Description (Optional)"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={customFrameworkDescription}
+                onChange={handleCustomFrameworkDescriptionChange}
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleSaveFrameworkDialogToggle}>Cancel</Button>
-              {/* TODO: Add function 'handleSaveFramework' which triggers onClick to
-              execute the POST request that saves the custom framework into the database */}
-              <Button>Save</Button>
+              <Button onClick={handleSaveFramework}>Save</Button>
             </DialogActions>
           </Dialog>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
+            sx={{
+              width: "150px",
+              height: "55px",
+              whiteSpace: "normal",
+              textAlign: "center",
+            }}
+          >
+            Update Score
+          </Button>
         </Box>
       )}
     </Box>
