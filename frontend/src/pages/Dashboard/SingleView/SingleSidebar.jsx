@@ -360,7 +360,12 @@ function SingleSidebar({ token }) {
         )
       );
     }
-  }, [allIndicators, selectedFramework, selectedCustomFramework]);
+  }, [
+    allIndicators,
+    selectedFramework,
+    selectedCustomFramework,
+    setSelectedAdditionalIndicators,
+  ]);
 
   const handleAdditionalIndicatorsChange = (indicatorId) => {
     setSelectedAdditionalIndicators((prev) => {
@@ -447,6 +452,7 @@ function SingleSidebar({ token }) {
 
   useEffect(() => {
     fetchCustomFrameworks();
+    // eslint-disable-next-line
   }, [token]);
 
   // To save the user's custom framework

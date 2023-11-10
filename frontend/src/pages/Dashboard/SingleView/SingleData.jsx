@@ -115,7 +115,7 @@ function SingleData() {
     });
 
     return Object.values(dataMap);
-  }, [filteredData]);
+  }, [allIndicators, filteredData]);
 
   // Retrieve the additional indicators and data selected by the user
   const additionalIndicatorsData = useMemo(
