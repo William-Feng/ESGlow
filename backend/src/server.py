@@ -12,6 +12,7 @@ from .frameworks import (
     get_indicator_values,
     get_company_info,
     create_custom_framework,
+    get_custom_frameworks
 )
 from .models import (
     user_authentication_models,
@@ -166,7 +167,8 @@ class PasswordResetChange(Resource):
     framework_names_model,
     indicator_names_model,
 ) = all_industry_company_framework_indicator_models(api)
-industry_companies_model, company_info_model = specific_industry_company_models(api)
+industry_companies_model, company_info_model = specific_industry_company_models(
+    api)
 (
     framework_detailed_model,
     indicator_value_detailed_model,
@@ -277,37 +279,10 @@ class IndicatorValues(Resource):
 
 # ===================================================================
 #
-# Custom Frameworks
-#
-# ===================================================================
-
-custom_framework_model = custom_framework_models(api)
-
-
-@api.route("/api/custom-frameworks")
-class CustomFrameworkList(Resource):
-    @api.expect(custom_framework_model, validate=True)
-    @api.response(201, "Custom framework for user created successfully!")
-    @api.response(401, "Authentication required. Please log in.")
-    @api.response(400, "Invalid custom framework input.")
-    @jwt_required()
-    def post(self):
-        data = api.payload
-        email = get_jwt_identity()
-
-        # Verify user exists in backend.
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            return {"message": "User not found."}, 400
-
-        return create_custom_framework(data, user)
-
-
-# ===================================================================
-#
 # Overview Values Calculation
 #
 # ===================================================================
+
 
 company_values_model = value_calculations(api)
 
@@ -375,3 +350,73 @@ class AllYears(Resource):
     @jwt_required()
     def get(self):
         return get_years()
+
+
+# ===================================================================
+#
+# Custom Frameworks
+#
+# ===================================================================
+
+custom_framework_model = custom_framework_models(api)
+
+
+@api.route("/api/custom-frameworks")
+class CustomFrameworkList(Resource):
+    # Create a new custom framework
+    @api.response(201, 'Custom framework for user created successfully!', model=custom_framework_model)
+    @api.response(401, 'Authentication required. Please log in.')
+    @api.response(400, 'Invalid custom framework input.')
+    @jwt_required()
+    def post(self):
+        data = api.payload
+        email = get_jwt_identity()
+
+        # Verify user exists in backend.
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "User not found."}, 400
+
+        return create_custom_framework(data, user)
+
+    # Retrieve all the custom frameworks associated with a user
+    @api.response(200, 'Custom frameworks retrieved successfully.')
+    @api.response(401, 'Authentication required. Please log in.')
+    @jwt_required()
+    def get(self):
+        email = get_jwt_identity()
+
+        # Verify user exists in backend.
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "User not found."}, 400
+
+        return get_custom_frameworks(user)
+
+
+# ===================================================================
+#
+# Custom Frameworks
+#
+# ===================================================================
+
+custom_framework_model = custom_framework_models(api)
+
+
+@api.route("/api/custom-frameworks")
+class CustomFrameworkList(Resource):
+    @api.expect(custom_framework_model, validate=True)
+    @api.response(201, "Custom framework for user created successfully!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid custom framework input.")
+    @jwt_required()
+    def post(self):
+        data = api.payload
+        email = get_jwt_identity()
+
+        # Verify user exists in backend.
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "User not found."}, 400
+
+        return create_custom_framework(data, user)

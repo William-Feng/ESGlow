@@ -5,21 +5,26 @@ import {
   AccordionSummary,
   Box,
   Checkbox,
+  Chip,
   FormControlLabel,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
-function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
+function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
-    remainingExtraIndicators,
-    selectedExtraIndicators,
-    handleExtraIndicatorsChange,
+    additionalIndicators,
+    selectedAdditionalIndicators,
+    handleAdditionalIndicatorsChange,
+    additionalIndicatorWeights,
+    handleWeightChange,
   } = useContext(SidebarContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
@@ -44,12 +49,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          <Typography style={{ color: "red", paddingBottom: "24px" }}>
-            Note that the following indicators are not included in the selected
-            framework and will not affect the ESG Score. The modifiable weights
-            are only included to create a custom framework.
-          </Typography>
-          {remainingExtraIndicators.map((indicator) => (
+          {additionalIndicators.map((indicator) => (
             <Box
               key={indicator.indicator_id}
               display="flex"
@@ -61,12 +61,12 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                 control={
                   <Checkbox
                     checked={
-                      selectedExtraIndicators.includes(
+                      selectedAdditionalIndicators.includes(
                         indicator.indicator_id
                       ) || false
                     }
                     onChange={() =>
-                      handleExtraIndicatorsChange(indicator.indicator_id)
+                      handleAdditionalIndicatorsChange(indicator.indicator_id)
                     }
                   />
                 }
@@ -76,6 +76,26 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onChange }) {
                   </Typography>
                 }
               />
+              <Box display="flex" alignItems="center" gap={1}>
+                <Tooltip title={indicator.indicator_description}>
+                  <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                </Tooltip>
+                <Chip
+                  label={`${
+                    additionalIndicatorWeights[indicator.indicator_id]
+                  }`}
+                  color={
+                    selectedAdditionalIndicators.includes(
+                      indicator.indicator_id
+                    )
+                      ? "primary"
+                      : "default"
+                  }
+                  onClick={(e) =>
+                    handleWeightChange(e, null, indicator.indicator_id, true)
+                  }
+                />
+              </Box>
             </Box>
           ))}
         </Box>

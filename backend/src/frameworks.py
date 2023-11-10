@@ -9,6 +9,8 @@ from .database import (
     CompanyFramework,
     FrameworkMetric,
     MetricIndicator,
+    CustomFrameworks,
+    CustomFrameworkPreferences
 )
 from typing import List
 
@@ -73,11 +75,11 @@ def all_frameworks():
 def all_indicators():
     """
     Summary:
-        Fetches all indicator names and IDs from the database.
+        Fetches all indicator information from the database.
     Args:
         None
     Returns:
-        Dictionary containing a successful message and a list of indicator names & IDs
+        Dictionary containing a successful message and a list of indicator IDs, names & descriptions
         HTTP status code
     """
 
@@ -115,7 +117,8 @@ def get_companies_by_industry(industry_name: str):
 
     # Extract company IDs
     companies = (
-        db.session.query(Company).filter_by(industry_id=industry.industry_id).all()
+        db.session.query(Company).filter_by(
+            industry_id=industry.industry_id).all()
     )
     company_ids = [company.company_id for company in companies]
 
@@ -178,12 +181,14 @@ def get_framework_info_from_company(company_id: int):
             Metric.metric_id.label("metric_id"),
             Metric.name.label("metric_name"),
             Metric.description.label("metric_description"),
-            FrameworkMetric.predefined_weight.label("metric_predefined_weight"),
+            FrameworkMetric.predefined_weight.label(
+                "metric_predefined_weight"),
             # Indicators
             Indicator.indicator_id.label("indicator_id"),
             Indicator.name.label("indicator_name"),
             Indicator.description.label("indicator_description"),
-            MetricIndicator.predefined_weight.label("indicator_predefined_weight"),
+            MetricIndicator.predefined_weight.label(
+                "indicator_predefined_weight"),
         )
         .select_from(Company)
         .join(CompanyFramework, Company.company_id == CompanyFramework.company_id)
@@ -312,9 +317,23 @@ def get_indicator_values(
 
 
 def create_custom_framework(data, user):
+    # Check if the custom framework name is null
+    if data['name'] == '':
+        return {"message": "Custom framework name cannot be empty."}, 400
+
+    # Check for unique custom framework name for the user
+    existing_framework = CustomFrameworks.query.filter_by(
+        user_id=user.user_id,
+        name=data['name']
+    ).first()
+    if existing_framework:
+        return {"message": "Custom framework with this name already exists."}, 400
+
     # Create new custom framework instance that is linked to the user
     new_custom_framework = CustomFrameworks(
-        user_id=user.user_id, framework_name=data["framework_name"]
+        user_id=user.user_id,
+        name=data['name'],
+        description=data['description']
     )
     db.session.add(new_custom_framework)
     db.session.commit()
@@ -323,8 +342,8 @@ def create_custom_framework(data, user):
     for pref in data["preferences"]:
         new_pref = CustomFrameworkPreferences(
             custom_framework_id=new_custom_framework.custom_framework_id,
-            indicator_id=pref["indicator_id"],
-            predefined_weight=pref["predefined_weight"],
+            indicator_id=pref['indicator_id'],
+            weight=pref['weight']
         )
         db.session.add(new_pref)
 
@@ -332,7 +351,40 @@ def create_custom_framework(data, user):
 
     response = {
         "message": "Custom framework for user created successfully!",
-        "custom_framework_id": new_custom_framework.custom_framework_id,
+    }
+
+    return response, 200
+
+
+def get_custom_frameworks(user):
+    # Get all custom frameworks associated with the user
+    custom_frameworks = CustomFrameworks.query.filter_by(
+        user_id=user.user_id
+    ).all()
+
+    custom_frameworks_data = []
+    for cf in custom_frameworks:
+        # Get preferences for each custom framework
+        preferences = CustomFrameworkPreferences.query.filter_by(
+            custom_framework_id=cf.custom_framework_id
+        ).all()
+        # Transform preferences into a list of dictionaries
+        preferences_data = [{
+            'indicator_id': pref.indicator_id,
+            'weight': pref.weight
+        } for pref in preferences]
+
+        # Append the framework and its preferences to the custom_frameworks_data list
+        custom_frameworks_data.append({
+            'framework_id': cf.custom_framework_id,
+            'framework_name': cf.name,
+            'description': cf.description,
+            'preferences': preferences_data
+        })
+
+    response = {
+        "message": "Custom frameworks for user successfully retrieved!",
+        "custom_frameworks": custom_frameworks_data
     }
 
     return response, 200

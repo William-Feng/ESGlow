@@ -30,15 +30,19 @@ function SingleView({ token }) {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
+  const [selectedCustomFramework, setSelectedCustomFramework] = useState(null);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedYears, setSelectedYears] = useState(years);
   const [indicatorValues, setIndicatorValues] = useState([]);
   const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
+  const [savedAdditionalIndicatorWeights, setSavedAdditionalIndicatorWeights] =
+    useState({});
 
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
-  const [selectedExtraIndicators, setSelectedExtraIndicators] = useState([]);
+  const [selectedAdditionalIndicators, setSelectedAdditionalIndicators] =
+    useState([]);
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -50,22 +54,12 @@ function SingleView({ token }) {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => {
-          if (response.status === 401) {
-            localStorage.removeItem("token");
-            navigate("/");
-            return;
-          }
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
+        .then((response) => response.json())
         .catch((error) =>
           console.error("Error fetching indicator values:", error)
         );
     },
-    [token, navigate]
+    [token]
   );
 
   // Fetch industry mean and ranking
@@ -122,17 +116,7 @@ function SingleView({ token }) {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => {
-        if (response.status === 401) {
-          localStorage.removeItem("token");
-          navigate("/");
-          return;
-        }
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         setFrameworksData(data.frameworks);
         // Selection is refreshed
@@ -328,14 +312,17 @@ function SingleView({ token }) {
                   years,
                   selectedFramework,
                   setSelectedFramework,
+                  selectedCustomFramework,
+                  setSelectedCustomFramework,
                   selectedIndicators,
                   setSelectedIndicators,
                   selectedYears,
                   setSelectedYears,
                   setSavedWeights,
                   allIndicators,
-                  selectedExtraIndicators,
-                  setSelectedExtraIndicators,
+                  selectedAdditionalIndicators,
+                  setSelectedAdditionalIndicators,
+                  setSavedAdditionalIndicatorWeights,
                 }}
               >
                 <SingleViewSidebar token={token} />
@@ -350,7 +337,8 @@ function SingleView({ token }) {
                 savedWeights,
                 allIndicators,
                 allIndicatorValues,
-                selectedExtraIndicators,
+                selectedAdditionalIndicators,
+                savedAdditionalIndicatorWeights,
               }}
             >
               <SingleViewData />

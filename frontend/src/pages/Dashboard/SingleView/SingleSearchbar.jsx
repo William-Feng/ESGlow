@@ -19,10 +19,6 @@ function SingleSearchbar({ token }) {
     setView,
   } = useContext(SingleViewContext);
 
-  const handleView = (_, newView) => {
-    setView(newView);
-  };
-
   const [industryList, setIndustryList] = useState([]);
   const [companyList, setCompanyList] = useState([]);
 
@@ -104,7 +100,7 @@ function SingleSearchbar({ token }) {
         options={industryList}
         sx={{
           width: "300px",
-          backgroundColor: "#E8E8E8",
+          backgroundColor: "white",
           borderRadius: 1,
         }}
         renderInput={(params) => <TextField {...params} label="Industry" />}
@@ -123,7 +119,7 @@ function SingleSearchbar({ token }) {
         }
         sx={{
           width: "300px",
-          backgroundColor: "#E8E8E8",
+          backgroundColor: selectedIndustry ? "white" : "#E8E8E8",
           borderRadius: 1,
         }}
         renderInput={(params) => <TextField {...params} label="Company" />}
@@ -131,10 +127,10 @@ function SingleSearchbar({ token }) {
       <ToggleButtonGroup
         value={view}
         exclusive
-        onChange={handleView}
+        onChange={(e) => setView(e.currentTarget.value)}
         aria-label="company view"
         sx={{
-          backgroundColor: "#E8E8E8",
+          backgroundColor: "white",
         }}
       >
         <ToggleButton
