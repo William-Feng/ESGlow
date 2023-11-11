@@ -70,3 +70,14 @@ We presented Demo B as a team, which went smoothly since we completed everything
 I went on a short trip and fell sick early in the week, but quickly recovered and contributed to writing up Retrospective B along with planning out the upcoming tasks.
 I updated the tables for the custom frameworks user story to reflect our new understanding of the task, and made some heavy UI updates so there's a better design.
 This included creating a new ESGlow logo, adopting gradient backgrounds with better contrast, restyling the overview/table sections, incorporating more year data etc.
+
+
+Week 9:
+
+I coordinated the entirety of the frontend with Carly & Mel, planning/splitting up the work, providing suggestions for improvements and making code reviews for each other.
+I tackled the custom frameworks feature, which firstly involved creating GET/POST/DELETE endpoints for retrieving, adding and deleting them from the database.
+I incorporated a 'Save Custom Frameworks' button onto the Selection Sidebar, which immediately shows up in the Framework accordion together with a distinct style.
+I rewrote the ESG score calculation function as there were a series of complications that arose from this user story, where additional indicators now affect the score.
+I ensured the persistence of the data for users who were logged in, together with a sleek feature that allows them to view and delete their custom frameworks.
+I improved the Sean's project Docker file to enable hot reloading, fixed bugs with Richard's generated data, implemented UI revamps with new designs and refactored code.
+With our final demo due next week, we are making good progress and will soon focus on final touches, refactoring and documentation and writing up the final report.
