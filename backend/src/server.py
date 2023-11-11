@@ -287,7 +287,7 @@ class IndicatorValues(Resource):
 company_values_model = value_calculations(api)
 
 
-@api.route("/api/values/<string:company_id>")
+@api.route("/api/values/company/<string:company_id>")
 class CompanyValues(Resource):
     @api.response(200, "Values for company retrieved!", model=company_values_model)
     @api.response(401, "Authentication required. Please log in.")
@@ -302,7 +302,7 @@ class CompanyValues(Resource):
         return get_company_values(selected_companies), 200
 
 
-@api.route("/api/values/<int:industry_id>")
+@api.route("/api/values/industry/<int:industry_id>")
 class IndustryValues(Resource):
     @api.response(200, "Values for industry retrieved!")
     @api.response(401, "Authentication required. Please log in.")

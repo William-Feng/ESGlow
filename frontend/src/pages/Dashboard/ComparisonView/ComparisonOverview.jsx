@@ -1,8 +1,13 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
+import { useContext } from "react";
+import { ComparisonViewContext } from "./ComparisonView";
 
 function ComparisonOverview() {
+  const { selectedCompanies, portfolioRating, bestPerformer, worstPerformer } =
+    useContext(ComparisonViewContext);
+
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
     return (
@@ -21,7 +26,14 @@ function ComparisonOverview() {
           textAlign="center"
           fontWeight="bold"
         >
-          COMPANY NAME
+          {selectedCompanies.map((company, index) => (
+            <span key={index}>
+              {company.name}
+              {index < selectedCompanies.length - 1 && (
+                <span style={{ color: "gray", fontWeight: "normal" }}> | </span>
+              )}
+            </span>
+          ))}
         </Typography>
         <Container
           sx={{
@@ -52,7 +64,7 @@ function ComparisonOverview() {
               }}
             >
               <Typography variant="h2" color="text.primary" paragraph>
-                SCORE
+                {portfolioRating}
               </Typography>
               <Box display="flex" alignItems="center">
                 <Typography variant="h6" color="text.secondary">
@@ -61,7 +73,8 @@ function ComparisonOverview() {
                 <Tooltip
                   title={
                     <Typography variant="body2">
-                      SOME KIND OF INFORMATION
+                      Calculated by averaging the ESG scores of each selected
+                      company.
                     </Typography>
                   }
                 >
@@ -71,7 +84,7 @@ function ComparisonOverview() {
                 </Tooltip>
               </Box>
             </Box>
-            {/* FIRST COLUMN: BEST AND WORST PERFORMERS */}
+
             <Box
               sx={{
                 flex: 1,
@@ -83,19 +96,13 @@ function ComparisonOverview() {
               }}
             >
               <Typography variant="h4" color="text.primary" paragraph>
-                43
+                {bestPerformer}
               </Typography>
-              <Typography variant="h6" color="text.secondary" mt={-1}>
-                Industry Mean
-              </Typography>
-              <Typography variant="h4" color="text.primary" mt={3} paragraph>
-                24/185
-              </Typography>
-              <Typography variant="h6" color="text.secondary" mt={-1}>
-                Industry Ranking
+              <Typography variant="h6" color="text.secondary">
+                Best Performer
               </Typography>
             </Box>
-            {/* SECOND COLUMN: BEST AND WORST PERFORMERS */}
+
             <Box
               sx={{
                 flex: 1,
@@ -107,24 +114,14 @@ function ComparisonOverview() {
               }}
             >
               <Typography variant="h4" color="text.primary" paragraph>
-                90
+                {worstPerformer}
               </Typography>
               <Typography variant="h6" color="text.secondary">
-                Best Performer
-              </Typography>
-              <Typography
-                variant="h4"
-                color="text.primary"
-                sx={{ mt: "16px" }}
-                paragraph
-              >
-                20
-              </Typography>
-              <Typography variant="h6" color="text.secondary">
-                Best Performer
+                Worst Performer
               </Typography>
             </Box>
           </Box>
+
           <Box sx={{ flex: 1 }}>
             <Typography
               variant="h5"
@@ -140,7 +137,7 @@ function ComparisonOverview() {
     );
   };
 
-  return true ? ( // this would use something equivalent to selectedCompany state
+  return selectedCompanies.length > 0 ? (
     renderCompanyData()
   ) : (
     <OverviewPrompt />

@@ -11,12 +11,14 @@ export const ComparisonViewContext = createContext();
 
 function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
-
+  const [portfolioRating, setPortfolioRating] = useState(0);
+  const [bestPerformer, setBestPerformer] = useState(0);
+  const [worstPerformer, setWorstPerformer] = useState(0);
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]);               // user selected single year ; TABLE VIEW
+  const [selectedYear, setSelectedYear] = useState([]); // user selected single year ; TABLE VIEW
   const [selectedYearRange, setSelectedYearRange] = useState([]); // user selected year range; GRAPH VIEW
-  const [yearsList, setYearsList] = useState([]);                 // SET range of years data available for the companies
+  const [yearsList, setYearsList] = useState([]); // SET range of years data available for the companies
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState([]);
 
@@ -33,13 +35,45 @@ function ComparisonView({ token }) {
       });
   }, [token]);
 
-  // for every new company selection:
+  // For every new company selection:
   useEffect(() => {
-    // clearing company searchbar clears the sidebar selected
+    // Fetch portfolio overview values
+    const fetchPromises = selectedCompanies.map((company) =>
+      fetch(`/api/values/company/${company.company_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => data[company.company_id].value.ESGscore)
+    );
+    Promise.all(fetchPromises)
+      .then((esgScores) => {
+        if (esgScores.length === 0) {
+          // No scores available
+          setPortfolioRating();
+          setBestPerformer();
+          setWorstPerformer();
+        } else {
+          // Calculate average ESG score
+          const totalScore = esgScores.reduce((sum, score) => sum + score, 0);
+          const averageScore = totalScore / esgScores.length;
+          setPortfolioRating(averageScore.toFixed(1));
+          // Find best and worst performers
+          setBestPerformer(Math.max(...esgScores));
+          setWorstPerformer(Math.min(...esgScores));
+        }
+      })
+      .catch((error) =>
+        console.error("There was an error fetching the ESG scores.", error)
+      );
+
+    // Clearing company searchbar clears the sidebar selected
     if (selectedCompanies.length === 0) {
-      setSelectedYear([])
-      setSelectedIndicators([])
+      setSelectedYear([]);
+      setSelectedIndicators([]);
     }
+
     // Fetch all available years of data
     fetch("/api/values/years", {
       headers: {
@@ -56,7 +90,7 @@ function ComparisonView({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
-  }, [token, selectedCompanies])
+  }, [token, selectedCompanies]);
 
   return (
     <>
@@ -107,7 +141,16 @@ function ComparisonView({ token }) {
               maxHeight: "320px",
             }}
           >
-            <ComparisonOverview />
+            <ComparisonViewContext.Provider
+              value={{
+                selectedCompanies,
+                portfolioRating,
+                bestPerformer,
+                worstPerformer,
+              }}
+            >
+              <ComparisonOverview />
+            </ComparisonViewContext.Provider>
           </Box>
           <Box
             sx={{
@@ -145,7 +188,7 @@ function ComparisonView({ token }) {
                   indicatorsList,
                   yearsList,
                   dataView,
-                  setDataView
+                  setDataView,
                 }}
               >
                 <ComparisonSidebar token={token} />
@@ -158,7 +201,7 @@ function ComparisonView({ token }) {
                 selectedYear,
                 selectedYearRange,
                 selectedIndicators,
-                yearsList
+                yearsList,
               }}
             >
               <ComparisonDataDisplay token={token} />

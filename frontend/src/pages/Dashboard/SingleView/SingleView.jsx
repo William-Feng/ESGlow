@@ -72,7 +72,7 @@ function SingleView({ token }) {
       .then((response) => response.json())
       .then((data) => {
         const industryId = data.industries.indexOf(selectedIndustry) + 1;
-        fetch(`/api/values/${industryId}`, {
+        fetch(`/api/values/industry/${industryId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
