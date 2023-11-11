@@ -34,6 +34,7 @@ function SingleSidebar({ token }) {
     setSelectedFramework,
     selectedCustomFramework,
     setSelectedCustomFramework,
+    isCustomFrameworksDialogOpen,
     selectedIndicators,
     setSelectedIndicators,
     selectedYears,
@@ -484,7 +485,7 @@ function SingleSidebar({ token }) {
   useEffect(() => {
     fetchCustomFrameworks();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, isCustomFrameworksDialogOpen]);
 
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
@@ -541,6 +542,8 @@ function SingleSidebar({ token }) {
         throw new Error(errorData.message || "Network response was not ok");
       }
 
+      setCustomFrameworkName("");
+      setCustomFrameworkDescription("");
       setSuccessMessage("Custom framework saved successfully.");
       fetchCustomFrameworks();
     } catch (error) {
@@ -702,6 +705,12 @@ function SingleSidebar({ token }) {
                 variant="standard"
                 value={customFrameworkDescription}
                 onChange={handleCustomFrameworkDescriptionChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSaveFramework();
+                  }
+                }}
               />
             </DialogContent>
             <DialogActions>
