@@ -114,11 +114,19 @@ function SingleData() {
     });
 
     // Calculate scores for the default framework
-    // For each indicator within a metric, the score contribution is its value multiplied by its relative weight
-    // within the metric, then multiplied by the metric's weight relative to the total weight sum.
+    // For each selected indicator within a metric, the score contribution is its value multiplied by its
+    // relative weight within the metric, then multiplied by the metric's weight relative to the total weight sum.
     if (savedWeights && savedWeights.metrics) {
       frameworkScore = savedWeights.metrics.reduce((accumulator, metric) => {
-        const totalIndicatorWeight = metric.indicators.reduce(
+        const filteredIndicatorIds = filteredData.map(
+          (data) => data.indicator_id
+        );
+
+        const selectedIndicators = metric.indicators.filter((indicator) =>
+          filteredIndicatorIds.includes(indicator.indicator_id)
+        );
+
+        const totalIndicatorWeight = selectedIndicators.reduce(
           (acc, indicator) => acc + indicator.indicator_weight,
           0
         );
