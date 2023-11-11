@@ -1,9 +1,7 @@
 \c esglow;
 
--- TODO:   
--- Company 11 Issue
--- Not all indicators add up to 1.
 -- Industries
+-- 5
 INSERT INTO industries (name) VALUES 
 ('Technology'),
 ('Healthcare'),
@@ -58,7 +56,7 @@ INSERT INTO metrics (name, description) VALUES
 
 -- Indicators
 -- 30
--- Changed to Source Format: Source 1: Data Description; Source 2: Data Description; Source 3...
+-- Data Source Format --> Source 1: Name (Description); Source 2: (Name) (Description);
 INSERT INTO indicators (name, description, source) VALUES 
 -- Emission Standards
 ('CO2 Emission Compliance', 'Adherence to CO2 emission standards.', 'Source 1: PlanetCare Reports (Comprehensive analyses and reports on global emissions); Source 2: EcoMetrics (Database of worldwide ecological statistics and metrics); Source 3: AquaStats (Global water and agriculture statistics database)'),
@@ -102,10 +100,117 @@ INSERT INTO indicators (name, description, source) VALUES
 ('Energy Efficiency Rating', 'Rating based on energy conservation and efficiency.', 'Source 1: EnergyWatch Metrics (Data and metrics on global energy consumption and sources); Source 2: EcoMetrics (Database of worldwide ecological statistics and metrics)');
 
 
+-- Framework Metrics Relationship
+-- Each framework must have at least one metric.
+INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUES 
+(1, 2, 0.1),
+(1, 9, 0.25),
+(1, 6, 0.1),
+(1, 3, 0.1),
+(1, 10, 0.05),
+(1, 8, 0.05),
+(1, 7, 0.35),
+(2, 6, 0.35),
+(2, 8, 0.25),
+(2, 9, 0.4),
+(3, 8, 0.1),
+(3, 10, 0.4),
+(3, 6, 0.15),
+(3, 1, 0.3),
+(3, 2, 0.05),
+(4, 3, 0.3),
+(4, 9, 0.4),
+(4, 7, 0.25),
+(4, 2, 0.05),
+(5, 2, 0.45),
+(5, 10, 0.35),
+(5, 1, 0.1),
+(5, 6, 0.1),
+(6, 4, 0.25),
+(6, 7, 0.3),
+(6, 9, 0.45),
+(7, 8, 0.4),
+(7, 6, 0.5),
+(7, 3, 0.1),
+(8, 3, 0.15),
+(8, 1, 0.45),
+(8, 10, 0.4),
+(9, 6, 0.2),
+(9, 7, 0.05),
+(9, 3, 0.05),
+(9, 10, 0.1),
+(9, 2, 0.05),
+(9, 1, 0.2),
+(9, 5, 0.2),
+(9, 8, 0.1),
+(9, 4, 0.05),
+(10, 6, 0.3),
+(10, 5, 0.5),
+(10, 2, 0.2);
+
+
+-- Company Frameworks Relationship
+-- Each company must have at least one framework.
+INSERT INTO company_frameworks (company_id, framework_id) VALUES
+(1, 6),
+(1, 2),
+(1, 4),
+(1, 5),
+(1, 10),
+(2, 8),
+(2, 6),
+(2, 4),
+(3, 7),
+(3, 5),
+(3, 8),
+(3, 9),
+(4, 9),
+(4, 3),
+(5, 9),
+(6, 3),
+(7, 7),
+(7, 3),
+(8, 6),
+(8, 5),
+(8, 9),
+(8, 1),
+(9, 4),
+(9, 5),
+(10, 3),
+(10, 5),
+(10, 8);
+
+
+-- Metric Indicators Relationship
+-- Each metric must have at least one indicator.
+INSERT INTO metric_indicators (metric_id, indicator_id, predefined_weight) VALUES 
+(1, 19, 0.5),
+(1, 24, 0.2),
+(1, 28, 0.3),
+(2, 2, 0.2),
+(2, 29, 0.4),
+(2, 11, 0.4),
+(3, 12, 0.5),
+(3, 6, 0.5),
+(4, 27, 0.6),
+(4, 26, 0.3),
+(4, 4, 0.1),
+(5, 2, 0.7),
+(5, 10, 0.3),
+(6, 1, 0.5),
+(6, 30, 0.5),
+(7, 5, 0.4),
+(7, 6, 0.2),
+(7, 28, 0.4),
+(8, 5, 0.6),
+(8, 23, 0.4),
+(9, 15, 0.7),
+(9, 28, 0.3),
+(10, 15, 0.6),
+(10, 26, 0.4);
+
 
 -- Indicator data values for each company for years 2018-2023.
--- 10 Companies
--- 
 INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (1, 1, 2018, 86),
 (1, 2, 2018, 52),
@@ -1907,111 +2012,3 @@ INSERT INTO data_values (indicator_id, company_id, year, rating) VALUES
 (30, 8, 2023, 64),
 (30, 9, 2023, 83),
 (30, 10, 2023, 83);
-
-
--- Framework Metrics Relationship
-INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUES 
-(1, 2, 0.1),
-(1, 9, 0.25),
-(1, 6, 0.1),
-(1, 3, 0.1),
-(1, 10, 0.05),
-(1, 8, 0.05),
-(1, 7, 0.35),
-(2, 6, 0.35),
-(2, 8, 0.25),
-(2, 9, 0.4),
-(3, 8, 0.1),
-(3, 10, 0.4),
-(3, 6, 0.15),
-(3, 1, 0.3),
-(3, 2, 0.05),
-(4, 3, 0.3),
-(4, 9, 0.4),
-(4, 7, 0.25),
-(4, 2, 0.05),
-(5, 2, 0.45),
-(5, 10, 0.35),
-(5, 1, 0.1),
-(5, 6, 0.1),
-(6, 4, 0.25),
-(6, 7, 0.3),
-(6, 9, 0.45),
-(7, 8, 0.4),
-(7, 6, 0.5),
-(7, 3, 0.1),
-(8, 3, 0.15),
-(8, 1, 0.45),
-(8, 10, 0.4),
-(9, 6, 0.2),
-(9, 7, 0.05),
-(9, 3, 0.05),
-(9, 10, 0.1),
-(9, 2, 0.05),
-(9, 1, 0.2),
-(9, 5, 0.2),
-(9, 8, 0.1),
-(9, 4, 0.05),
-(10, 6, 0.3),
-(10, 5, 0.5),
-(10, 2, 0.2);
-
-
--- Company Frameworks Relationship
--- Each company must have at least one framework.
-INSERT INTO company_frameworks (company_id, framework_id) VALUES
-(1, 6),
-(1, 2),
-(1, 4),
-(1, 5),
-(1, 10),
-(2, 8),
-(2, 6),
-(2, 4),
-(3, 7),
-(3, 5),
-(3, 8),
-(3, 9),
-(4, 9),
-(4, 3),
-(5, 9),
-(6, 3),
-(7, 7),
-(7, 3),
-(8, 6),
-(8, 5),
-(8, 9),
-(8, 1),
-(9, 4),
-(9, 5),
-(10, 3),
-(10, 5),
-(10, 8);
-
-
--- Metric Indicators Relationship
-INSERT INTO metric_indicators (metric_id, indicator_id, predefined_weight) VALUES 
-(1, 19, 0.5),
-(1, 24, 0.2),
-(1, 28, 0.3),
-(2, 2, 0.2),
-(2, 29, 0.4),
-(2, 11, 0.4),
-(3, 12, 0.5),
-(3, 6, 0.5),
-(4, 27, 0.6),
-(4, 26, 0.3),
-(4, 4, 0.1),
-(5, 2, 0.7),
-(5, 10, 0.3),
-(6, 1, 0.5),
-(6, 30, 0.5),
-(7, 5, 0.4),
-(7, 6, 0.2),
-(7, 28, 0.4),
-(8, 5, 0.6),
-(8, 23, 0.4),
-(9, 15, 0.7),
-(9, 28, 0.3),
-(10, 15, 0.6),
-(10, 26, 0.4);
