@@ -29,7 +29,7 @@ function SingleSidebar({ token }) {
   const {
     selectedCompany,
     frameworksData,
-    years,
+    yearsList,
     selectedFramework,
     setSelectedFramework,
     selectedCustomFramework,
@@ -642,7 +642,7 @@ function SingleSidebar({ token }) {
           disabled={!frameworksData}
           expanded={expanded.panel4}
           onToggleDropdown={handleChange("panel4")}
-          years={years}
+          years={yearsList}
           handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>

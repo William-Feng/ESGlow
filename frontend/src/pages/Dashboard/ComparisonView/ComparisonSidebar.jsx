@@ -55,7 +55,7 @@ function ComparisonSidebar({ token }) {
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
-      <Box sx={{ textAlign: 'center' }}>
+      <Box sx={{ textAlign: 'center', mb: '15px' }}>
         <ToggleButtonGroup
           value={dataView}
           exclusive
