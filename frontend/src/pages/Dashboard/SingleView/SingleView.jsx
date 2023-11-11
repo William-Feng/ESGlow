@@ -303,8 +303,8 @@ function SingleView({ token }) {
         if (!savedWeights || savedWeights.year === data.year) {
           const weight =
             savedAdditionalIndicatorWeights[data.indicator_id.toString()] || 0;
-          const normalizedWeight = weight / totalWeightSum;
-          const indicatorScore = data.value * normalizedWeight;
+          const normalisedWeight = weight / totalWeightSum;
+          const indicatorScore = data.value * normalisedWeight;
           return accumulator + indicatorScore;
         }
         return accumulator;

@@ -54,7 +54,6 @@ function Header({
 
   const handleCloseFrameworksDialog = () => {
     setIsCustomFrameworksDialogOpen(false);
-    console.log("This has been set to false");
   };
 
   const handleLogout = () => {
