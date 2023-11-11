@@ -55,10 +55,11 @@ function ComparisonSidebar({ token }) {
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
-      <Box sx={{ textAlign: 'center', mb: '15px' }}>
+      <Box sx={{ textAlign: 'center', m: '15px' }}>
         <ToggleButtonGroup
           value={dataView}
           exclusive
+          disabled={!selectedCompanies.length}
           onChange={(e) => setDataView(e.currentTarget.value)}
           aria-label="table view"
           sx={{
