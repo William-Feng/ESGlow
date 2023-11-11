@@ -1,13 +1,14 @@
 \c esglow;
 
 -- Industries
--- 5
+-- 6
 INSERT INTO industries (name) VALUES 
 ('Technology'),
 ('Healthcare'),
 ('Finance'),
 ('Manufacturing'),
-('Energy');
+('Energy'),
+('Design');
 
 
 -- Companies
@@ -18,10 +19,10 @@ INSERT INTO companies (industry_id, name, description) VALUES
 (3, 'FairTrade Enterprises', 'As a trailblazer in the financial world, FairTrade Enterprises offers a unique blend of financial services, emphasising ethical investment strategies and transparent trading practices that promote a fairer global economy.'),
 (1, 'FutureDriven Tech', 'FutureDriven Tech is committed to leveraging cutting-edge technology to design innovative solutions that not only meet the demands of today but also pave the way for a brighter, more sustainable tomorrow.'),
 (2, 'UnityGlobal Services', 'With a passion for quality healthcare and a commitment to diversity, UnityGlobal Services offers a comprehensive suite of healthcare solutions that bridge gaps and ensure accessibility to quality care on a global scale.'),
-(2, 'MediTech Solutions', 'At MediTech Solutions, we leverage technology to revolutionize healthcare, creating digital solutions that improve patient outcomes and enhance the healthcare experience.'),
-(3, 'EcoFinance', 'EcoFinance is revolutionizing the finance industry by offering sustainable and ethical financial solutions that prioritize the environment and social responsibility.'),
-(4, 'EcoManufacturing', 'EcoManufacturing is redefining the manufacturing industry, prioritizing sustainable practices and eco-friendly materials to create high-quality products.'),
-(4, 'Manufacturing Pioneers', 'As a leader in the manufacturing sector, Manufacturing Pioneers is dedicated to driving innovation and revolutionizing the way products are made.'),
+(2, 'MediTech Solutions', 'At MediTech Solutions, we leverage technology to revolutionise healthcare, creating digital solutions that improve patient outcomes and enhance the healthcare experience.'),
+(3, 'EcoFinance', 'EcoFinance is revolutionising the finance industry by offering sustainable and ethical financial solutions that prioritise the environment and social responsibility.'),
+(4, 'EcoManufacturing', 'EcoManufacturing is redefining the manufacturing industry, prioritising sustainable practices and eco-friendly materials to create high-quality products.'),
+(4, 'Manufacturing Pioneers', 'As a leader in the manufacturing sector, Manufacturing Pioneers is dedicated to driving innovation and revolutionising the way products are made.'),
 (5, 'Less Evil Renewables', 'Founded by the formerly and now currently reformed Doctor Evil, Less Evil Renewables is commited to making renewables that are less evil than their competitors, but not too good either.');
 
 
@@ -34,7 +35,7 @@ INSERT INTO frameworks (name, description) VALUES
 ('SASB', 'Identifies a subset of ESG issues most relevant to financial performance in various industries.'),
 ('GRESB', 'An ESG benchmark for real assets globally.'),
 ('Social Impact Standards', 'A set of guidelines focusing on social responsibility, inclusivity, and community engagement.'),
-('Green Innovation Protocols', 'Protocols that emphasize the importance of innovative and environmentally friendly practices in business operations.'),
+('Green Innovation Protocols', 'Protocols that emphasise the importance of innovative and environmentally friendly practices in business operations.'),
 ('Sustainability and Transparency Standards', 'A comprehensive measure for transparency and sustainability in corporate practices.'),
 ('Global Ethical Compliance', 'Ensures adherence to ethical standards and practices on a global scale.'),
 ('Responsible Supply Chain Framework', 'A protocol that focuses on sustainable and ethical practices throughout the supply chain.');
@@ -103,13 +104,11 @@ INSERT INTO indicators (name, description, source) VALUES
 -- Framework Metrics Relationship
 -- Each framework must have at least one metric.
 INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUES 
-(1, 2, 0.1),
-(1, 9, 0.25),
+(1, 2, 0.25),
+(1, 9, 0.3),
 (1, 6, 0.1),
 (1, 3, 0.1),
-(1, 10, 0.05),
-(1, 8, 0.05),
-(1, 7, 0.35),
+(1, 8, 0.25),
 (2, 6, 0.35),
 (2, 8, 0.25),
 (2, 9, 0.4),
@@ -120,15 +119,13 @@ INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUE
 (3, 2, 0.05),
 (4, 3, 0.3),
 (4, 9, 0.4),
-(4, 7, 0.25),
-(4, 2, 0.05),
+(4, 2, 0.3),
 (5, 2, 0.45),
 (5, 10, 0.35),
 (5, 1, 0.1),
 (5, 6, 0.1),
 (6, 4, 0.25),
-(6, 7, 0.3),
-(6, 9, 0.45),
+(6, 7, 0.75),
 (7, 8, 0.4),
 (7, 6, 0.5),
 (7, 3, 0.1),
@@ -136,17 +133,11 @@ INSERT INTO framework_metrics (framework_id, metric_id, predefined_weight) VALUE
 (8, 1, 0.45),
 (8, 10, 0.4),
 (9, 6, 0.2),
-(9, 7, 0.05),
-(9, 3, 0.05),
-(9, 10, 0.1),
-(9, 2, 0.05),
-(9, 1, 0.2),
-(9, 5, 0.2),
-(9, 8, 0.1),
-(9, 4, 0.05),
-(10, 6, 0.3),
-(10, 5, 0.5),
-(10, 2, 0.2);
+(9, 7, 0.4),
+(9, 10, 0.15),
+(9, 5, 0.25),
+(10, 6, 0.35),
+(10, 5, 0.65);
 
 
 -- Company Frameworks Relationship
