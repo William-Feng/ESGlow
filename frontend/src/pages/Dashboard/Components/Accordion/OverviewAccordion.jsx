@@ -44,7 +44,11 @@ export default function OverviewAccordion({
               maxHeight: "320px",
             }}
           >
-            <SingleOverview/>
+            {isSingleView ?
+              <SingleOverview/>
+              :
+              <ComparisonOverview/>
+            }
           </Box>
         </AccordionDetails>
     </Accordion>
