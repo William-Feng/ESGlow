@@ -10,6 +10,7 @@ function ComparisonOverview() {
         sx={{
           bgcolor: "background.paper",
           mx: "auto",
+          mt: -4,
         }}
       >
         <Typography

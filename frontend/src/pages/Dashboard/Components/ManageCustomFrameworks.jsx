@@ -12,11 +12,14 @@ import {
   IconButton,
   Tooltip,
   Box,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 function ManageCustomFrameworks({ open, onClose, token }) {
   const [customFrameworks, setCustomFrameworks] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (open) {
@@ -44,15 +47,19 @@ function ManageCustomFrameworks({ open, onClose, token }) {
     })
       .then((response) => {
         if (response.ok) {
-          // Update state to reflect deleted framework
           setCustomFrameworks(
             customFrameworks.filter((f) => f.framework_id !== frameworkId)
           );
+          setSuccessMessage("Framework deleted successfully.");
         } else {
           console.error("Failed to delete framework");
         }
       })
       .catch((error) => console.error("Error deleting framework", error));
+  };
+
+  const handleCloseSnackbar = () => {
+    setSuccessMessage("");
   };
 
   return (
@@ -116,6 +123,14 @@ function ManageCustomFrameworks({ open, onClose, token }) {
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="success">{successMessage}</Alert>
+      </Snackbar>
     </Dialog>
   );
 }

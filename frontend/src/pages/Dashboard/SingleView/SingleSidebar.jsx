@@ -44,6 +44,8 @@ function SingleSidebar({ token }) {
     selectedAdditionalIndicators,
     setSelectedAdditionalIndicators,
     setSavedAdditionalIndicatorWeights,
+    updateScore,
+    setAdjustedScore,
   } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
@@ -59,6 +61,7 @@ function SingleSidebar({ token }) {
       weights[indicator.indicator_id] = 0;
     });
     setAdditionalIndicatorWeights(weights);
+    setAdjustedScore(0);
   }, [
     selectedCompany,
     setSelectedFramework,
@@ -66,6 +69,7 @@ function SingleSidebar({ token }) {
     setSelectedIndicators,
     setSelectedAdditionalIndicators,
     allIndicators,
+    setAdjustedScore,
   ]);
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
@@ -81,10 +85,21 @@ function SingleSidebar({ token }) {
       );
       setSelectedFramework(null);
     } else {
-      setSelectedFramework(
-        frameworksData.find((f) => f.framework_id === frameworkId)
+      const newFramework = frameworksData.find(
+        (f) => f.framework_id === frameworkId
       );
+      setSelectedFramework(newFramework);
       setSelectedCustomFramework(null);
+
+      // Reset indicator weights to the predefined weights and update the selected indicators
+      const newIndicatorWeights = {};
+      newFramework.metrics.forEach((metric) => {
+        metric.indicators.forEach((indicator) => {
+          newIndicatorWeights[indicator.indicator_id] =
+            indicator.predefined_weight;
+        });
+      });
+      setIndicatorWeights(newIndicatorWeights);
       setSelectedIndicators(
         frameworksData.flatMap((framework) =>
           framework.metrics.flatMap((metric) =>
@@ -161,23 +176,33 @@ function SingleSidebar({ token }) {
   };
 
   const handleIndicatorChange = (metric, indicatorId, checked) => {
-    setSelectedIndicators((prevIndicators) => {
-      if (checked) {
-        return [...prevIndicators, indicatorId];
-      } else {
-        return prevIndicators.filter((id) => id !== indicatorId);
-      }
-    });
+    // Update the new selected indicators
+    const newSelectedIndicators = checked
+      ? [...selectedIndicators, indicatorId]
+      : selectedIndicators.filter((id) => id !== indicatorId);
 
-    // Ensure metric is selected if indicator is selected
+    setSelectedIndicators(newSelectedIndicators);
+
+    // Update selected metrics
     setSelectedMetrics((prevMetrics) => {
-      if (checked && !prevMetrics.includes(metric)) {
+      const metricAlreadySelected = prevMetrics.some(
+        (m) => m.metric_id === metric.metric_id
+      );
+
+      if (checked && !metricAlreadySelected) {
+        // If an indicator is being selected and its metric is not already selected, add the metric
         return [...prevMetrics, metric];
-      } else if (howManyIndicatorsChecked(metric) === 0) {
-        return prevMetrics.filter((m) => m !== metric);
-      } else {
-        return [...prevMetrics];
+      } else if (!checked && metricAlreadySelected) {
+        // If an indicator is being deselected, check if the metric still has any selected indicators
+        const isAnyIndicatorInMetricSelected = metric.indicators.some((ind) =>
+          newSelectedIndicators.includes(ind.indicator_id)
+        );
+        if (!isAnyIndicatorInMetricSelected) {
+          // If no indicators in the metric are selected, remove the metric
+          return prevMetrics.filter((m) => m.metric_id !== metric.metric_id);
+        }
       }
+      return prevMetrics;
     });
   };
 
@@ -232,7 +257,7 @@ function SingleSidebar({ token }) {
     if (metric) {
       const metricId = metric.metric_id;
       if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
-        // Return red if weight has been deselected
+        // Return red if no indicators within the metric are selected
         return "error";
       } else if (
         Math.abs(
@@ -322,11 +347,11 @@ function SingleSidebar({ token }) {
   const handleYearChange = (year) => {
     setSelectedYears((prevYears) => {
       if (prevYears.includes(year)) {
-        const newYearsList = prevYears.filter((y) => y !== year)
-        return (newYearsList.sort((a, b) => a - b));
+        const newYearsList = prevYears.filter((y) => y !== year);
+        return newYearsList.sort((a, b) => a - b);
       } else {
-        const newYearsList = [...prevYears, year]
-        return (newYearsList.sort((a, b) => a - b));
+        const newYearsList = [...prevYears, year];
+        return newYearsList.sort((a, b) => a - b);
       }
     });
   };
@@ -428,29 +453,22 @@ function SingleSidebar({ token }) {
       return setErrorMessage("Please select at least one year.");
     }
 
-    // Update savedWeights with indicator and metric weights from default framework
-    const newSavedWeights = {};
-    const savedMetricsList = [];
-    selectedMetrics.forEach((metric) => {
-      const metricId = metric.metric_id;
-      const metricWeight = metricWeights[metricId];
-      const indicators = [];
-      metric.indicators.forEach((indicator) => {
-        const indicatorId = indicator.indicator_id;
-        const indicatorWeight = indicatorWeights[indicatorId];
-        indicators.push({
-          indicator_id: indicatorId,
-          indicator_weight: indicatorWeight,
-        });
-      });
-      savedMetricsList.push({
-        metric_id: metricId,
-        metric_weight: metricWeight,
-        indicators: indicators,
-      });
-    });
-    newSavedWeights["metrics"] = savedMetricsList;
-    newSavedWeights["year"] = Math.max(...selectedYears);
+    // Prepare the metrics and their weights for saving
+    const newSavedWeights = {
+      metrics: selectedMetrics.map((metric) => ({
+        metric_id: metric.metric_id,
+        metric_weight: metricWeights[metric.metric_id],
+        indicators: metric.indicators
+          .filter((indicator) =>
+            selectedIndicators.includes(indicator.indicator_id)
+          )
+          .map((indicator) => ({
+            indicator_id: indicator.indicator_id,
+            indicator_weight: indicatorWeights[indicator.indicator_id],
+          })),
+      })),
+      year: Math.max(...selectedYears),
+    };
     setSavedWeights(newSavedWeights);
 
     // Include the weights from the additional indicators
@@ -461,7 +479,9 @@ function SingleSidebar({ token }) {
     });
     setSavedAdditionalIndicatorWeights(newSavedAdditionalWeights);
 
-    return setSuccessMessage("Preferences saved successfully.");
+    updateScore(newSavedWeights, newSavedAdditionalWeights);
+
+    return setSuccessMessage("Selections saved successfully.");
   };
 
   // Show the user's custom frameworks

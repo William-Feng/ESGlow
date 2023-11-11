@@ -1,10 +1,4 @@
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Header";
 import SingleViewSearchbar from "./SingleSearchbar";
 import SingleViewSidebar from "./SingleSidebar";
@@ -50,6 +44,10 @@ function SingleView({ token }) {
   const [selectedAdditionalIndicators, setSelectedAdditionalIndicators] =
     useState([]);
 
+  const [adjustedScore, setAdjustedScore] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
+  const [additionalIndicatorsData, setAdditionalIndicatorsData] = useState([]);
+
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
   //                     & fixedIndicatorValues (fixed value after company selection)
@@ -85,7 +83,7 @@ function SingleView({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
-  },[token]);
+  }, [token]);
 
   // Upon initial company selection, fetch:
   // frameworks and all its information  (frameworksData)
@@ -134,10 +132,9 @@ function SingleView({ token }) {
           error
         )
       );
-    
+
     // open overview accordion
     setOverviewExpanded(true);
-
   }, [token, navigate, selectedCompany, yearsList, fetchIndicatorValues]);
 
   // Set indicatorValues, variable selection of indicator values that changes with sidebar
@@ -210,19 +207,144 @@ function SingleView({ token }) {
       );
   }, [token, selectedCompany, yearsList]);
 
+  // Retrieve the data from the selected framework
+  useEffect(() => {
+    const validIndicatorIds = selectedFramework
+      ? selectedFramework.metrics.flatMap((metric) =>
+          metric.indicators.map((indicator) => indicator.indicator_id)
+        )
+      : [];
+
+    const newFilteredData = indicatorValues.filter((row) =>
+      validIndicatorIds.includes(row.indicator_id)
+    );
+
+    setFilteredData(newFilteredData);
+  }, [selectedFramework, indicatorValues]);
+
+  // Retrieve the data from the selected additional indicators
+  useEffect(() => {
+    const newAdditionalIndicatorsData = allIndicatorValues.filter((indicator) =>
+      selectedAdditionalIndicators.includes(indicator.indicator_id)
+    );
+
+    setAdditionalIndicatorsData(newAdditionalIndicatorsData);
+  }, [selectedAdditionalIndicators, allIndicatorValues]);
+
+  // Adjusted ESG Score Calculation
+  function calculateScore(
+    savedWeights,
+    filteredData,
+    savedAdditionalIndicatorWeights,
+    additionalIndicatorsData
+  ) {
+    let totalWeightSum = 0;
+    let frameworkScore = 0;
+    let additionalScore = 0;
+
+    // Calculate total weight sum from savedWeights, and add the weights from the additional indicators
+    if (savedWeights && savedWeights.metrics) {
+      totalWeightSum += savedWeights.metrics.reduce(
+        (accumulator, metric) => accumulator + metric.metric_weight,
+        0
+      );
+    }
+
+    Object.values(savedAdditionalIndicatorWeights).forEach((weight) => {
+      totalWeightSum += weight;
+    });
+
+    // Calculate scores for the default framework
+    // For each selected indicator within a metric, the score contribution is its value multiplied by its
+    // relative weight within the metric, then multiplied by the metric's weight relative to the total weight sum.
+    if (savedWeights && savedWeights.metrics) {
+      frameworkScore = savedWeights.metrics.reduce((accumulator, metric) => {
+        const filteredIndicatorIds = filteredData.map(
+          (data) => data.indicator_id
+        );
+
+        const selectedIndicators = metric.indicators.filter((indicator) =>
+          filteredIndicatorIds.includes(indicator.indicator_id)
+        );
+
+        const totalIndicatorWeight = selectedIndicators.reduce(
+          (acc, indicator) => acc + indicator.indicator_weight,
+          0
+        );
+
+        const metricScore = metric.indicators.reduce((acc, indicator) => {
+          const matchingIndicator = filteredData.find(
+            (data) =>
+              data.indicator_id === indicator.indicator_id &&
+              data.year === savedWeights.year
+          );
+
+          if (matchingIndicator) {
+            const indicatorRelativeWeight =
+              indicator.indicator_weight / totalIndicatorWeight;
+            const indicatorScore =
+              matchingIndicator.value *
+              indicatorRelativeWeight *
+              (metric.metric_weight / totalWeightSum);
+
+            return acc + indicatorScore;
+          }
+          return acc;
+        }, 0);
+
+        return accumulator + metricScore;
+      }, 0);
+    }
+
+    // Calculate scores for the additional indicators (note that these are not grouped into metrics)
+    // For each, the score contribution is its value multiplied by its relative weight in the total weight sum.
+    if (Object.keys(savedAdditionalIndicatorWeights).length > 0) {
+      additionalScore = additionalIndicatorsData.reduce((accumulator, data) => {
+        if (!savedWeights || savedWeights.year === data.year) {
+          const weight =
+            savedAdditionalIndicatorWeights[data.indicator_id.toString()] || 0;
+          const normalisedWeight = weight / totalWeightSum;
+          const indicatorScore = data.value * normalisedWeight;
+          return accumulator + indicatorScore;
+        }
+        return accumulator;
+      }, 0);
+    }
+
+    return frameworkScore + additionalScore;
+  }
+
+  // Invoke the score calculation function upon pressing the 'Update Score' button
+  function updateScore(savedWeights, savedAdditionalIndicatorWeights) {
+    if (savedWeights || savedAdditionalIndicatorWeights) {
+      const score = calculateScore(
+        savedWeights,
+        filteredData,
+        savedAdditionalIndicatorWeights,
+        additionalIndicatorsData
+      );
+      setAdjustedScore(score.toFixed(3));
+    }
+  }
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
         <SingleViewContext.Provider
           value={{
-            selectedIndustry,
-            setSelectedIndustry,
-            selectedCompany,
-            setSelectedCompany,
             view,
             setView,
             frameworksData,
             yearsList,
+            filteredData,
+            additionalIndicatorsData,
+            adjustedScore,
+            setAdjustedScore,
+            updateScore,
+            selectedIndustry,
+            setSelectedIndustry,
+            selectedCompany,
+            setSelectedCompany,
             selectedFramework,
             setSelectedFramework,
             selectedCustomFramework,
@@ -261,7 +383,9 @@ function SingleView({ token }) {
               <Header
                 token={token}
                 isCustomFrameworksDialogOpen={isCustomFrameworksDialogOpen}
-                setIsCustomFrameworksDialogOpen={setIsCustomFrameworksDialogOpen}
+                setIsCustomFrameworksDialogOpen={
+                  setIsCustomFrameworksDialogOpen
+                }
               />
             </Toolbar>
             <Toolbar sx={{ margin: "auto" }}>
@@ -279,9 +403,9 @@ function SingleView({ token }) {
               flexDirection: "column",
             }}
           >
-            <OverviewAccordion 
+            <OverviewAccordion
               isSingleView={true}
-              isDisabled={!(frameworksData&&selectedCompany)}
+              isDisabled={!(frameworksData && selectedCompany)}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
             />

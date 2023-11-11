@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect, useMemo, useContext } from "react";
+import React, { useMemo, useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
@@ -17,24 +17,11 @@ function SingleData() {
     selectedCompany,
     selectedFramework,
     selectedYears,
-    indicatorValues,
-    savedWeights,
     allIndicators,
-    allIndicatorValues,
-    selectedAdditionalIndicators,
-    savedAdditionalIndicatorWeights,
+    filteredData,
+    additionalIndicatorsData,
+    adjustedScore,
   } = useContext(SingleViewContext);
-  const [adjustedScore, setAdjustedScore] = useState(0);
-  
-  const validIndicatorIds = selectedFramework
-    ? selectedFramework.metrics.flatMap((metric) =>
-        metric.indicators.map((indicator) => indicator.indicator_id)
-      )
-    : [];
-
-  const filteredData = indicatorValues.filter((row) =>
-    validIndicatorIds.includes(row.indicator_id)
-  );
 
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
@@ -55,15 +42,6 @@ function SingleData() {
 
     return Object.values(dataMap);
   }, [allIndicators, filteredData]);
-
-  // Retrieve the additional indicators and data selected by the user
-  const additionalIndicatorsData = useMemo(
-    () =>
-      allIndicatorValues.filter((indicator) =>
-        selectedAdditionalIndicators.includes(indicator.indicator_id)
-      ),
-    [selectedAdditionalIndicators, allIndicatorValues]
-  );
 
   // Convert the additional indicator data into a format that can be displayed in the table
   const structuredExtraData = useMemo(() => {
@@ -89,94 +67,6 @@ function SingleData() {
     () => selectedFramework || structuredExtraData.length > 0,
     [selectedFramework, structuredExtraData]
   );
-
-  // Adjusted ESG Score Calculation
-  function calculateScore(
-    savedWeights,
-    filteredData,
-    savedAdditionalIndicatorWeights,
-    additionalIndicatorsData
-  ) {
-    let totalWeightSum = 0;
-    let frameworkScore = 0;
-    let additionalScore = 0;
-
-    // Calculate total weight sum from savedWeights, and add the weights from the additional indicators
-    if (savedWeights && savedWeights.metrics) {
-      totalWeightSum += savedWeights.metrics.reduce(
-        (accumulator, metric) => accumulator + metric.metric_weight,
-        0
-      );
-    }
-
-    Object.values(savedAdditionalIndicatorWeights).forEach((weight) => {
-      totalWeightSum += weight;
-    });
-
-    // Calculate scores for the default framework
-    // For each indicator within a metric, the score contribution is its value multiplied by its relative weight
-    // within the metric, then multiplied by the metric's weight relative to the total weight sum.
-    if (savedWeights && savedWeights.metrics) {
-      frameworkScore = savedWeights.metrics.reduce((accumulator, metric) => {
-        const totalIndicatorWeight = metric.indicators.reduce(
-          (acc, indicator) => acc + indicator.indicator_weight,
-          0
-        );
-
-        const metricScore = metric.indicators.reduce((acc, indicator) => {
-          const matchingIndicator = filteredData.find(
-            (data) =>
-              data.indicator_id === indicator.indicator_id &&
-              data.year === savedWeights.year
-          );
-
-          if (matchingIndicator) {
-            const indicatorRelativeWeight =
-              indicator.indicator_weight / totalIndicatorWeight;
-            const indicatorScore =
-              matchingIndicator.value *
-              indicatorRelativeWeight *
-              (metric.metric_weight / totalWeightSum);
-            return acc + indicatorScore;
-          }
-          return acc;
-        }, 0);
-
-        return accumulator + metricScore;
-      }, 0);
-    }
-
-    // Calculate scores for the additional indicators (note that these are not grouped into metrics)
-    // For each, the score contribution is its value multiplied by its relative weight in the total weight sum.
-    if (Object.keys(savedAdditionalIndicatorWeights).length > 0) {
-      additionalScore = additionalIndicatorsData.reduce((accumulator, data) => {
-        if (!savedWeights || savedWeights.year === data.year) {
-          const weight =
-            savedAdditionalIndicatorWeights[data.indicator_id.toString()] || 0;
-          const normalizedWeight = weight / totalWeightSum;
-          const indicatorScore = data.value * normalizedWeight;
-          return accumulator + indicatorScore;
-        }
-        return accumulator;
-      }, 0);
-    }
-
-    return frameworkScore + additionalScore;
-  }
-
-  // Invoke the score calculation function upon pressing the 'Update Score' button
-  useEffect(() => {
-    if (savedWeights || savedAdditionalIndicatorWeights) {
-      const score = calculateScore(
-        savedWeights,
-        filteredData,
-        savedAdditionalIndicatorWeights,
-        additionalIndicatorsData
-      );
-      setAdjustedScore(score.toFixed(1));
-    }
-    // eslint-disable-next-line
-  }, [savedWeights, savedAdditionalIndicatorWeights, additionalIndicatorsData]);
 
   if (!selectedCompany || !hasDataToShow) {
     return (
