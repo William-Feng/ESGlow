@@ -170,23 +170,27 @@ function SingleSidebar({ token }) {
 
     setSelectedIndicators(newSelectedIndicators);
 
-    const indicatorsInMetric = metric.indicators.map(
-      (indicator) => indicator.indicator_id
-    );
-    const metricIsSelected = newSelectedIndicators.some((id) =>
-      indicatorsInMetric.includes(id)
-    );
-
-    // Update selected metrics based on new indicators state
-    if (metricIsSelected) {
-      if (!selectedMetrics.includes(metric.metric_id)) {
-        setSelectedMetrics((prev) => [...prev, metric.metric_id]);
-      }
-    } else {
-      setSelectedMetrics((prev) =>
-        prev.filter((mId) => mId !== metric.metric_id)
+    // Update selected metrics
+    setSelectedMetrics((prevMetrics) => {
+      const metricAlreadySelected = prevMetrics.some(
+        (m) => m.metric_id === metric.metric_id
       );
-    }
+
+      if (checked && !metricAlreadySelected) {
+        // If an indicator is being selected and its metric is not already selected, add the metric
+        return [...prevMetrics, metric];
+      } else if (!checked && metricAlreadySelected) {
+        // If an indicator is being deselected, check if the metric still has any selected indicators
+        const isAnyIndicatorInMetricSelected = metric.indicators.some((ind) =>
+          newSelectedIndicators.includes(ind.indicator_id)
+        );
+        if (!isAnyIndicatorInMetricSelected) {
+          // If no indicators in the metric are selected, remove the metric
+          return prevMetrics.filter((m) => m.metric_id !== metric.metric_id);
+        }
+      }
+      return prevMetrics;
+    });
   };
 
   const handleMetricChange = (metric, event) => {
@@ -240,7 +244,7 @@ function SingleSidebar({ token }) {
     if (metric) {
       const metricId = metric.metric_id;
       if (!selectedMetrics.find((m) => m.metric_id === metricId)) {
-        // Return red if weight has been deselected
+        // Return red if no indicators within the metric are selected
         return "error";
       } else if (
         Math.abs(
@@ -434,31 +438,20 @@ function SingleSidebar({ token }) {
       return setErrorMessage("Please select at least one year.");
     }
 
-    // Ensure that a metric is unselected if all of its indicators are unselected
-    const recomputedSelectedMetrics = frameworkMetrics
-      .filter((metric) =>
-        metric.indicators.some((indicator) =>
-          selectedIndicators.includes(indicator.indicator_id)
-        )
-      )
-      .map((metric) => metric.metric_id);
-
+    // Prepare the metrics and their weights for saving
     const newSavedWeights = {
-      metrics: recomputedSelectedMetrics.map((metricId) => {
-        const metric = frameworkMetrics.find((m) => m.metric_id === metricId);
-        return {
-          metric_id: metricId,
-          metric_weight: metricWeights[metricId],
-          indicators: metric.indicators
-            .filter((indicator) =>
-              selectedIndicators.includes(indicator.indicator_id)
-            )
-            .map((indicator) => ({
-              indicator_id: indicator.indicator_id,
-              indicator_weight: indicatorWeights[indicator.indicator_id],
-            })),
-        };
-      }),
+      metrics: selectedMetrics.map((metric) => ({
+        metric_id: metric.metric_id,
+        metric_weight: metricWeights[metric.metric_id],
+        indicators: metric.indicators
+          .filter((indicator) =>
+            selectedIndicators.includes(indicator.indicator_id)
+          )
+          .map((indicator) => ({
+            indicator_id: indicator.indicator_id,
+            indicator_weight: indicatorWeights[indicator.indicator_id],
+          })),
+      })),
       year: Math.max(...selectedYears),
     };
     setSavedWeights(newSavedWeights);
@@ -473,7 +466,7 @@ function SingleSidebar({ token }) {
 
     updateScore(newSavedWeights, newSavedAdditionalWeights);
 
-    return setSuccessMessage("Preferences saved successfully.");
+    return setSuccessMessage("Selections saved successfully.");
   };
 
   // Show the user's custom frameworks
