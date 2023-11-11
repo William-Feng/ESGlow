@@ -321,9 +321,11 @@ function SingleSidebar({ token }) {
   const handleYearChange = (year) => {
     setSelectedYears((prevYears) => {
       if (prevYears.includes(year)) {
-        return prevYears.filter((y) => y !== year);
+        const newYearsList = prevYears.filter((y) => y !== year)
+        return (newYearsList.sort((a, b) => a - b));
       } else {
-        return [...prevYears, year];
+        const newYearsList = [...prevYears, year]
+        return (newYearsList.sort((a, b) => a - b));
       }
     });
   };
