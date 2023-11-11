@@ -1,9 +1,15 @@
-import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  Toolbar,
+} from "@mui/material";
 import Header from "../Header";
 import SingleViewSearchbar from "./SingleSearchbar";
-import SingleViewOverview from "./SingleOverview";
 import SingleViewSidebar from "./SingleSidebar";
 import SingleViewData from "./SingleData";
+import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import {
   useEffect,
   useState,
@@ -20,8 +26,10 @@ function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
-  const [yearsList, setYearsList] = useState([]);
+  // Collapsing the Overview section
+  const [overviewExpanded, setOverviewExpanded] = useState(false);
 
+  const [yearsList, setYearsList] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
@@ -87,6 +95,7 @@ function SingleView({ token }) {
     if (!companyId) {
       setSelectedFramework(null);
       setFrameworksData(null);
+      setOverviewExpanded(false);
       return;
     }
 
@@ -125,6 +134,10 @@ function SingleView({ token }) {
           error
         )
       );
+    
+    // open overview accordion
+    setOverviewExpanded(true);
+
   }, [token, navigate, selectedCompany, yearsList, fetchIndicatorValues]);
 
   // Set indicatorValues, variable selection of indicator values that changes with sidebar
@@ -266,14 +279,12 @@ function SingleView({ token }) {
               flexDirection: "column",
             }}
           >
-            <Box
-              sx={{
-                textAlign: "center",
-                maxHeight: "320px",
-              }}
-            >
-              <SingleViewOverview />
-            </Box>
+            <OverviewAccordion 
+              isSingleView={true}
+              isDisabled={!(frameworksData&&selectedCompany)}
+              overviewExpanded={overviewExpanded}
+              setOverviewExpanded={setOverviewExpanded}
+            />
             <Box
               sx={{
                 flex: 1,

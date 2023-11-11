@@ -5,12 +5,14 @@ import ComparisonSidebar from "./ComparisonSidebar";
 import ComparisonDataDisplay from "./ComparisonDataDisplay";
 import { useContext, createContext, useState, useEffect } from "react";
 import { PageContext } from "../Dashboard";
-import ComparisonOverview from "./ComparisonOverview";
+import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 
 export const ComparisonViewContext = createContext();
 
 function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
+
+  const [overviewExpanded, setOverviewExpanded] = useState(false);
 
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
@@ -22,6 +24,7 @@ function ComparisonView({ token }) {
 
   // call fetch on all indicator IDs only once upon load
   useEffect(() => {
+
     fetch("/api/indicators/all", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -31,15 +34,7 @@ function ComparisonView({ token }) {
       .then((data) => {
         setIndicatorsList(data.indicators);
       });
-  }, [token]);
 
-  // for every new company selection:
-  useEffect(() => {
-    // clearing company searchbar clears the sidebar selected
-    if (selectedCompanies.length === 0) {
-      setSelectedYear([])
-      setSelectedIndicators([])
-    }
     // Fetch all available years of data
     fetch("/api/values/years", {
       headers: {
@@ -56,6 +51,21 @@ function ComparisonView({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
+
+  }, [token]);
+
+  // for every new company selection:
+  useEffect(() => {
+    // clearing company searchbar clears the sidebar selected
+    if (selectedCompanies.length === 0) {
+      setSelectedYear([])
+      setSelectedIndicators([])
+      setOverviewExpanded(false);
+      return;
+    }
+    // open overview accordion
+    setOverviewExpanded(true);
+
   }, [token, selectedCompanies])
 
   return (
@@ -110,14 +120,12 @@ function ComparisonView({ token }) {
               flexDirection: "column",
             }}
           >
-            <Box
-              sx={{
-                textAlign: "center",
-                maxHeight: "320px",
-              }}
-            >
-              <ComparisonOverview />
-            </Box>
+            <OverviewAccordion 
+              isSingleView={false}
+              isDisabled={!selectedCompanies.length}
+              overviewExpanded={overviewExpanded}
+              setOverviewExpanded={setOverviewExpanded}
+            />
             <Box
               sx={{
                 flex: 1,

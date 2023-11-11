@@ -106,7 +106,6 @@ function SingleOverview() {
         sx={{
           bgcolor: "background.paper",
           mx: "auto",
-          padding: "16px 0",
         }}
       >
         <Typography
