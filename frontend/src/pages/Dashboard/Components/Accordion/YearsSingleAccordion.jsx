@@ -10,15 +10,21 @@ import {
 } from "@mui/material";
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ComparisonSidebarContext } from "../../ComparisonView/ComparisonSidebar";
+import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
 
-function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
-  const { yearsList, selectedYear, handleYearChange } = useContext(
-    ComparisonSidebarContext
-  );
+function YearsSingleAccordion({ disabled, expanded, onToggleDropdown }) {
+  const {
+    yearsList,
+    selectedYear,
+    setSelectedYear
+  } = useContext(ComparisonViewContext);
+  
+  const handleYearSelect = (_, value) => {
+    setSelectedYear([parseInt(value)]);
+  }
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
@@ -52,8 +58,8 @@ function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
                 <RadioGroup
                   aria-labelledby="demo-controlled-radio-buttons-group"
                   name="controlled-radio-buttons-group"
-                  value={selectedYear ? selectedYear.toString() : ""}
-                  onChange={handleYearChange}
+                  value={selectedYear[0] ? selectedYear[0].toString() : ""}
+                  onChange={handleYearSelect}
                 >
                   <Box
                     display="flex"
@@ -75,4 +81,4 @@ function YearsSingleSelectAccordion({ disabled, expanded, onChange }) {
   );
 }
 
-export default YearsSingleSelectAccordion;
+export default YearsSingleAccordion;

@@ -14,7 +14,7 @@ import {
 import { SingleViewContext } from "./SingleView";
 import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
-import YearsAccordion from "../Components/Accordion/YearsAccordion";
+import YearsMultiAccordion from "../Components/Accordion/YearsMultiAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 
 export const SidebarContext = createContext();
@@ -29,11 +29,12 @@ function SingleSidebar({ token }) {
   const {
     selectedCompany,
     frameworksData,
-    years,
+    yearsList,
     selectedFramework,
     setSelectedFramework,
     selectedCustomFramework,
     setSelectedCustomFramework,
+    isCustomFrameworksDialogOpen,
     selectedIndicators,
     setSelectedIndicators,
     selectedYears,
@@ -83,10 +84,21 @@ function SingleSidebar({ token }) {
       );
       setSelectedFramework(null);
     } else {
-      setSelectedFramework(
-        frameworksData.find((f) => f.framework_id === frameworkId)
+      const newFramework = frameworksData.find(
+        (f) => f.framework_id === frameworkId
       );
+      setSelectedFramework(newFramework);
       setSelectedCustomFramework(null);
+
+      // Reset indicator weights to the predefined weights and update the selected indicators
+      const newIndicatorWeights = {};
+      newFramework.metrics.forEach((metric) => {
+        metric.indicators.forEach((indicator) => {
+          newIndicatorWeights[indicator.indicator_id] =
+            indicator.predefined_weight;
+        });
+      });
+      setIndicatorWeights(newIndicatorWeights);
       setSelectedIndicators(
         frameworksData.flatMap((framework) =>
           framework.metrics.flatMap((metric) =>
@@ -334,9 +346,11 @@ function SingleSidebar({ token }) {
   const handleYearChange = (year) => {
     setSelectedYears((prevYears) => {
       if (prevYears.includes(year)) {
-        return prevYears.filter((y) => y !== year);
+        const newYearsList = prevYears.filter((y) => y !== year);
+        return newYearsList.sort((a, b) => a - b);
       } else {
-        return [...prevYears, year];
+        const newYearsList = [...prevYears, year];
+        return newYearsList.sort((a, b) => a - b);
       }
     });
   };
@@ -490,7 +504,7 @@ function SingleSidebar({ token }) {
   useEffect(() => {
     fetchCustomFrameworks();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, isCustomFrameworksDialogOpen]);
 
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
@@ -547,6 +561,8 @@ function SingleSidebar({ token }) {
         throw new Error(errorData.message || "Network response was not ok");
       }
 
+      setCustomFrameworkName("");
+      setCustomFrameworkDescription("");
       setSuccessMessage("Custom framework saved successfully.");
       fetchCustomFrameworks();
     } catch (error) {
@@ -631,26 +647,26 @@ function SingleSidebar({ token }) {
         <FrameworkAccordion
           disabled={!frameworksData}
           expanded={expanded.panel1}
-          onChange={handleChange("panel1")}
+          onToggleDropdown={handleChange("panel1")}
           frameworksData={frameworksData}
         />
         {!selectedCustomFramework && (
           <MetricsIndicatorsAccordion
             disabled={!frameworksData}
             expanded={expanded.panel2}
-            onChange={handleChange("panel2")}
+            onToggleDropdown={handleChange("panel2")}
           />
         )}
         <AdditionalIndicatorsAccordion
           disabled={!frameworksData}
           expanded={expanded.panel3}
-          onChange={handleChange("panel3")}
+          onToggleDropdown={handleChange("panel3")}
         />
-        <YearsAccordion
+        <YearsMultiAccordion
           disabled={!frameworksData}
           expanded={expanded.panel4}
-          onChange={handleChange("panel4")}
-          years={years}
+          onToggleDropdown={handleChange("panel4")}
+          years={yearsList}
           handleYearChange={handleYearChange}
         />
       </SidebarContext.Provider>
@@ -708,6 +724,12 @@ function SingleSidebar({ token }) {
                 variant="standard"
                 value={customFrameworkDescription}
                 onChange={handleCustomFrameworkDescriptionChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSaveFramework();
+                  }
+                }}
               />
             </DialogContent>
             <DialogActions>

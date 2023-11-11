@@ -388,3 +388,30 @@ def get_custom_frameworks(user):
     }
 
     return response, 200
+
+
+def delete_custom_framework(user, framework_id):
+    # Fetch the specified custom framework
+    custom_framework = CustomFrameworks.query.filter_by(
+        custom_framework_id=framework_id,
+        user_id=user.user_id
+    ).first()
+
+    # Check if custom framework exists and belongs to the user
+    if not custom_framework:
+        return {"message": "Custom framework not found."}, 404
+
+    # Delete related preferences
+    CustomFrameworkPreferences.query.filter_by(
+        custom_framework_id=framework_id
+    ).delete()
+
+    # Delete the custom framework
+    db.session.delete(custom_framework)
+    db.session.commit()
+
+    response = {
+        "message": "Custom framework deleted successfully!",
+    }
+
+    return response, 200

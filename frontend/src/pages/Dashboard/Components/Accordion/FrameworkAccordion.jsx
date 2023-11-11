@@ -15,7 +15,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
 
-function FrameworkAccordion({ disabled, expanded, onChange }) {
+function FrameworkAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
     frameworksData,
     customFrameworks,
@@ -42,7 +42,7 @@ function FrameworkAccordion({ disabled, expanded, onChange }) {
   }, [frameworksData, customFrameworks]);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"

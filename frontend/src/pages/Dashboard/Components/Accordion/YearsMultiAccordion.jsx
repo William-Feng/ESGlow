@@ -9,16 +9,16 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-function YearsAccordion({
+function YearsMultiAccordion({
   disabled,
   expanded,
-  onChange,
+  onToggleDropdown,
   years,
   handleYearChange,
   borderRequired,
 }) {
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel3bh-content"
@@ -71,4 +71,4 @@ function YearsAccordion({
   );
 }
 
-export default YearsAccordion;
+export default YearsMultiAccordion;
