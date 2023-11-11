@@ -17,22 +17,11 @@ function SingleData() {
     selectedCompany,
     selectedFramework,
     selectedYears,
-    indicatorValues,
     allIndicators,
-    allIndicatorValues,
-    selectedAdditionalIndicators,
+    filteredData,
+    additionalIndicatorsData,
     adjustedScore,
   } = useContext(SingleViewContext);
-
-  const validIndicatorIds = selectedFramework
-    ? selectedFramework.metrics.flatMap((metric) =>
-        metric.indicators.map((indicator) => indicator.indicator_id)
-      )
-    : [];
-
-  const filteredData = indicatorValues.filter((row) =>
-    validIndicatorIds.includes(row.indicator_id)
-  );
 
   // Only include the data for the selected frameworks, indicators and years
   const structuredData = useMemo(() => {
@@ -53,15 +42,6 @@ function SingleData() {
 
     return Object.values(dataMap);
   }, [allIndicators, filteredData]);
-
-  // Retrieve the additional indicators and data selected by the user
-  const additionalIndicatorsData = useMemo(
-    () =>
-      allIndicatorValues.filter((indicator) =>
-        selectedAdditionalIndicators.includes(indicator.indicator_id)
-      ),
-    [selectedAdditionalIndicators, allIndicatorValues]
-  );
 
   // Convert the additional indicator data into a format that can be displayed in the table
   const structuredExtraData = useMemo(() => {

@@ -43,6 +43,8 @@ function SingleView({ token }) {
     useState([]);
 
   const [adjustedScore, setAdjustedScore] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
+  const [additionalIndicatorsData, setAdditionalIndicatorsData] = useState([]);
 
   // fetch function is extracted as a separate function
   // this is called to set: indicatorValues (variable changes with sidebar selection)
@@ -178,6 +180,30 @@ function SingleView({ token }) {
       );
   }, [token, selectedCompany, yearsString]);
 
+  // Retrieve the data from the selected framework
+  useEffect(() => {
+    const validIndicatorIds = selectedFramework
+      ? selectedFramework.metrics.flatMap((metric) =>
+          metric.indicators.map((indicator) => indicator.indicator_id)
+        )
+      : [];
+
+    const newFilteredData = indicatorValues.filter((row) =>
+      validIndicatorIds.includes(row.indicator_id)
+    );
+
+    setFilteredData(newFilteredData);
+  }, [selectedFramework, indicatorValues]);
+
+  // Retrieve the data from the selected additional indicators
+  useEffect(() => {
+    const newAdditionalIndicatorsData = allIndicatorValues.filter((indicator) =>
+      selectedAdditionalIndicators.includes(indicator.indicator_id)
+    );
+
+    setAdditionalIndicatorsData(newAdditionalIndicatorsData);
+  }, [selectedAdditionalIndicators, allIndicatorValues]);
+
   // Adjusted ESG Score Calculation
   function calculateScore(
     savedWeights,
@@ -205,9 +231,6 @@ function SingleView({ token }) {
     // For each selected indicator within a metric, the score contribution is its value multiplied by its
     // relative weight within the metric, then multiplied by the metric's weight relative to the total weight sum.
     if (savedWeights && savedWeights.metrics) {
-      console.log(filteredData);
-      console.log(savedWeights.metrics);
-
       frameworkScore = savedWeights.metrics.reduce((accumulator, metric) => {
         const filteredIndicatorIds = filteredData.map(
           (data) => data.indicator_id
@@ -217,13 +240,10 @@ function SingleView({ token }) {
           filteredIndicatorIds.includes(indicator.indicator_id)
         );
 
-        console.log(selectedIndicators);
         const totalIndicatorWeight = selectedIndicators.reduce(
           (acc, indicator) => acc + indicator.indicator_weight,
           0
         );
-
-        console.log("totalIndicatorWeight: ", totalIndicatorWeight);
 
         const metricScore = metric.indicators.reduce((acc, indicator) => {
           const matchingIndicator = filteredData.find(
@@ -239,19 +259,6 @@ function SingleView({ token }) {
               matchingIndicator.value *
               indicatorRelativeWeight *
               (metric.metric_weight / totalWeightSum);
-
-            console.log(indicator);
-            console.log("indicatorRelativeWeight: ", indicatorRelativeWeight);
-            console.log(
-              "metric weight / totalWeightSum",
-              metric.metric_weight / totalWeightSum
-            );
-            console.log(
-              "Final weight",
-              indicatorRelativeWeight * (metric.metric_weight / totalWeightSum)
-            );
-            console.log("value", matchingIndicator.value);
-            console.log("indicatorScore: ", indicatorScore);
 
             return acc + indicatorScore;
           }
@@ -281,21 +288,13 @@ function SingleView({ token }) {
   }
 
   // Invoke the score calculation function upon pressing the 'Update Score' button
-  function updateScore(newSavedWeights, newSavedAdditionalIndicatorWeights) {
-    console.log("The update score function has been called");
-    console.log("newSavedWeights: ", newSavedWeights);
-    console.log("indicatorValues: ", indicatorValues);
-    console.log(
-      "newSavedAdditionalIndicatorWeights: ",
-      newSavedAdditionalIndicatorWeights
-    );
-    console.log("selectedAdditionalIndicators: ", selectedAdditionalIndicators);
-    if (newSavedWeights || newSavedAdditionalIndicatorWeights) {
+  function updateScore(savedWeights, savedAdditionalIndicatorWeights) {
+    if (savedWeights || savedAdditionalIndicatorWeights) {
       const score = calculateScore(
-        newSavedWeights,
-        indicatorValues,
-        newSavedAdditionalIndicatorWeights,
-        selectedAdditionalIndicators
+        savedWeights,
+        filteredData,
+        savedAdditionalIndicatorWeights,
+        additionalIndicatorsData
       );
       setAdjustedScore(score.toFixed(3));
     }
@@ -422,6 +421,8 @@ function SingleView({ token }) {
                 allIndicatorValues,
                 selectedAdditionalIndicators,
                 savedAdditionalIndicatorWeights,
+                filteredData,
+                additionalIndicatorsData,
                 adjustedScore,
               }}
             >
