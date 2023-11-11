@@ -43,6 +43,8 @@ function SingleSidebar({ token }) {
     selectedAdditionalIndicators,
     setSelectedAdditionalIndicators,
     setSavedAdditionalIndicatorWeights,
+    updateScore,
+    setAdjustedScore,
   } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
@@ -58,6 +60,7 @@ function SingleSidebar({ token }) {
       weights[indicator.indicator_id] = 0;
     });
     setAdditionalIndicatorWeights(weights);
+    setAdjustedScore(0);
   }, [
     selectedCompany,
     setSelectedFramework,
@@ -160,24 +163,30 @@ function SingleSidebar({ token }) {
   };
 
   const handleIndicatorChange = (metric, indicatorId, checked) => {
-    setSelectedIndicators((prevIndicators) => {
-      if (checked) {
-        return [...prevIndicators, indicatorId];
-      } else {
-        return prevIndicators.filter((id) => id !== indicatorId);
-      }
-    });
+    // Update the new selected indicators
+    const newSelectedIndicators = checked
+      ? [...selectedIndicators, indicatorId]
+      : selectedIndicators.filter((id) => id !== indicatorId);
 
-    // Ensure metric is selected if indicator is selected
-    setSelectedMetrics((prevMetrics) => {
-      if (checked && !prevMetrics.includes(metric)) {
-        return [...prevMetrics, metric];
-      } else if (howManyIndicatorsChecked(metric) === 0) {
-        return prevMetrics.filter((m) => m !== metric);
-      } else {
-        return [...prevMetrics];
+    setSelectedIndicators(newSelectedIndicators);
+
+    const indicatorsInMetric = metric.indicators.map(
+      (indicator) => indicator.indicator_id
+    );
+    const metricIsSelected = newSelectedIndicators.some((id) =>
+      indicatorsInMetric.includes(id)
+    );
+
+    // Update selected metrics based on new indicators state
+    if (metricIsSelected) {
+      if (!selectedMetrics.includes(metric.metric_id)) {
+        setSelectedMetrics((prev) => [...prev, metric.metric_id]);
       }
-    });
+    } else {
+      setSelectedMetrics((prev) =>
+        prev.filter((mId) => mId !== metric.metric_id)
+      );
+    }
   };
 
   const handleMetricChange = (metric, event) => {
@@ -425,29 +434,33 @@ function SingleSidebar({ token }) {
       return setErrorMessage("Please select at least one year.");
     }
 
-    // Update savedWeights with indicator and metric weights from default framework
-    const newSavedWeights = {};
-    const savedMetricsList = [];
-    selectedMetrics.forEach((metric) => {
-      const metricId = metric.metric_id;
-      const metricWeight = metricWeights[metricId];
-      const indicators = [];
-      metric.indicators.forEach((indicator) => {
-        const indicatorId = indicator.indicator_id;
-        const indicatorWeight = indicatorWeights[indicatorId];
-        indicators.push({
-          indicator_id: indicatorId,
-          indicator_weight: indicatorWeight,
-        });
-      });
-      savedMetricsList.push({
-        metric_id: metricId,
-        metric_weight: metricWeight,
-        indicators: indicators,
-      });
-    });
-    newSavedWeights["metrics"] = savedMetricsList;
-    newSavedWeights["year"] = Math.max(...selectedYears);
+    // Ensure that a metric is unselected if all of its indicators are unselected
+    const recomputedSelectedMetrics = frameworkMetrics
+      .filter((metric) =>
+        metric.indicators.some((indicator) =>
+          selectedIndicators.includes(indicator.indicator_id)
+        )
+      )
+      .map((metric) => metric.metric_id);
+
+    const newSavedWeights = {
+      metrics: recomputedSelectedMetrics.map((metricId) => {
+        const metric = frameworkMetrics.find((m) => m.metric_id === metricId);
+        return {
+          metric_id: metricId,
+          metric_weight: metricWeights[metricId],
+          indicators: metric.indicators
+            .filter((indicator) =>
+              selectedIndicators.includes(indicator.indicator_id)
+            )
+            .map((indicator) => ({
+              indicator_id: indicator.indicator_id,
+              indicator_weight: indicatorWeights[indicator.indicator_id],
+            })),
+        };
+      }),
+      year: Math.max(...selectedYears),
+    };
     setSavedWeights(newSavedWeights);
 
     // Include the weights from the additional indicators
@@ -457,6 +470,8 @@ function SingleSidebar({ token }) {
         additionalIndicatorWeights[indicatorId];
     });
     setSavedAdditionalIndicatorWeights(newSavedAdditionalWeights);
+
+    updateScore(newSavedWeights, newSavedAdditionalWeights);
 
     return setSuccessMessage("Preferences saved successfully.");
   };
