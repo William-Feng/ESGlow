@@ -56,7 +56,7 @@ function ManageCustomFrameworks({ open, onClose, token }) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open || false} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Created Custom Frameworks</DialogTitle>
       <List>
         {customFrameworks.length > 0 ? (

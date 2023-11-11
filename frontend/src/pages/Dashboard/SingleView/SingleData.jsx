@@ -25,7 +25,7 @@ function SingleData() {
     savedAdditionalIndicatorWeights,
   } = useContext(SingleViewContext);
   const [adjustedScore, setAdjustedScore] = useState(0);
-
+  
   const validIndicatorIds = selectedFramework
     ? selectedFramework.metrics.flatMap((metric) =>
         metric.indicators.map((indicator) => indicator.indicator_id)

@@ -6,7 +6,6 @@ import SingleViewSidebar from "./SingleSidebar";
 import SingleViewData from "./SingleData";
 import {
   useEffect,
-  useMemo,
   useState,
   useCallback,
   useContext,
@@ -21,8 +20,7 @@ function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
-  const years = useMemo(() => [2018, 2019, 2020, 2021, 2022, 2023], []);
-  const yearsString = years.join(",");
+  const [yearsList, setYearsList] = useState([]);
 
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -32,7 +30,7 @@ function SingleView({ token }) {
   const [isCustomFrameworksDialogOpen, setIsCustomFrameworksDialogOpen] =
     useState(false);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-  const [selectedYears, setSelectedYears] = useState(years);
+  const [selectedYears, setSelectedYears] = useState([]);
   const [indicatorValues, setIndicatorValues] = useState([]);
   const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
@@ -63,6 +61,27 @@ function SingleView({ token }) {
   );
 
   useEffect(() => {
+    // Fetch all available years of data
+    fetch("/api/values/years", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setYearsList(data.years);
+        setSelectedYears(data.years);
+      })
+      .catch((error) => {
+        if (error !== "No years found") {
+          console.error("There was an error fetching the years.", error);
+        }
+      });
+  },[token]);
+
+  // Upon initial company selection, fetch:
+  // frameworks and all its information  (frameworksData)
+  useEffect(() => {
     // New selection of company wipes data display to blank
     const companyId = selectedCompany ? selectedCompany.company_id : 0;
     if (!companyId) {
@@ -87,12 +106,13 @@ function SingleView({ token }) {
           )
         );
         setSelectedIndicators(allIndicators);
+
         // Set FIXED Indicator values (doesn't change with sidebar selection)
         // this displays a ESG score in SingleViewOverview for a company
         fetchIndicatorValues(
           companyId,
           [...new Set(allIndicators)].join(","),
-          yearsString
+          yearsList.join(",")
         )
           .then((data) => {
             setFixedIndicatorValues(data.values);
@@ -105,7 +125,7 @@ function SingleView({ token }) {
           error
         )
       );
-  }, [token, navigate, selectedCompany, yearsString, fetchIndicatorValues]);
+  }, [token, navigate, selectedCompany, yearsList, fetchIndicatorValues]);
 
   // Set indicatorValues, variable selection of indicator values that changes with sidebar
   useEffect(() => {
@@ -119,6 +139,7 @@ function SingleView({ token }) {
       // Convert the selectedIndicators to a set to ensure there are no duplicates
       // This is because frameworks may encompass the same metrics and hence the same indicators
       const indicatorIds = [...new Set(selectedIndicators)].join(",");
+      const yearsString = yearsList.join(",");
 
       fetchIndicatorValues(companyId, indicatorIds, yearsString)
         .then((data) => {
@@ -129,11 +150,9 @@ function SingleView({ token }) {
   }, [
     selectedIndicators,
     token,
-    years,
-    navigate,
     selectedCompany,
     fetchIndicatorValues,
-    yearsString,
+    yearsList,
   ]);
 
   // Retrieve the values of all possible indicators for the selected company
@@ -158,7 +177,7 @@ function SingleView({ token }) {
 
         // Fetch the indicator values for all the indicators
         return fetch(
-          `/api/values/${companyId}/${indicatorIds}/${yearsString}`,
+          `/api/values/${companyId}/${indicatorIds}/${yearsList.join(",")}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -176,7 +195,7 @@ function SingleView({ token }) {
           error
         )
       );
-  }, [token, selectedCompany, yearsString]);
+  }, [token, selectedCompany, yearsList]);
 
   return (
     <>
@@ -271,7 +290,7 @@ function SingleView({ token }) {
                 value={{
                   selectedCompany,
                   frameworksData,
-                  years,
+                  yearsList,
                   selectedFramework,
                   setSelectedFramework,
                   selectedCustomFramework,
@@ -296,6 +315,7 @@ function SingleView({ token }) {
                 selectedCompany,
                 selectedFramework,
                 selectedYears,
+                setSelectedYears,
                 indicatorValues,
                 savedWeights,
                 allIndicators,
