@@ -1,9 +1,15 @@
-import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  Toolbar,
+} from "@mui/material";
 import Header from "../Header";
 import SingleViewSearchbar from "./SingleSearchbar";
-import SingleViewOverview from "./SingleOverview";
 import SingleViewSidebar from "./SingleSidebar";
 import SingleViewData from "./SingleData";
+import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import {
   useEffect,
   useState,
@@ -20,8 +26,10 @@ function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
   const navigate = useNavigate();
 
-  const [yearsList, setYearsList] = useState([]);
+  // Collapsing the Overview section
+  const [overviewExpanded, setOverviewExpanded] = useState(false);
 
+  const [yearsList, setYearsList] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
@@ -87,6 +95,7 @@ function SingleView({ token }) {
     if (!companyId) {
       setSelectedFramework(null);
       setFrameworksData(null);
+      setOverviewExpanded(false);
       return;
     }
 
@@ -125,6 +134,10 @@ function SingleView({ token }) {
           error
         )
       );
+    
+    // open overview accordion
+    setOverviewExpanded(true);
+
   }, [token, navigate, selectedCompany, yearsList, fetchIndicatorValues]);
 
   // Set indicatorValues, variable selection of indicator values that changes with sidebar
@@ -200,134 +213,108 @@ function SingleView({ token }) {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar
-          enableColorOnDark
-          position="fixed"
-          color="inherit"
-          elevation={0}
-          sx={{
-            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
-            boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-            height: 128,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
+        <SingleViewContext.Provider
+          value={{
+            selectedIndustry,
+            setSelectedIndustry,
+            selectedCompany,
+            setSelectedCompany,
+            view,
+            setView,
+            frameworksData,
+            yearsList,
+            selectedFramework,
+            setSelectedFramework,
+            selectedCustomFramework,
+            setSelectedCustomFramework,
+            isCustomFrameworksDialogOpen,
+            selectedIndicators,
+            setSelectedIndicators,
+            indicatorValues,
+            fixedIndicatorValues,
+            selectedYears,
+            setSelectedYears,
+            savedWeights,
+            setSavedWeights,
+            allIndicators,
+            allIndicatorValues,
+            selectedAdditionalIndicators,
+            setSelectedAdditionalIndicators,
+            savedAdditionalIndicatorWeights,
+            setSavedAdditionalIndicatorWeights,
           }}
         >
-          <Toolbar>
-            <Header
-              token={token}
-              isCustomFrameworksDialogOpen={isCustomFrameworksDialogOpen}
-              setIsCustomFrameworksDialogOpen={setIsCustomFrameworksDialogOpen}
-            />
-          </Toolbar>
-          <Toolbar sx={{ margin: "auto" }}>
-            <SingleViewContext.Provider
-              value={{
-                selectedIndustry,
-                setSelectedIndustry,
-                selectedCompany,
-                setSelectedCompany,
-                view,
-                setView,
-              }}
-            >
+          <CssBaseline />
+          <AppBar
+            enableColorOnDark
+            position="fixed"
+            color="inherit"
+            elevation={0}
+            sx={{
+              background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
+              boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
+              height: 128,
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+          >
+            <Toolbar>
+              <Header
+                token={token}
+                isCustomFrameworksDialogOpen={isCustomFrameworksDialogOpen}
+                setIsCustomFrameworksDialogOpen={setIsCustomFrameworksDialogOpen}
+              />
+            </Toolbar>
+            <Toolbar sx={{ margin: "auto" }}>
               <SingleViewSearchbar token={token} />
-            </SingleViewContext.Provider>
-          </Toolbar>
-        </AppBar>
-        <Box
-          sx={{
-            position: "fixed",
-            top: "128px",
-            width: "100%",
-            height: "calc(100vh - 128px)",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+            </Toolbar>
+          </AppBar>
           <Box
             sx={{
-              textAlign: "center",
-              maxHeight: "320px",
-            }}
-          >
-            <SingleViewContext.Provider
-              value={{
-                selectedCompany,
-                frameworksData,
-                fixedIndicatorValues,
-              }}
-            >
-              <SingleViewOverview />
-            </SingleViewContext.Provider>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "row",
+              position: "fixed",
+              top: "128px",
+              width: "100%",
+              height: "calc(100vh - 128px)",
               overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Drawer
+            <OverviewAccordion 
+              isSingleView={true}
+              isDisabled={!(frameworksData&&selectedCompany)}
+              overviewExpanded={overviewExpanded}
+              setOverviewExpanded={setOverviewExpanded}
+            />
+            <Box
               sx={{
-                width: 360,
-                flexShrink: 0,
-                "& .MuiDrawer-paper": {
-                  position: "static",
-                  width: 360,
-                  boxSizing: "border-box",
-                  overflowY: "auto",
-                  maxHeight: "100%",
-                  backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
-                },
+                flex: 1,
+                display: "flex",
+                flexDirection: "row",
+                overflowY: "auto",
               }}
-              variant="permanent"
-              anchor="left"
             >
-              <SingleViewContext.Provider
-                value={{
-                  selectedCompany,
-                  frameworksData,
-                  yearsList,
-                  selectedFramework,
-                  setSelectedFramework,
-                  selectedCustomFramework,
-                  setSelectedCustomFramework,
-                  isCustomFrameworksDialogOpen,
-                  selectedIndicators,
-                  setSelectedIndicators,
-                  selectedYears,
-                  setSelectedYears,
-                  setSavedWeights,
-                  allIndicators,
-                  selectedAdditionalIndicators,
-                  setSelectedAdditionalIndicators,
-                  setSavedAdditionalIndicatorWeights,
+              <Drawer
+                sx={{
+                  width: 360,
+                  flexShrink: 0,
+                  "& .MuiDrawer-paper": {
+                    position: "static",
+                    width: 360,
+                    boxSizing: "border-box",
+                    overflowY: "auto",
+                    maxHeight: "100%",
+                    backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
+                  },
                 }}
+                variant="permanent"
+                anchor="left"
               >
                 <SingleViewSidebar token={token} />
-              </SingleViewContext.Provider>
-            </Drawer>
-            <SingleViewContext.Provider
-              value={{
-                selectedCompany,
-                selectedFramework,
-                selectedYears,
-                setSelectedYears,
-                indicatorValues,
-                savedWeights,
-                allIndicators,
-                allIndicatorValues,
-                selectedAdditionalIndicators,
-                savedAdditionalIndicatorWeights,
-              }}
-            >
+              </Drawer>
               <SingleViewData />
-            </SingleViewContext.Provider>
+            </Box>
           </Box>
-        </Box>
+        </SingleViewContext.Provider>
       </Box>
     </>
   );
