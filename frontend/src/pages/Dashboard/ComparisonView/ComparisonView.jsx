@@ -61,110 +61,93 @@ function ComparisonView({ token }) {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar
-          enableColorOnDark
-          position="fixed"
-          color="inherit"
-          elevation={0}
-          sx={{
-            background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
-            boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-            height: 128,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
+        <ComparisonViewContext.Provider
+          value={{
+            selectedCompanies,
+            setSelectedCompanies,
+            view,
+            setView,
+            selectedYear,
+            setSelectedYear,
+            selectedYearRange,
+            setSelectedYearRange,
+            selectedIndicators,
+            setSelectedIndicators,
+            indicatorsList,
+            yearsList,
+            dataView,
+            setDataView
           }}
         >
-          <Toolbar>
-            <Header token={token} />
-          </Toolbar>
-          <Toolbar sx={{ margin: "auto" }}>
-            <ComparisonViewContext.Provider
-              value={{
-                selectedCompanies,
-                setSelectedCompanies,
-                view,
-                setView,
-              }}
-            >
+          <CssBaseline />
+          <AppBar
+            enableColorOnDark
+            position="fixed"
+            color="inherit"
+            elevation={0}
+            sx={{
+              background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
+              boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
+              height: 128,
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+          >
+            <Toolbar>
+              <Header token={token} />
+            </Toolbar>
+            <Toolbar sx={{ margin: "auto" }}>
               <ComparisonSearchbar token={token} />
-            </ComparisonViewContext.Provider>
-          </Toolbar>
-        </AppBar>
-        <Box
-          sx={{
-            position: "fixed",
-            top: "128px",
-            width: "100%",
-            height: "calc(100vh - 128px)",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+            </Toolbar>
+          </AppBar>
           <Box
             sx={{
-              textAlign: "center",
-              maxHeight: "320px",
-            }}
-          >
-            <ComparisonOverview />
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "row",
+              position: "fixed",
+              top: "128px",
+              width: "100%",
+              height: "calc(100vh - 128px)",
               overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Drawer
+            <Box
               sx={{
-                width: 360,
-                flexShrink: 0,
-                "& .MuiDrawer-paper": {
-                  position: "static",
-                  width: 360,
-                  boxSizing: "border-box",
-                  overflowY: "auto",
-                  maxHeight: "100%",
-                  // backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
-                },
+                textAlign: "center",
+                maxHeight: "320px",
               }}
-              variant="permanent"
-              anchor="left"
             >
-              <ComparisonViewContext.Provider
-                value={{
-                  selectedCompanies,
-                  selectedYear,
-                  setSelectedYear,
-                  selectedYearRange,
-                  setSelectedYearRange,
-                  selectedIndicators,
-                  setSelectedIndicators,
-                  indicatorsList,
-                  yearsList,
-                  dataView,
-                  setDataView
+              <ComparisonOverview />
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "row",
+                overflowY: "auto",
+              }}
+            >
+              <Drawer
+                sx={{
+                  width: 360,
+                  flexShrink: 0,
+                  "& .MuiDrawer-paper": {
+                    position: "static",
+                    width: 360,
+                    boxSizing: "border-box",
+                    overflowY: "auto",
+                    maxHeight: "100%",
+                    // backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
+                  },
                 }}
+                variant="permanent"
+                anchor="left"
               >
                 <ComparisonSidebar token={token} />
-              </ComparisonViewContext.Provider>
-            </Drawer>
-            <ComparisonViewContext.Provider
-              value={{
-                dataView,
-                selectedCompanies,
-                selectedYear,
-                selectedYearRange,
-                selectedIndicators,
-                yearsList
-              }}
-            >
+              </Drawer>
               <ComparisonDataDisplay token={token} />
-            </ComparisonViewContext.Provider>
+            </Box>
           </Box>
-        </Box>
+        </ComparisonViewContext.Provider>
       </Box>
     </>
   );
