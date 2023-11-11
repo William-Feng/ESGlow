@@ -69,6 +69,7 @@ function SingleSidebar({ token }) {
     setSelectedIndicators,
     setSelectedAdditionalIndicators,
     allIndicators,
+    setAdjustedScore,
   ]);
 
   const frameworkMetrics = selectedFramework ? selectedFramework.metrics : [];
