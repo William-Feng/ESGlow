@@ -1,25 +1,14 @@
 import React from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Link,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
 
 function ResetPassword({ email }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
-  const handleCloseSnackbar = () => {
-    setErrorMessage("");
-  };
 
   const submitNewPassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -61,7 +50,6 @@ function ResetPassword({ email }) {
       <Typography variant="h4" gutterBottom>
         Set New Password
       </Typography>
-
       <Box
         component="form"
         noValidate
@@ -83,7 +71,6 @@ function ResetPassword({ email }) {
         >
           Enter your new password below.
         </Typography>
-
         <TextField
           margin="normal"
           required
@@ -117,16 +104,11 @@ function ResetPassword({ email }) {
         >
           Confirm
         </Button>
-
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert severity="error">{errorMessage}</Alert>
-        </Snackbar>
-
+        <SnackBarManager
+          position={"top"}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
         <Box mt={2} textAlign="center">
           <Typography variant="body2" color="textSecondary">
             Remembered your password?{" "}

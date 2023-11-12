@@ -2,8 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Snackbar,
-  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -12,6 +10,7 @@ import {
   DialogContentText,
 } from "@mui/material";
 import { SingleViewContext } from "./SingleView";
+import SnackBarManager from "../Components/Misc/SnackBarManager";
 import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
 import YearsMultiAccordion from "../Components/Accordion/YearsMultiAccordion";
@@ -444,11 +443,6 @@ function SingleSidebar({ token }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleCloseSnackbar = () => {
-    setSuccessMessage("");
-    setErrorMessage("");
-  };
-
   const handleUpdateSelections = () => {
     if (selectedYears.length === 0) {
       return setErrorMessage("Please select at least one year.");
@@ -562,22 +556,13 @@ function SingleSidebar({ token }) {
 
   return (
     <Box sx={{ paddingBottom: 3 }}>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={!!errorMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={!!successMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="success">{successMessage}</Alert>
-      </Snackbar>
+      <SnackBarManager
+        position={"bottom"}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <Dialog open={isDialogOpen} onClose={closeWeightDialog}>
         <DialogTitle>Enter New Weight</DialogTitle>
         <DialogContent>

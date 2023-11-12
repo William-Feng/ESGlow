@@ -1,24 +1,13 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Link,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
 
 function Login({ onSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
-  const handleCloseSnackbar = () => {
-    setErrorMessage("");
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,14 +46,11 @@ function Login({ onSuccess }) {
         alignItems: "center",
       }}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={!!errorMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
+      <SnackBarManager
+        position={"top"}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <Typography variant="h4" gutterBottom>
         Welcome Back!
       </Typography>

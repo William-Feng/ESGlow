@@ -1,26 +1,21 @@
 import React from "react";
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
   Link,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
 
 function ResetInputEmail({ setter }) {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleCloseSnackbar = () => {
-    setErrorMessage("");
-  };
 
   const submitEmail = async () => {
     setLoading(true);
@@ -61,19 +56,14 @@ function ResetInputEmail({ setter }) {
         alignItems: "center",
       }}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={!!errorMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
-
+      <SnackBarManager
+        position={"top"}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <Typography variant="h4" gutterBottom>
         Forgot Password?
       </Typography>
-
       <Box
         component="form"
         noValidate
@@ -96,7 +86,6 @@ function ResetInputEmail({ setter }) {
           Enter the email associated with your account, and we'll send you a
           code to reset your password.
         </Typography>
-
         <TextField
           margin="normal"
           required
@@ -109,7 +98,6 @@ function ResetInputEmail({ setter }) {
           onChange={(e) => setEmail(e.target.value)}
           variant="standard"
         />
-
         <Button
           type="submit"
           fullWidth
@@ -120,7 +108,6 @@ function ResetInputEmail({ setter }) {
         >
           {loading ? <CircularProgress size={24} /> : "Next"}
         </Button>
-
         <Box mt={2} textAlign="center">
           <Typography variant="body2" color="textSecondary">
             Remember your password?{" "}
