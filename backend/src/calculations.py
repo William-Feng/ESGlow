@@ -113,7 +113,7 @@ def get_company_value(company):
             "ESGscore": sum(
                 [framework["score"] for framework in framework_values.values()]
             )
-            // len(framework_values),
+            / len(framework_values),
             "year": most_recent_year,
             "frameworks": [framework_values[key] for key in framework_values.keys()],
         },
@@ -197,7 +197,8 @@ def get_industry_values(industry_id):
             average_score:
         }
     """
-    existing_industry = Industry.query.filter_by(industry_id=industry_id).first()
+    existing_industry = Industry.query.filter_by(
+        industry_id=industry_id).first()
     if not existing_industry:
         return ({"message": "Invalid industry id provided"}, 400)
 
@@ -227,7 +228,7 @@ def get_industry_values(industry_id):
             "message": "Values for industry retrieved!",
             "min_score": min(scores),
             "max_score": max(scores),
-            "average_score": sum(scores) // len(scores),
+            "average_score": sum(scores) / len(scores),
         },
         200,
     )
@@ -249,7 +250,8 @@ def get_company_industry_ranking(company_id):
     """
 
     # Grab Company Object
-    company = db.session.query(Company).filter(Company.company_id == company_id).first()
+    company = db.session.query(Company).filter(
+        Company.company_id == company_id).first()
     if not company:
         return {"message": "Invalid company id supplied!"}, 400
 
@@ -321,7 +323,8 @@ def get_company_graph_values(company_id):
         },
         HTTP Status Code
     """
-    company = db.session.query(Company).filter(Company.company_id == company_id).first()
+    company = db.session.query(Company).filter(
+        Company.company_id == company_id).first()
     if not company:
         return {"message": "Invalid company id supplied!"}, 400
 
@@ -386,7 +389,8 @@ def get_company_year_scores(company):
     for year in years:
         metric_values = {}
         for metric in metrics:
-            metric_values[metric.metric_id] = calculate_metric(metric, year, company)
+            metric_values[metric.metric_id] = calculate_metric(
+                metric, year, company)
 
         # Calculate the value of each framework.
         framework_values = {}
@@ -400,7 +404,8 @@ def get_company_year_scores(company):
         year_scores.append(
             (
                 year,
-                sum([framework["score"] for framework in framework_values.values()])
+                sum([framework["score"]
+                    for framework in framework_values.values()])
                 / len(framework_values),
             )
         )
