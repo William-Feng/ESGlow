@@ -5,12 +5,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useMemo, useContext, useCallback } from "react";
 import { SingleViewContext } from "./SingleView";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import DataRow from "../Components/DataRow";
 
 function SingleData() {
   const {
@@ -78,8 +77,8 @@ function SingleData() {
       >
         <Typography variant="h6" color="text.secondary">
           {selectedCompany
-            ? "Please select a framework or at least one of the additional indicators to see the ESG data."
-            : "Please select a company to see the ESG data."}
+            ? "Please select a framework or at least one of the additional indicators to view the ESG data."
+            : "Please select a company from the search bar above to view its details and the ESG data."}
         </Typography>
       </Box>
     );
@@ -99,7 +98,6 @@ function SingleData() {
           borderColor: "divider",
         }}
       >
-        {/* TODO: There is duplication between normal data and the additional data, abstract into separate component */}
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -137,164 +135,24 @@ function SingleData() {
           </TableHead>
           <TableBody>
             {structuredData.map((row, index) => (
-              <TableRow
+              <DataRow
                 key={index}
-                sx={{
-                  backgroundColor: index % 2 === 0 ? "#FAFAFA" : "#F5F5F5",
-                  borderTop: "1px solid #E0E0E0",
-                  "&:hover": {
-                    backgroundColor: "#E5E5E5",
-                  },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    fontSize: "1.1em",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {row.name}
-                  <Tooltip
-                    title={
-                      <React.Fragment>
-                        {row.source.split(";").map((source, index) => {
-                          // Splitting the source string into three parts: the source number, name and description
-                          const [sourceNumber, sourceRest] =
-                            source.split(/:(.+)/);
-                          const [sourceName, sourceDescription] =
-                            sourceRest.split(/\((.+)/);
-
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                marginBottom:
-                                  index < row.source.split(";").length - 1
-                                    ? 10
-                                    : 0,
-                              }}
-                            >
-                              <Typography
-                                component="span"
-                                style={{ fontStyle: "italic" }}
-                              >
-                                {sourceNumber.trim()}:
-                              </Typography>{" "}
-                              <Typography
-                                component="span"
-                                style={{ fontWeight: "bold" }}
-                              >
-                                {sourceName.trim()}
-                              </Typography>
-                              {" (" + sourceDescription.trim()}
-                            </div>
-                          );
-                        })}
-                      </React.Fragment>
-                    }
-                    sx={{ marginLeft: "4px" }}
-                  >
-                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                  </Tooltip>
-                </TableCell>
-                {selectedYears.map((year) => (
-                  <TableCell
-                    key={year}
-                    sx={{
-                      borderRight: "1px solid",
-                      borderColor: "divider",
-                      textAlign: "center",
-                      fontSize: "1.1em",
-                    }}
-                  >
-                    {row[year] || null}
-                  </TableCell>
-                ))}
-              </TableRow>
+                row={row}
+                backgroundColor={index % 2 === 0 ? "#FAFAFA" : "#F5F5F5"}
+                borderTopColor="#E0E0E0"
+                hoverColor="#E5E5E5"
+                selectedYears={selectedYears}
+              />
             ))}
-            {structuredExtraData.map((extraRow, index) => (
-              <TableRow
+            {structuredExtraData.map((row, index) => (
+              <DataRow
                 key={`extra-${index}`}
-                sx={{
-                  backgroundColor: "#F0E5FF",
-                  borderTop: "1px solid #D5C8FF",
-                  "&:hover": {
-                    backgroundColor: "#E8D6FF",
-                  },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    fontSize: "1.1em",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {extraRow.name}
-                  <Tooltip
-                    title={
-                      <React.Fragment>
-                        {extraRow.source.split(";").map((source, index) => {
-                          // Splitting the source string into three parts: the source number, name and description
-                          const [sourceNumber, sourceRest] =
-                            source.split(/:(.+)/);
-                          const [sourceName, sourceDescription] =
-                            sourceRest.split(/\((.+)/);
-
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                marginBottom:
-                                  index < extraRow.source.split(";").length - 1
-                                    ? 10
-                                    : 0,
-                              }}
-                            >
-                              <Typography
-                                component="span"
-                                style={{ fontStyle: "italic" }}
-                              >
-                                {sourceNumber.trim()}:
-                              </Typography>{" "}
-                              <Typography
-                                component="span"
-                                style={{ fontWeight: "bold" }}
-                              >
-                                {sourceName.trim()}
-                              </Typography>
-                              {" (" + sourceDescription.trim()}
-                            </div>
-                          );
-                        })}
-                      </React.Fragment>
-                    }
-                    sx={{ marginLeft: "4px" }}
-                  >
-                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
-                  </Tooltip>
-                </TableCell>
-                {selectedYears.map((year) => (
-                  <TableCell
-                    key={year}
-                    sx={{
-                      borderRight: "1px solid",
-                      borderColor: "divider",
-                      textAlign: "center",
-                      fontSize: "1.1em",
-                    }}
-                  >
-                    {extraRow[year] || null}
-                  </TableCell>
-                ))}
-              </TableRow>
+                row={row}
+                backgroundColor="#F0E5FF"
+                borderTopColor="#D5C8FF"
+                hoverColor="#E8D6FF"
+                selectedYears={selectedYears}
+              />
             ))}
           </TableBody>
         </Table>
@@ -317,7 +175,7 @@ function SingleData() {
           </>
         ) : hasDataToShow ? (
           <Typography variant="h5" color="text.secondary">
-            Please make sure 'UPDATE SCORE' is clicked.
+            Please make sure the 'UPDATE SCORE' button is clicked.
           </Typography>
         ) : null}
       </Box>
