@@ -1,15 +1,86 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
-function ComparisonOverview() {
-  const { selectedCompanies, portfolioRating, bestPerformer, worstPerformer } =
-    useContext(ComparisonViewContext);
+function ComparisonOverview({ token }) {
+  const { selectedCompanies } = useContext(ComparisonViewContext);
+
+  const [companyData, setCompanyData] = useState([]);
+  const [portfolioRating, setPortfolioRating] = useState([]);
+  const [bestPerformer, setBestPerformer] = useState(0);
+  const [worstPerformer, setWorstPerformer] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch portfolio overview values
+        const fetchPromises = selectedCompanies.map(async (company) => {
+          const response = await fetch(
+            `/api/values/company/${company.company_id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await response.json();
+
+          const esgScore = data[company.company_id].value.ESGscore;
+          const year = data[company.company_id].value.year;
+
+          // Update companyData only for the selected companies
+          setCompanyData((prevData) => [
+            ...prevData,
+            {
+              company_id: company.company_id,
+              name: company.name,
+              score: esgScore,
+              year: year,
+            },
+          ]);
+
+          return esgScore;
+        });
+
+        const esgScores = await Promise.all(fetchPromises);
+
+        if (esgScores.length === 0) {
+          // No scores available
+          setPortfolioRating();
+          setBestPerformer();
+          setWorstPerformer();
+        } else {
+          // Calculate average ESG score
+          const totalScore = esgScores.reduce((sum, score) => sum + score, 0);
+          const averageScore = totalScore / esgScores.length;
+          setPortfolioRating(averageScore.toFixed(1));
+
+          // Find best and worst performers
+          setBestPerformer(Math.max(...esgScores));
+          setWorstPerformer(Math.min(...esgScores));
+        }
+      } catch (error) {
+        console.error("There was an error fetching the ESG scores.", error);
+      }
+    };
+
+    // Clear companyData before fetching new data
+    setCompanyData([]);
+
+    fetchData();
+  }, [token, selectedCompanies]);
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
+    const toolTipString = `The Portfolio ESG Rating is calculated by averaging ${companyData.year} ESG scores of the selected companies:`;
+    const toolTipStringList = companyData.map((item, index) => (
+      <span key={index}>
+        {item.name}: <strong>{item.score}</strong>
+      </span>
+    ));
+
     return (
       <Box
         sx={{
@@ -73,8 +144,22 @@ function ComparisonOverview() {
                 <Tooltip
                   title={
                     <Typography variant="body2">
-                      Calculated by averaging the ESG scores of each selected
-                      company.
+                      {toolTipString}
+                      {toolTipStringList.map((str) => (
+                        <Typography
+                          variant="body2"
+                          key={str}
+                          sx={{
+                            display: "block",
+                            marginTop: "4px",
+                            whiteSpace: "nowrap",
+                            textIndent: "16px",
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {str}
+                        </Typography>
+                      ))}
                     </Typography>
                   }
                 >
