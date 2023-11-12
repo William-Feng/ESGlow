@@ -408,6 +408,7 @@ function SingleView({ token }) {
               isDisabled={!(frameworksData && selectedCompany)}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
+              token={token}
             />
             <Box
               sx={{
