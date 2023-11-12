@@ -92,15 +92,10 @@ function SingleOverview({ token }) {
         framework.year === Math.max(...scoreList.map((f) => f.year))
     );
 
-    // Assuming all objects have the same year
-    const year = filteredFrameworksScores[0].year;
-    const toolTipStringIntro =
-      `The ESG Rating is calculated by averaging` +
-      ` ${year} data of the following framework scores:\n`;
-
+    const toolTipStringIntro = `The ESG Rating is calculated by averaging the most recent framework scores:\n`;
     const toolTipStringList = filteredFrameworksScores.map((item, index) => (
       <span key={index}>
-        - {item.framework_name}: <strong>{item.score}</strong>
+        - {item.framework_name}: <strong>{item.score}</strong> ({item.year})
       </span>
     ));
 
@@ -177,7 +172,7 @@ function SingleOverview({ token }) {
                 </Typography>
                 <Tooltip
                   title={
-                    <Typography variant="body2" sx={{ fontSize: "1rem" }}>
+                    <Typography variant="body2">
                       {toolTipStringIntro}
                       {toolTipStringList.map((str) => (
                         <Typography
@@ -221,7 +216,7 @@ function SingleOverview({ token }) {
               }}
             >
               <Typography variant="h4" color="text.primary" paragraph>
-                {industryMean}
+                {industryMean.toFixed(1)}
               </Typography>
               <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean

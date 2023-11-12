@@ -75,21 +75,16 @@ function ComparisonOverview({ token }) {
   const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG scores of the selected companies:`;
   const toolTipStringList = companyData.map((item, index) => (
     <span key={index}>
-      {item.name}: <strong>{item.score}</strong> ({item.year})
+      - {item.name}: <strong>{Math.round(item.score)}</strong> ({item.year})
     </span>
   ));
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "nowrap",
-        justifyContent: "space-between",
-        alignItems: "center",
-        border: 1,
-        borderRadius: 4,
-        padding: 2,
+        bgcolor: "background.paper",
+        mx: "auto",
+        mt: -4,
       }}
     >
       <Typography
@@ -111,17 +106,21 @@ function ComparisonOverview({ token }) {
       </Typography>
       <Container
         sx={{
-          flex: 2.5,
           display: "flex",
           flexDirection: "row",
+          flexWrap: "nowrap",
+          justifyContent: "space-between",
           alignItems: "center",
+          border: 1,
+          borderRadius: 4,
+          padding: 2,
         }}
       >
         <Box
           sx={{
-            flex: 1,
+            flex: 2.5,
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             alignItems: "center",
           }}
         >
@@ -180,7 +179,7 @@ function ComparisonOverview({ token }) {
             }}
           >
             <Typography variant="h4" color="text.primary" paragraph>
-              {bestPerformer}
+              {bestPerformer.toFixed(1)}
             </Typography>
             <Typography variant="h6" color="text.secondary">
               Best Performer
@@ -198,7 +197,7 @@ function ComparisonOverview({ token }) {
             }}
           >
             <Typography variant="h4" color="text.primary" paragraph>
-              {worstPerformer}
+              {worstPerformer.toFixed(1)}
             </Typography>
             <Typography variant="h6" color="text.secondary">
               Worst Performer
