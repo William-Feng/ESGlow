@@ -1,5 +1,5 @@
 import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
-import Header from "../Header";
+import Header from "../Components/Misc/Header";
 import SingleViewSearchbar from "./SingleSearchbar";
 import SingleViewSidebar from "./SingleSidebar";
 import SingleViewData from "./SingleData";
@@ -13,7 +13,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageContext } from "../Dashboard";
-import ScoreCalculation from "../Components/ScoreCalculation";
+import ScoreCalculation from "../../../utils/ScoreCalculation";
 
 export const SingleViewContext = createContext();
 

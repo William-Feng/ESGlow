@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useMemo, useContext, useCallback } from "react";
 import { SingleViewContext } from "./SingleView";
-import DataRow from "../Components/DataRow";
+import DataRow from "../Components/Misc/DataRow";
 
 function SingleData() {
   const {

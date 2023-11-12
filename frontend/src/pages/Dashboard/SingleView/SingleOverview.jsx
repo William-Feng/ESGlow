@@ -2,7 +2,7 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
-import useIndustryData from "../Components/Hooks/UseIndustryData";
+import useIndustryData from "../../../hooks/UseIndustryData";
 
 function SingleOverview({ token }) {
   const {

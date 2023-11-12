@@ -1,5 +1,5 @@
 import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
-import Header from "../Header";
+import Header from "../Components/Misc/Header";
 import ComparisonSearchbar from "./ComparisonSearchbar";
 import ComparisonSidebar from "./ComparisonSidebar";
 import ComparisonDataDisplay from "./ComparisonDataDisplay";

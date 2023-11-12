@@ -6,8 +6,8 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import SingleOverview from "../../../Dashboard/SingleView/SingleOverview";
-import ComparisonOverview from "../../../Dashboard/ComparisonView/ComparisonOverview";
+import SingleOverview from "../../SingleView/SingleOverview";
+import ComparisonOverview from "../../ComparisonView/ComparisonOverview";
 
 function OverviewAccordion({
   isSingleView,
@@ -53,7 +53,11 @@ function OverviewAccordion({
             maxHeight: "320px",
           }}
         >
-          {isSingleView ? <SingleOverview token={token} /> : <ComparisonOverview token={token} />}
+          {isSingleView ? (
+            <SingleOverview token={token} />
+          ) : (
+            <ComparisonOverview token={token} />
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>
