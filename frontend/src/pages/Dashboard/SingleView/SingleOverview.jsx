@@ -3,6 +3,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import useIndustryData from "../../../hooks/UseIndustryData";
+import RecentESGScores from "../../../utils/RecentESGScores";
 
 function SingleOverview({ token }) {
   const {
@@ -12,81 +13,15 @@ function SingleOverview({ token }) {
     fixedIndicatorValues,
   } = useContext(SingleViewContext);
 
-  const [industryMean, industryRanking] = useIndustryData(
+  const { industryMean, industryRanking } = useIndustryData(
     token,
     selectedIndustry,
     selectedCompany
   );
 
-  const getRecentESGScores = () => {
-    if (!frameworksData) {
-      return [];
-    }
-    let ESGScoreList = [];
-
-    // Iterate over the frameworks in the array.
-    frameworksData.forEach((framework) => {
-      let frameworkScore = 0;
-      const { framework_name } = framework;
-
-      // Map to store the most recent year's indicator values by indicator_id
-      const mostRecentIndicatorValues = new Map();
-
-      // Iterate through fixedIndicatorValues to find the most recent values for each indicator_id
-      fixedIndicatorValues.forEach((indicatorValue) => {
-        if (
-          !mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
-          indicatorValue.year >
-            mostRecentIndicatorValues.get(indicatorValue.indicator_id).year
-        ) {
-          mostRecentIndicatorValues.set(
-            indicatorValue.indicator_id,
-            indicatorValue
-          );
-        }
-      });
-
-      // Calculate each metric score
-      framework.metrics.forEach((metric) => {
-        const { predefined_weight, indicators } = metric;
-        const metricScore = indicators.reduce((accumulator, indicator) => {
-          const indicatorValue = mostRecentIndicatorValues.get(
-            indicator.indicator_id
-          );
-
-          if (indicatorValue) {
-            const indicatorScore =
-              indicatorValue.value * indicator.predefined_weight;
-            return accumulator + indicatorScore;
-          }
-
-          return accumulator;
-        }, 0);
-
-        frameworkScore += predefined_weight * metricScore;
-      });
-
-      // Find most recent year and only calculate values based on that year
-      const mostRecentYear = [...mostRecentIndicatorValues.values()].reduce(
-        (maxYear, indicatorValue) => {
-          return Math.max(maxYear, indicatorValue.year);
-        },
-        -Infinity
-      );
-
-      ESGScoreList.push({
-        framework_name,
-        year: mostRecentYear,
-        score: Math.round(frameworkScore),
-      });
-    });
-
-    return ESGScoreList;
-  };
-
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-    const scoreList = getRecentESGScores();
+    const scoreList = RecentESGScores(frameworksData, fixedIndicatorValues);
     const filteredFrameworksScores = scoreList.filter(
       (framework) =>
         framework.year === Math.max(...scoreList.map((f) => f.year))
