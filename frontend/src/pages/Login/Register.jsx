@@ -38,23 +38,31 @@ function Register({ onSuccess }) {
       return setErrorMessage("Passwords do not match");
     }
 
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-      }),
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      onSuccess(data.token);
-      navigate("/dashboard");
-    } else {
-      return setErrorMessage(data.message);
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (response.status === 200) {
+        onSuccess(data.token);
+        navigate("/dashboard");
+      } else {
+        setErrorMessage(data.message);
+      }
+    } catch (error) {
+      console.error("Error with POST request for /api/register", error);
+      setErrorMessage("Failed to register. Please try again.");
     }
   };
 
