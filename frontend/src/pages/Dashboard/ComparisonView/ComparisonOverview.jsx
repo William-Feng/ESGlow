@@ -20,16 +20,13 @@ function ComparisonOverview({ token }) {
         }
 
         // Fetch portfolio overview values
-        let company_ids = selectedCompanies.map(c => c.company_id).join(',');
-        
-        const response = await fetch(
-          `/api/values/company/${company_ids}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        let company_ids = selectedCompanies.map((c) => c.company_id).join(",");
+
+        const response = await fetch(`/api/values/company/${company_ids}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
 
         // Clear previous data before updating
@@ -78,10 +75,10 @@ function ComparisonOverview({ token }) {
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-    const toolTipString = `The Portfolio ESG Rating is calculated by averaging ${companyData.year} ESG scores of the selected companies:`;
+    const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG scores of the selected companies:`;
     const toolTipStringList = companyData.map((item, index) => (
       <span key={index}>
-        {item.name}: <strong>{item.score}</strong>
+        {item.name}: <strong>{item.score}</strong> ({item.year})
       </span>
     ));
 
@@ -148,7 +145,7 @@ function ComparisonOverview({ token }) {
                 <Tooltip
                   title={
                     <Typography variant="body2">
-                      {toolTipString}
+                      {toolTipStringIntro}
                       {toolTipStringList.map((str) => (
                         <Typography
                           variant="body2"
