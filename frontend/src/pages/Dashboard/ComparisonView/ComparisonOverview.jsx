@@ -1,13 +1,95 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useContext, useEffect, useState } from "react";
+import { ComparisonViewContext } from "./ComparisonView";
 
-function ComparisonOverview() {
+function ComparisonOverview({ token }) {
+  const { selectedCompanies } = useContext(ComparisonViewContext);
+
+  const [companyData, setCompanyData] = useState([]);
+  const [portfolioRating, setPortfolioRating] = useState([]);
+  const [bestPerformer, setBestPerformer] = useState(0);
+  const [worstPerformer, setWorstPerformer] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (selectedCompanies.length === 0) {
+          return;
+        }
+
+        // Fetch portfolio overview values
+        let company_ids = selectedCompanies.map((c) => c.company_id).join(",");
+
+        const response = await fetch(`/api/values/company/${company_ids}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+
+        // Clear previous data before updating
+        setCompanyData([]);
+
+        const esgScores = selectedCompanies.map((company) => {
+          const esgScore = data[company.company_id].value.ESGscore;
+          const year = data[company.company_id].value.year;
+
+          // Update companyData only for the selected companies
+          setCompanyData((prevData) => [
+            ...prevData,
+            {
+              company_id: company.company_id,
+              name: company.name,
+              score: esgScore,
+              year: year,
+            },
+          ]);
+
+          return esgScore;
+        });
+
+        if (esgScores.length === 0) {
+          // No scores available
+          setPortfolioRating();
+          setBestPerformer();
+          setWorstPerformer();
+        } else {
+          // Calculate average ESG score
+          const totalScore = esgScores.reduce((sum, score) => sum + score, 0);
+          const averageScore = totalScore / esgScores.length;
+          setPortfolioRating(averageScore.toFixed(1));
+
+          // Find best and worst performers
+          setBestPerformer(Math.max(...esgScores));
+          setWorstPerformer(Math.min(...esgScores));
+        }
+      } catch (error) {
+        console.error("There was an error fetching the ESG scores.", error);
+      }
+    };
+
+    fetchData();
+  }, [token, selectedCompanies]);
+
+  const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG scores of the selected companies:`;
+  const toolTipStringList = companyData.map((item, index) => (
+    <span key={index}>
+      {item.name}: <strong>{item.score}</strong> ({item.year})
+    </span>
+  ));
+
   return (
     <Box
       sx={{
-        bgcolor: "background.paper",
-        mx: "auto",
-        mt: -4,
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "nowrap",
+        justifyContent: "space-between",
+        alignItems: "center",
+        border: 1,
+        borderRadius: 4,
+        padding: 2,
       }}
     >
       <Typography
@@ -18,25 +100,28 @@ function ComparisonOverview() {
         textAlign="center"
         fontWeight="bold"
       >
-        COMPANY NAMES
+        {selectedCompanies.map((company, index) => (
+          <span key={index}>
+            {company.name}
+            {index < selectedCompanies.length - 1 && (
+              <span style={{ color: "gray", fontWeight: "normal" }}> | </span>
+            )}
+          </span>
+        ))}
       </Typography>
       <Container
         sx={{
+          flex: 2.5,
           display: "flex",
           flexDirection: "row",
-          flexWrap: "nowrap",
-          justifyContent: "space-between",
           alignItems: "center",
-          border: 1,
-          borderRadius: 4,
-          padding: 2,
         }}
       >
         <Box
           sx={{
-            flex: 2.5,
+            flex: 1,
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             alignItems: "center",
           }}
         >
@@ -49,7 +134,7 @@ function ComparisonOverview() {
             }}
           >
             <Typography variant="h2" color="text.primary" paragraph>
-              SCORE
+              {portfolioRating}
             </Typography>
             <Box display="flex" alignItems="center">
               <Typography variant="h6" color="text.secondary">
@@ -58,7 +143,22 @@ function ComparisonOverview() {
               <Tooltip
                 title={
                   <Typography variant="body2">
-                    SOME KIND OF INFORMATION
+                    {toolTipStringIntro}
+                    {toolTipStringList.map((str) => (
+                      <Typography
+                        variant="body2"
+                        key={str}
+                        sx={{
+                          display: "block",
+                          marginTop: "4px",
+                          whiteSpace: "nowrap",
+                          textIndent: "16px",
+                          fontSize: "1rem",
+                        }}
+                      >
+                        {str}
+                      </Typography>
+                    ))}
                   </Typography>
                 }
               >
@@ -68,7 +168,7 @@ function ComparisonOverview() {
               </Tooltip>
             </Box>
           </Box>
-          {/* FIRST COLUMN: BEST AND WORST PERFORMERS */}
+
           <Box
             sx={{
               flex: 1,
@@ -80,19 +180,13 @@ function ComparisonOverview() {
             }}
           >
             <Typography variant="h4" color="text.primary" paragraph>
-              43
+              {bestPerformer}
             </Typography>
-            <Typography variant="h6" color="text.secondary" mt={-1}>
-              Industry Mean
-            </Typography>
-            <Typography variant="h4" color="text.primary" mt={3} paragraph>
-              24/185
-            </Typography>
-            <Typography variant="h6" color="text.secondary" mt={-1}>
-              Industry Ranking
+            <Typography variant="h6" color="text.secondary">
+              Best Performer
             </Typography>
           </Box>
-          {/* SECOND COLUMN: BEST AND WORST PERFORMERS */}
+
           <Box
             sx={{
               flex: 1,
@@ -104,24 +198,14 @@ function ComparisonOverview() {
             }}
           >
             <Typography variant="h4" color="text.primary" paragraph>
-              90
+              {worstPerformer}
             </Typography>
             <Typography variant="h6" color="text.secondary">
-              Best Performer
-            </Typography>
-            <Typography
-              variant="h4"
-              color="text.primary"
-              sx={{ mt: "16px" }}
-              paragraph
-            >
-              20
-            </Typography>
-            <Typography variant="h6" color="text.secondary">
-              Best Performer
+              Worst Performer
             </Typography>
           </Box>
         </Box>
+
         <Box sx={{ flex: 1 }}>
           <Typography
             variant="h5"

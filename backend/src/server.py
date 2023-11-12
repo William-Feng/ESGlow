@@ -22,11 +22,18 @@ from .models import (
     specific_industry_company_models,
     framework_metric_indicator_models,
     value_calculations,
-    custom_framework_models
+    custom_framework_models,
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
-from .calculations import get_company_values, get_industry_values, get_years
+from .calculations import (
+    get_company_graph_values,
+    get_company_values,
+    get_indicator_graph_values,
+    get_industry_values,
+    get_company_industry_ranking,
+    get_years,
+)
 
 api = Api()
 jwt = JWTManager()
@@ -281,7 +288,7 @@ class IndicatorValues(Resource):
 company_values_model = value_calculations(api)
 
 
-@api.route("/api/values/<string:company_id>")
+@api.route("/api/values/company/<string:company_id>")
 class CompanyValues(Resource):
     @api.response(200, "Values for company retrieved!", model=company_values_model)
     @api.response(401, "Authentication required. Please log in.")
@@ -296,9 +303,8 @@ class CompanyValues(Resource):
         return get_company_values(selected_companies), 200
 
 
-@api.route("/api/values/<int:industry_id>")
+@api.route("/api/values/industry/<int:industry_id>")
 class IndustryValues(Resource):
-    # TODO: Model has been removed for error
     @api.response(200, "Values for industry retrieved!")
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid industry id provided")
@@ -306,6 +312,36 @@ class IndustryValues(Resource):
     @jwt_required()
     def get(self, industry_id):
         return get_industry_values(industry_id)
+
+
+@api.route("/api/values/ranking/company/<int:company_id>")
+class CompanyRanking(Resource):
+    @api.response(200, "Ranking in industry determined!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid company id supplied!")
+    @jwt_required()
+    def get(self, company_id):
+        return get_company_industry_ranking(company_id)
+
+
+@api.route("/api/values/graph/company/<int:company_id>")
+class GraphCompanyValues(Resource):
+    @api.response(200, "Graph Values for Company Returned!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid company id provided")
+    @jwt_required()
+    def get(self, company_id):
+        return get_company_graph_values(company_id)
+
+
+@api.route("/api/values/graph/indicator/<int:indicator_id>")
+class GraphIndicatorValues(Resource):
+    @api.response(200, "Graph Values for Indicator Returned!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid indicator id provided")
+    @jwt_required()
+    def get(self, indicator_id):
+        return get_indicator_graph_values(indicator_id)
 
 
 @api.route("/api/values/years")
@@ -359,13 +395,24 @@ class CustomFrameworkList(Resource):
         return get_custom_frameworks(user)
 
 
-@api.route("/api/custom-frameworks/<int:framework_id>")
-class CustomFramework(Resource):
-    @api.response(200, 'Custom framework deleted successfully.')
-    @api.response(400, 'Custom framework not found.')
-    @api.response(401, 'Authentication required. Please log in.')
+# ===================================================================
+#
+# Custom Frameworks
+#
+# ===================================================================
+
+custom_framework_model = custom_framework_models(api)
+
+
+@api.route("/api/custom-frameworks")
+class CustomFrameworkList(Resource):
+    @api.expect(custom_framework_model, validate=True)
+    @api.response(201, "Custom framework for user created successfully!")
+    @api.response(401, "Authentication required. Please log in.")
+    @api.response(400, "Invalid custom framework input.")
     @jwt_required()
-    def delete(self, framework_id):
+    def post(self):
+        data = api.payload
         email = get_jwt_identity()
 
         # Verify user exists in backend.
@@ -373,4 +420,4 @@ class CustomFramework(Resource):
         if not user:
             return {"message": "User not found."}, 400
 
-        return delete_custom_framework(user, framework_id)
+        return create_custom_framework(data, user)

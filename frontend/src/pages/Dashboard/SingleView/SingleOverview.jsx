@@ -1,11 +1,64 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SingleViewContext } from "./SingleView";
 
-function SingleOverview() {
-  const { selectedCompany, frameworksData, fixedIndicatorValues } =
-    useContext(SingleViewContext);
+function SingleOverview({ token }) {
+  const {
+    selectedIndustry,
+    selectedCompany,
+    frameworksData,
+    fixedIndicatorValues,
+  } = useContext(SingleViewContext);
+
+  const [industryMean, setIndustryMean] = useState(0);
+  const [industryRanking, setIndustryRanking] = useState("");
+
+  // Fetch industry mean and ranking
+  useEffect(() => {
+    fetch("/api/industries/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!selectedIndustry) {
+          return;
+        }
+        const industryId = data.industries.indexOf(selectedIndustry) + 1;
+        fetch(`/api/values/industry/${industryId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setIndustryMean(data.average_score);
+          });
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the industry information.",
+          error
+        )
+      );
+
+    if (!selectedCompany) {
+      return
+    }
+    fetch(`/api/values/ranking/company/${selectedCompany.company_id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIndustryRanking(`${data.ranking}/${data.industry_company_count}`);
+      });
+    // eslint-disable-next-line
+  }, [selectedCompany]);
+
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];
@@ -209,13 +262,13 @@ function SingleOverview() {
               }}
             >
               <Typography variant="h4" color="text.primary" paragraph>
-                43
+                {industryMean}
               </Typography>
               <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean
               </Typography>
               <Typography variant="h4" color="text.primary" mt={3} paragraph>
-                24/185
+                {industryRanking}
               </Typography>
               <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Ranking

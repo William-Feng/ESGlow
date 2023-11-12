@@ -11,18 +11,16 @@ export const ComparisonViewContext = createContext();
 
 function ComparisonView({ token }) {
   const { view, setView } = useContext(PageContext);
-
   const [overviewExpanded, setOverviewExpanded] = useState(false);
-
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]);               // user selected single year ; TABLE VIEW
+  const [selectedYear, setSelectedYear] = useState([]); // user selected single year ; TABLE VIEW
   const [selectedYearRange, setSelectedYearRange] = useState([]); // user selected year range; GRAPH VIEW
-  const [yearsList, setYearsList] = useState([]);                 // SET range of years data available for the companies
+  const [yearsList, setYearsList] = useState([]); // SET range of years data available for the companies
   const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState([]);
 
-  // call fetch on all indicator IDs only once upon load
+  // Call fetch on all indicator IDs only once upon load
   useEffect(() => {
 
     fetch("/api/indicators/all", {
@@ -125,6 +123,7 @@ function ComparisonView({ token }) {
               isDisabled={!selectedCompanies.length}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
+              token={token}
             />
             <Box
               sx={{
