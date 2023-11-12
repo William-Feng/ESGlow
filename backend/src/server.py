@@ -12,7 +12,8 @@ from .frameworks import (
     get_indicator_values,
     get_company_info,
     create_custom_framework,
-    get_custom_frameworks
+    get_custom_frameworks,
+    delete_custom_framework
 )
 from .models import (
     user_authentication_models,
@@ -363,7 +364,7 @@ custom_framework_model = custom_framework_models(api)
 
 @api.route("/api/custom-frameworks")
 class CustomFrameworkList(Resource):
-    # Create a new custom framework
+    # Create a new custom framework for a user
     @api.response(201, 'Custom framework for user created successfully!', model=custom_framework_model)
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid custom framework input.')

@@ -18,6 +18,13 @@ function Dashboard({ token }) {
           },
         },
       },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: {
+            fontSize: "1.5rem",
+          },
+        },
+      },
     },
   });
 

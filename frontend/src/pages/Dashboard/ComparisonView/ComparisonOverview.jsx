@@ -86,7 +86,7 @@ function ComparisonOverview({ token }) {
         sx={{
           bgcolor: "background.paper",
           mx: "auto",
-          padding: "16px 0",
+          mt: -4,
         }}
       >
         <Typography
