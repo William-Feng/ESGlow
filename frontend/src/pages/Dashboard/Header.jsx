@@ -32,9 +32,10 @@ function Header({
       .then((data) => {
         setName(data.name);
       })
-      .catch((error) =>
-        console.error("There was an error fetching the user's name.", error)
-      );
+      .catch((error) => {
+        console.error("There was an error fetching the user's name.", error);
+        navigate("/");
+      });
   }, [token, navigate]);
 
   const [anchorElUser, setAnchorElUser] = useState(null);
