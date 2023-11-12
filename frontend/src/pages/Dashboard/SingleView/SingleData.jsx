@@ -23,11 +23,11 @@ function SingleData() {
     adjustedScore,
   } = useContext(SingleViewContext);
 
-  // Only include the data for the selected frameworks, indicators and years
-  const structuredData = useMemo(() => {
+  // Convert the indicator data into a format that can be displayed in the table
+  const processIndicatorData = (data) => {
     const dataMap = {};
 
-    filteredData.forEach((row) => {
+    data.forEach((row) => {
       if (!dataMap[row.indicator_id]) {
         const indicator_source = allIndicators.find(
           (indicator) => indicator.indicator_id === row.indicator_id
@@ -41,33 +41,27 @@ function SingleData() {
     });
 
     return Object.values(dataMap);
-  }, [allIndicators, filteredData]);
+  };
 
-  // Convert the additional indicator data into a format that can be displayed in the table
-  const structuredExtraData = useMemo(() => {
-    const dataMap = {};
+  // Data for the selected frameworks and indicators over the years
+  const structuredData = useMemo(
+    () => processIndicatorData(filteredData),
+    [allIndicators, filteredData]
+  );
 
-    additionalIndicatorsData.forEach((row) => {
-      if (!dataMap[row.indicator_id]) {
-        const indicator_source = allIndicators.find(
-          (indicator) => indicator.indicator_id === row.indicator_id
-        ).indicator_source;
-        dataMap[row.indicator_id] = {
-          name: row.indicator_name,
-          source: indicator_source,
-        };
-      }
-      dataMap[row.indicator_id][row.year] = row.value;
-    });
+  // Data for the selected additional indicators data over the years
+  const structuredExtraData = useMemo(
+    () => processIndicatorData(additionalIndicatorsData),
+    [allIndicators, additionalIndicatorsData]
+  );
 
-    return Object.values(dataMap);
-  }, [allIndicators, additionalIndicatorsData]);
-
+  // Determine if there is data to show based on the selected framework and additional indicators
   const hasDataToShow = useMemo(
     () => selectedFramework || structuredExtraData.length > 0,
     [selectedFramework, structuredExtraData]
   );
 
+  // Display a prompt if the user has not selected a company or there is no data to show
   if (!selectedCompany || !hasDataToShow) {
     return (
       <Box
