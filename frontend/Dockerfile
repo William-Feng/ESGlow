@@ -29,7 +29,7 @@
 # CMD ["nginx", "-g", "daemon off;"]
 
 # Use an official Node runtime as a parent image
-FROM node:16
+FROM node:21.1.0
 
 # Set the working directory in the container
 WORKDIR /app
