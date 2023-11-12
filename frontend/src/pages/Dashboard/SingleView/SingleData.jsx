@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useMemo, useContext } from "react";
+import React, { useMemo, useContext, useCallback } from "react";
 import { SingleViewContext } from "./SingleView";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
@@ -24,35 +24,38 @@ function SingleData() {
   } = useContext(SingleViewContext);
 
   // Convert the indicator data into a format that can be displayed in the table
-  const processIndicatorData = (data) => {
-    const dataMap = {};
+  const processIndicatorData = useCallback(
+    (data) => {
+      const dataMap = {};
 
-    data.forEach((row) => {
-      if (!dataMap[row.indicator_id]) {
-        const indicator_source = allIndicators.find(
-          (indicator) => indicator.indicator_id === row.indicator_id
-        ).indicator_source;
-        dataMap[row.indicator_id] = {
-          name: row.indicator_name,
-          source: indicator_source,
-        };
-      }
-      dataMap[row.indicator_id][row.year] = row.value;
-    });
+      data.forEach((row) => {
+        if (!dataMap[row.indicator_id]) {
+          const indicator_source = allIndicators.find(
+            (indicator) => indicator.indicator_id === row.indicator_id
+          ).indicator_source;
+          dataMap[row.indicator_id] = {
+            name: row.indicator_name,
+            source: indicator_source,
+          };
+        }
+        dataMap[row.indicator_id][row.year] = row.value;
+      });
 
-    return Object.values(dataMap);
-  };
+      return Object.values(dataMap);
+    },
+    [allIndicators]
+  );
 
   // Data for the selected frameworks and indicators over the years
   const structuredData = useMemo(
     () => processIndicatorData(filteredData),
-    [allIndicators, filteredData]
+    [processIndicatorData, filteredData]
   );
 
   // Data for the selected additional indicators data over the years
   const structuredExtraData = useMemo(
     () => processIndicatorData(additionalIndicatorsData),
-    [allIndicators, additionalIndicatorsData]
+    [processIndicatorData, additionalIndicatorsData]
   );
 
   // Determine if there is data to show based on the selected framework and additional indicators
