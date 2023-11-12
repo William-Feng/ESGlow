@@ -4,43 +4,44 @@ import SingleViewSearchbar from "./SingleSearchbar";
 import SingleViewSidebar from "./SingleSidebar";
 import SingleViewData from "./SingleData";
 import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
-import {
-  useEffect,
-  useState,
-  useCallback,
-  useContext,
-  createContext,
-} from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext, createContext } from "react";
 import { PageContext } from "../Dashboard";
-import useYearsData from "../../../hooks/UseYearsData";
+import useFrameworkData from "../../../hooks/UseFrameworksData";
 import UseIndicatorData from "../../../hooks/UseIndicatorData";
+import useIndicatorValuesData from "../../../hooks/UseIndicatorValuesData";
+import useYearsData from "../../../hooks/UseYearsData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
 
 export const SingleViewContext = createContext();
 
 function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
-  const navigate = useNavigate();
-
-  // Collapsing the Overview section
   const [overviewExpanded, setOverviewExpanded] = useState(false);
-
+  const [yearsList, selectedYears, setSelectedYears] = useYearsData(token);
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
-  const [frameworksData, setFrameworksData] = useState([]);
-  const [selectedFramework, setSelectedFramework] = useState(null);
+  const fetchIndicatorValues = useIndicatorValuesData(token);
+  const {
+    frameworksData,
+    selectedFramework,
+    setSelectedFramework,
+    selectedIndicators,
+    setSelectedIndicators,
+    fixedIndicatorValues,
+  } = useFrameworkData(
+    token,
+    selectedCompany,
+    yearsList,
+    fetchIndicatorValues,
+    setOverviewExpanded
+  );
   const [selectedCustomFramework, setSelectedCustomFramework] = useState(null);
   const [isCustomFrameworksDialogOpen, setIsCustomFrameworksDialogOpen] =
     useState(false);
-  const [yearsList, selectedYears, setSelectedYears] = useYearsData(token);
-  const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [indicatorValues, setIndicatorValues] = useState([]);
-  const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
   const [savedAdditionalIndicatorWeights, setSavedAdditionalIndicatorWeights] =
     useState({});
-
   const [allIndicators, allIndicatorValues] = UseIndicatorData(
     token,
     selectedCompany,
@@ -53,80 +54,9 @@ function SingleView({ token }) {
   const [filteredData, setFilteredData] = useState([]);
   const [additionalIndicatorsData, setAdditionalIndicatorsData] = useState([]);
 
-  // fetch function is extracted as a separate function
-  // this is called to set: indicatorValues (variable changes with sidebar selection)
-  //                     & fixedIndicatorValues (fixed value after company selection)
-  const fetchIndicatorValues = useCallback(
-    (companyId, indicatorIds, yearsString) => {
-      return fetch(`/api/values/${companyId}/${indicatorIds}/${yearsString}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .catch((error) =>
-          console.error("Error fetching indicator values:", error)
-        );
-    },
-    [token]
-  );
-
-  // Upon initial company selection, fetch:
-  // frameworks and all its information  (frameworksData)
-  useEffect(() => {
-    // New selection of company wipes data display to blank
-    const companyId = selectedCompany ? selectedCompany.company_id : 0;
-    if (!companyId) {
-      setSelectedFramework(null);
-      setFrameworksData(null);
-      setOverviewExpanded(false);
-      return;
-    }
-
-    fetch(`/api/frameworks/${companyId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setFrameworksData(data.frameworks);
-        // Selection is refreshed
-        setSelectedFramework(null);
-        const allIndicators = data.frameworks.flatMap((framework) =>
-          framework.metrics.flatMap((metric) =>
-            metric.indicators.map((indicator) => indicator.indicator_id)
-          )
-        );
-        setSelectedIndicators(allIndicators);
-
-        // Set FIXED Indicator values (doesn't change with sidebar selection)
-        // this displays a ESG score in SingleViewOverview for a company
-        fetchIndicatorValues(
-          companyId,
-          [...new Set(allIndicators)].join(","),
-          yearsList.join(",")
-        )
-          .then((data) => {
-            setFixedIndicatorValues(data.values);
-          })
-          .catch((error) => console.error(error));
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the framework, metric and indicator information.",
-          error
-        )
-      );
-
-    // open overview accordion
-    setOverviewExpanded(true);
-  }, [token, navigate, selectedCompany, yearsList, fetchIndicatorValues]);
-
-  // Set indicatorValues, variable selection of indicator values that changes with sidebar
+  // Set the variable indicator values that changes with sidebar selections
   useEffect(() => {
     if (selectedIndicators.length) {
-      // New selection of company wipes data display to blank
       const companyId = selectedCompany ? selectedCompany.company_id : 0;
       if (!companyId) {
         setSelectedFramework(null);
@@ -144,11 +74,12 @@ function SingleView({ token }) {
         .catch((error) => console.error(error));
     }
   }, [
-    selectedIndicators,
     token,
+    setSelectedFramework,
     selectedCompany,
-    fetchIndicatorValues,
+    selectedIndicators,
     yearsList,
+    fetchIndicatorValues,
   ]);
 
   // Retrieve the data from the selected framework
@@ -266,7 +197,7 @@ function SingleView({ token }) {
           >
             <OverviewAccordion
               isSingleView={true}
-              isDisabled={!(frameworksData && selectedCompany)}
+              isDisabled={!selectedCompany}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
               token={token}
@@ -289,7 +220,9 @@ function SingleView({ token }) {
                     boxSizing: "border-box",
                     overflowY: "auto",
                     maxHeight: "100%",
-                    backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
+                    backgroundColor: selectedCompany
+                      ? "transparent"
+                      : "#f5f5f5",
                   },
                 }}
                 variant="permanent"

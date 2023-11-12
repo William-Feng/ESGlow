@@ -64,7 +64,7 @@ function ScoreCalculation(
 
   // Calculate scores for the additional indicators (note that these are not grouped into metrics)
   // For each, the score contribution is its value multiplied by its relative weight in the total weight sum.
-  if (Object.keys(savedAdditionalIndicatorWeights).length > 0) {
+  if (Object.keys(savedAdditionalIndicatorWeights).length) {
     additionalScore = additionalIndicatorsData.reduce((accumulator, data) => {
       if (!savedWeights || savedWeights.year === data.year) {
         const weight =

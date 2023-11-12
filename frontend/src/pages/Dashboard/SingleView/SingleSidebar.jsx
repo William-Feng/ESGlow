@@ -151,7 +151,7 @@ function SingleSidebar({ token }) {
 
   // Collapse all accordions when the company is changed or deleted
   useEffect(() => {
-    if (!frameworksData) {
+    if (!selectedCompany) {
       setExpanded({
         panel1: false,
         panel2: false,
@@ -159,7 +159,7 @@ function SingleSidebar({ token }) {
         panel4: false,
       });
     }
-  }, [frameworksData]);
+  }, [selectedCompany]);
 
   const [expandedMetrics, setExpandedMetrics] = useState([]);
 
@@ -481,7 +481,7 @@ function SingleSidebar({ token }) {
 
     updateScore(newSavedWeights, newSavedAdditionalWeights);
 
-    return setSuccessMessage("Selections saved successfully.");
+    return setSuccessMessage("Selections updated successfully.");
   };
 
   // Show the user's custom frameworks
@@ -646,25 +646,25 @@ function SingleSidebar({ token }) {
         }}
       >
         <FrameworkAccordion
-          disabled={!frameworksData}
+          disabled={!selectedCompany}
           expanded={expanded.panel1}
           onToggleDropdown={handleChange("panel1")}
           frameworksData={frameworksData}
         />
         {!selectedCustomFramework && (
           <MetricsIndicatorsAccordion
-            disabled={!frameworksData}
+            disabled={!selectedCompany}
             expanded={expanded.panel2}
             onToggleDropdown={handleChange("panel2")}
           />
         )}
         <AdditionalIndicatorsAccordion
-          disabled={!frameworksData}
+          disabled={!selectedCompany}
           expanded={expanded.panel3}
           onToggleDropdown={handleChange("panel3")}
         />
         <YearsMultiAccordion
-          disabled={!frameworksData}
+          disabled={!selectedCompany}
           expanded={expanded.panel4}
           onToggleDropdown={handleChange("panel4")}
           years={yearsList}
