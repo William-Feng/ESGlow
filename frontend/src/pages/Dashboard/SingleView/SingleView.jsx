@@ -13,6 +13,8 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageContext } from "../Dashboard";
+import useYearsData from "../../../hooks/UseYearsData";
+import UseIndicatorData from "../../../hooks/UseIndicatorData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
 
 export const SingleViewContext = createContext();
@@ -24,7 +26,6 @@ function SingleView({ token }) {
   // Collapsing the Overview section
   const [overviewExpanded, setOverviewExpanded] = useState(false);
 
-  const [yearsList, setYearsList] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
@@ -32,16 +33,19 @@ function SingleView({ token }) {
   const [selectedCustomFramework, setSelectedCustomFramework] = useState(null);
   const [isCustomFrameworksDialogOpen, setIsCustomFrameworksDialogOpen] =
     useState(false);
+  const [yearsList, selectedYears, setSelectedYears] = useYearsData(token);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-  const [selectedYears, setSelectedYears] = useState([]);
   const [indicatorValues, setIndicatorValues] = useState([]);
   const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
   const [savedWeights, setSavedWeights] = useState({});
   const [savedAdditionalIndicatorWeights, setSavedAdditionalIndicatorWeights] =
     useState({});
 
-  const [allIndicators, setAllIndicators] = useState([]);
-  const [allIndicatorValues, setAllIndicatorValues] = useState([]);
+  const [allIndicators, allIndicatorValues] = UseIndicatorData(
+    token,
+    selectedCompany,
+    yearsList
+  );
   const [selectedAdditionalIndicators, setSelectedAdditionalIndicators] =
     useState([]);
 
@@ -66,25 +70,6 @@ function SingleView({ token }) {
     },
     [token]
   );
-
-  useEffect(() => {
-    // Fetch all available years of data
-    fetch("/api/values/years", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setYearsList(data.years);
-        setSelectedYears(data.years);
-      })
-      .catch((error) => {
-        if (error !== "No years found") {
-          console.error("There was an error fetching the years.", error);
-        }
-      });
-  }, [token]);
 
   // Upon initial company selection, fetch:
   // frameworks and all its information  (frameworksData)
@@ -165,48 +150,6 @@ function SingleView({ token }) {
     fetchIndicatorValues,
     yearsList,
   ]);
-
-  // Retrieve the values of all possible indicators for the selected company
-  useEffect(() => {
-    const companyId = selectedCompany ? selectedCompany.company_id : 0;
-    if (!companyId) {
-      return;
-    }
-
-    // Fetch all the possible indicators
-    fetch("/api/indicators/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setAllIndicators(data.indicators);
-        const indicatorIds = data.indicators
-          .map((d) => d.indicator_id)
-          .join(",");
-
-        // Fetch the indicator values for all the indicators
-        return fetch(
-          `/api/values/${companyId}/${indicatorIds}/${yearsList.join(",")}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        setAllIndicatorValues(data.values);
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the complete indicator information.",
-          error
-        )
-      );
-  }, [token, selectedCompany, yearsList]);
 
   // Retrieve the data from the selected framework
   useEffect(() => {

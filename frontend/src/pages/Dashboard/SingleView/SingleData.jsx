@@ -31,7 +31,7 @@ function SingleData() {
         if (!dataMap[row.indicator_id]) {
           const indicator_source = allIndicators.find(
             (indicator) => indicator.indicator_id === row.indicator_id
-          ).indicator_source;
+          )?.indicator_source;
           dataMap[row.indicator_id] = {
             name: row.indicator_name,
             source: indicator_source,
