@@ -78,7 +78,7 @@ function SingleData() {
         <Typography variant="h6" color="text.secondary">
           {selectedCompany
             ? "Please select a framework or at least one of the additional indicators to view the ESG data."
-            : "Please select a company from the search bar above to view its details and the ESG data."}
+            : "Please select a company to view the ESG data."}
         </Typography>
       </Box>
     );

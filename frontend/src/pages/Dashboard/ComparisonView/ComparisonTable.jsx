@@ -9,17 +9,16 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
-
-export default function ComparisonTable({ token }) {
+function ComparisonTable({ token }) {
   const {
     dataView,
     selectedCompanies,
     selectedYear,
     selectedIndicators,
-    yearsList
+    yearsList,
   } = useContext(ComparisonViewContext);
 
-  const [currentData, setCurrentData] = useState({})
+  const [currentData, setCurrentData] = useState({});
 
   useEffect(() => {
     if (selectedCompanies.length === 0 || selectedIndicators.length === 0) {
@@ -27,46 +26,59 @@ export default function ComparisonTable({ token }) {
     }
     const indicatorIds = selectedIndicators.join(",");
     let yearsListString = yearsList.join(",");
-    if (dataView === 'table') {
-      yearsListString = selectedYear[0]
+    if (dataView === "table") {
+      yearsListString = selectedYear[0];
     }
     const newData = {};
     const promisesList = [];
-    
+
     selectedCompanies.forEach((c) => {
       promisesList.push(
-        fetch(`/api/values/${c.company_id}/${indicatorIds}/${yearsListString}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        fetch(
+          `/api/values/${c.company_id}/${indicatorIds}/${yearsListString}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
           .then((response) => response.json())
           .then((data) => {
-            const dataValues = data.values
+            const dataValues = data.values;
             dataValues.forEach((indicatorInfo) => {
               if (!newData[indicatorInfo.indicator_id]) {
                 newData[indicatorInfo.indicator_id] = {
                   name: indicatorInfo.indicator_name,
                 };
               }
-              newData[indicatorInfo.indicator_id][c.company_id] = indicatorInfo.value;
+              newData[indicatorInfo.indicator_id][c.company_id] =
+                indicatorInfo.value;
             });
           })
           .catch((error) => {
-            console.error("Error fetching indicator values for company:", error);
+            console.error(
+              "Error fetching indicator values for company:",
+              error
+            );
           })
-      )
+      );
     });
 
     Promise.all(promisesList)
-    .then(() => {
-      setCurrentData(newData)
-    })
-    .catch((error) => {
-      console.error("Error fetching all indicator values:", error);
-    })
-
-  }, [token, selectedCompanies, selectedIndicators, selectedYear, yearsList, dataView]);
+      .then(() => {
+        setCurrentData(newData);
+      })
+      .catch((error) => {
+        console.error("Error fetching all indicator values:", error);
+      });
+  }, [
+    token,
+    selectedCompanies,
+    selectedIndicators,
+    selectedYear,
+    yearsList,
+    dataView,
+  ]);
 
   return (
     <>
@@ -151,5 +163,7 @@ export default function ComparisonTable({ token }) {
         </Table>
       </Box>
     </>
-  )
+  );
 }
+
+export default ComparisonTable;

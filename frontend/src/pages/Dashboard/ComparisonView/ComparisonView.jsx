@@ -22,7 +22,6 @@ function ComparisonView({ token }) {
 
   // Call fetch on all indicator IDs only once upon load
   useEffect(() => {
-
     fetch("/api/indicators/all", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -49,22 +48,20 @@ function ComparisonView({ token }) {
           console.error("There was an error fetching the years.", error);
         }
       });
-
   }, [token]);
 
   // for every new company selection:
   useEffect(() => {
     // clearing company searchbar clears the sidebar selected
     if (selectedCompanies.length === 0) {
-      setSelectedYear([])
-      setSelectedIndicators([])
+      setSelectedYear([]);
+      setSelectedIndicators([]);
       setOverviewExpanded(false);
       return;
     }
     // open overview accordion
     setOverviewExpanded(true);
-
-  }, [token, selectedCompanies])
+  }, [token, selectedCompanies]);
 
   return (
     <>
@@ -84,7 +81,7 @@ function ComparisonView({ token }) {
             indicatorsList,
             yearsList,
             dataView,
-            setDataView
+            setDataView,
           }}
         >
           <CssBaseline />
@@ -118,7 +115,7 @@ function ComparisonView({ token }) {
               flexDirection: "column",
             }}
           >
-            <OverviewAccordion 
+            <OverviewAccordion
               isSingleView={false}
               isDisabled={!selectedCompanies.length}
               overviewExpanded={overviewExpanded}
@@ -143,7 +140,8 @@ function ComparisonView({ token }) {
                     boxSizing: "border-box",
                     overflowY: "auto",
                     maxHeight: "100%",
-                    // backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
+                    backgroundColor:
+                      selectedCompanies.length > 0 ? "transparent" : "#f5f5f5",
                   },
                 }}
                 variant="permanent"
