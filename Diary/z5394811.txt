@@ -40,3 +40,8 @@ Week 8
 Presented Demo B to the tutor and gained feedback. Recorded demo B video on behalf of team to send to client.
 Planned with group members in the tutorial to organize the order of tasks in tackling our next few tickets.
 Implemented the multi-select searchbar for Comparison View and put in UI fixes such as overcrowding the input tab.
+
+Week 9
+Created the table and graph data visualisations for Comparison view page and the changed the sidebar accordingly.
+Refactored the Overview section into accordion so the data display takes up more space of the screen,
+as per last demo feedback from tutor. Implemented overdue UI fixes and tackling new feedback functionalities provided by client
