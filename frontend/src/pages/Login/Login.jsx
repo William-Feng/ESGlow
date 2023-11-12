@@ -92,7 +92,7 @@ function Login({ onSuccess }) {
           variant="standard"
         />
         <Box mt={2}>
-          <Link href="/resetpassword" variant="body2" color="textSecondary">
+          <Link href="/reset-password" variant="body2" color="textSecondary">
             Forgot password?
           </Link>
         </Box>

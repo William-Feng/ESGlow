@@ -7,12 +7,12 @@ import Login from "./Login";
 import Register from "./Register";
 import Logo from "../../assets/Logo.png";
 import { useState } from "react";
-import ResetInputEmail from "./ResetInputEmail";
-import ResetVerify from "./ResetVerify";
-import ResetPassword from "./ResetPassword";
-import ResetSuccess from "./ResetSuccess";
+import ResetInputEmail from "./ResetPassword/ResetInputEmail";
+import ResetVerify from "./ResetPassword/ResetVerify";
+import ResetNew from "./ResetPassword/ResetNew";
+import ResetSuccess from "./ResetPassword/ResetSuccess";
 
-function StartPage({ page, onSuccess }) {
+function Landing({ page, onSuccess }) {
   const [email, setEmail] = useState(localStorage.getItem("email"));
 
   function setUserEmail(email) {
@@ -180,13 +180,13 @@ function StartPage({ page, onSuccess }) {
       >
         {page === "login" && <Login onSuccess={onSuccess} />}
         {page === "register" && <Register onSuccess={onSuccess} />}
-        {page === "resetPassword" && <ResetInputEmail setter={setUserEmail} />}
-        {page === "resetVerify" && <ResetVerify email={email} />}
-        {page === "resetNewPW" && <ResetPassword email={email} />}
-        {page === "resetSuccess" && <ResetSuccess remover={removeUserEmail} />}
+        {page === "reset-password" && <ResetInputEmail setter={setUserEmail} />}
+        {page === "reset-verify" && <ResetVerify email={email} />}
+        {page === "reset-new-password" && <ResetNew email={email} />}
+        {page === "reset-success" && <ResetSuccess remover={removeUserEmail} />}
       </Grid>
     </Grid>
   );
 }
 
-export default StartPage;
+export default Landing;

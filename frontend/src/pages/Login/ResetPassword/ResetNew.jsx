@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
+import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
 
 function ResetPassword({ email }) {
   const [newPassword, setNewPassword] = useState("");
@@ -31,7 +31,7 @@ function ResetPassword({ email }) {
 
     const data = await response.json();
     if (response.status === 200) {
-      navigate("/resetPassword/success");
+      navigate("/reset-password/success");
     } else {
       return setErrorMessage(data.message);
     }

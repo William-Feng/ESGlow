@@ -1,31 +1,20 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Link,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
+import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
 
-function ResetInputEmail({ setter }) {
-  const [email, setEmail] = useState("");
+function ResetVerify({ email }) {
+  const [code, setCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const submitEmail = async () => {
-    setLoading(true);
-    if (email.length === 0) {
-      setErrorMessage("Please enter your email");
-      setLoading(false);
-      return;
+  const submitVerificationCode = async () => {
+    if (code.length === 0) {
+      return setErrorMessage("Please enter verification code");
     }
 
-    const response = await fetch("/api/password-reset/request", {
+    const response = await fetch("/api/password-reset/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,16 +22,15 @@ function ResetInputEmail({ setter }) {
       },
       body: JSON.stringify({
         email,
+        code,
       }),
     });
 
     const data = await response.json();
-    setLoading(false);
     if (response.status === 200) {
-      setter(email);
-      navigate("/resetPassword/verify");
+      navigate("/reset-password/set");
     } else {
-      setErrorMessage(data.message);
+      return setErrorMessage(data.message);
     }
   };
 
@@ -56,14 +44,10 @@ function ResetInputEmail({ setter }) {
         alignItems: "center",
       }}
     >
-      <SnackBarManager
-        position={"top"}
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
-      />
       <Typography variant="h4" gutterBottom>
-        Forgot Password?
+        Verify Your Code
       </Typography>
+
       <Box
         component="form"
         noValidate
@@ -74,7 +58,7 @@ function ResetInputEmail({ setter }) {
         }}
         onSubmit={(e) => {
           e.preventDefault();
-          submitEmail();
+          submitVerificationCode();
         }}
       >
         <Typography
@@ -83,19 +67,18 @@ function ResetInputEmail({ setter }) {
           mb={2}
           textAlign="center"
         >
-          Enter the email associated with your account, and we'll send you a
-          code to reset your password.
+          Enter the verification code sent to {email}.
         </Typography>
         <TextField
           margin="normal"
           required
           fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
+          id="code"
+          label="Verification Code"
+          name="code"
+          autoComplete="code"
           autoFocus
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setCode(e.target.value)}
           variant="standard"
         />
         <Button
@@ -104,15 +87,19 @@ function ResetInputEmail({ setter }) {
           variant="contained"
           color="primary"
           sx={{ mt: 3, mb: 2 }}
-          disabled={loading}
         >
-          {loading ? <CircularProgress size={24} /> : "Next"}
+          Verify
         </Button>
+        <SnackBarManager
+          position={"top"}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
         <Box mt={2} textAlign="center">
           <Typography variant="body2" color="textSecondary">
-            Remember your password?{" "}
+            Go back to{" "}
             <Link href="/" color="primary" underline="hover">
-              Return to login
+              login page
             </Link>
           </Typography>
         </Box>
@@ -121,4 +108,4 @@ function ResetInputEmail({ setter }) {
   );
 }
 
-export default ResetInputEmail;
+export default ResetVerify;
