@@ -15,18 +15,27 @@ function ComparisonOverview({ token }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch portfolio overview values
-        const fetchPromises = selectedCompanies.map(async (company) => {
-          const response = await fetch(
-            `/api/values/company/${company.company_id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await response.json();
+        if (selectedCompanies.length === 0) {
+          return;
+        }
 
+        // Fetch portfolio overview values
+        let company_ids = selectedCompanies.map(c => c.company_id).join(',');
+        
+        const response = await fetch(
+          `/api/values/company/${company_ids}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await response.json();
+
+        // Clear previous data before updating
+        setCompanyData([]);
+
+        const esgScores = selectedCompanies.map((company) => {
           const esgScore = data[company.company_id].value.ESGscore;
           const year = data[company.company_id].value.year;
 
@@ -43,8 +52,6 @@ function ComparisonOverview({ token }) {
 
           return esgScore;
         });
-
-        const esgScores = await Promise.all(fetchPromises);
 
         if (esgScores.length === 0) {
           // No scores available
@@ -65,9 +72,6 @@ function ComparisonOverview({ token }) {
         console.error("There was an error fetching the ESG scores.", error);
       }
     };
-
-    // Clear companyData before fetching new data
-    setCompanyData([]);
 
     fetchData();
   }, [token, selectedCompanies]);

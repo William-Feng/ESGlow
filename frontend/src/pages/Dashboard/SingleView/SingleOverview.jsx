@@ -1,13 +1,65 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SingleViewContext } from "./SingleView";
 import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
-function SingleOverview() {
-  const { industryMean, industryRanking, selectedCompany, frameworksData, fixedIndicatorValues, ind } =
-    useContext(SingleViewContext);
-  
+function SingleOverview({ token }) {
+  const {
+    selectedIndustry,
+    selectedCompany,
+    frameworksData,
+    fixedIndicatorValues,
+  } = useContext(SingleViewContext);
+
+  const [industryMean, setIndustryMean] = useState(0);
+  const [industryRanking, setIndustryRanking] = useState("");
+
+  // Fetch industry mean and ranking
+  useEffect(() => {
+    fetch("/api/industries/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!selectedIndustry) {
+          return;
+        }
+        const industryId = data.industries.indexOf(selectedIndustry) + 1;
+        fetch(`/api/values/industry/${industryId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setIndustryMean(data.average_score);
+          });
+      })
+      .catch((error) =>
+        console.error(
+          "There was an error fetching the industry information.",
+          error
+        )
+      );
+
+    if (!selectedCompany) {
+      return
+    }
+    fetch(`/api/values/ranking/company/${selectedCompany.company_id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIndustryRanking(`${data.ranking}/${data.industry_company_count}`);
+      });
+    // eslint-disable-next-line
+  }, [selectedCompany]);
+
   const getRecentESGScores = () => {
     if (!frameworksData) {
       return [];

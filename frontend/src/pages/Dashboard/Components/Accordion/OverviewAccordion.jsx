@@ -14,6 +14,7 @@ function OverviewAccordion({
   isDisabled,
   overviewExpanded,
   setOverviewExpanded,
+  token,
 }) {
   return (
     <Accordion
@@ -52,7 +53,7 @@ function OverviewAccordion({
             maxHeight: "320px",
           }}
         >
-          {isSingleView ? <SingleOverview /> : <ComparisonOverview />}
+          {isSingleView ? <SingleOverview token={token} /> : <ComparisonOverview token={token} />}
         </Box>
       </AccordionDetails>
     </Accordion>

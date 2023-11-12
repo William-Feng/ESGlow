@@ -25,8 +25,6 @@ function SingleView({ token }) {
 
   const [yearsList, setYearsList] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState();
-  const [industryMean, setIndustryMean] = useState(0);
-  const [industryRanking, setIndustryRanking] = useState("");
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [frameworksData, setFrameworksData] = useState([]);
   const [selectedFramework, setSelectedFramework] = useState(null);
@@ -67,46 +65,6 @@ function SingleView({ token }) {
     },
     [token]
   );
-
-  // Fetch industry mean and ranking
-  useEffect(() => {
-    fetch("/api/industries/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const industryId = data.industries.indexOf(selectedIndustry) + 1;
-        fetch(`/api/values/industry/${industryId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            setIndustryMean(data.average_score);
-          });
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the industry information.",
-          error
-        )
-      );
-
-    if (selectedCompany) {
-      fetch(`/api/values/ranking/company/${selectedCompany.company_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setIndustryRanking(`${data.ranking}/${data.industry_company_count}`);
-        });
-    }
-  }, [selectedCompany]);
 
   useEffect(() => {
     // Fetch all available years of data
@@ -385,8 +343,6 @@ function SingleView({ token }) {
             updateScore,
             selectedIndustry,
             setSelectedIndustry,
-            industryMean,
-            industryRanking,
             selectedCompany,
             setSelectedCompany,
             selectedFramework,
@@ -452,6 +408,7 @@ function SingleView({ token }) {
               isDisabled={!(frameworksData && selectedCompany)}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
+              token={token}
             />
             <Box
               sx={{

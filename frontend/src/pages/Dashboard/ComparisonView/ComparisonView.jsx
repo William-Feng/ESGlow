@@ -123,6 +123,7 @@ function ComparisonView({ token }) {
               isDisabled={!selectedCompanies.length}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
+              token={token}
             />
             <Box
               sx={{
