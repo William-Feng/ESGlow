@@ -2,7 +2,6 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
-import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
 function SingleOverview() {
   const { selectedCompany, frameworksData, fixedIndicatorValues } =
@@ -238,11 +237,7 @@ function SingleOverview() {
     );
   };
 
-  return frameworksData && selectedCompany ? (
-    renderCompanyData()
-  ) : (
-    <OverviewPrompt />
-  );
+  return frameworksData && selectedCompany ? renderCompanyData() : null;
 }
 
 export default SingleOverview;

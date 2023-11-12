@@ -1,149 +1,139 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
 
 function ComparisonOverview() {
-  // Company has been selected, so display the company's details
-  const renderCompanyData = () => {
-    return (
-      <Box
+  return (
+    <Box
+      sx={{
+        bgcolor: "background.paper",
+        mx: "auto",
+        mt: -4,
+      }}
+    >
+      <Typography
+        component="h1"
+        variant="h4"
+        color="text.primary"
+        gutterBottom
+        textAlign="center"
+        fontWeight="bold"
+      >
+        COMPANY NAMES
+      </Typography>
+      <Container
         sx={{
-          bgcolor: "background.paper",
-          mx: "auto",
-          mt: -4,
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "nowrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+          border: 1,
+          borderRadius: 4,
+          padding: 2,
         }}
       >
-        <Typography
-          component="h1"
-          variant="h4"
-          color="text.primary"
-          gutterBottom
-          textAlign="center"
-          fontWeight="bold"
-        >
-          COMPANY NAME
-        </Typography>
-        <Container
+        <Box
           sx={{
+            flex: 2.5,
             display: "flex",
             flexDirection: "row",
-            flexWrap: "nowrap",
-            justifyContent: "space-between",
             alignItems: "center",
-            border: 1,
-            borderRadius: 4,
-            padding: 2,
           }}
         >
           <Box
             sx={{
-              flex: 2.5,
+              flex: 1,
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h2" color="text.primary" paragraph>
-                SCORE
-              </Typography>
-              <Box display="flex" alignItems="center">
-                <Typography variant="h6" color="text.secondary">
-                  Portfolio ESG Rating
-                </Typography>
-                <Tooltip
-                  title={
-                    <Typography variant="body2">
-                      SOME KIND OF INFORMATION
-                    </Typography>
-                  }
-                >
-                  <InfoOutlinedIcon
-                    style={{ cursor: "pointer", paddingLeft: 3 }}
-                  />
-                </Tooltip>
-              </Box>
-            </Box>
-            {/* FIRST COLUMN: BEST AND WORST PERFORMERS */}
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" color="text.primary" paragraph>
-                43
-              </Typography>
-              <Typography variant="h6" color="text.secondary" mt={-1}>
-                Industry Mean
-              </Typography>
-              <Typography variant="h4" color="text.primary" mt={3} paragraph>
-                24/185
-              </Typography>
-              <Typography variant="h6" color="text.secondary" mt={-1}>
-                Industry Ranking
-              </Typography>
-            </Box>
-            {/* SECOND COLUMN: BEST AND WORST PERFORMERS */}
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" color="text.primary" paragraph>
-                90
-              </Typography>
+            <Typography variant="h2" color="text.primary" paragraph>
+              SCORE
+            </Typography>
+            <Box display="flex" alignItems="center">
               <Typography variant="h6" color="text.secondary">
-                Best Performer
+                Portfolio ESG Rating
               </Typography>
-              <Typography
-                variant="h4"
-                color="text.primary"
-                sx={{ mt: "16px" }}
-                paragraph
+              <Tooltip
+                title={
+                  <Typography variant="body2">
+                    SOME KIND OF INFORMATION
+                  </Typography>
+                }
               >
-                20
-              </Typography>
-              <Typography variant="h6" color="text.secondary">
-                Best Performer
-              </Typography>
+                <InfoOutlinedIcon
+                  style={{ cursor: "pointer", paddingLeft: 3 }}
+                />
+              </Tooltip>
             </Box>
           </Box>
-          <Box sx={{ flex: 1 }}>
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              paragraph
-              textAlign="center"
-            >
-              Chart
+          {/* FIRST COLUMN: BEST AND WORST PERFORMERS */}
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h4" color="text.primary" paragraph>
+              43
+            </Typography>
+            <Typography variant="h6" color="text.secondary" mt={-1}>
+              Industry Mean
+            </Typography>
+            <Typography variant="h4" color="text.primary" mt={3} paragraph>
+              24/185
+            </Typography>
+            <Typography variant="h6" color="text.secondary" mt={-1}>
+              Industry Ranking
             </Typography>
           </Box>
-        </Container>
-      </Box>
-    );
-  };
-
-  return true ? ( // this would use something equivalent to selectedCompany state
-    renderCompanyData()
-  ) : (
-    <OverviewPrompt />
+          {/* SECOND COLUMN: BEST AND WORST PERFORMERS */}
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h4" color="text.primary" paragraph>
+              90
+            </Typography>
+            <Typography variant="h6" color="text.secondary">
+              Best Performer
+            </Typography>
+            <Typography
+              variant="h4"
+              color="text.primary"
+              sx={{ mt: "16px" }}
+              paragraph
+            >
+              20
+            </Typography>
+            <Typography variant="h6" color="text.secondary">
+              Best Performer
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <Typography
+            variant="h5"
+            color="text.secondary"
+            paragraph
+            textAlign="center"
+          >
+            Chart
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 
