@@ -16,6 +16,7 @@ import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
 import YearsMultiAccordion from "../Components/Accordion/YearsMultiAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
+import useCustomFrameworksData from "../../../hooks/UseCustomFrameworksData";
 
 export const SidebarContext = createContext();
 
@@ -448,7 +449,7 @@ function SingleSidebar({ token }) {
     setErrorMessage("");
   };
 
-  const handleSave = () => {
+  const handleUpdateSelections = () => {
     if (selectedYears.length === 0) {
       return setErrorMessage("Please select at least one year.");
     }
@@ -484,28 +485,13 @@ function SingleSidebar({ token }) {
     return setSuccessMessage("Selections updated successfully.");
   };
 
-  // Show the user's custom frameworks
-  const [customFrameworks, setCustomFrameworks] = useState([]);
-
-  const fetchCustomFrameworks = () => {
-    fetch("/api/custom-frameworks", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCustomFrameworks(data.custom_frameworks);
-      })
-      .catch((error) =>
-        console.error("Error fetching custom frameworks", error)
-      );
-  };
-
-  useEffect(() => {
-    fetchCustomFrameworks();
-    // eslint-disable-next-line
-  }, [token, isCustomFrameworksDialogOpen]);
+  // Update the user's custom frameworks on successful save or when the user manages/deletes them
+  const [saveTrigger, setSaveTrigger] = useState(false);
+  const customFrameworks = useCustomFrameworksData(
+    token,
+    isCustomFrameworksDialogOpen,
+    saveTrigger
+  );
 
   // To save the user's custom framework
   const [saveFrameworkDialogOpen, setSaveFrameworkDialogOpen] = useState(false);
@@ -565,7 +551,7 @@ function SingleSidebar({ token }) {
       setCustomFrameworkName("");
       setCustomFrameworkDescription("");
       setSuccessMessage("Custom framework saved successfully.");
-      fetchCustomFrameworks();
+      setSaveTrigger((prev) => !prev);
     } catch (error) {
       console.error(error);
       setErrorMessage(
@@ -742,7 +728,7 @@ function SingleSidebar({ token }) {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleSave}
+            onClick={handleUpdateSelections}
             sx={{
               width: "150px",
               height: "55px",
