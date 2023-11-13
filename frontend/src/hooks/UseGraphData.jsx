@@ -37,7 +37,6 @@ export function useESGScoresData(token, selectedCompany) {
 }
 
 export function useIndicatorMeanScores(token, indicatorIds) {
-  console.log('id taken', indicatorIds)
   const [indicatorMeanScores, setIndicatorMeanScore] = useState([]);
 
   useEffect(() => {
@@ -52,7 +51,6 @@ export function useIndicatorMeanScores(token, indicatorIds) {
           }
         );
         const data = await response.json();
-        console.log('fetched')
         // Check if the indicator already exists in the state
         const isDuplicate = indicatorMeanScores.some(
           (entry) => entry.label === `#${indicator.toString()} average`

@@ -10,6 +10,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function MultiSelectAccordion({
+  title,
   disabled,
   expanded,
   onToggleDropdown,
@@ -36,7 +37,7 @@ function MultiSelectAccordion({
             textTransform: "uppercase",
           }}
         >
-          Years
+          {title}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

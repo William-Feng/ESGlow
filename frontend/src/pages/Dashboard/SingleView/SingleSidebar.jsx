@@ -636,6 +636,7 @@ function SingleSidebar({ token }) {
           onToggleDropdown={handleChange("panel3")}
         />
         <MultiSelectAccordion
+          title={'Years'}
           disabled={!selectedCompany}
           expanded={expanded.panel4}
           onToggleDropdown={handleChange("panel4")}

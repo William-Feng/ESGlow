@@ -101,17 +101,19 @@ function ComparisonGraph({ token }) {
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
   const { indicatorMeanScores } = useIndicatorMeanScores(token, selectedIndicatorAverage);
-  console.log(selectedIndicatorAverage, indicatorMeanScores)
 
   return (
     <>
         <MultiSelectAccordion
+          title={'Display Indicator Average'}
           disabled={false}
           expanded={expanded}
           onToggleDropdown={(_, isExpanded) => {
             setExpanded(isExpanded);
           }}
-          valuesList={selectedIndicators}
+          valuesList={
+            selectedIndicators.map((indicator) => `#${indicator} average`)
+          }
           handleSelectChange={handleSelectIndicatorChange}
         />
       {isLoading ? (
