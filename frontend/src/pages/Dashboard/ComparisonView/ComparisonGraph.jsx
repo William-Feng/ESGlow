@@ -19,6 +19,12 @@ function ComparisonGraph({ token }) {
   const [expanded, setExpanded] = useState(false);
   const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
   
+  useEffect(() => {
+    setSelectedIndicatorAverage((prev) => {
+      return prev.filter((indicator) => selectedIndicators.includes(indicator));
+    })
+  }, [selectedIndicators]);
+
   const handleSelectIndicatorChange = (indicator) => {
     setSelectedIndicatorAverage((prevIndicators) => {
       var newSelectedIndicatorsList = [];
@@ -95,7 +101,8 @@ function ComparisonGraph({ token }) {
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
   const { indicatorMeanScores } = useIndicatorMeanScores(token, selectedIndicatorAverage);
-  console.log(indicatorMeanScores)
+  console.log(selectedIndicatorAverage, indicatorMeanScores)
+
   return (
     <>
         <MultiSelectAccordion

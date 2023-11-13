@@ -37,6 +37,7 @@ export function useESGScoresData(token, selectedCompany) {
 }
 
 export function useIndicatorMeanScores(token, indicatorIds) {
+  console.log('id taken', indicatorIds)
   const [indicatorMeanScores, setIndicatorMeanScore] = useState([]);
 
   useEffect(() => {
@@ -51,8 +52,7 @@ export function useIndicatorMeanScores(token, indicatorIds) {
           }
         );
         const data = await response.json();
-        console.log(data);
-
+        console.log('fetched')
         // Check if the indicator already exists in the state
         const isDuplicate = indicatorMeanScores.some(
           (entry) => entry.label === `#${indicator.toString()} average`
@@ -75,14 +75,16 @@ export function useIndicatorMeanScores(token, indicatorIds) {
 
     indicatorIds.forEach((i) => {
       fetchHistoricalEsgScoresList(i);
-      // Filter out entries that are not present in indicatorIds
-      setIndicatorMeanScore((prev) =>
-        prev.filter((entry) =>
-          indicatorIds.includes(parseInt(entry.label.match(/\d+/)[0]))
-        )
-      );
-      });
+    });
+
+    setIndicatorMeanScore((prev) => 
+      prev.filter((entry) => 
+        indicatorIds.includes(parseInt(entry.label.match(/\d+/)[0]))
+      )
+    )
+
   }, [token, indicatorIds]);
+
 
   return { indicatorMeanScores };
 }
