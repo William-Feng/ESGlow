@@ -51,35 +51,33 @@ export function useIndicatorMeanScores(token, indicatorIds) {
           }
         );
         const data = await response.json();
-        // Check if the indicator already exists in the state
-        const isDuplicate = indicatorMeanScores.some(
-          (entry) => entry.label === `${data["indicator_name"]} Average`
-        );
 
-        if (!isDuplicate) {
-          // Add a new entry if the indicator is not a duplicate
-          setIndicatorMeanScore((prev) => [
-            ...prev,
-            {
-              data: data["indicator_scores"].map((tuple) => tuple[1]),
-              label: `${data["indicator_name"]} Average`,
-            },
-          ]);
-        }
+        setIndicatorMeanScore((prevScores) => {
+          const isDuplicate = prevScores.some(
+            (entry) =>
+              entry.label === `${data["indicator_name"]} Benchmark Average`
+          );
+          if (!isDuplicate) {
+            return [
+              ...prevScores,
+              {
+                data: data["indicator_scores"].map((tuple) => tuple[1]),
+                label: `${data["indicator_name"]} Benchmark Average`,
+              },
+            ];
+          }
+          return prevScores;
+        });
       } catch (error) {
         console.error("Error fetching indicator mean scores", error);
       }
     };
 
+    setIndicatorMeanScore([]);
     indicatorIds.forEach((i) => {
       fetchHistoricalEsgScoresList(i);
     });
 
-    setIndicatorMeanScore((prev) =>
-      prev.filter((entry) =>
-        indicatorIds.includes(parseInt(entry.label.match(/\d+/)[0]))
-      )
-    );
     // eslint-disable-next-line
   }, [token, indicatorIds]);
 
