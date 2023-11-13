@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -6,6 +6,7 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
+  Radio,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -13,7 +14,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
 
-function IndicatorsAccordion({ disabled, expanded, onToggleDropdown, handleIndicatorsChange }) {
+function IndicatorsAccordion({
+  disabled,
+  expanded,
+  onToggleDropdown,
+  handleIndicatorsChange,
+  multi,
+}) {
   const {
     selectedYear,
     selectedYearRange,
@@ -22,7 +29,11 @@ function IndicatorsAccordion({ disabled, expanded, onToggleDropdown, handleIndic
   } = useContext(ComparisonViewContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
@@ -58,15 +69,26 @@ function IndicatorsAccordion({ disabled, expanded, onToggleDropdown, handleIndic
               >
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      checked={
-                        selectedIndicators.includes(indicator.indicator_id) ||
-                        false
-                      }
-                      onChange={() =>
-                        handleIndicatorsChange(indicator.indicator_id)
-                      }
-                    />
+                    multi === true ? (
+                      <Checkbox
+                        checked={selectedIndicators.includes(
+                          indicator.indicator_id
+                        )}
+                        onChange={() =>
+                          handleIndicatorsChange(indicator.indicator_id)
+                        }
+                      />
+                    ) : (
+                      <Radio
+                        checked={selectedIndicators.includes(
+                          indicator.indicator_id
+                        )}
+                        onChange={() =>
+                          handleIndicatorsChange(indicator.indicator_id)
+                        }
+                        value={indicator.indicator_id}
+                      />
+                    )
                   }
                   label={
                     <Typography style={{ maxWidth: 200, whiteSpace: "normal" }}>

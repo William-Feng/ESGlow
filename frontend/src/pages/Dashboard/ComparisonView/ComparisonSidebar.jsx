@@ -39,13 +39,19 @@ function ComparisonSidebar({ token }) {
   };
 
   const handleIndicatorsChange = (indicatorId) => {
-    setSelectedIndicators((prev) => {
-      if (prev.includes(indicatorId)) {
-        return prev.filter((id) => id !== indicatorId);
-      } else {
-        return [...prev, indicatorId];
-      }
-    });
+    if (dataView === "graph") {
+      // In graph view, only allow one indicator to be selected
+      setSelectedIndicators([indicatorId]);
+    } else {
+      // In table view, allow multiple indicators to be selected
+      setSelectedIndicators((prev) => {
+        if (prev.includes(indicatorId)) {
+          return prev.filter((id) => id !== indicatorId);
+        } else {
+          return [...prev, indicatorId];
+        }
+      });
+    }
   };
 
   return (
@@ -86,13 +92,13 @@ function ComparisonSidebar({ token }) {
       </Box>
       {dataView === "graph" ? (
         <YearsRangeAccordion
-          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          disabled={selectedCompanies.length === 0}
           expanded={expanded.panel1}
           onToggleDropdown={handleChange("panel1")}
         />
       ) : (
         <YearsSingleAccordion
-          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          disabled={selectedCompanies.length === 0}
           expanded={expanded.panel1}
           onToggleDropdown={handleChange("panel1")}
         />
@@ -102,6 +108,7 @@ function ComparisonSidebar({ token }) {
         expanded={expanded.panel2}
         onToggleDropdown={handleChange("panel2")}
         handleIndicatorsChange={handleIndicatorsChange}
+        multi={dataView !== "graph"}
       />
     </Box>
   );
