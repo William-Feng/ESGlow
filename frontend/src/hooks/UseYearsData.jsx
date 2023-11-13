@@ -7,7 +7,7 @@ function useYearsData(token) {
   useEffect(() => {
     const fetchYears = async () => {
       try {
-        const response = await fetch("/api/values/years", {
+        const response = await fetch("/api/years/all", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

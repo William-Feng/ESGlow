@@ -216,6 +216,15 @@ class IndicatorsAll(Resource):
         return all_indicators()
 
 
+@api.route("/api/years/all")
+class AllYears(Resource):
+    @api.response(200, "All years retrieved!")
+    @api.response(401, "Authentication required. Please log in.")
+    @jwt_required()
+    def get(self):
+        return get_years()
+
+
 @api.route("/api/industries/<string:industry_name>")
 class CompaniesByIndustry(Resource):
     @api.response(
@@ -284,7 +293,6 @@ class IndicatorValues(Resource):
 #
 # ===================================================================
 
-
 company_values_model = value_calculations(api)
 
 
@@ -342,15 +350,6 @@ class GraphIndicatorValues(Resource):
     @jwt_required()
     def get(self, indicator_id):
         return get_indicator_graph_values(indicator_id)
-
-
-@api.route("/api/values/years")
-class AllYears(Resource):
-    @api.response(200, "All years retrieved!")
-    @api.response(401, "Authentication required. Please log in.")
-    @jwt_required()
-    def get(self):
-        return get_years()
 
 
 # ===================================================================
