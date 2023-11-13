@@ -1,8 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-function UseIndicatorData(token, selectedCompany, yearsList) {
+function useIndicatorData(token, selectedCompany, yearsList) {
   const [allIndicators, setAllIndicators] = useState([]);
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
+
+  // Fetch the specific indicator values for a company over the years
+  const fetchIndicatorValues = useCallback(
+    async (companyId, indicatorIds) => {
+      try {
+        const response = await fetch(
+          `/api/values/${companyId}/${indicatorIds}/${yearsList.join(",")}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return await response.json();
+      } catch (error) {
+        console.error("Error fetching indicator values:", error);
+        return null;
+      }
+    },
+    [token, yearsList]
+  );
 
   useEffect(() => {
     const fetchIndicators = async () => {
@@ -25,19 +46,9 @@ function UseIndicatorData(token, selectedCompany, yearsList) {
           .map((d) => d.indicator_id)
           .join(",");
 
-        try {
-          const valuesResponse = await fetch(
-            `/api/values/${companyId}/${indicatorIds}/${yearsList.join(",")}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const valuesData = await valuesResponse.json();
+        const valuesData = await fetchIndicatorValues(companyId, indicatorIds);
+        if (valuesData) {
           setAllIndicatorValues(valuesData.values);
-        } catch (error) {
-          console.error("Error fetching indicator values:", error);
         }
       } catch (error) {
         console.error("Error fetching all indicators:", error);
@@ -45,9 +56,9 @@ function UseIndicatorData(token, selectedCompany, yearsList) {
     };
 
     fetchIndicators();
-  }, [token, selectedCompany, yearsList]);
+  }, [token, selectedCompany, yearsList, fetchIndicatorValues]);
 
-  return [allIndicators, allIndicatorValues];
+  return [allIndicators, allIndicatorValues, fetchIndicatorValues];
 }
 
-export default UseIndicatorData;
+export default useIndicatorData;

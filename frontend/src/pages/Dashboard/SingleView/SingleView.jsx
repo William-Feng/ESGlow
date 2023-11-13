@@ -7,8 +7,7 @@ import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import { useEffect, useState, useContext, createContext } from "react";
 import { PageContext } from "../Dashboard";
 import useFrameworkData from "../../../hooks/UseFrameworksData";
-import UseIndicatorData from "../../../hooks/UseIndicatorData";
-import useIndicatorValuesData from "../../../hooks/UseIndicatorValuesData";
+import useIndicatorData from "../../../hooks/UseIndicatorData";
 import useYearsData from "../../../hooks/UseYearsData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
 
@@ -20,7 +19,8 @@ function SingleView({ token }) {
   const [yearsList, selectedYears, setSelectedYears] = useYearsData(token);
   const [selectedIndustry, setSelectedIndustry] = useState();
   const [selectedCompany, setSelectedCompany] = useState(null);
-  const fetchIndicatorValues = useIndicatorValuesData(token);
+  const [allIndicators, allIndicatorValues, fetchIndicatorValues] =
+    useIndicatorData(token, selectedCompany, yearsList);
   const {
     frameworksData,
     selectedFramework,
@@ -42,11 +42,6 @@ function SingleView({ token }) {
   const [savedWeights, setSavedWeights] = useState({});
   const [savedAdditionalIndicatorWeights, setSavedAdditionalIndicatorWeights] =
     useState({});
-  const [allIndicators, allIndicatorValues] = UseIndicatorData(
-    token,
-    selectedCompany,
-    yearsList
-  );
   const [selectedAdditionalIndicators, setSelectedAdditionalIndicators] =
     useState([]);
 
