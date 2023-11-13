@@ -1,9 +1,9 @@
+import { FormControlLabel, Switch } from "@mui/material";
 import * as React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import { CircularProgress } from "@mui/material";
-import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
 import { useIndicatorMeanScores } from "../../../hooks/UseGraphData";
 
 function ComparisonGraph({ token }) {
@@ -16,28 +16,24 @@ function ComparisonGraph({ token }) {
 
   const [currentData, setCurrentData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [expanded, setExpanded] = useState(false);
+  const [showAverage, setShowAverage] = useState(false);
   const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
 
-  useEffect(() => {
-    setSelectedIndicatorAverage((prev) => {
-      return prev.filter((indicator) => selectedIndicators.includes(indicator));
-    });
-  }, [selectedIndicators]);
-
-  const handleSelectIndicatorChange = (indicator) => {
-    setSelectedIndicatorAverage((prevIndicators) => {
-      var newSelectedIndicatorsList = [];
-      if (prevIndicators.includes(indicator)) {
-        newSelectedIndicatorsList = prevIndicators.filter(
-          (i) => i !== indicator
-        );
-      } else {
-        newSelectedIndicatorsList = [...prevIndicators, indicator];
-      }
-      return newSelectedIndicatorsList.sort((a, b) => a - b);
-    });
+  const handleToggleAverage = () => {
+    setShowAverage((prev) => !prev);
+    if (!showAverage) {
+      setSelectedIndicatorAverage(
+        selectedIndicators.length > 0 ? [selectedIndicators[0]] : []
+      );
+    } else {
+      setSelectedIndicatorAverage([]);
+    }
   };
+
+  const { indicatorMeanScores } = useIndicatorMeanScores(
+    token,
+    selectedIndicatorAverage
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -102,22 +98,13 @@ function ComparisonGraph({ token }) {
       });
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  const { indicatorMeanScores } = useIndicatorMeanScores(
-    token,
-    selectedIndicatorAverage
-  );
-
   return (
     <>
-      <MultiSelectAccordion
-        title={"Display Indicator Benchmark Average"}
-        disabled={false}
-        expanded={expanded}
-        onToggleDropdown={(_, isExpanded) => {
-          setExpanded(isExpanded);
-        }}
-        valuesList={selectedIndicators}
-        handleSelectChange={handleSelectIndicatorChange}
+      <FormControlLabel
+        control={
+          <Switch checked={showAverage} onChange={handleToggleAverage} />
+        }
+        label="Display Indicator Benchmark Average"
       />
       {isLoading ? (
         <CircularProgress />
@@ -132,7 +119,7 @@ function ComparisonGraph({ token }) {
                 selectedYearRange.includes(yearsList[index])
               ),
             })),
-            ...indicatorMeanScores,
+            ...(showAverage ? indicatorMeanScores : []),
           ]}
           xAxis={[{ scaleType: "point", data: selectedYearRange }]}
           slotProps={{
