@@ -13,7 +13,7 @@ import { SingleViewContext } from "./SingleView";
 import SnackBarManager from "../Components/Misc/SnackBarManager";
 import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
-import YearsMultiAccordion from "../Components/Accordion/YearsMultiAccordion";
+import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 import SidebarSaveButtons from "../Components/Misc/SidebarSaveButtons";
 import useCustomFrameworksData from "../../../hooks/UseCustomFrameworksData";
@@ -635,12 +635,14 @@ function SingleSidebar({ token }) {
           expanded={expanded.panel3}
           onToggleDropdown={handleChange("panel3")}
         />
-        <YearsMultiAccordion
+        <MultiSelectAccordion
+          title={'Years'}
           disabled={!selectedCompany}
           expanded={expanded.panel4}
           onToggleDropdown={handleChange("panel4")}
-          years={yearsList}
-          handleYearChange={handleYearChange}
+          valuesList={yearsList}
+          handleSelectChange={handleYearChange}
+          allChecked={true}
         />
         <SidebarSaveButtons
           selectedFramework={selectedFramework}
