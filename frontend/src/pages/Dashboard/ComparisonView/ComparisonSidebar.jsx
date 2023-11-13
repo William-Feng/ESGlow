@@ -11,11 +11,16 @@ import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
 import { ComparisonViewContext } from "./ComparisonView";
 
 function ComparisonSidebar({ token }) {
-  const { selectedCompanies, setSelectedIndicators, dataView, setDataView } =
-    useContext(ComparisonViewContext);
+  const {
+    selectedCompanies,
+    selectedIndicators,
+    setSelectedIndicators,
+    dataView,
+    setDataView,
+  } = useContext(ComparisonViewContext);
 
   useEffect(() => {
-    // close accordions upon clearing companies selection
+    // Close accordions upon clearing companies selection
     if (selectedCompanies.length === 0) {
       setExpanded({
         panel1: false,
@@ -53,6 +58,14 @@ function ComparisonSidebar({ token }) {
       });
     }
   };
+
+  useEffect(() => {
+    // When switching to graph view, select only the indicator with the smallest ID
+    if (dataView === "graph" && selectedIndicators.length > 1) {
+      const smallestIndicatorId = Math.min(...selectedIndicators);
+      setSelectedIndicators([smallestIndicatorId]);
+    }
+  }, [dataView, selectedIndicators, setSelectedIndicators]);
 
   return (
     <Box sx={{ paddingBottom: 3, borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
@@ -104,11 +117,11 @@ function ComparisonSidebar({ token }) {
         />
       )}
       <IndicatorsAccordion
+        multi={dataView !== "graph"}
         disabled={selectedCompanies.length === 0}
         expanded={expanded.panel2}
         onToggleDropdown={handleChange("panel2")}
         handleIndicatorsChange={handleIndicatorsChange}
-        multi={dataView !== "graph"}
       />
     </Box>
   );

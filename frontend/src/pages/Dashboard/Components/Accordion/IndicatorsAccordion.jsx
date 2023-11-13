@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -15,11 +15,11 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
 
 function IndicatorsAccordion({
+  multi,
   disabled,
   expanded,
   onToggleDropdown,
   handleIndicatorsChange,
-  multi,
 }) {
   const {
     selectedYear,
