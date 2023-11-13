@@ -2,7 +2,7 @@ import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Components/Misc/Header";
 import SingleViewSearchbar from "./SingleSearchbar";
 import SingleViewSidebar from "./SingleSidebar";
-import SingleViewData from "./SingleData";
+import SingleViewData from "./SingleDataDisplay";
 import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import { useEffect, useState, useContext, createContext } from "react";
 import { PageContext } from "../Dashboard";

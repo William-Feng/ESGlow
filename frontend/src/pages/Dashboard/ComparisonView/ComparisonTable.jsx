@@ -113,7 +113,6 @@ function ComparisonTable({ token }) {
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "10px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}

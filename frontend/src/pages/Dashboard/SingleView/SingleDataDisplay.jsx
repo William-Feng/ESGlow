@@ -11,7 +11,7 @@ import React, { useMemo, useContext, useCallback } from "react";
 import { SingleViewContext } from "./SingleView";
 import DataRow from "../Components/Misc/DataRow";
 
-function SingleData() {
+function SingleDataDisplay() {
   const {
     selectedCompany,
     selectedFramework,
@@ -123,7 +123,7 @@ function SingleData() {
                     background: "#D1EFFF",
                     borderRight: "1px solid",
                     borderColor: "divider",
-                    padding: "10px",
+                    padding: "15px",
                     borderBottom: "2px solid",
                     textAlign: "center",
                   }}
@@ -183,4 +183,4 @@ function SingleData() {
   );
 }
 
-export default SingleData;
+export default SingleDataDisplay;
