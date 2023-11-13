@@ -52,26 +52,31 @@ export function useIndicatorMeanScores(token, indicatorIds) {
         );
         const data = await response.json();
         console.log(data);
-        setIndicatorMeanScore((prev) => {
-          const newIndicatorGraph =
+
+        // Check if the indicator already exists in the state
+        const isDuplicate = indicatorMeanScores.some(
+          (entry) => entry.label === indicator.toString()
+        );
+
+        if (!isDuplicate) {
+          // Add a new entry if the indicator is not a duplicate
+          setIndicatorMeanScore((prev) => [
+            ...prev,
             {
               data: data['indicator_scores'].map((tuple) => tuple[1]),
-              label: indicator.toString()
-            }
-            console.log('new line', newIndicatorGraph)
-          return [ ...prev, newIndicatorGraph]
-        });
-      
+              label: indicator.toString(),
+            },
+          ]);
+        }
       } catch (error) {
         console.error("Error fetching indicator mean scores", error);
       }
-    }
-    
+    };
+
     indicatorIds.forEach((i) => {
       fetchHistoricalEsgScoresList(i);
-    })
+    });
+  }, [token, indicatorIds, indicatorMeanScores]);
 
-  }, [token, indicatorIds]);
-
-  return { indicatorMeanScores }
+  return { indicatorMeanScores };
 }

@@ -94,8 +94,8 @@ function ComparisonGraph({ token }) {
       });
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  const { indicatorAverageGraphs } = useIndicatorMeanScores(token, selectedIndicatorAverage);
-  
+  const { indicatorMeanScores } = useIndicatorMeanScores(token, selectedIndicatorAverage);
+
   return (
     <>
         <MultiSelectAccordion
@@ -113,12 +113,17 @@ function ComparisonGraph({ token }) {
         <LineChart
           height={380}
           margin={{ bottom: 100 }}
-          series={currentData.map((item) => ({
-            label: item.label,
-            data: item.data.filter((_, index) =>
-              selectedYearRange.includes(yearsList[index])
-            ),
-          }))}
+          series={
+            [
+              ...currentData.map((item) => ({
+                label: item.label,
+                data: item.data.filter((_, index) =>
+                  selectedYearRange.includes(yearsList[index])
+                ),
+              })),
+              ...indicatorMeanScores
+            ]
+          }
           xAxis={[{ scaleType: "point", data: selectedYearRange }]}
           slotProps={{
             legend: {
