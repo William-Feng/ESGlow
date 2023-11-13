@@ -1,9 +1,9 @@
+import { FormControlLabel, Switch } from "@mui/material";
 import * as React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import { CircularProgress } from "@mui/material";
-import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
 import { useIndicatorMeanScores } from "../../../hooks/UseGraphData";
 
 function ComparisonGraph({ token }) {
@@ -16,26 +16,27 @@ function ComparisonGraph({ token }) {
 
   const [currentData, setCurrentData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [expanded, setExpanded] = useState(false);
+  const [showAverage, setShowAverage] = useState(false);
   const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
-  
-  useEffect(() => {
-    setSelectedIndicatorAverage((prev) => {
-      return prev.filter((indicator) => selectedIndicators.includes(indicator));
-    })
-  }, [selectedIndicators]);
 
-  const handleSelectIndicatorChange = (indicator) => {
-    setSelectedIndicatorAverage((prevIndicators) => {
-      var newSelectedIndicatorsList = [];
-      if (prevIndicators.includes(indicator)) {
-        newSelectedIndicatorsList = prevIndicators.filter((i) => i !== indicator);
-      } else {
-        newSelectedIndicatorsList = [...prevIndicators, indicator];
-      }
-      return newSelectedIndicatorsList.sort((a, b) => a - b);
-    });
+  useEffect(() => {
+    // Update the average when the selected indicators change or if the switch is toggled
+    if (showAverage && selectedIndicators.length > 0) {
+      setSelectedIndicatorAverage([selectedIndicators[0]]);
+    }
+  }, [selectedIndicators, showAverage]);
+
+  const handleToggleAverage = () => {
+    setShowAverage((prev) => !prev);
+    if (showAverage) {
+      setSelectedIndicatorAverage([]);
+    }
   };
+
+  const { indicatorMeanScores } = useIndicatorMeanScores(
+    token,
+    selectedIndicatorAverage
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -65,10 +66,10 @@ function ComparisonGraph({ token }) {
             const dataValues = data.values;
 
             const indicatorData = {};
-            // Initialize the indicatorData object
+            // Initialise the indicatorData object
             selectedIndicators.forEach((indicatorId) => {
               indicatorData[indicatorId] = {
-                label: `${c.name} #${indicatorId}`,
+                label: `${c.name}`,
                 data: [],
               };
             });
@@ -100,37 +101,36 @@ function ComparisonGraph({ token }) {
       });
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  const { indicatorMeanScores } = useIndicatorMeanScores(token, selectedIndicatorAverage);
-
   return (
     <>
-        <MultiSelectAccordion
-          title={'Display Indicator Average'}
-          disabled={false}
-          expanded={expanded}
-          onToggleDropdown={(_, isExpanded) => {
-            setExpanded(isExpanded);
-          }}
-          valuesList={selectedIndicators}
-          handleSelectChange={handleSelectIndicatorChange}
-        />
+      <FormControlLabel
+        control={
+          <Switch checked={showAverage} onChange={handleToggleAverage} />
+        }
+        label="Display Indicator Benchmark Average"
+      />
       {isLoading ? (
         <CircularProgress />
       ) : (
         <LineChart
-          height={380}
+          height={480}
           margin={{ bottom: 100 }}
-          series={
-            [
-              ...currentData.map((item) => ({
-                label: item.label,
-                data: item.data.filter((_, index) =>
-                  selectedYearRange.includes(yearsList[index])
-                ),
-              })),
-              ...indicatorMeanScores
-            ]
-          }
+          series={[
+            ...currentData.map((item) => ({
+              label: item.label,
+              data: item.data.filter((_, index) =>
+                selectedYearRange.includes(yearsList[index])
+              ),
+            })),
+            ...(showAverage
+              ? indicatorMeanScores.map((item) => ({
+                  label: item.label,
+                  data: item.data.filter((_, index) =>
+                    selectedYearRange.includes(yearsList[index])
+                  ),
+                }))
+              : []),
+          ]}
           xAxis={[{ scaleType: "point", data: selectedYearRange }]}
           slotProps={{
             legend: {

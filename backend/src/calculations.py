@@ -428,7 +428,8 @@ def get_indicator_graph_values(indicator_id):
 
     Return:
         {
-            message: ,
+            message,
+            indicator_name,
             indicator_scores: [(year, score)]
         },
         HTTP Status Code
@@ -443,9 +444,7 @@ def get_indicator_graph_values(indicator_id):
     if not indicator:
         return {"message": "Invalid indicator id provided"}, 400
 
-    # This all years...
     years = get_all_years()
-    # Get all data Values for indicator?
 
     # For each year, find all DataValues with Indicator.
     indicator_years = []
@@ -464,6 +463,7 @@ def get_indicator_graph_values(indicator_id):
 
     return {
         "message": "Graph Values for Indicator Returned!",
+        "indicator_name": indicator.name,
         "indicator_scores": indicator_years,
     }, 200
 

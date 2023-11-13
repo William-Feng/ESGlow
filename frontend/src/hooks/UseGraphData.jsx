@@ -17,10 +17,11 @@ export function useESGScoresData(token, selectedCompany) {
             }
           );
           const data = await response.json();
-          const sortedData = data['year_values'].sort((a, b) => a[0] - b[0]);
-          setEsgScoresYears(sortedData.map(tuple => tuple[0].toString()))
-          setHistoricalEsgScores(sortedData.map(tuple => Math.round(tuple[1])))
-
+          const sortedData = data["year_values"].sort((a, b) => a[0] - b[0]);
+          setEsgScoresYears(sortedData.map((tuple) => tuple[0].toString()));
+          setHistoricalEsgScores(
+            sortedData.map((tuple) => Math.round(tuple[1]))
+          );
         } catch (error) {
           console.error("Error fetching historical ESG Scores", error);
         }
@@ -30,7 +31,6 @@ export function useESGScoresData(token, selectedCompany) {
     if (selectedCompany) {
       fetchHistoricalEsgScoresList();
     }
-
   }, [token, selectedCompany]);
 
   return { historicalEsgScores, EsgScoresYears };
@@ -51,38 +51,35 @@ export function useIndicatorMeanScores(token, indicatorIds) {
           }
         );
         const data = await response.json();
-        // Check if the indicator already exists in the state
-        const isDuplicate = indicatorMeanScores.some(
-          (entry) => entry.label === `#${indicator.toString()} average`
-        );
 
-        if (!isDuplicate) {
-          // Add a new entry if the indicator is not a duplicate
-          setIndicatorMeanScore((prev) => [
-            ...prev,
-            {
-              data: data['indicator_scores'].map((tuple) => tuple[1]),
-              label: `#${indicator.toString()} average`,
-            },
-          ]);
-        }
+        setIndicatorMeanScore((prevScores) => {
+          const isDuplicate = prevScores.some(
+            (entry) =>
+              entry.label === `${data["indicator_name"]} Benchmark Average`
+          );
+          if (!isDuplicate) {
+            return [
+              ...prevScores,
+              {
+                data: data["indicator_scores"].map((tuple) => tuple[1]),
+                label: `${data["indicator_name"]} Benchmark Average`,
+              },
+            ];
+          }
+          return prevScores;
+        });
       } catch (error) {
         console.error("Error fetching indicator mean scores", error);
       }
     };
 
+    setIndicatorMeanScore([]);
     indicatorIds.forEach((i) => {
       fetchHistoricalEsgScoresList(i);
     });
 
-    setIndicatorMeanScore((prev) => 
-      prev.filter((entry) => 
-        indicatorIds.includes(parseInt(entry.label.match(/\d+/)[0]))
-      )
-    )
-
+    // eslint-disable-next-line
   }, [token, indicatorIds]);
-
 
   return { indicatorMeanScores };
 }
