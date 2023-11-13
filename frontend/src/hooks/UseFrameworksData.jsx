@@ -13,21 +13,22 @@ function useFrameworkData(
   const [fixedIndicatorValues, setFixedIndicatorValues] = useState([]);
 
   useEffect(() => {
-    const companyId = selectedCompany ? selectedCompany.company_id : 0;
-    if (!companyId) {
-      setFrameworksData([]);
-      setSelectedFramework(null);
-      setOverviewExpanded(false);
-      return;
-    }
+    const fetchFrameworks = async () => {
+      const companyId = selectedCompany ? selectedCompany.company_id : 0;
+      if (!companyId) {
+        setFrameworksData([]);
+        setSelectedFramework(null);
+        setOverviewExpanded(false);
+        return;
+      }
 
-    fetch(`/api/frameworks/${companyId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+      try {
+        const response = await fetch(`/api/frameworks/${companyId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
         setFrameworksData(data.frameworks);
         setSelectedFramework(null);
         setOverviewExpanded(true);
@@ -39,18 +40,23 @@ function useFrameworkData(
         );
         setSelectedIndicators(allIndicators);
 
-        // Fetch fixed indicator values (doesn't change with sidebar selections)
-        fetchIndicatorValues(
-          companyId,
-          [...new Set(allIndicators)].join(","),
-          yearsList.join(",")
-        )
-          .then((data) => setFixedIndicatorValues(data.values))
-          .catch((error) => console.error(error));
-      })
-      .catch((error) =>
-        console.error("Error fetching frameworks, metrics, indicators:", error)
-      );
+        try {
+          // Fetch fixed indicator values (doesn't change with sidebar selections)
+          const fixedValues = await fetchIndicatorValues(
+            companyId,
+            [...new Set(allIndicators)].join(","),
+            yearsList.join(",")
+          );
+          setFixedIndicatorValues(fixedValues.values);
+        } catch (error) {
+          console.error("Error fetching fixed indicator values:", error);
+        }
+      } catch (error) {
+        console.error("Error fetching frameworks, metrics, indicators:", error);
+      }
+    };
+
+    fetchFrameworks();
   }, [
     token,
     selectedCompany,

@@ -5,40 +5,46 @@ function UseIndicatorData(token, selectedCompany, yearsList) {
   const [allIndicatorValues, setAllIndicatorValues] = useState([]);
 
   useEffect(() => {
-    const companyId = selectedCompany ? selectedCompany.company_id : 0;
-    if (!companyId) {
-      setAllIndicators([]);
-      setAllIndicatorValues([]);
-      return;
-    }
+    const fetchIndicators = async () => {
+      const companyId = selectedCompany ? selectedCompany.company_id : 0;
+      if (!companyId) {
+        setAllIndicators([]);
+        setAllIndicatorValues([]);
+        return;
+      }
 
-    fetch("/api/indicators/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setAllIndicators(data.indicators);
-        const indicatorIds = data.indicators
+      try {
+        const indicatorsResponse = await fetch("/api/indicators/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const indicatorsData = await indicatorsResponse.json();
+        setAllIndicators(indicatorsData.indicators);
+        const indicatorIds = indicatorsData.indicators
           .map((d) => d.indicator_id)
           .join(",");
 
-        fetch(
-          `/api/values/${companyId}/${indicatorIds}/${yearsList.join(",")}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => setAllIndicatorValues(data.values))
-          .catch((error) =>
-            console.error("Error fetching indicator values:", error)
+        try {
+          const valuesResponse = await fetch(
+            `/api/values/${companyId}/${indicatorIds}/${yearsList.join(",")}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
-      })
-      .catch((error) => console.error("Error fetching all indicators:", error));
+          const valuesData = await valuesResponse.json();
+          setAllIndicatorValues(valuesData.values);
+        } catch (error) {
+          console.error("Error fetching indicator values:", error);
+        }
+      } catch (error) {
+        console.error("Error fetching all indicators:", error);
+      }
+    };
+
+    fetchIndicators();
   }, [token, selectedCompany, yearsList]);
 
   return [allIndicators, allIndicatorValues];

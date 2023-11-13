@@ -8,19 +8,18 @@ function useCustomFrameworksData(
   const [customFrameworks, setCustomFrameworks] = useState([]);
 
   useEffect(() => {
-    const fetchCustomFrameworks = () => {
-      fetch("/api/custom-frameworks", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setCustomFrameworks(data.custom_frameworks);
-        })
-        .catch((error) =>
-          console.error("Error fetching custom frameworks", error)
-        );
+    const fetchCustomFrameworks = async () => {
+      try {
+        const response = await fetch("/api/custom-frameworks", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setCustomFrameworks(data.custom_frameworks);
+      } catch (error) {
+        console.error("Error fetching custom frameworks", error);
+      }
     };
 
     fetchCustomFrameworks();

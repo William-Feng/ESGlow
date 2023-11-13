@@ -5,17 +5,22 @@ function useYearsData(token) {
   const [selectedYears, setSelectedYears] = useState([]);
 
   useEffect(() => {
-    fetch("/api/values/years", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchYears = async () => {
+      try {
+        const response = await fetch("/api/values/years", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
         setYearsList(data.years);
         setSelectedYears(data.years);
-      })
-      .catch((error) => console.error("Error fetching years:", error));
+      } catch (error) {
+        console.error("Error fetching years:", error);
+      }
+    };
+
+    fetchYears();
   }, [token]);
 
   return [yearsList, selectedYears, setSelectedYears];
