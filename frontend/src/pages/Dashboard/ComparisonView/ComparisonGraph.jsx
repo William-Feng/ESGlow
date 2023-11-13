@@ -18,18 +18,20 @@ function ComparisonGraph({ token }) {
   const [isLoading, setIsLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
-  
+
   useEffect(() => {
     setSelectedIndicatorAverage((prev) => {
       return prev.filter((indicator) => selectedIndicators.includes(indicator));
-    })
+    });
   }, [selectedIndicators]);
 
   const handleSelectIndicatorChange = (indicator) => {
     setSelectedIndicatorAverage((prevIndicators) => {
       var newSelectedIndicatorsList = [];
       if (prevIndicators.includes(indicator)) {
-        newSelectedIndicatorsList = prevIndicators.filter((i) => i !== indicator);
+        newSelectedIndicatorsList = prevIndicators.filter(
+          (i) => i !== indicator
+        );
       } else {
         newSelectedIndicatorsList = [...prevIndicators, indicator];
       }
@@ -65,10 +67,10 @@ function ComparisonGraph({ token }) {
             const dataValues = data.values;
 
             const indicatorData = {};
-            // Initialize the indicatorData object
+            // Initialise the indicatorData object
             selectedIndicators.forEach((indicatorId) => {
               indicatorData[indicatorId] = {
-                label: `${c.name} #${indicatorId}`,
+                label: `${c.name}`,
                 data: [],
               };
             });
@@ -100,37 +102,38 @@ function ComparisonGraph({ token }) {
       });
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  const { indicatorMeanScores } = useIndicatorMeanScores(token, selectedIndicatorAverage);
+  const { indicatorMeanScores } = useIndicatorMeanScores(
+    token,
+    selectedIndicatorAverage
+  );
 
   return (
     <>
-        <MultiSelectAccordion
-          title={'Display Indicator Average'}
-          disabled={false}
-          expanded={expanded}
-          onToggleDropdown={(_, isExpanded) => {
-            setExpanded(isExpanded);
-          }}
-          valuesList={selectedIndicators}
-          handleSelectChange={handleSelectIndicatorChange}
-        />
+      <MultiSelectAccordion
+        title={"Display Indicator Benchmark Average"}
+        disabled={false}
+        expanded={expanded}
+        onToggleDropdown={(_, isExpanded) => {
+          setExpanded(isExpanded);
+        }}
+        valuesList={selectedIndicators}
+        handleSelectChange={handleSelectIndicatorChange}
+      />
       {isLoading ? (
         <CircularProgress />
       ) : (
         <LineChart
           height={380}
           margin={{ bottom: 100 }}
-          series={
-            [
-              ...currentData.map((item) => ({
-                label: item.label,
-                data: item.data.filter((_, index) =>
-                  selectedYearRange.includes(yearsList[index])
-                ),
-              })),
-              ...indicatorMeanScores
-            ]
-          }
+          series={[
+            ...currentData.map((item) => ({
+              label: item.label,
+              data: item.data.filter((_, index) =>
+                selectedYearRange.includes(yearsList[index])
+              ),
+            })),
+            ...indicatorMeanScores,
+          ]}
           xAxis={[{ scaleType: "point", data: selectedYearRange }]}
           slotProps={{
             legend: {

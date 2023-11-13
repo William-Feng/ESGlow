@@ -53,7 +53,7 @@ export function useIndicatorMeanScores(token, indicatorIds) {
         const data = await response.json();
         // Check if the indicator already exists in the state
         const isDuplicate = indicatorMeanScores.some(
-          (entry) => entry.label === `#${indicator.toString()} average`
+          (entry) => entry.label === `${data["indicator_name"]} Average`
         );
 
         if (!isDuplicate) {
@@ -62,7 +62,7 @@ export function useIndicatorMeanScores(token, indicatorIds) {
             ...prev,
             {
               data: data["indicator_scores"].map((tuple) => tuple[1]),
-              label: `#${indicator.toString()} average`,
+              label: `${data["indicator_name"]} Average`,
             },
           ]);
         }
