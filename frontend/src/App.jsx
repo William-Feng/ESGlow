@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import CssBaseLine from "@mui/material/CssBaseline";
-import StartPage from "./pages/Login/StartPage";
+import Landing from "./pages/Login/Landing";
 import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
@@ -20,27 +20,27 @@ function App() {
         <Route
           exact
           path="/"
-          element={<StartPage page={"login"} onSuccess={manageTokenSet} />}
+          element={<Landing page={"login"} onSuccess={manageTokenSet} />}
         />
         <Route
           path="/register"
-          element={<StartPage page={"register"} onSuccess={manageTokenSet} />}
+          element={<Landing page={"register"} onSuccess={manageTokenSet} />}
         />
         <Route
-          path="/resetPassword"
-          element={<StartPage page={"resetPassword"} />}
+          path="/reset-password"
+          element={<Landing page={"reset-password"} />}
         />
         <Route
-          path="/resetPassword/verify"
-          element={<StartPage page={"resetVerify"} />}
+          path="/reset-password/verify"
+          element={<Landing page={"reset-verify"} />}
         />
         <Route
-          path="/resetPassword/setNewPassword"
-          element={<StartPage page={"resetNewPW"} />}
+          path="/reset-password/set"
+          element={<Landing page={"reset-new-password"} />}
         />
         <Route
-          path="/resetPassword/success"
-          element={<StartPage page={"resetSuccess"} />}
+          path="/reset-password/success"
+          element={<Landing page={"reset-success"} />}
         />
         <Route
           path="/dashboard"

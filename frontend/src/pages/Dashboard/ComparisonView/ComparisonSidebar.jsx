@@ -10,14 +10,9 @@ import YearsRangeAccordion from "../Components/Accordion/YearsRangeAccordion";
 import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
 import { ComparisonViewContext } from "./ComparisonView";
 
-
 function ComparisonSidebar({ token }) {
-  const {
-    selectedCompanies,
-    setSelectedIndicators,
-    dataView,
-    setDataView
-  } = useContext(ComparisonViewContext);
+  const { selectedCompanies, setSelectedIndicators, dataView, setDataView } =
+    useContext(ComparisonViewContext);
 
   useEffect(() => {
     // close accordions upon clearing companies selection
@@ -54,8 +49,8 @@ function ComparisonSidebar({ token }) {
   };
 
   return (
-    <Box sx={{ paddingBottom: 3 }}>
-      <Box sx={{ textAlign: 'center', m: '15px' }}>
+    <Box sx={{ paddingBottom: 3, borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
+      <Box sx={{ textAlign: "center", m: "15px" }}>
         <ToggleButtonGroup
           value={dataView}
           exclusive
@@ -64,7 +59,7 @@ function ComparisonSidebar({ token }) {
           aria-label="table view"
           sx={{
             backgroundColor: "#E8E8E8",
-            m: 'auto'
+            m: "auto",
           }}
         >
           <ToggleButton
@@ -73,10 +68,7 @@ function ComparisonSidebar({ token }) {
               backgroundColor: dataView === "table" ? "#B0C4DE !important" : "",
             }}
           >
-            <Typography
-              variant="body4"
-              textAlign="center"
-            >
+            <Typography variant="body4" textAlign="center">
               Table View
             </Typography>
           </ToggleButton>
@@ -86,34 +78,31 @@ function ComparisonSidebar({ token }) {
               backgroundColor: dataView === "graph" ? "#B0C4DE !important" : "",
             }}
           >
-            <Typography
-              variant="body4"
-              textAlign="center"
-            >
+            <Typography variant="body4" textAlign="center">
               Graph View
             </Typography>
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
-        { dataView === 'graph' ? (
-          <YearsRangeAccordion
-            disabled={selectedCompanies.length === 0} // Depending on some sort of selection
-            expanded={expanded.panel1}
-            onToggleDropdown={handleChange("panel1")}
-          />
-        ) : (
-          <YearsSingleAccordion
-            disabled={selectedCompanies.length === 0} // Depending on some sort of selection
-            expanded={expanded.panel1}
-            onToggleDropdown={handleChange("panel1")}
-          />
-        )}
-        <IndicatorsAccordion
-          disabled={selectedCompanies.length === 0}
-          expanded={expanded.panel2}
-          onToggleDropdown={handleChange("panel2")}
-          handleIndicatorsChange={handleIndicatorsChange}
+      {dataView === "graph" ? (
+        <YearsRangeAccordion
+          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          expanded={expanded.panel1}
+          onToggleDropdown={handleChange("panel1")}
         />
+      ) : (
+        <YearsSingleAccordion
+          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          expanded={expanded.panel1}
+          onToggleDropdown={handleChange("panel1")}
+        />
+      )}
+      <IndicatorsAccordion
+        disabled={selectedCompanies.length === 0}
+        expanded={expanded.panel2}
+        onToggleDropdown={handleChange("panel2")}
+        handleIndicatorsChange={handleIndicatorsChange}
+      />
     </Box>
   );
 }

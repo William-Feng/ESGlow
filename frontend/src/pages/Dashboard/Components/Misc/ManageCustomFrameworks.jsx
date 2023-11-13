@@ -12,10 +12,9 @@ import {
   IconButton,
   Tooltip,
   Box,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SnackBarManager from "./SnackBarManager";
 
 function ManageCustomFrameworks({ open, onClose, token }) {
   const [customFrameworks, setCustomFrameworks] = useState([]);
@@ -56,10 +55,6 @@ function ManageCustomFrameworks({ open, onClose, token }) {
         }
       })
       .catch((error) => console.error("Error deleting framework", error));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSuccessMessage("");
   };
 
   return (
@@ -123,14 +118,11 @@ function ManageCustomFrameworks({ open, onClose, token }) {
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={!!successMessage}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert severity="success">{successMessage}</Alert>
-      </Snackbar>
+      <SnackBarManager
+        position={"bottom"}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
+      />
     </Dialog>
   );
 }

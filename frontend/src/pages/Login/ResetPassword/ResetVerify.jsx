@@ -1,24 +1,13 @@
 import React from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Link,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
 
 function ResetVerify({ email }) {
   const [code, setCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
-  const handleCloseSnackbar = () => {
-    setErrorMessage("");
-  };
 
   const submitVerificationCode = async () => {
     if (code.length === 0) {
@@ -39,7 +28,7 @@ function ResetVerify({ email }) {
 
     const data = await response.json();
     if (response.status === 200) {
-      navigate("/resetPassword/setNewPassword");
+      navigate("/reset-password/set");
     } else {
       return setErrorMessage(data.message);
     }
@@ -80,7 +69,6 @@ function ResetVerify({ email }) {
         >
           Enter the verification code sent to {email}.
         </Typography>
-
         <TextField
           margin="normal"
           required
@@ -93,7 +81,6 @@ function ResetVerify({ email }) {
           onChange={(e) => setCode(e.target.value)}
           variant="standard"
         />
-
         <Button
           type="submit"
           fullWidth
@@ -103,16 +90,11 @@ function ResetVerify({ email }) {
         >
           Verify
         </Button>
-
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert severity="error">{errorMessage}</Alert>
-        </Snackbar>
-
+        <SnackBarManager
+          position={"top"}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
         <Box mt={2} textAlign="center">
           <Typography variant="body2" color="textSecondary">
             Go back to{" "}

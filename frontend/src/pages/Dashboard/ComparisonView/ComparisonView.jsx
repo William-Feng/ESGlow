@@ -1,11 +1,13 @@
 import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
-import Header from "../Header";
+import Header from "../Components/Misc/Header";
 import ComparisonSearchbar from "./ComparisonSearchbar";
 import ComparisonSidebar from "./ComparisonSidebar";
 import ComparisonDataDisplay from "./ComparisonDataDisplay";
 import { useContext, createContext, useState, useEffect } from "react";
 import { PageContext } from "../Dashboard";
 import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
+import useIndicatorData from "../../../hooks/UseIndicatorData";
+import useYearsData from "../../../hooks/UseYearsData";
 
 export const ComparisonViewContext = createContext();
 
@@ -14,57 +16,29 @@ function ComparisonView({ token }) {
   const [overviewExpanded, setOverviewExpanded] = useState(false);
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]); // user selected single year ; TABLE VIEW
-  const [selectedYearRange, setSelectedYearRange] = useState([]); // user selected year range; GRAPH VIEW
-  const [yearsList, setYearsList] = useState([]); // SET range of years data available for the companies
+  // User selected single year in table view
+  const [selectedYear, setSelectedYear] = useState([]);
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]);
+  // List of years available for selection, user selected year range in graph view
+  const [yearsList, selectedYearRange, setSelectedYearRange] =
+    useYearsData(token);
+  const [indicatorsList] = useIndicatorData(
+    token,
+    selectedCompanies.length > 0 ? selectedCompanies[0] : null,
+    selectedYearRange
+  );
 
-  // Call fetch on all indicator IDs only once upon load
   useEffect(() => {
-
-    fetch("/api/indicators/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setIndicatorsList(data.indicators);
-      });
-
-    // Fetch all available years of data
-    fetch("/api/values/years", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setYearsList(data.years);
-        setSelectedYearRange(data.years);
-      })
-      .catch((error) => {
-        if (error !== "No years found") {
-          console.error("There was an error fetching the years.", error);
-        }
-      });
-
-  }, [token]);
-
-  // for every new company selection:
-  useEffect(() => {
-    // clearing company searchbar clears the sidebar selected
+    // Clearing company searchbar clears the sidebar selections
     if (selectedCompanies.length === 0) {
-      setSelectedYear([])
-      setSelectedIndicators([])
+      setSelectedYear([]);
+      setSelectedIndicators([]);
       setOverviewExpanded(false);
       return;
     }
-    // open overview accordion
+    // Open overview accordion
     setOverviewExpanded(true);
-
-  }, [token, selectedCompanies])
+  }, [token, selectedCompanies]);
 
   return (
     <>
@@ -84,7 +58,7 @@ function ComparisonView({ token }) {
             indicatorsList,
             yearsList,
             dataView,
-            setDataView
+            setDataView,
           }}
         >
           <CssBaseline />
@@ -118,7 +92,7 @@ function ComparisonView({ token }) {
               flexDirection: "column",
             }}
           >
-            <OverviewAccordion 
+            <OverviewAccordion
               isSingleView={false}
               isDisabled={!selectedCompanies.length}
               overviewExpanded={overviewExpanded}
@@ -143,7 +117,8 @@ function ComparisonView({ token }) {
                     boxSizing: "border-box",
                     overflowY: "auto",
                     maxHeight: "100%",
-                    // backgroundColor: frameworksData ? "transparent" : "#f5f5f5",
+                    backgroundColor:
+                      selectedCompanies.length > 0 ? "transparent" : "#f5f5f5",
                   },
                 }}
                 variant="permanent"

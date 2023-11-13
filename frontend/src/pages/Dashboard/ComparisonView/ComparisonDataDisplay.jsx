@@ -1,24 +1,17 @@
-import {
-  Box,
-  Typography
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import ComparisonTable from "./ComparisonTable";
 import ComparisonGraph from "./ComparisonGraph";
 
 function ComparisonDataDisplay({ token }) {
-  const {
-    dataView,
-    selectedCompanies,
-    selectedYear,
-    selectedIndicators,
-  } = useContext(ComparisonViewContext);
+  const { dataView, selectedCompanies, selectedYear, selectedIndicators } =
+    useContext(ComparisonViewContext);
 
   if (
-    selectedCompanies.length === 0
-    || selectedIndicators.length === 0
-    || (!selectedYear.length && dataView === 'table')
+    selectedCompanies.length === 0 ||
+    selectedIndicators.length === 0 ||
+    (!selectedYear.length && dataView === "table")
   ) {
     return (
       <Box
@@ -32,10 +25,10 @@ function ComparisonDataDisplay({ token }) {
       >
         <Typography variant="h6" color="text.secondary">
           {selectedCompanies.length === 0
-            ? "Please select one or more companies to see the ESG data."
-            : (dataView === 'table' && selectedYear.length === 0)
-            ? "Please select a year to see the ESG data."
-            : "Please select one or more indicators to see the ESG data"}
+            ? "Please select at least one company to view the ESG data."
+            : dataView === "table" && selectedYear.length === 0
+            ? "Please select a year to view the ESG data."
+            : "Please select at least one indicator to view the ESG data"}
         </Typography>
       </Box>
     );
@@ -49,10 +42,10 @@ function ComparisonDataDisplay({ token }) {
         width: "100%",
       }}
     >
-      {dataView === 'table' ? (
-        <ComparisonTable token={token}/>
+      {dataView === "table" ? (
+        <ComparisonTable token={token} />
       ) : (
-        <ComparisonGraph token={token}/>
+        <ComparisonGraph token={token} />
       )}
     </Box>
   );

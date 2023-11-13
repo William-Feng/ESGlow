@@ -1,8 +1,9 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
-import OverviewPrompt from "../Components/Prompts/OverviewPrompt";
+import useIndustryData from "../../../hooks/UseIndustryData";
+import RecentESGScores from "../../../utils/RecentESGScores";
 
 function SingleOverview({ token }) {
   const {
@@ -12,137 +13,24 @@ function SingleOverview({ token }) {
     fixedIndicatorValues,
   } = useContext(SingleViewContext);
 
-  const [industryMean, setIndustryMean] = useState(0);
-  const [industryRanking, setIndustryRanking] = useState("");
-
-  // Fetch industry mean and ranking
-  useEffect(() => {
-    fetch("/api/industries/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!selectedIndustry) {
-          return;
-        }
-        const industryId = data.industries.indexOf(selectedIndustry) + 1;
-        fetch(`/api/values/industry/${industryId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            setIndustryMean(data.average_score);
-          });
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the industry information.",
-          error
-        )
-      );
-
-    if (!selectedCompany) {
-      return
-    }
-    fetch(`/api/values/ranking/company/${selectedCompany.company_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setIndustryRanking(`${data.ranking}/${data.industry_company_count}`);
-      });
-    // eslint-disable-next-line
-  }, [selectedCompany]);
-
-  const getRecentESGScores = () => {
-    if (!frameworksData) {
-      return [];
-    }
-    let ESGScoreList = [];
-
-    // Iterate over the frameworks in the array.
-    frameworksData.forEach((framework) => {
-      let frameworkScore = 0;
-      const { framework_name } = framework;
-
-      // Map to store the most recent year's indicator values by indicator_id
-      const mostRecentIndicatorValues = new Map();
-
-      // Iterate through fixedIndicatorValues to find the most recent values for each indicator_id
-      fixedIndicatorValues.forEach((indicatorValue) => {
-        if (
-          !mostRecentIndicatorValues.has(indicatorValue.indicator_id) ||
-          indicatorValue.year >
-            mostRecentIndicatorValues.get(indicatorValue.indicator_id).year
-        ) {
-          mostRecentIndicatorValues.set(
-            indicatorValue.indicator_id,
-            indicatorValue
-          );
-        }
-      });
-
-      // Calculate each metric score
-      framework.metrics.forEach((metric) => {
-        const { predefined_weight, indicators } = metric;
-        const metricScore = indicators.reduce((accumulator, indicator) => {
-          const indicatorValue = mostRecentIndicatorValues.get(
-            indicator.indicator_id
-          );
-
-          if (indicatorValue) {
-            const indicatorScore =
-              indicatorValue.value * indicator.predefined_weight;
-            return accumulator + indicatorScore;
-          }
-
-          return accumulator;
-        }, 0);
-
-        frameworkScore += predefined_weight * metricScore;
-      });
-
-      // Find most recent year and only calculate values based on that year
-      const mostRecentYear = [...mostRecentIndicatorValues.values()].reduce(
-        (maxYear, indicatorValue) => {
-          return Math.max(maxYear, indicatorValue.year);
-        },
-        -Infinity
-      );
-
-      ESGScoreList.push({
-        framework_name,
-        year: mostRecentYear,
-        score: Math.round(frameworkScore),
-      });
-    });
-
-    return ESGScoreList;
-  };
+  const { industryMean, industryRanking } = useIndustryData(
+    token,
+    selectedIndustry,
+    selectedCompany
+  );
 
   // Company has been selected, so display the company's details
   const renderCompanyData = () => {
-    const scoreList = getRecentESGScores();
+    const scoreList = RecentESGScores(frameworksData, fixedIndicatorValues);
     const filteredFrameworksScores = scoreList.filter(
       (framework) =>
         framework.year === Math.max(...scoreList.map((f) => f.year))
     );
 
-    // Assuming all objects have the same year
-    const year = filteredFrameworksScores[0].year;
-    const toolTipStringIntro =
-      `The ESG Rating is calculated by averaging` +
-      ` ${year} data of the following framework scores:\n`;
-
+    const toolTipStringIntro = `The ESG Rating is calculated by averaging the most recent framework scores:\n`;
     const toolTipStringList = filteredFrameworksScores.map((item, index) => (
       <span key={index}>
-        - {item.framework_name}: <strong>{item.score}</strong>
+        - {item.framework_name}: <strong>{item.score}</strong> ({item.year})
       </span>
     ));
 
@@ -219,7 +107,7 @@ function SingleOverview({ token }) {
                 </Typography>
                 <Tooltip
                   title={
-                    <Typography variant="body2" sx={{ fontSize: "1rem" }}>
+                    <Typography variant="body2">
                       {toolTipStringIntro}
                       {toolTipStringList.map((str) => (
                         <Typography
@@ -263,7 +151,7 @@ function SingleOverview({ token }) {
               }}
             >
               <Typography variant="h4" color="text.primary" paragraph>
-                {industryMean}
+                {industryMean.toFixed(1)}
               </Typography>
               <Typography variant="h6" color="text.secondary" mt={-1}>
                 Industry Mean
@@ -291,11 +179,7 @@ function SingleOverview({ token }) {
     );
   };
 
-  return frameworksData && selectedCompany ? (
-    renderCompanyData()
-  ) : (
-    <OverviewPrompt />
-  );
+  return frameworksData && selectedCompany ? renderCompanyData() : null;
 }
 
 export default SingleOverview;

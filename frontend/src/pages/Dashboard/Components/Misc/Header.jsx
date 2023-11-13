@@ -1,8 +1,8 @@
 import { Box, Typography, Button, Avatar, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ManageCustomFrameworks from "./Components/ManageCustomFrameworks";
-import Logo from "../../assets/Logo.png";
+import ManageCustomFrameworks from "./ManageCustomFrameworks";
+import Logo from "../../../../assets/Logo.png";
 
 function Header({
   token,
@@ -32,9 +32,10 @@ function Header({
       .then((data) => {
         setName(data.name);
       })
-      .catch((error) =>
-        console.error("There was an error fetching the user's name.", error)
-      );
+      .catch((error) => {
+        console.error("There was an error fetching the user's name.", error);
+        navigate("/");
+      });
   }, [token, navigate]);
 
   const [anchorElUser, setAnchorElUser] = useState(null);

@@ -6,8 +6,10 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
+import useCompanyData from "../../../hooks/UseCompanyData";
+import useIndustryData from "../../../hooks/UseIndustryData";
 
 function SingleSearchbar({ token }) {
   const {
@@ -19,67 +21,8 @@ function SingleSearchbar({ token }) {
     setView,
   } = useContext(SingleViewContext);
 
-  const [industryList, setIndustryList] = useState([]);
-  const [companyList, setCompanyList] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/industries/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setIndustryList(data.industries);
-      })
-      .catch((error) =>
-        console.error(
-          "There was an error fetching the industry information.",
-          error
-        )
-      );
-  }, [token]);
-
-  useEffect(() => {
-    // Once an industry has been selected, fetch the companies for that industry
-    if (selectedIndustry) {
-      fetch(`/api/industries/${selectedIndustry}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Halt the chain if there are no companies for the selected industry
-          if (data.companies.length === 0) {
-            setCompanyList([]);
-            return Promise.reject("No companies found for selected industry");
-          }
-          const companyIds = data.companies.join(",");
-          // Fetch the company information
-          return fetch(`/api/companies/${companyIds}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          setCompanyList(data.companies);
-        })
-        .catch((error) => {
-          if (error !== "No companies found for the selected industry") {
-            console.error(
-              "There was an error fetching the company information.",
-              error
-            );
-          }
-        });
-    } else {
-      // Reset to null if no industry is selected
-      setCompanyList([]);
-    }
-  }, [selectedIndustry, token]);
+  const { industryList } = useIndustryData(token, null, null);
+  const companyList = useCompanyData(selectedIndustry, token);
 
   return (
     <Box
@@ -94,7 +37,6 @@ function SingleSearchbar({ token }) {
         disablePortal
         onChange={(_, i) => {
           setSelectedIndustry(i || null);
-          setCompanyList([]);
           setSelectedCompany(null);
         }}
         options={industryList}
@@ -143,12 +85,12 @@ function SingleSearchbar({ token }) {
             variant="body4"
             textAlign="center"
             sx={{
-              fontSize: "14px", // Default font size
+              fontSize: "14px",
               "@media (min-width: 768px)": {
-                fontSize: "10px", // Adjust font size for screens wider than 768px
+                fontSize: "10px",
               },
               "@media (min-width: 1024px)": {
-                fontSize: "14px", // Adjust font size for screens wider than 1024px
+                fontSize: "14px",
               },
             }}
           >
