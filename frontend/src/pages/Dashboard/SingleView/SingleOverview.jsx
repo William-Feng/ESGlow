@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Tooltip } from "@mui/material";
+import { Box, Container, Typography, Tooltip, CircularProgress } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
@@ -180,7 +180,7 @@ function SingleOverview({ token }) {
                 xAxis={[{ scaleType: 'point', data: EsgScoresYears }]}
               />
             ) : (
-              <Typography variant="body2">No historical ESG scores available.</Typography>
+              <CircularProgress />
             )}
           </Box>
         </Container>

@@ -3,6 +3,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import { CircularProgress } from "@mui/material";
+import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
 
 function ComparisonGraph({ token }) {
   const {
@@ -14,6 +15,8 @@ function ComparisonGraph({ token }) {
 
   const [currentData, setCurrentData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -78,8 +81,19 @@ function ComparisonGraph({ token }) {
       });
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
+  console.log(selectedIndicatorAverage)
+  
   return (
     <>
+        <MultiSelectAccordion
+          disabled={false}
+          expanded={expanded}
+          onToggleDropdown={(_, isExpanded) => {
+            setExpanded(isExpanded);
+          }}
+          valuesList={selectedIndicators}
+          handleSelectChange={setSelectedIndicatorAverage}
+        />
       {isLoading ? (
         <CircularProgress />
       ) : (

@@ -9,13 +9,14 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-function YearsMultiAccordion({
+function MultiSelectAccordion({
   disabled,
   expanded,
   onToggleDropdown,
-  years,
-  handleYearChange,
+  valuesList,
+  handleSelectChange,
   borderRequired,
+  allChecked
 }) {
   return (
     <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
@@ -48,17 +49,17 @@ function YearsMultiAccordion({
             px: 2,
           }}
         >
-          {years.map((year) => (
+          {valuesList.map((value) => (
             <FormControlLabel
-              key={year}
-              value={year}
+              key={value}
+              value={value}
               control={
                 <Checkbox
-                  defaultChecked
-                  onChange={() => handleYearChange(year)}
+                  defaultChecked={allChecked || false}
+                  onChange={() => handleSelectChange(value)}
                 />
               }
-              label={<Typography fontWeight="bold">{year}</Typography>}
+              label={<Typography fontWeight="bold">{value}</Typography>}
               sx={{
                 display: "flex",
                 justifyContent: "flex-start",
@@ -71,4 +72,4 @@ function YearsMultiAccordion({
   );
 }
 
-export default YearsMultiAccordion;
+export default MultiSelectAccordion;
