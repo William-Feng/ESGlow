@@ -28,7 +28,9 @@ function ComparisonDataDisplay({ token }) {
             ? "Please select at least one company to view the ESG data."
             : dataView === "table" && selectedYear.length === 0
             ? "Please select a year to view the ESG data."
-            : "Please select at least one indicator to view the ESG data"}
+            : dataView === "table"
+            ? "Please select at least one indicator to view the ESG data."
+            : "Please select one indicator to view the ESG data"}
         </Typography>
       </Box>
     );

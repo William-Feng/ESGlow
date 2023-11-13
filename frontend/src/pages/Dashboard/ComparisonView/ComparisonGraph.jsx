@@ -19,13 +19,16 @@ function ComparisonGraph({ token }) {
   const [showAverage, setShowAverage] = useState(false);
   const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
 
+  useEffect(() => {
+    // Update the average when the selected indicators change or if the switch is toggled
+    if (showAverage && selectedIndicators.length > 0) {
+      setSelectedIndicatorAverage([selectedIndicators[0]]);
+    }
+  }, [selectedIndicators, showAverage]);
+
   const handleToggleAverage = () => {
     setShowAverage((prev) => !prev);
-    if (!showAverage) {
-      setSelectedIndicatorAverage(
-        selectedIndicators.length > 0 ? [selectedIndicators[0]] : []
-      );
-    } else {
+    if (showAverage) {
       setSelectedIndicatorAverage([]);
     }
   };
