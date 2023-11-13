@@ -55,7 +55,7 @@ export function useIndicatorMeanScores(token, indicatorIds) {
 
         // Check if the indicator already exists in the state
         const isDuplicate = indicatorMeanScores.some(
-          (entry) => entry.label === indicator.toString()
+          (entry) => entry.label === `#${indicator.toString()} average`
         );
 
         if (!isDuplicate) {
@@ -64,7 +64,7 @@ export function useIndicatorMeanScores(token, indicatorIds) {
             ...prev,
             {
               data: data['indicator_scores'].map((tuple) => tuple[1]),
-              label: indicator.toString(),
+              label: `#${indicator.toString()} average`,
             },
           ]);
         }
@@ -75,8 +75,14 @@ export function useIndicatorMeanScores(token, indicatorIds) {
 
     indicatorIds.forEach((i) => {
       fetchHistoricalEsgScoresList(i);
-    });
-  }, [token, indicatorIds, indicatorMeanScores]);
+      // Filter out entries that are not present in indicatorIds
+      setIndicatorMeanScore((prev) =>
+        prev.filter((entry) =>
+          indicatorIds.includes(parseInt(entry.label.match(/\d+/)[0]))
+        )
+      );
+      });
+  }, [token, indicatorIds]);
 
   return { indicatorMeanScores };
 }
