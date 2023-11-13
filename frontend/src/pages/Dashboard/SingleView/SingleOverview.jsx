@@ -1,9 +1,11 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
+import { LineChart } from "@mui/x-charts/LineChart";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import useIndustryData from "../../../hooks/UseIndustryData";
 import RecentESGScores from "../../../utils/RecentESGScores";
+import useESGScoresData from "../../../hooks/UseESGScoresData";
 
 function SingleOverview({ token }) {
   const {
@@ -16,6 +18,11 @@ function SingleOverview({ token }) {
   const { industryMean, industryRanking } = useIndustryData(
     token,
     selectedIndustry,
+    selectedCompany
+  );
+  
+  const { historicalEsgScores, EsgScoresYears } = useESGScoresData(
+    token,
     selectedCompany
   );
 
@@ -165,14 +172,16 @@ function SingleOverview({ token }) {
             </Box>
           </Box>
           <Box sx={{ flex: 1 }}>
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              paragraph
-              textAlign="center"
-            >
-              Chart
-            </Typography>
+            {historicalEsgScores && historicalEsgScores.length > 0 ? (
+              <LineChart
+                width={300}
+                height={220}
+                series={[{ data: historicalEsgScores, label: 'ESG Score' }]}
+                xAxis={[{ scaleType: 'point', data: EsgScoresYears }]}
+              />
+            ) : (
+              <Typography variant="body2">No historical ESG scores available.</Typography>
+            )}
           </Box>
         </Container>
       </Box>
