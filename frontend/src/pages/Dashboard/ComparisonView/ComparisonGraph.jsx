@@ -113,7 +113,7 @@ function ComparisonGraph({ token }) {
         <CircularProgress />
       ) : (
         <LineChart
-          height={380}
+          height={480}
           margin={{ bottom: 100 }}
           series={[
             ...currentData.map((item) => ({
@@ -122,7 +122,14 @@ function ComparisonGraph({ token }) {
                 selectedYearRange.includes(yearsList[index])
               ),
             })),
-            ...(showAverage ? indicatorMeanScores : []),
+            ...(showAverage
+              ? indicatorMeanScores.map((item) => ({
+                  label: item.label,
+                  data: item.data.filter((_, index) =>
+                    selectedYearRange.includes(yearsList[index])
+                  ),
+                }))
+              : []),
           ]}
           xAxis={[{ scaleType: "point", data: selectedYearRange }]}
           slotProps={{
