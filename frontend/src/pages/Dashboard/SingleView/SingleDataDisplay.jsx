@@ -90,14 +90,16 @@ function SingleDataDisplay() {
     // Group filteredData by indicator_id
     const groupedData = filteredData.reduce((acc, row) => {
       const { indicator_id, indicator_name, value } = row;
-  
+
       const indicator = allIndicators.find(
         (indicator) => indicator.indicator_id === row.indicator_id
       );
       const source = indicator ? indicator.indicator_source || "" : "";
-  
-      const existingGroup = acc.find((group) => group.indicator_id === indicator_id);
-  
+
+      const existingGroup = acc.find(
+        (group) => group.indicator_id === indicator_id
+      );
+
       if (!existingGroup) {
         acc.push({
           indicator_id,
@@ -108,21 +110,23 @@ function SingleDataDisplay() {
       } else {
         existingGroup.values.push(value);
       }
-  
+
       return acc;
     }, []);
-  
+
     // Group additionalIndicatorsData by indicator_id
     const groupedExtraData = additionalIndicatorsData.reduce((acc, row) => {
       const { indicator_id, indicator_name, value } = row;
-  
+
       const indicator = allIndicators.find(
         (indicator) => indicator.indicator_id === row.indicator_id
       );
       const source = indicator ? indicator.indicator_source || "" : "";
-  
-      const existingGroup = acc.find((group) => group.indicator_id === indicator_id);
-  
+
+      const existingGroup = acc.find(
+        (group) => group.indicator_id === indicator_id
+      );
+
       if (!existingGroup) {
         acc.push({
           indicator_id,
@@ -133,27 +137,25 @@ function SingleDataDisplay() {
       } else {
         existingGroup.values.push(value);
       }
-  
+
       return acc;
     }, []);
-  
-    // Combine groupedData and groupedExtraData
-    const combinedGroupedData = [...groupedData, ...groupedExtraData];
-  
+
     // Convert combinedGroupedData to CSV content
+    const combinedGroupedData = [...groupedData, ...groupedExtraData];
     const csvContent = [
       "Indicator,Source," + selectedYears.join(","),
       ...combinedGroupedData.map((row) =>
         [row.indicator_name, row.source, ...row.values].join(",")
       ),
     ].join("\n");
-  
+
     // Create and trigger download
     const blob = new Blob([csvContent], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    const companyName = selectedCompany.name.replace(/\s+/g, '_');
-    link.download = `${companyName}_ESG_data.csv`;
+    const companyName = selectedCompany.name.replace(/\s+/g, "_");
+    link.download = `${companyName}_ESG_Data.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

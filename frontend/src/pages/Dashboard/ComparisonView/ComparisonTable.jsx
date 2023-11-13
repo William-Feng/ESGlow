@@ -1,12 +1,13 @@
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 
 function ComparisonTable({ token }) {
@@ -79,6 +80,33 @@ function ComparisonTable({ token }) {
     yearsList,
     dataView,
   ]);
+
+  // Download data display table as CSV
+  const handleDownloadCSV = () => {
+    // Convert currentData to CSV content
+    const header = [
+      "Indicator",
+      ...selectedCompanies.map((company) => company.name),
+    ];
+    const rows = Object.values(currentData).map((entry) => [
+      entry.name,
+      ...selectedCompanies.map((company) => entry[company.company_id] || null),
+    ]);
+
+    const csvContent = [header, ...rows].map((row) => row.join(",")).join("\n");
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    const companies = selectedCompanies
+      .map((company) => company.name.replace(/\s+/g, "_"))
+      .join("_");
+    link.download = `${companies}_${selectedYear}_ESG_Data.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -160,6 +188,27 @@ function ComparisonTable({ token }) {
             ))}
           </TableBody>
         </Table>
+        <Box
+          sx={{
+            pt: 3,
+            display: "flex",
+            float: "left",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDownloadCSV}
+            sx={{
+              width: "150px",
+              height: "55px",
+              whiteSpace: "normal",
+              textAlign: "center",
+            }}
+          >
+            Download
+          </Button>
+        </Box>
       </Box>
     </>
   );
