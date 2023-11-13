@@ -111,9 +111,7 @@ function ComparisonGraph({ token }) {
           onToggleDropdown={(_, isExpanded) => {
             setExpanded(isExpanded);
           }}
-          valuesList={
-            selectedIndicators.map((indicator) => `#${indicator} average`)
-          }
+          valuesList={selectedIndicators}
           handleSelectChange={handleSelectIndicatorChange}
         />
       {isLoading ? (
