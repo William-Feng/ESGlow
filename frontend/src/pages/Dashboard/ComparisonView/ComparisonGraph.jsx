@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import { CircularProgress } from "@mui/material";
 import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
+import { useIndicatorMeanScores } from "../../../hooks/UseGraphData";
 
 function ComparisonGraph({ token }) {
   const {
@@ -17,6 +18,18 @@ function ComparisonGraph({ token }) {
   const [isLoading, setIsLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [selectedIndicatorAverage, setSelectedIndicatorAverage] = useState([]);
+
+  const handleSelectIndicatorChange = (indicator) => {
+    setSelectedIndicatorAverage((prevIndicators) => {
+      var newSelectedIndicatorsList = [];
+      if (prevIndicators.includes(indicator)) {
+        newSelectedIndicatorsList = prevIndicators.filter((i) => i !== indicator);
+      } else {
+        newSelectedIndicatorsList = [...prevIndicators, indicator];
+      }
+      return newSelectedIndicatorsList.sort((a, b) => a - b);
+    });
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -81,7 +94,7 @@ function ComparisonGraph({ token }) {
       });
   }, [token, selectedCompanies, selectedIndicators, yearsList]);
 
-  console.log(selectedIndicatorAverage)
+  const { indicatorAverageGraphs } = useIndicatorMeanScores(token, selectedIndicatorAverage);
   
   return (
     <>
@@ -92,7 +105,7 @@ function ComparisonGraph({ token }) {
             setExpanded(isExpanded);
           }}
           valuesList={selectedIndicators}
-          handleSelectChange={setSelectedIndicatorAverage}
+          handleSelectChange={handleSelectIndicatorChange}
         />
       {isLoading ? (
         <CircularProgress />

@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import useIndustryData from "../../../hooks/UseIndustryData";
 import RecentESGScores from "../../../utils/RecentESGScores";
-import useESGScoresData from "../../../hooks/UseESGScoresData";
+import { useESGScoresData } from "../../../hooks/UseGraphData";
 
 function SingleOverview({ token }) {
   const {
