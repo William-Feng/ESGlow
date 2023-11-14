@@ -11,11 +11,16 @@ import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
 import { ComparisonViewContext } from "./ComparisonView";
 
 function ComparisonSidebar({ token }) {
-  const { selectedCompanies, setSelectedIndicators, dataView, setDataView } =
-    useContext(ComparisonViewContext);
+  const {
+    selectedCompanies,
+    selectedIndicators,
+    setSelectedIndicators,
+    dataView,
+    setDataView,
+  } = useContext(ComparisonViewContext);
 
   useEffect(() => {
-    // close accordions upon clearing companies selection
+    // Close accordions upon clearing companies selection
     if (selectedCompanies.length === 0) {
       setExpanded({
         panel1: false,
@@ -39,14 +44,28 @@ function ComparisonSidebar({ token }) {
   };
 
   const handleIndicatorsChange = (indicatorId) => {
-    setSelectedIndicators((prev) => {
-      if (prev.includes(indicatorId)) {
-        return prev.filter((id) => id !== indicatorId);
-      } else {
-        return [...prev, indicatorId];
-      }
-    });
+    if (dataView === "graph") {
+      // In graph view, only allow one indicator to be selected
+      setSelectedIndicators([indicatorId]);
+    } else {
+      // In table view, allow multiple indicators to be selected
+      setSelectedIndicators((prev) => {
+        if (prev.includes(indicatorId)) {
+          return prev.filter((id) => id !== indicatorId);
+        } else {
+          return [...prev, indicatorId];
+        }
+      });
+    }
   };
+
+  useEffect(() => {
+    // When switching to graph view, select only the indicator with the smallest ID
+    if (dataView === "graph" && selectedIndicators.length > 1) {
+      const smallestIndicatorId = Math.min(...selectedIndicators);
+      setSelectedIndicators([smallestIndicatorId]);
+    }
+  }, [dataView, selectedIndicators, setSelectedIndicators]);
 
   return (
     <Box sx={{ paddingBottom: 3, borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
@@ -86,18 +105,19 @@ function ComparisonSidebar({ token }) {
       </Box>
       {dataView === "graph" ? (
         <YearsRangeAccordion
-          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          disabled={selectedCompanies.length === 0}
           expanded={expanded.panel1}
           onToggleDropdown={handleChange("panel1")}
         />
       ) : (
         <YearsSingleAccordion
-          disabled={selectedCompanies.length === 0} // Depending on some sort of selection
+          disabled={selectedCompanies.length === 0}
           expanded={expanded.panel1}
           onToggleDropdown={handleChange("panel1")}
         />
       )}
       <IndicatorsAccordion
+        multi={dataView !== "graph"}
         disabled={selectedCompanies.length === 0}
         expanded={expanded.panel2}
         onToggleDropdown={handleChange("panel2")}
