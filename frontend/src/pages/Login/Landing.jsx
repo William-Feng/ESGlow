@@ -11,6 +11,8 @@ import ResetInputEmail from "./ResetPassword/ResetInputEmail";
 import ResetVerify from "./ResetPassword/ResetVerify";
 import ResetNew from "./ResetPassword/ResetNew";
 import ResetSuccess from "./ResetPassword/ResetSuccess";
+import { maxWidthMedium } from "../../styles/viewportSizes";
+import { headingFont, iconCaptionFont, logoFont, logoSizeStyle } from "../../styles/fontStyle";
 
 function Landing({ page, onSuccess }) {
   const [email, setEmail] = useState(localStorage.getItem("email"));
@@ -29,7 +31,7 @@ function Landing({ page, onSuccess }) {
       <Grid
         item
         xs={12}
-        sm={8}
+        sm={12}
         md={8}
         sx={{
           background: "linear-gradient(135deg, #3A719B, #2C5274, #1C365A)",
@@ -43,13 +45,7 @@ function Landing({ page, onSuccess }) {
         <Typography
           variant="h1"
           color="white"
-          sx={{
-            fontWeight: 700,
-            letterSpacing: "0.2rem",
-            textAlign: "center",
-            fontSize: "5rem",
-            textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)",
-          }}
+          sx={logoFont}
         >
           ESGlow
         </Typography>
@@ -57,10 +53,13 @@ function Landing({ page, onSuccess }) {
           component="img"
           src={Logo}
           alt="ESGlow Logo"
-          sx={{ width: "200px", marginBottom: "1rem" }}
+          sx={logoSizeStyle}
         />
-
-        <Typography variant="h3" color="white" mb={2}>
+        <Typography
+          sx={headingFont}
+          color="white"
+          mb={2}
+        >
           Empower Your Investments
         </Typography>
         <Typography
@@ -69,6 +68,11 @@ function Landing({ page, onSuccess }) {
           mb={2}
           fontWeight="300"
           textAlign="center"
+          sx={{
+            "@media (max-width: 425px)": {
+              display: "none",
+            },
+          }}
         >
           With ESGlow, venture beyond mere numbers. Harness the power of an
           intuitive design with digestible ESG data tailored just for you.
@@ -76,7 +80,11 @@ function Landing({ page, onSuccess }) {
           decisions!
         </Typography>
 
-        <Grid container spacing={8} justifyContent="center">
+        <Box
+          container
+          justifyContent="center"
+          sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
+        >
           <Grid
             item
             sx={{
@@ -98,10 +106,7 @@ function Landing({ page, onSuccess }) {
               variant="body1"
               color="white"
               mt={1}
-              sx={{
-                maxWidth: "200px",
-                textAlign: "center",
-              }}
+              sx={iconCaptionFont}
             >
               Profound Corporate Insights
             </Typography>
@@ -127,10 +132,7 @@ function Landing({ page, onSuccess }) {
               variant="body1"
               color="white"
               mt={1}
-              sx={{
-                maxWidth: "200px",
-                textAlign: "center",
-              }}
+              sx={iconCaptionFont}
             >
               Benchmark Company Performance
             </Typography>
@@ -156,21 +158,18 @@ function Landing({ page, onSuccess }) {
               variant="body1"
               color="white"
               mt={1}
-              sx={{
-                maxWidth: "200px",
-                textAlign: "center",
-              }}
+              sx={iconCaptionFont}
             >
               Personalised Data Interpretations
             </Typography>
           </Grid>
-        </Grid>
+        </Box>
       </Grid>
 
       <Grid
         item
         xs={12}
-        sm={4}
+        sm={12}
         md={4}
         sx={{
           display: "flex",
