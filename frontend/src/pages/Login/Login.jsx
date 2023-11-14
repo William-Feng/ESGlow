@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
 import { landingPageBoxStyle } from "../../styles/componentStyle";
+import { landingPageLinkFont } from "../../styles/fontStyle";
 
 function Login({ onSuccess }) {
   const [email, setEmail] = useState("");
@@ -49,7 +50,7 @@ function Login({ onSuccess }) {
       <Typography variant="h4" gutterBottom>
         Welcome Back!
       </Typography>
-      <Typography variant="subtitle1" color="textSecondary" mb={4}>
+      <Typography variant="subtitle1" color="textSecondary" mb={3}>
         Log in to access your dashboard
       </Typography>
       <Box
@@ -85,9 +86,15 @@ function Login({ onSuccess }) {
           autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
           variant="standard"
+          sx={{ height: '2em' }}
         />
-        <Box mt={2}>
-          <Link href="/reset-password" variant="body2" color="textSecondary">
+        <Box mt={4}>
+          <Link
+            href="/reset-password"
+            variant="body2"
+            color="textSecondary"
+            sx={landingPageLinkFont}
+          >
             Forgot password?
           </Link>
         </Box>
@@ -96,14 +103,20 @@ function Login({ onSuccess }) {
           fullWidth
           variant="contained"
           color="primary"
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 3, mb: 2, maxHeight: '10vh' }}
         >
           Log In
         </Button>
         <Box mt={2} textAlign="center">
-          <Typography variant="body2" color="textSecondary">
+          <Typography variant="body1" color="textSecondary">
             Don't have an account?{" "}
-            <Link href="/register" color="primary" underline="hover">
+            <br/>
+            <Link
+              href="/register"
+              color="primary"
+              underline="hover"
+              sx={landingPageLinkFont}
+            >
               Register here
             </Link>
           </Typography>

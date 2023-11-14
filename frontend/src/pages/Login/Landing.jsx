@@ -11,7 +11,6 @@ import ResetInputEmail from "./ResetPassword/ResetInputEmail";
 import ResetVerify from "./ResetPassword/ResetVerify";
 import ResetNew from "./ResetPassword/ResetNew";
 import ResetSuccess from "./ResetPassword/ResetSuccess";
-import { maxWidthMedium } from "../../styles/viewportSizes";
 import { headingFont, iconCaptionFont, logoFont, logoSizeStyle } from "../../styles/fontStyle";
 
 function Landing({ page, onSuccess }) {

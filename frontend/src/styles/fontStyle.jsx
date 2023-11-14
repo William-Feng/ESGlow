@@ -55,3 +55,7 @@ export const toggleButtonStyle = {
     fontSize: "20px",
   },
 };
+
+export const landingPageLinkFont = {
+  fontSize: "1rem",
+}
