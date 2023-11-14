@@ -384,7 +384,7 @@ def get_company_year_scores(company):
     )
 
     years = sorted([year[0] for year in years])
-    print(years)
+    # print(years)
     # Calculate the data values of each indicator, then the data values of all metrics.
     for year in years:
         metric_values = {}
