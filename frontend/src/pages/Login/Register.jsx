@@ -2,6 +2,7 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
+import { landingPageBoxStyle } from "../../styles/componentStyle";
 
 function Register({ onSuccess }) {
   const [name, setName] = useState("");
@@ -57,13 +58,7 @@ function Register({ onSuccess }) {
 
   return (
     <Box
-      sx={{
-        my: 8,
-        mx: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      sx={landingPageBoxStyle}
     >
       <SnackBarManager
         position={"top"}

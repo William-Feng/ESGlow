@@ -2,6 +2,7 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
+import { landingPageBoxStyle } from "../../styles/componentStyle";
 
 function Login({ onSuccess }) {
   const [email, setEmail] = useState("");
@@ -38,13 +39,7 @@ function Login({ onSuccess }) {
 
   return (
     <Box
-      sx={{
-        my: 8,
-        mx: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      sx={landingPageBoxStyle}
     >
       <SnackBarManager
         position={"top"}

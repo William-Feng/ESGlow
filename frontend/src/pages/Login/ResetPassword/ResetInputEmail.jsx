@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
+import { landingPageBoxStyle } from "../../../styles/componentStyle";
 
 function ResetInputEmail({ setter }) {
   const [email, setEmail] = useState("");
@@ -48,13 +49,7 @@ function ResetInputEmail({ setter }) {
 
   return (
     <Box
-      sx={{
-        my: 8,
-        mx: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      sx={landingPageBoxStyle}
     >
       <SnackBarManager
         position={"top"}

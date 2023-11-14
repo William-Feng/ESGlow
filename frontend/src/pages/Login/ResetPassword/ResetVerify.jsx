@@ -3,6 +3,7 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
+import { landingPageBoxStyle } from "../../../styles/componentStyle";
 
 function ResetVerify({ email }) {
   const [code, setCode] = useState("");
@@ -36,13 +37,7 @@ function ResetVerify({ email }) {
 
   return (
     <Box
-      sx={{
-        my: 8,
-        mx: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      sx={landingPageBoxStyle}
     >
       <Typography variant="h4" gutterBottom>
         Verify Your Code

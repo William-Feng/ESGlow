@@ -36,3 +36,13 @@ export const overviewStyle = {
   display: "flex",
   flexDirection: "column",
 }
+
+// Below are Landing Page styles
+
+export const landingPageBoxStyle = {
+  my: 8,
+  mx: 4,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+}
