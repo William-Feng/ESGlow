@@ -14,6 +14,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function FrameworkAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
@@ -50,12 +51,7 @@ function FrameworkAccordion({ disabled, expanded, onToggleDropdown }) {
         sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           Frameworks
         </Typography>

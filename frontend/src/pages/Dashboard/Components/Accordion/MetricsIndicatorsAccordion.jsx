@@ -13,6 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
@@ -38,12 +39,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
         id="panel2bh-header"
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           Metrics & Indicators
         </Typography>

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function MultiSelectAccordion({
   title,
@@ -30,12 +31,7 @@ function MultiSelectAccordion({
         }}
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           {title}
         </Typography>
