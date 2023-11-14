@@ -10,6 +10,7 @@ import useFrameworkData from "../../../hooks/UseFrameworksData";
 import useIndicatorData from "../../../hooks/UseIndicatorData";
 import useYearsData from "../../../hooks/UseYearsData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
+import { appBarStyle, drawerBoxStyle, drawerStyle, overviewStyle } from "../../../styles/componentStyle";
 
 export const SingleViewContext = createContext();
 
@@ -159,12 +160,7 @@ function SingleView({ token }) {
             position="fixed"
             color="inherit"
             elevation={0}
-            sx={{
-              background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
-              boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-              height: 128,
-              zIndex: (theme) => theme.zIndex.drawer + 1,
-            }}
+            sx={appBarStyle}
           >
             <Toolbar>
               <Header
@@ -180,15 +176,7 @@ function SingleView({ token }) {
             </Toolbar>
           </AppBar>
           <Box
-            sx={{
-              position: "fixed",
-              top: "128px",
-              width: "100%",
-              height: "calc(100vh - 128px)",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-            }}
+            sx={overviewStyle}
           >
             <OverviewAccordion
               isSingleView={true}
@@ -198,28 +186,10 @@ function SingleView({ token }) {
               token={token}
             />
             <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "row",
-                overflowY: "auto",
-              }}
+              sx={drawerBoxStyle}
             >
               <Drawer
-                sx={{
-                  width: 360,
-                  flexShrink: 0,
-                  "& .MuiDrawer-paper": {
-                    position: "static",
-                    width: 360,
-                    boxSizing: "border-box",
-                    overflowY: "auto",
-                    maxHeight: "100%",
-                    backgroundColor: selectedCompany
-                      ? "transparent"
-                      : "#f5f5f5",
-                  },
-                }}
+                sx={drawerStyle(selectedCompany)}
                 variant="permanent"
                 anchor="left"
               >
