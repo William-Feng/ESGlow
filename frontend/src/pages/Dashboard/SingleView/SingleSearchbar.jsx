@@ -10,7 +10,11 @@ import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import useCompanyData from "../../../hooks/UseCompanyData";
 import useIndustryData from "../../../hooks/UseIndustryData";
-import { toggleButtonStyle } from "../../../styles/fontStyle";
+import { toggleButtonStyle } from "../../../styles/componentStyle";
+import {
+  searchBarBoxStyle,
+  searchBarStyle,
+} from "../../../styles/componentStyle";
 
 function SingleSearchbar({ token }) {
   const {
@@ -26,14 +30,7 @@ function SingleSearchbar({ token }) {
   const companyList = useCompanyData(selectedIndustry, token);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 5,
-      }}
-    >
+    <Box sx={searchBarBoxStyle}>
       <Autocomplete
         disablePortal
         onChange={(_, i) => {
@@ -41,12 +38,8 @@ function SingleSearchbar({ token }) {
           setSelectedCompany(null);
         }}
         options={industryList}
-        sx={{
-          width: "300px",
-          backgroundColor: "white",
-          borderRadius: 1,
-        }}
-        renderInput={(params) => <TextField {...params} label="Industry" />}
+        sx={searchBarStyle}
+        renderInput={(params) => <TextField {...params} label='Industry' />}
       />
       <Autocomplete
         disablePortal
@@ -61,46 +54,37 @@ function SingleSearchbar({ token }) {
           selectedIndustry ? "No options available" : "Select an industry first"
         }
         sx={{
-          width: "300px",
+          ...searchBarStyle,
           backgroundColor: selectedIndustry ? "white" : "#E8E8E8",
-          borderRadius: 1,
         }}
-        renderInput={(params) => <TextField {...params} label="Company" />}
+        renderInput={(params) => <TextField {...params} label='Company' />}
       />
       <ToggleButtonGroup
         value={view}
         exclusive
         onChange={(e) => setView(e.currentTarget.value)}
-        aria-label="company view"
+        aria-label='company view'
         sx={{
           backgroundColor: "white",
         }}
       >
         <ToggleButton
-          value="single"
+          value='single'
           sx={{
             backgroundColor: view === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography
-            variant="body4"
-            textAlign="center"
-            sx={toggleButtonStyle}
-          >
-            Single Company View
+          <Typography variant='body4' textAlign='center' sx={toggleButtonStyle}>
+            Single View
           </Typography>
         </ToggleButton>
         <ToggleButton
-          value="multiple"
+          value='multiple'
           sx={{
             backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography
-            variant="body4"
-            textAlign="center"
-            sx={toggleButtonStyle}
-          >
+          <Typography variant='body4' textAlign='center' sx={toggleButtonStyle}>
             Comparison View
           </Typography>
         </ToggleButton>

@@ -10,7 +10,12 @@ import useFrameworkData from "../../../hooks/UseFrameworksData";
 import useIndicatorData from "../../../hooks/UseIndicatorData";
 import useYearsData from "../../../hooks/UseYearsData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
-import { appBarStyle, drawerBoxStyle, drawerStyle, overviewStyle } from "../../../styles/componentStyle";
+import {
+  appBarStyle,
+  drawerBoxStyle,
+  drawerStyle,
+  overviewStyle,
+} from "../../../styles/componentStyle";
 
 export const SingleViewContext = createContext();
 
@@ -157,10 +162,10 @@ function SingleView({ token }) {
           <CssBaseline />
           <AppBar
             enableColorOnDark
-            position="fixed"
-            color="inherit"
+            position='fixed'
+            color='inherit'
             elevation={0}
-            sx={appBarStyle}
+            sx={appBarStyle(true)}
           >
             <Toolbar>
               <Header
@@ -175,9 +180,7 @@ function SingleView({ token }) {
               <SingleViewSearchbar token={token} />
             </Toolbar>
           </AppBar>
-          <Box
-            sx={overviewStyle}
-          >
+          <Box sx={overviewStyle}>
             <OverviewAccordion
               isSingleView={true}
               isDisabled={!selectedCompany}
@@ -185,13 +188,11 @@ function SingleView({ token }) {
               setOverviewExpanded={setOverviewExpanded}
               token={token}
             />
-            <Box
-              sx={drawerBoxStyle}
-            >
+            <Box sx={drawerBoxStyle}>
               <Drawer
                 sx={drawerStyle(selectedCompany)}
-                variant="permanent"
-                anchor="left"
+                variant='permanent'
+                anchor='left'
               >
                 <SingleViewSidebar token={token} />
               </Drawer>

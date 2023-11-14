@@ -1,9 +1,25 @@
-export const appBarStyle = {
-  background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
-  boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-  height: 128,
-  zIndex: (theme) => theme.zIndex.drawer + 1,
-}
+import { bigDashboard, mediumDashboard, smallDashboard } from "./viewportSizes";
+
+export const appBarStyle = (isSingleView) => {
+  const baseStyle = {
+    background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
+    boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
+    height: 128,
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  };
+
+  if (isSingleView) {
+    baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
+      height: '300px',
+    };
+  } else {
+    baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
+      height: '200px',
+    };
+  }
+
+  return baseStyle;
+};
 
 export const drawerStyle = (isCompanySelected) => {
   return {
@@ -45,4 +61,39 @@ export const landingPageBoxStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+}
+
+// Below are Dashboard component styles
+
+export const toggleButtonStyle = {
+  fontSize: "13px",
+  [`@media (max-width: ${bigDashboard}px)`]: {
+    fontSize: "10px",
+  },
+  [`@media (max-width: ${mediumDashboard}px)`]: {
+    fontSize: "1rem",
+  },
+  [`@media (max-width: ${smallDashboard}px)`]: {
+    fontSize: "2.5vw",
+  },
+};
+
+export const searchBarBoxStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 5,
+  [`@media (max-width: ${mediumDashboard}px)`]: {
+    flexDirection: 'column',
+    gap: 2,
+  },
+}
+
+export const searchBarStyle = {
+  width: "300px",
+  backgroundColor: "white",
+  borderRadius: 1,
+  [`@media (max-width: ${mediumDashboard}px)`]: {
+    width: "70vw"
+  },
 }

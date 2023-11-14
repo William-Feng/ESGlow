@@ -11,7 +11,8 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useEffect, useState, useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
-import { toggleButtonStyle } from "../../../styles/fontStyle";
+import { toggleButtonStyle } from "../../../styles/componentStyle";
+import { searchBarBoxStyle, searchBarStyle } from "../../../styles/componentStyle";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -50,12 +51,7 @@ function ComparisonSearchbar({ token }) {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 5,
-      }}
+      sx={searchBarBoxStyle}
     >
       <Autocomplete
         disablePortal
@@ -80,11 +76,7 @@ function ComparisonSearchbar({ token }) {
           </li>
         )}
         noOptionsText={"No options available"}
-        sx={{
-          width: "340px",
-          backgroundColor: "white",
-          borderRadius: 1,
-        }}
+        sx={searchBarStyle}
         renderInput={(params) => <TextField {...params} label="Company" />}
       />
       <ToggleButtonGroup

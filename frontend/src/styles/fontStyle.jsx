@@ -1,4 +1,7 @@
-import { maxWidthMedium, maxWidthSmall } from "./viewportSizes";
+import {
+  maxWidthMedium,
+  maxWidthSmall,
+} from "./viewportSizes";
 
 export const logoFont = {
   fontWeight: 700,
@@ -6,25 +9,25 @@ export const logoFont = {
   textAlign: "center",
   fontSize: "5rem",
   textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)",
-  mb: '5px',
+  mb: "5px",
   [`@media (max-width: ${maxWidthMedium}px)`]: {
     fontSize: "3rem",
-    mb: '20px',
+    mb: "20px",
   },
 };
 
 export const logoSizeStyle = {
   width: "200px",
   marginBottom: "1rem",
-  maxWidth: "100%", 
-  height: "auto", 
+  maxWidth: "100%",
+  height: "auto",
   [`@media (max-width: ${maxWidthSmall}px)`]: {
-    width: "150px",  
+    width: "150px",
   },
 };
 
 export const headingFont = {
-  textAlign: 'center',
+  textAlign: "center",
   fontSize: "2.5rem",
   [`@media (max-width: ${maxWidthMedium}px)`]: {
     fontSize: "2rem",
@@ -38,7 +41,7 @@ export const iconCaptionFont = {
   maxWidth: "200px",
   textAlign: "center",
   [`@media (max-width: ${maxWidthSmall}px)`]: {
-    display: 'none',
+    display: "none",
   },
 };
 
@@ -49,13 +52,6 @@ export const accordionSummaryFont = {
   textTransform: "uppercase",
 };
 
-export const toggleButtonStyle = {
-  fontSize: "14px",
-  [`@media (max-width: ${maxWidthMedium}px)`]: {
-    fontSize: "20px",
-  },
-};
-
 export const landingPageLinkFont = {
   fontSize: "1rem",
-}
+};

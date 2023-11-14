@@ -68,7 +68,7 @@ function ComparisonView({ token }) {
             position="fixed"
             color="inherit"
             elevation={0}
-            sx={appBarStyle}
+            sx={appBarStyle(false)}
           >
             <Toolbar>
               <Header token={token} />
