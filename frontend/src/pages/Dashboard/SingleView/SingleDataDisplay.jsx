@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -84,6 +85,28 @@ function SingleDataDisplay() {
     );
   }
 
+  // Download data display table as CSV
+  const handleDownloadCSV = () => {
+    const data = [...structuredData, ...structuredExtraData];
+    const csvContent = [
+      "Indicator,Source," + selectedYears.join(","),
+      ...data.map((row) => {
+        const years = selectedYears.map((year) => row[year] || "");
+        return [row.name, row.source, ...years].join(",");
+      }),
+    ].join("\n");
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    const companyName = selectedCompany.name.replace(/\s+/g, "_");
+    link.download = `${companyName}_ESG_Data.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Box
       sx={{
@@ -156,6 +179,27 @@ function SingleDataDisplay() {
             ))}
           </TableBody>
         </Table>
+      </Box>
+      <Box
+        sx={{
+          pt: 3,
+          display: "flex",
+          float: "left",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleDownloadCSV}
+          sx={{
+            width: "150px",
+            height: "55px",
+            whiteSpace: "normal",
+            textAlign: "center",
+          }}
+        >
+          Download
+        </Button>
       </Box>
       <Box
         sx={{

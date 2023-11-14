@@ -1,13 +1,17 @@
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 function ComparisonTable({ token }) {
   const {
@@ -15,6 +19,7 @@ function ComparisonTable({ token }) {
     selectedCompanies,
     selectedYear,
     selectedIndicators,
+    indicatorsList,
     yearsList,
   } = useContext(ComparisonViewContext);
 
@@ -47,8 +52,13 @@ function ComparisonTable({ token }) {
             const dataValues = data.values;
             dataValues.forEach((indicatorInfo) => {
               if (!newData[indicatorInfo.indicator_id]) {
+                const indicator_source = indicatorsList.find(
+                  (indicator) =>
+                    indicator.indicator_id === indicatorInfo.indicator_id
+                )?.indicator_source;
                 newData[indicatorInfo.indicator_id] = {
                   name: indicatorInfo.indicator_name,
+                  source: indicator_source,
                 };
               }
               newData[indicatorInfo.indicator_id][c.company_id] =
@@ -76,9 +86,39 @@ function ComparisonTable({ token }) {
     selectedCompanies,
     selectedIndicators,
     selectedYear,
+    indicatorsList,
     yearsList,
     dataView,
   ]);
+
+  // Download data display table as CSV
+  const handleDownloadCSV = () => {
+    // Convert currentData to CSV content
+    const header = [
+      "Indicator",
+      "Source",
+      ...selectedCompanies.map((company) => company.name),
+    ];
+    const rows = Object.values(currentData).map((entry) => [
+      entry.name,
+      entry.source,
+      ...selectedCompanies.map((company) => entry[company.company_id] || null),
+    ]);
+
+    const csvContent = [header, ...rows].map((row) => row.join(",")).join("\n");
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    const companies = selectedCompanies
+      .map((company) => company.name.replace(/\s+/g, "_"))
+      .join("_");
+    link.download = `${companies}_${selectedYear}_ESG_Data.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -139,9 +179,54 @@ function ComparisonTable({ token }) {
                     borderRight: "1px solid",
                     borderColor: "divider",
                     fontSize: "1.1em",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
                   {row.name}
+                  <Tooltip
+                    title={
+                      <React.Fragment>
+                        {row.source.split(";").map((source, index) => {
+                          // Splitting the source string into three parts: the source number, name and description
+                          const [sourceNumber, sourceRest] =
+                            source.split(/:(.+)/);
+                          const [sourceName, sourceDescription] =
+                            sourceRest.split(/\((.+)/);
+
+                          return (
+                            <div
+                              key={index}
+                              style={{
+                                marginBottom:
+                                  index < row.source.split(";").length - 1
+                                    ? 10
+                                    : 0,
+                              }}
+                            >
+                              <Typography
+                                component="span"
+                                style={{ fontStyle: "italic" }}
+                              >
+                                {sourceNumber.trim()}:
+                              </Typography>{" "}
+                              <Typography
+                                component="span"
+                                style={{ fontWeight: "bold" }}
+                              >
+                                {sourceName.trim()}
+                              </Typography>
+                              {" (" + sourceDescription.trim()}
+                            </div>
+                          );
+                        })}
+                      </React.Fragment>
+                    }
+                    sx={{ marginLeft: "4px" }}
+                  >
+                    <InfoOutlinedIcon style={{ cursor: "pointer" }} />
+                  </Tooltip>
                 </TableCell>
                 {selectedCompanies.map((company) => (
                   <TableCell
@@ -160,6 +245,27 @@ function ComparisonTable({ token }) {
             ))}
           </TableBody>
         </Table>
+        <Box
+          sx={{
+            pt: 3,
+            display: "flex",
+            float: "left",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDownloadCSV}
+            sx={{
+              width: "150px",
+              height: "55px",
+              whiteSpace: "normal",
+              textAlign: "center",
+            }}
+          >
+            Download
+          </Button>
+        </Box>
       </Box>
     </>
   );
