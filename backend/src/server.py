@@ -15,14 +15,12 @@ from .frameworks import (
     get_custom_frameworks,
     delete_custom_framework
 )
-from .models import (
-    user_authentication_models,
-    password_reset_models,
-    all_industry_company_framework_indicator_models,
-    specific_industry_company_models,
-    framework_metric_indicator_models,
-    value_calculations,
-    custom_framework_models,
+from .models import(
+    AuthModels,
+    PasswordResetModels,
+    InfoModels,
+    DataModels,
+    CustomFrameworkModels
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
@@ -45,13 +43,11 @@ jwt = JWTManager()
 #
 # ===================================================================
 
-user_model, register_model, login_model = user_authentication_models(api)
-
 
 @api.route("/api/register")
 class Register(Resource):
-    @api.expect(user_model, validate=True)
-    @api.response(200, "User created successfully!", model=register_model)
+    @api.expect(AuthModels.user_model(api), validate=True)
+    @api.response(200, "User created successfully!", model=AuthModels.register_model(api))
     @api.response(400, "User already exists.")
     def post(self):
         data = api.payload
@@ -64,8 +60,8 @@ class Register(Resource):
 
 @api.route("/api/login")
 class Login(Resource):
-    @api.expect(user_model, validate=True)
-    @api.response(200, "Login successful!", model=login_model)
+    @api.expect(AuthModels.user_model(api), validate=True)
+    @api.response(200, "Login successful!", model=AuthModels.login_model(api))
     @api.response(400, "Invalid email or password.")
     def post(self):
         data = api.payload
@@ -85,7 +81,7 @@ def invalid_token_response(invalid_token):
     }, 401
 
 
-@api.route("/api/user")
+@api.route("/api/user")  # TODO model
 class DecodeUser(Resource):
     @api.response(200, "User authenticated!")
     @api.response(401, "Authentication required. Please log in.")
@@ -103,16 +99,10 @@ class DecodeUser(Resource):
 #
 # ===================================================================
 
-(
-    password_reset_request_model,
-    password_reset_verify_model,
-    password_reset_change_model,
-) = password_reset_models(api)
-
 
 @api.route("/api/password-reset/request")
 class PasswordResetRequest(Resource):
-    @api.expect(password_reset_request_model, validate=True)
+    @api.expect(PasswordResetModels.password_reset_request_model(api), validate=True)
     @api.response(200, "Password Reset Request Successful!")
     @api.response(400, "Email does not exist.")
     def post(self):
@@ -125,7 +115,7 @@ class PasswordResetRequest(Resource):
 
 @api.route("/api/password-reset/verify")
 class PasswordResetVerify(Resource):
-    @api.expect(password_reset_verify_model, validate=True)
+    @api.expect(PasswordResetModels.password_reset_verify_model(api), validate=True)
     @api.response(200, "Password Successfully Reset!")
     @api.response(400, "Verification Code is incorrect.")
     @api.response(400, "Email does not exist.")
@@ -145,7 +135,7 @@ class PasswordResetVerify(Resource):
 
 @api.route("/api/password-reset/change")
 class PasswordResetChange(Resource):
-    @api.expect(password_reset_change_model, validate=True)
+    @api.expect(PasswordResetModels.password_reset_change_model(api), validate=True)
     @api.response(200, "Password Successfully Reset!")
     @api.response(400, "Email is incorrect.")
     def post(self):
@@ -162,23 +152,11 @@ class PasswordResetChange(Resource):
 #
 # ===================================================================
 
-(
-    industry_names_model,
-    company_names_model,
-    framework_names_model,
-    indicator_names_model,
-) = all_industry_company_framework_indicator_models(api)
-industry_companies_model, company_info_model = specific_industry_company_models(
-    api)
-(
-    framework_detailed_model,
-    indicator_value_detailed_model,
-) = framework_metric_indicator_models(api)
 
 
 @api.route("/api/industries/all")
 class IndustriesAll(Resource):
-    @api.response(200, "All industries retrieved!", model=industry_names_model)
+    @api.response(200, "All industries retrieved!", model=InfoModels.industry_names_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "No industries found.")
     @jwt_required()
@@ -188,7 +166,7 @@ class IndustriesAll(Resource):
 
 @api.route("/api/companies/all")
 class CompaniesAll(Resource):
-    @api.response(200, "All companies retrieved!", model=company_names_model)
+    @api.response(200, "All companies retrieved!", model=InfoModels.company_names_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "No companies found.")
     @jwt_required()
@@ -198,7 +176,7 @@ class CompaniesAll(Resource):
 
 @api.route("/api/frameworks/all")
 class FrameworksAll(Resource):
-    @api.response(200, "All frameworks retrieved!", model=framework_names_model)
+    @api.response(200, "All frameworks retrieved!", model=InfoModels.framework_names_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "No frameworks found.")
     @jwt_required()
@@ -208,7 +186,7 @@ class FrameworksAll(Resource):
 
 @api.route("/api/indicators/all")
 class IndicatorsAll(Resource):
-    @api.response(200, "All indicators retrieved!", model=indicator_names_model)
+    @api.response(200, "All indicators retrieved!", model=InfoModels.indicator_names_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "No indicators found.")
     @jwt_required()
@@ -216,7 +194,7 @@ class IndicatorsAll(Resource):
         return all_indicators()
 
 
-@api.route("/api/years/all")
+@api.route("/api/years/all") # TODO model
 class AllYears(Resource):
     @api.response(200, "All years retrieved!")
     @api.response(401, "Authentication required. Please log in.")
@@ -230,7 +208,7 @@ class CompaniesByIndustry(Resource):
     @api.response(
         200,
         "Companies for industry successfully retrieved!",
-        model=industry_companies_model,
+        model=InfoModels.industry_companies_model(api),
     )
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Industry not found.")
@@ -240,7 +218,7 @@ class CompaniesByIndustry(Resource):
 
 
 @api.route("/api/companies/<string:company_ids>")
-class CompanyInformation(Resource):
+class CompanyInformation(Resource):  # TODO model
     @api.response(200, "Companies' information successfully retrieved!")
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Company not found.")
@@ -258,7 +236,7 @@ class FrameworksByCompany(Resource):
     @api.response(
         200,
         "Framework, metric & indicator information for company successfully retrieved!",
-        model=framework_detailed_model,
+        model=DataModels.framework_detailed_model(api),
     )
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company.")
@@ -272,7 +250,7 @@ class IndicatorValues(Resource):
     @api.response(
         200,
         "Indicator values for company successfully retrieved!",
-        model=indicator_value_detailed_model,
+        model=DataModels.indicator_value_detailed_model(api),
     )
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company, indicator or none found.")
@@ -293,12 +271,11 @@ class IndicatorValues(Resource):
 #
 # ===================================================================
 
-company_values_model = value_calculations(api)
 
 
 @api.route("/api/values/company/<string:company_id>")
 class CompanyValues(Resource):
-    @api.response(200, "Values for company retrieved!", model=company_values_model)
+    @api.response(200, "Values for company retrieved!", model=InfoModels.company_values_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company id provided")
     @jwt_required()
@@ -312,7 +289,7 @@ class CompanyValues(Resource):
 
 
 @api.route("/api/values/industry/<int:industry_id>")
-class IndustryValues(Resource):
+class IndustryValues(Resource): #TODO: model
     @api.response(200, "Values for industry retrieved!")
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid industry id provided")
@@ -327,8 +304,8 @@ class CompanyRanking(Resource):
     @api.response(200, "Ranking in industry determined!")
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company id supplied!")
-    @jwt_required()
-    def get(self, company_id):
+    @jwt_required() 
+    def get(self, company_id): #TODO: model
         return get_company_industry_ranking(company_id)
 
 
@@ -338,7 +315,7 @@ class GraphCompanyValues(Resource):
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company id provided")
     @jwt_required()
-    def get(self, company_id):
+    def get(self, company_id): #TODO: model
         return get_company_graph_values(company_id)
 
 
@@ -348,7 +325,7 @@ class GraphIndicatorValues(Resource):
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid indicator id provided")
     @jwt_required()
-    def get(self, indicator_id):
+    def get(self, indicator_id): #TODO: model
         return get_indicator_graph_values(indicator_id)
 
 
@@ -358,13 +335,12 @@ class GraphIndicatorValues(Resource):
 #
 # ===================================================================
 
-custom_framework_model = custom_framework_models(api)
 
 
 @api.route("/api/custom-frameworks")
 class CustomFrameworkList(Resource):
     # Create a new custom framework for a user
-    @api.response(201, 'Custom framework for user created successfully!', model=custom_framework_model)
+    @api.response(201, 'Custom framework for user created successfully!', model=CustomFrameworkModels.custom_framework_model(api))
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid custom framework input.')
     @jwt_required()
@@ -383,7 +359,7 @@ class CustomFrameworkList(Resource):
     @api.response(200, 'Custom frameworks retrieved successfully.')
     @api.response(401, 'Authentication required. Please log in.')
     @jwt_required()
-    def get(self):
+    def get(self): # TODO: model
         email = get_jwt_identity()
 
         # Verify user exists in backend.
@@ -399,7 +375,7 @@ class CustomFramework(Resource):
     @api.response(200, 'Custom framework deleted successfully.')
     @api.response(400, 'Custom framework not found.')
     @api.response(401, 'Authentication required. Please log in.')
-    @jwt_required()
+    @jwt_required() # TODO: model
     def delete(self, framework_id):
         email = get_jwt_identity()
 
