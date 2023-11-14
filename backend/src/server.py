@@ -20,7 +20,8 @@ from .models import(
     PasswordResetModels,
     InfoModels,
     DataModels,
-    CustomFrameworkModels
+    CustomFrameworkModels,
+    GraphModels
 )
 from .reset import reset_password_request, reset_password_verify, reset_password_change
 from .user import login, register, get_user
@@ -81,9 +82,9 @@ def invalid_token_response(invalid_token):
     }, 401
 
 
-@api.route("/api/user")  # TODO model
+@api.route("/api/user")
 class DecodeUser(Resource):
-    @api.response(200, "User authenticated!")
+    @api.response(200, "User authenticated!", model=AuthModels.user_decode_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @jwt_required()
     def get(self):
@@ -194,9 +195,9 @@ class IndicatorsAll(Resource):
         return all_indicators()
 
 
-@api.route("/api/years/all") # TODO model
+@api.route("/api/years/all")
 class AllYears(Resource):
-    @api.response(200, "All years retrieved!")
+    @api.response(200, "All years retrieved!", model=InfoModels.all_years_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @jwt_required()
     def get(self):
@@ -218,8 +219,8 @@ class CompaniesByIndustry(Resource):
 
 
 @api.route("/api/companies/<string:company_ids>")
-class CompanyInformation(Resource):  # TODO model
-    @api.response(200, "Companies' information successfully retrieved!")
+class CompanyInformation(Resource):
+    @api.response(200, "Companies' information successfully retrieved!", model=InfoModels.company_info_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Company not found.")
     def get(self, company_ids):
@@ -289,11 +290,10 @@ class CompanyValues(Resource):
 
 
 @api.route("/api/values/industry/<int:industry_id>")
-class IndustryValues(Resource): #TODO: model
-    @api.response(200, "Values for industry retrieved!")
+class IndustryValues(Resource):
+    @api.response(200, "Values for industry retrieved!", model=DataModels.industry_values_model(api))
     @api.response(401, "Authentication required. Please log in.")
-    @api.response(400, "Invalid industry id provided")
-    @api.response(400, "Industry has no companies!")
+    @api.response(400, "Invalid industry id or industry has no companies")
     @jwt_required()
     def get(self, industry_id):
         return get_industry_values(industry_id)
@@ -301,31 +301,31 @@ class IndustryValues(Resource): #TODO: model
 
 @api.route("/api/values/ranking/company/<int:company_id>")
 class CompanyRanking(Resource):
-    @api.response(200, "Ranking in industry determined!")
+    @api.response(200, "Ranking in industry determined!", model=DataModels.company_ranking_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company id supplied!")
     @jwt_required() 
-    def get(self, company_id): #TODO: model
+    def get(self, company_id):
         return get_company_industry_ranking(company_id)
 
 
 @api.route("/api/values/graph/company/<int:company_id>")
 class GraphCompanyValues(Resource):
-    @api.response(200, "Graph Values for Company Returned!")
+    @api.response(200, "Graph Values for Company Returned!", model=GraphModels.company_values_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company id provided")
     @jwt_required()
-    def get(self, company_id): #TODO: model
+    def get(self, company_id):
         return get_company_graph_values(company_id)
 
 
 @api.route("/api/values/graph/indicator/<int:indicator_id>")
 class GraphIndicatorValues(Resource):
-    @api.response(200, "Graph Values for Indicator Returned!")
+    @api.response(200, "Graph Values for Indicator Returned!", model=GraphModels.indicator_values_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid indicator id provided")
     @jwt_required()
-    def get(self, indicator_id): #TODO: model
+    def get(self, indicator_id):
         return get_indicator_graph_values(indicator_id)
 
 
@@ -356,10 +356,10 @@ class CustomFrameworkList(Resource):
         return create_custom_framework(data, user)
 
     # Retrieve all the custom frameworks associated with a user
-    @api.response(200, 'Custom frameworks retrieved successfully.')
+    @api.response(200, 'Custom frameworks retrieved successfully.', model=CustomFrameworkModels.custom_framework_data_model(api))
     @api.response(401, 'Authentication required. Please log in.')
     @jwt_required()
-    def get(self): # TODO: model
+    def get(self):
         email = get_jwt_identity()
 
         # Verify user exists in backend.
@@ -375,7 +375,7 @@ class CustomFramework(Resource):
     @api.response(200, 'Custom framework deleted successfully.')
     @api.response(400, 'Custom framework not found.')
     @api.response(401, 'Authentication required. Please log in.')
-    @jwt_required() # TODO: model
+    @jwt_required()
     def delete(self, framework_id):
         email = get_jwt_identity()
 
