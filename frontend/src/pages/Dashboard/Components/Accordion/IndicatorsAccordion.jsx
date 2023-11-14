@@ -105,7 +105,7 @@ function IndicatorsAccordion({
             ))
           ) : (
             <Typography style={{ color: "red" }}>
-              Select a year to see the associated indicators
+              Select a year to see the associated indicators.
             </Typography>
           )}
         </Box>
