@@ -105,14 +105,33 @@ function ComparisonGraph({ token }) {
   // Download graph display as SVG
   const handleDownload = () => {
     setIsLoading(true);
-  
+
     try {
       const chartNode = chartRef.current;
-
-      // Serialise chart SVG data and create a Blob
       const svgData = new XMLSerializer().serializeToString(chartNode);
-      const blob = new Blob([svgData], { type: "image/svg+xml" });
-  
+
+      // Find path elements with the specified classes
+      let parser = new DOMParser();
+      let svgDoc = parser.parseFromString(svgData, "image/svg+xml");
+      let pathElements = svgDoc.querySelectorAll(
+        ".css-wn5hww-MuiLineElement-root, .css-a8rcf6-MuiLineElement-root, .css-1l0ye40-MuiLineElement-root, .css-u0sr46-MuiLineElement-root"
+      );
+
+      // Apply legend color to each line and remove fill attribute
+      let legendColors = [];
+      svgDoc.querySelectorAll(".MuiChartsLegend-mark").forEach((rect) => {
+        legendColors.push(rect.getAttribute("fill"));
+      });
+      pathElements.forEach((path, index) => {
+        path.setAttribute("fill", "transparent");
+        path.setAttribute("stroke", legendColors[index]);
+      });
+
+      // Serialize the modified SVG document back to a string
+      let modifiedSvgData = new XMLSerializer().serializeToString(svgDoc);
+
+      const blob = new Blob([modifiedSvgData], { type: "image/svg+xml" });
+
       // Create download link
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -121,13 +140,13 @@ function ComparisonGraph({ token }) {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-  
+
       setIsLoading(false);
     } catch (error) {
       console.error("Error capturing chart as image:", error);
       setIsLoading(false);
     }
-  };  
+  };
 
   return (
     <>
