@@ -10,6 +10,7 @@ import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
 import useCompanyData from "../../../hooks/UseCompanyData";
 import useIndustryData from "../../../hooks/UseIndustryData";
+import { toggleButtonStyle } from "../../../styles/fontStyle";
 
 function SingleSearchbar({ token }) {
   const {
@@ -84,15 +85,7 @@ function SingleSearchbar({ token }) {
           <Typography
             variant="body4"
             textAlign="center"
-            sx={{
-              fontSize: "14px",
-              "@media (min-width: 768px)": {
-                fontSize: "10px",
-              },
-              "@media (min-width: 1024px)": {
-                fontSize: "14px",
-              },
-            }}
+            sx={toggleButtonStyle}
           >
             Single Company View
           </Typography>
@@ -106,15 +99,7 @@ function SingleSearchbar({ token }) {
           <Typography
             variant="body4"
             textAlign="center"
-            sx={{
-              fontSize: "14px",
-              "@media (min-width: 768px)": {
-                fontSize: "10px",
-              },
-              "@media (min-width: 1024px)": {
-                fontSize: "14px",
-              },
-            }}
+            sx={toggleButtonStyle}
           >
             Comparison View
           </Typography>

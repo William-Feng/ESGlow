@@ -11,6 +11,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useEffect, useState, useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import { toggleButtonStyle } from "../../../styles/fontStyle";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -104,15 +105,7 @@ function ComparisonSearchbar({ token }) {
           <Typography
             variant="body4"
             textAlign="center"
-            sx={{
-              fontSize: "14px", // Default font size
-              "@media (min-width: 768px)": {
-                fontSize: "10px", // Adjust font size for screens wider than 768px
-              },
-              "@media (min-width: 1024px)": {
-                fontSize: "14px", // Adjust font size for screens wider than 1024px
-              },
-            }}
+            sx={toggleButtonStyle}
           >
             Single Company View
           </Typography>
@@ -126,15 +119,7 @@ function ComparisonSearchbar({ token }) {
           <Typography
             variant="body4"
             textAlign="center"
-            sx={{
-              fontSize: "14px",
-              "@media (min-width: 768px)": {
-                fontSize: "10px",
-              },
-              "@media (min-width: 1024px)": {
-                fontSize: "14px",
-              },
-            }}
+            sx={toggleButtonStyle}
           >
             Comparison View
           </Typography>
