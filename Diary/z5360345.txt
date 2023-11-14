@@ -40,3 +40,7 @@ Wrote Restrospective B.
 Wrote backend technologies sections for final report.
 Added documentation for remaining backend functions.
 Updated backend tests for the new database structure and endpoints.
+
+Week 9
+Packaged entire app with docker, such that all dependencies can be downloaded with one command without worrying about compatability issues.
+Slightly refactored backend.
