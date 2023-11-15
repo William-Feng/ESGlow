@@ -140,22 +140,37 @@ function ComparisonOverview({ token }) {
           </Box>
         </Box>
 
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, position: "relative" }}>
           {companyData.length ? (
-            <BarChart
-              xAxis={[
-                {
-                  scaleType: "band",
-                  data: companyData.map((c) => c.name),
-                  tickLabelStyle: {
-                    fontSize: 8,
+            <>
+              <Typography
+                variant="h6"
+                color="text.primary"
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                Portfolio Breakdown
+              </Typography>
+              <BarChart
+                xAxis={[
+                  {
+                    scaleType: "band",
+                    data: companyData.map((c) => c.name),
+                    tickLabelStyle: {
+                      fontSize: 8,
+                    },
                   },
-                },
-              ]}
-              series={[{ data: companyData.map((c) => c.score.toFixed(1)) }]}
-              width={420}
-              height={250}
-            />
+                ]}
+                series={[{ data: companyData.map((c) => c.score.toFixed(1)) }]}
+                width={420}
+                height={250}
+              />
+            </>
           ) : (
             <CircularProgress />
           )}
