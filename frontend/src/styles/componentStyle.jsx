@@ -119,7 +119,7 @@ export const searchBarBoxStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  gap: 5,
+  gap: 4,
   [`@media (max-width: ${mediumDashboard}px)`]: {
     flexDirection: "column",
     gap: 2,
@@ -127,7 +127,7 @@ export const searchBarBoxStyle = {
 };
 
 export const searchBarStyle = {
-  width: "300px",
+  width: "330px",
   backgroundColor: "white",
   borderRadius: 1,
   [`@media (max-width: ${mediumDashboard}px)`]: {
