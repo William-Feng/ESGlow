@@ -286,7 +286,9 @@ class CompanyValues(Resource):
         except ValueError:
             return {"message": "Invalid company id provided"}, 400
 
-        return get_company_values(selected_companies), 200
+        values = get_company_values(selected_companies)
+        values["message"] = "Values for company retrieved!"
+        return values, 200
 
 
 @api.route("/api/values/industry/<int:industry_id>")
@@ -340,7 +342,8 @@ class GraphIndicatorValues(Resource):
 @api.route("/api/custom-frameworks")
 class CustomFrameworkList(Resource):
     # Create a new custom framework for a user
-    @api.response(201, 'Custom framework for user created successfully!', model=CustomFrameworkModels.custom_framework_model(api))
+    @api.expect(CustomFrameworkModels.custom_framework_model(api), validate=True)
+    @api.response(201, 'Custom framework for user created successfully!')
     @api.response(401, 'Authentication required. Please log in.')
     @api.response(400, 'Invalid custom framework input.')
     @jwt_required()
@@ -371,7 +374,7 @@ class CustomFrameworkList(Resource):
 
 
 @api.route("/api/custom-frameworks/<int:framework_id>")
-class CustomFramework(Resource):
+class FrameworkRemove(Resource):
     @api.response(200, 'Custom framework deleted successfully.')
     @api.response(400, 'Custom framework not found.')
     @api.response(401, 'Authentication required. Please log in.')
