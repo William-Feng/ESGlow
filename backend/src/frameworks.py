@@ -10,9 +10,10 @@ from .database import (
     FrameworkMetric,
     MetricIndicator,
     CustomFrameworks,
-    CustomFrameworkPreferences
+    CustomFrameworkPreferences,
+    User
 )
-from typing import List
+from typing import List, Dict
 
 
 def all_industries():
@@ -316,7 +317,17 @@ def get_indicator_values(
     return response, 200
 
 
-def create_custom_framework(data, user):
+def create_custom_framework(data: Dict, user: User):
+    """
+    Summary:
+        Creates a custom framework and stores it in the database.
+    Args:
+        data (Dict): Framework data as per the 'CustomFramework' Flask model.
+        user (User): The User creating the framework.
+    Returns:
+        Dictionary containing a status message.
+        HTTP status code
+    """
     # Check if the custom framework name is null
     if data['name'] == '':
         return {"message": "Custom framework name cannot be empty."}, 400
@@ -356,7 +367,17 @@ def create_custom_framework(data, user):
     return response, 200
 
 
-def get_custom_frameworks(user):
+def get_custom_frameworks(user: User):
+    """
+    Summary:
+        Get all custom frameworks associated with the given user.
+    Args:
+        user (User): The User who created the frameworks.
+    Returns:
+        Dictionary containing a status message and a list of info about
+        custom frameworks created by the user.
+        HTTP status code
+    """
     # Get all custom frameworks associated with the user
     custom_frameworks = CustomFrameworks.query.filter_by(
         user_id=user.user_id
@@ -390,7 +411,17 @@ def get_custom_frameworks(user):
     return response, 200
 
 
-def delete_custom_framework(user, framework_id):
+def delete_custom_framework(user: User, framework_id: int):
+    """
+    Summary:
+        Deletes a custom framework from the database.
+    Args:
+        user (User): The User who created the frameworks.
+        framework_id (int): ID of the framework to be deleted.
+    Returns:
+        Dictionary containing a status message.
+        HTTP status code
+    """
     # Fetch the specified custom framework
     custom_framework = CustomFrameworks.query.filter_by(
         custom_framework_id=framework_id,
