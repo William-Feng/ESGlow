@@ -40,7 +40,7 @@ function ComparisonSidebar({ token }) {
   };
 
   const handleIndicatorsChange = (indicatorId) => {
-    if (dataView === "graph") {
+    if (dataView !== "table") {
       // In graph view, only allow one indicator to be selected
       setSelectedIndicators([indicatorId]);
     } else {
@@ -56,8 +56,10 @@ function ComparisonSidebar({ token }) {
   };
 
   useEffect(() => {
+    console.log("The dataView is ", dataView);
+
     // When switching to graph view, select only the indicator with the smallest ID
-    if (dataView === "graph" && selectedIndicators.length > 1) {
+    if (dataView !== "table" && selectedIndicators.length > 1) {
       const smallestIndicatorId = Math.min(...selectedIndicators);
       setSelectedIndicators([smallestIndicatorId]);
     }
@@ -71,7 +73,7 @@ function ComparisonSidebar({ token }) {
         dataView={dataView}
         otherViewTitle={"Graph View"}
       />
-      {dataView === "graph" ? (
+      {dataView !== "table" ? (
         <YearsRangeAccordion
           disabled={selectedCompanies.length === 0}
           expanded={expanded.panel1}
@@ -85,7 +87,7 @@ function ComparisonSidebar({ token }) {
         />
       )}
       <IndicatorsAccordion
-        multi={dataView !== "graph"}
+        multi={dataView === "table"}
         disabled={selectedCompanies.length === 0}
         expanded={expanded.panel2}
         onToggleDropdown={handleChange("panel2")}
