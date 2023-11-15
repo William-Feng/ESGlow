@@ -7,13 +7,13 @@ import {
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { ComparisonViewContext } from "./ComparisonView";
+import { ComparisonModeContext } from "./ComparisonMode";
 import { overviewContainerStyle } from "../../../styles/componentStyle";
 import useESGData from "../../../hooks/UseESGData";
 import { BarChart } from "@mui/x-charts";
 
 function ComparisonOverview({ token }) {
-  const { selectedCompanies } = useContext(ComparisonViewContext);
+  const { selectedCompanies } = useContext(ComparisonModeContext);
 
   const { companyData, portfolioRating, bestPerformer, worstPerformer } =
     useESGData(token, selectedCompanies);
@@ -34,12 +34,12 @@ function ComparisonOverview({ token }) {
       }}
     >
       <Typography
-        component='h1'
-        variant='h4'
-        color='text.primary'
+        component="h1"
+        variant="h4"
+        color="text.primary"
         gutterBottom
-        textAlign='center'
-        fontWeight='bold'
+        textAlign="center"
+        fontWeight="bold"
       >
         {selectedCompanies.map((company, index) => (
           <span key={index}>
@@ -67,20 +67,20 @@ function ComparisonOverview({ token }) {
               alignItems: "center",
             }}
           >
-            <Typography variant='h2' color='text.primary' paragraph>
+            <Typography variant="h2" color="text.primary" paragraph>
               {portfolioRating}
             </Typography>
-            <Box display='flex' alignItems='center'>
-              <Typography variant='h6' color='text.secondary'>
+            <Box display="flex" alignItems="center">
+              <Typography variant="h6" color="text.secondary">
                 Portfolio ESG Rating
               </Typography>
               <Tooltip
                 title={
-                  <Typography variant='body2'>
+                  <Typography variant="body2">
                     {toolTipStringIntro}
                     {toolTipStringList.map((str) => (
                       <Typography
-                        variant='body2'
+                        variant="body2"
                         key={str}
                         sx={{
                           display: "block",
@@ -113,10 +113,10 @@ function ComparisonOverview({ token }) {
               textAlign: "center",
             }}
           >
-            <Typography variant='h4' color='text.primary' paragraph>
+            <Typography variant="h4" color="text.primary" paragraph>
               {bestPerformer.toFixed(1)}
             </Typography>
-            <Typography variant='h6' color='text.secondary'>
+            <Typography variant="h6" color="text.secondary">
               Best Performer
             </Typography>
           </Box>
@@ -131,10 +131,10 @@ function ComparisonOverview({ token }) {
               textAlign: "center",
             }}
           >
-            <Typography variant='h4' color='text.primary' paragraph>
+            <Typography variant="h4" color="text.primary" paragraph>
               {worstPerformer.toFixed(1)}
             </Typography>
-            <Typography variant='h6' color='text.secondary'>
+            <Typography variant="h6" color="text.secondary">
               Worst Performer
             </Typography>
           </Box>

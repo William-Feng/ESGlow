@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import YearsSingleAccordion from "../Components/Accordion/YearsSingleAccordion";
 import YearsRangeAccordion from "../Components/Accordion/YearsRangeAccordion";
 import IndicatorsAccordion from "../Components/Accordion/IndicatorsAccordion";
-import { ComparisonViewContext } from "./ComparisonView";
+import { ComparisonModeContext } from "./ComparisonMode";
 import ToggleDataView from "../Components/Misc/ToggleDataView";
 
 function ComparisonSidebar({ token }) {
@@ -13,7 +13,7 @@ function ComparisonSidebar({ token }) {
     setSelectedIndicators,
     dataView,
     setDataView,
-  } = useContext(ComparisonViewContext);
+  } = useContext(ComparisonModeContext);
 
   useEffect(() => {
     // Close accordions upon clearing companies selection

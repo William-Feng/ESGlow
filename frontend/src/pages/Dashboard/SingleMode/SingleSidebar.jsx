@@ -9,7 +9,7 @@ import {
   DialogActions,
   DialogContentText,
 } from "@mui/material";
-import { SingleViewContext } from "./SingleView";
+import { SingleModeContext } from "./SingleMode";
 import SnackBarManager from "../Components/Misc/SnackBarManager";
 import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
@@ -50,8 +50,8 @@ function SingleSidebar({ token }) {
     updateScore,
     setAdjustedScore,
     setDataView,
-    dataView
-  } = useContext(SingleViewContext);
+    dataView,
+  } = useContext(SingleModeContext);
 
   // Reset the states if the company is changed or deleted
   // Note that selected additional indicators remain the same if a new framework is selected

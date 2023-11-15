@@ -8,11 +8,15 @@ import {
 import { LineChart } from "@mui/x-charts/LineChart";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { SingleViewContext } from "./SingleView";
+import { SingleModeContext } from "./SingleMode";
 import useIndustryData from "../../../hooks/UseIndustryData";
 import RecentESGScores from "../../../utils/RecentESGScores";
 import { useESGScoresData } from "../../../hooks/UseGraphData";
-import { overviewContainerStyle, overviewContentContainerStyle, overviewScoreContainerStyle } from "../../../styles/componentStyle";
+import {
+  overviewContainerStyle,
+  overviewContentContainerStyle,
+  overviewScoreContainerStyle,
+} from "../../../styles/componentStyle";
 
 function SingleOverview({ token }) {
   const {
@@ -20,7 +24,7 @@ function SingleOverview({ token }) {
     selectedCompany,
     frameworksData,
     fixedIndicatorValues,
-  } = useContext(SingleViewContext);
+  } = useContext(SingleModeContext);
 
   const { industryMean, industryRanking } = useIndustryData(
     token,
@@ -64,20 +68,20 @@ function SingleOverview({ token }) {
         }}
       >
         <Typography
-          component='h1'
-          variant='h4'
-          color='text.primary'
+          component="h1"
+          variant="h4"
+          color="text.primary"
           gutterBottom
-          textAlign='center'
-          fontWeight='bold'
+          textAlign="center"
+          fontWeight="bold"
         >
           {selectedCompany.name}
         </Typography>
         <Container sx={overviewContainerStyle}>
           <Box sx={{ flex: 1.2 }}>
             <Typography
-              variant='body'
-              color='text.primary'
+              variant="body"
+              color="text.primary"
               paragraph
               sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
             >
@@ -94,20 +98,20 @@ function SingleOverview({ token }) {
             }}
           >
             <Box sx={overviewScoreContainerStyle}>
-              <Typography variant='h2' color='text.primary' paragraph>
+              <Typography variant="h2" color="text.primary" paragraph>
                 {averageESGScore}
               </Typography>
-              <Box display='flex' alignItems='center'>
-                <Typography variant='h6' color='text.secondary'>
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6" color="text.secondary">
                   ESG Rating
                 </Typography>
                 <Tooltip
                   title={
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       {toolTipStringIntro}
                       {toolTipStringList.map((str) => (
                         <Typography
-                          variant='body2'
+                          variant="body2"
                           key={str}
                           sx={{
                             display: "block",
@@ -138,18 +142,18 @@ function SingleOverview({ token }) {
             </Box>
             <Box sx={overviewContentContainerStyle}>
               <Box sx={overviewScoreContainerStyle}>
-                <Typography variant='h4' color='text.primary' paragraph>
+                <Typography variant="h4" color="text.primary" paragraph>
                   {industryMean.toFixed(1)}
                 </Typography>
-                <Typography variant='h6' color='text.secondary' mt={-1}>
+                <Typography variant="h6" color="text.secondary" mt={-1}>
                   Industry Mean
                 </Typography>
               </Box>
               <Box sx={overviewScoreContainerStyle}>
-                <Typography variant='h4' color='text.primary' paragraph>
+                <Typography variant="h4" color="text.primary" paragraph>
                   {industryRanking}
                 </Typography>
-                <Typography variant='h6' color='text.secondary' mt={-1}>
+                <Typography variant="h6" color="text.secondary" mt={-1}>
                   Industry Ranking
                 </Typography>
               </Box>

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
+import { ComparisonModeContext } from "../../ComparisonMode/ComparisonMode";
 import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function IndicatorsAccordion({
@@ -27,7 +27,7 @@ function IndicatorsAccordion({
     selectedYearRange,
     indicatorsList,
     selectedIndicators,
-  } = useContext(ComparisonViewContext);
+  } = useContext(ComparisonModeContext);
 
   return (
     <Accordion
@@ -46,11 +46,7 @@ function IndicatorsAccordion({
           textTransform: "uppercase",
         }}
       >
-        <Typography
-          sx={accordionSummaryFont}
-        >
-          Indicators
-        </Typography>
+        <Typography sx={accordionSummaryFont}>Indicators</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>

@@ -1,9 +1,6 @@
-import {
-  Box,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useMemo, useContext, useCallback } from "react";
-import { SingleViewContext } from "./SingleView";
+import { SingleModeContext } from "./SingleMode";
 import {
   dataDisplayContainerStyle,
   dataDisplayPlaceholderStyle,
@@ -19,7 +16,7 @@ function SingleDataDisplay() {
     filteredData,
     additionalIndicatorsData,
     dataView,
-  } = useContext(SingleViewContext);
+  } = useContext(SingleModeContext);
 
   // Convert the indicator data into a format that can be displayed in the table
   const processIndicatorData = useCallback(
@@ -66,7 +63,7 @@ function SingleDataDisplay() {
   if (!selectedCompany || !hasDataToShow) {
     return (
       <Box sx={dataDisplayPlaceholderStyle}>
-        <Typography variant='h6' color='text.secondary'>
+        <Typography variant="h6" color="text.secondary">
           {selectedCompany
             ? "Please select a framework or at least one of the additional indicators to view the ESG data."
             : "Please select a company to view the ESG data."}

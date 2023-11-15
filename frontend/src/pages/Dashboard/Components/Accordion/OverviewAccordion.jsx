@@ -6,12 +6,12 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import SingleOverview from "../../SingleView/SingleOverview";
-import ComparisonOverview from "../../ComparisonView/ComparisonOverview";
+import SingleOverview from "../../SingleMode/SingleOverview";
+import ComparisonOverview from "../../ComparisonMode/ComparisonOverview";
 import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function OverviewAccordion({
-  isSingleView,
+  isSingleMode,
   isDisabled,
   overviewExpanded,
   setOverviewExpanded,
@@ -37,7 +37,7 @@ function OverviewAccordion({
         <Typography
           sx={{
             width: "20%",
-            ...accordionSummaryFont
+            ...accordionSummaryFont,
           }}
         >
           Overview
@@ -49,7 +49,7 @@ function OverviewAccordion({
             textAlign: "center",
           }}
         >
-          {isSingleView ? (
+          {isSingleMode ? (
             <SingleOverview token={token} />
           ) : (
             <ComparisonOverview token={token} />

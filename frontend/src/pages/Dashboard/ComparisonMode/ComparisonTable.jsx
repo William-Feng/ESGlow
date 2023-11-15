@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { ComparisonViewContext } from "./ComparisonView";
+import { ComparisonModeContext } from "./ComparisonMode";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
   tableCellStyle,
@@ -27,7 +27,7 @@ function ComparisonTable({ token }) {
     selectedIndicators,
     indicatorsList,
     yearsList,
-  } = useContext(ComparisonViewContext);
+  } = useContext(ComparisonModeContext);
 
   const [currentData, setCurrentData] = useState({});
 
@@ -134,7 +134,7 @@ function ComparisonTable({ token }) {
           borderColor: "divider",
         }}
       >
-        <Table size='small'>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell sx={tableCellTitleStyle}>Indicator</TableCell>
@@ -180,13 +180,13 @@ function ComparisonTable({ token }) {
                               }}
                             >
                               <Typography
-                                component='span'
+                                component="span"
                                 style={{ fontStyle: "italic" }}
                               >
                                 {sourceNumber.trim()}:
                               </Typography>{" "}
                               <Typography
-                                component='span'
+                                component="span"
                                 style={{ fontWeight: "bold" }}
                               >
                                 {sourceName.trim()}
@@ -219,8 +219,8 @@ function ComparisonTable({ token }) {
           }}
         >
           <Button
-            variant='contained'
-            color='primary'
+            variant="contained"
+            color="primary"
             onClick={handleDownloadCSV}
             sx={{
               width: "150px",

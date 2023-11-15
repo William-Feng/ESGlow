@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext } from "react";
-import { SingleViewContext } from "./SingleView";
+import { SingleModeContext } from "./SingleMode";
 import { useCompanyData } from "../../../hooks/UseCompanyData";
 import useIndustryData from "../../../hooks/UseIndustryData";
 import { toggleButtonStyle } from "../../../styles/componentStyle";
@@ -22,9 +22,9 @@ function SingleSearchbar({ token }) {
     setSelectedIndustry,
     selectedCompany,
     setSelectedCompany,
-    view,
-    setView,
-  } = useContext(SingleViewContext);
+    mode,
+    setMode,
+  } = useContext(SingleModeContext);
 
   const { industryList } = useIndustryData(token, null, null);
   const companyList = useCompanyData(selectedIndustry, token);
@@ -39,7 +39,7 @@ function SingleSearchbar({ token }) {
         }}
         options={industryList}
         sx={searchBarStyle}
-        renderInput={(params) => <TextField {...params} label='Industry' />}
+        renderInput={(params) => <TextField {...params} label="Industry" />}
       />
       <Autocomplete
         disablePortal
@@ -57,35 +57,35 @@ function SingleSearchbar({ token }) {
           ...searchBarStyle,
           backgroundColor: selectedIndustry ? "white" : "#E8E8E8",
         }}
-        renderInput={(params) => <TextField {...params} label='Company' />}
+        renderInput={(params) => <TextField {...params} label="Company" />}
       />
       <ToggleButtonGroup
-        value={view}
+        value={mode}
         exclusive
-        onChange={(e) => setView(e.currentTarget.value)}
-        aria-label='company view'
+        onChange={(e) => setMode(e.currentTarget.value)}
+        aria-label="company mode"
         sx={{
           backgroundColor: "white",
         }}
       >
         <ToggleButton
-          value='single'
+          value="single"
           sx={{
-            backgroundColor: view === "single" ? "#B0C4DE !important" : "",
+            backgroundColor: mode === "single" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant='body4' textAlign='center' sx={toggleButtonStyle}>
-            Single View
+          <Typography variant="body4" textAlign="center" sx={toggleButtonStyle}>
+            Single Mode
           </Typography>
         </ToggleButton>
         <ToggleButton
-          value='multiple'
+          value="multiple"
           sx={{
-            backgroundColor: view === "multiple" ? "#B0C4DE !important" : "",
+            backgroundColor: mode === "multiple" ? "#B0C4DE !important" : "",
           }}
         >
-          <Typography variant='body4' textAlign='center' sx={toggleButtonStyle}>
-            Comparison View
+          <Typography variant="body4" textAlign="center" sx={toggleButtonStyle}>
+            Comparison Mode
           </Typography>
         </ToggleButton>
       </ToggleButtonGroup>

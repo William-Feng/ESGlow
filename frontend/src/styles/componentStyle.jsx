@@ -17,7 +17,7 @@ export const landingPageBoxStyle = {
 
 // Below are Dashboard component styles
 
-export const appBarStyle = (isSingleView) => {
+export const appBarStyle = (isSingleMode) => {
   const baseStyle = {
     background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
@@ -26,7 +26,7 @@ export const appBarStyle = (isSingleView) => {
     position: "fixed",
   };
 
-  if (isSingleView) {
+  if (isSingleMode) {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       height: "300px",
     };
@@ -42,7 +42,7 @@ export const appBarStyle = (isSingleView) => {
   return baseStyle;
 };
 
-export const overviewStyle = (isSingleView) => {
+export const overviewStyle = (isSingleMode) => {
   const baseStyle = {
     position: "fixed",
     top: "128px",
@@ -53,7 +53,7 @@ export const overviewStyle = (isSingleView) => {
     flexDirection: "column",
   };
 
-  if (isSingleView) {
+  if (isSingleMode) {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       top: "300px",
       maxHeight: "calc(100vh - 300px)",
@@ -186,7 +186,7 @@ export const dataDisplayContainerStyle = {
   minHeight: "300px",
 };
 
-export const dataDisplayPlaceholderStyle ={
+export const dataDisplayPlaceholderStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -194,4 +194,4 @@ export const dataDisplayPlaceholderStyle ={
   bgcolor: "#f5f5f5",
   minHeight: "400px",
   padding: 2,
-}
+};

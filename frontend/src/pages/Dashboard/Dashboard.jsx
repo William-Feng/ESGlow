@@ -1,22 +1,13 @@
 import { ThemeProvider, createTheme } from "@mui/material";
 import { useState, createContext } from "react";
-import SingleView from "./SingleView/SingleView";
-import ComparisonView from "./ComparisonView/ComparisonView";
+import SingleMode from "./SingleMode/SingleMode";
+import ComparisonMode from "./ComparisonMode/ComparisonMode";
 
 export const PageContext = createContext();
 
 function Dashboard({ token }) {
   const defaultTheme = createTheme({
     components: {
-      //   MuiAccordion: {
-      //     styleOverrides: {
-      //       root: {
-      //         "&.Mui-disabled": {
-      //           backgroundColor: "#D7D7D7",
-      //         },
-      //       },
-      //     },
-      //   },
       MuiTooltip: {
         defaultProps: {
           arrow: true,
@@ -37,20 +28,20 @@ function Dashboard({ token }) {
     },
   });
 
-  const [view, setView] = useState("single");
+  const [mode, setMode] = useState("single");
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <PageContext.Provider
         value={{
-          view,
-          setView,
+          mode,
+          setMode,
         }}
       >
-        {view === "single" ? (
-          <SingleView token={token} />
+        {mode === "single" ? (
+          <SingleMode token={token} />
         ) : (
-          <ComparisonView token={token} />
+          <ComparisonMode token={token} />
         )}
       </PageContext.Provider>
     </ThemeProvider>
