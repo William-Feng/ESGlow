@@ -21,6 +21,7 @@ export const SingleViewContext = createContext();
 
 function SingleView({ token }) {
   const { view, setView } = useContext(PageContext);
+  const [dataView, setDataView] = useState("table");
   const [overviewExpanded, setOverviewExpanded] = useState(false);
   const [yearsList, selectedYears, setSelectedYears] = useYearsData(token);
   const [selectedIndustry, setSelectedIndustry] = useState();
@@ -157,6 +158,8 @@ function SingleView({ token }) {
             setSelectedAdditionalIndicators,
             savedAdditionalIndicatorWeights,
             setSavedAdditionalIndicatorWeights,
+            setDataView,
+            dataView
           }}
         >
           <CssBaseline />

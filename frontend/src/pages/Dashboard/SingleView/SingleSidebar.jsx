@@ -18,6 +18,7 @@ import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalInd
 import SidebarSaveButtons from "../Components/Misc/SidebarSaveButtons";
 import useCustomFrameworksData from "../../../hooks/UseCustomFrameworksData";
 import { sidebarBoxStyle } from "../../../styles/componentStyle";
+import ToggleDataView from "../Components/Misc/ToggleDataView";
 
 export const SidebarContext = createContext();
 
@@ -48,6 +49,8 @@ function SingleSidebar({ token }) {
     setSavedAdditionalIndicatorWeights,
     updateScore,
     setAdjustedScore,
+    setDataView,
+    dataView
   } = useContext(SingleViewContext);
 
   // Reset the states if the company is changed or deleted
@@ -618,6 +621,12 @@ function SingleSidebar({ token }) {
           additionalIndicatorWeights,
         }}
       >
+        <ToggleDataView
+          disabled={!selectedCompany}
+          setDataView={setDataView}
+          dataView={dataView}
+          otherViewTitle={"Bar Chart View"}
+        />
         <FrameworkAccordion
           disabled={!selectedCompany}
           expanded={expanded.panel1}
