@@ -73,6 +73,7 @@ export const overviewContainerStyle = {
   border: 1,
   borderRadius: 4,
   padding: 2,
+  gap: 1,
   [`@media (max-width: ${maxWidthMedium}px)`]: {
     flexDirection: "column",
     width: "100%",
@@ -184,5 +185,6 @@ export const dataDisplayPlaceholderStyle ={
   alignItems: "center",
   flex: 1,
   bgcolor: "#f5f5f5",
-  minHeight: "200px",
+  minHeight: "400px",
+  padding: 2,
 }

@@ -54,7 +54,6 @@ function SingleOverview({ token }) {
       <Box
         sx={{
           bgcolor: "background.paper",
-          mx: "auto",
           mt: -3,
         }}
       >
@@ -69,7 +68,7 @@ function SingleOverview({ token }) {
           {selectedCompany.name}
         </Typography>
         <Container sx={overviewContainerStyle}>
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: 1.2 }}>
             <Typography
               variant='body'
               color='text.primary'
@@ -85,6 +84,7 @@ function SingleOverview({ token }) {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
+              gap: 1,
             }}
           >
             <Box sx={overviewScoreContainerStyle}>
