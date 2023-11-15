@@ -68,8 +68,17 @@ function ComparisonSidebar({ token }) {
   }, [dataView, selectedIndicators, setSelectedIndicators]);
 
   return (
-    <Box sx={{ paddingBottom: 3, borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
-      <Box sx={{ textAlign: "center", m: "15px" }}>
+    <Box sx={{ paddingBottom: 3 }}>
+      <Box
+        sx={{
+          backgroundColor:
+            selectedCompanies.length > 0 ? "transparent" : "#D7D7D7",
+          textAlign: "center",
+          p: "15px",
+          borderTop: "1px solid rgba(0, 0, 0, 0.12)",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+        }}
+      >
         <ToggleButtonGroup
           value={dataView}
           exclusive
@@ -87,9 +96,7 @@ function ComparisonSidebar({ token }) {
               backgroundColor: dataView === "table" ? "#B0C4DE !important" : "",
             }}
           >
-            <Typography variant="body4" textAlign="center">
-              Table View
-            </Typography>
+            <Typography variant="body4">Table View</Typography>
           </ToggleButton>
           <ToggleButton
             value="graph"
@@ -97,9 +104,7 @@ function ComparisonSidebar({ token }) {
               backgroundColor: dataView === "graph" ? "#B0C4DE !important" : "",
             }}
           >
-            <Typography variant="body4" textAlign="center">
-              Graph View
-            </Typography>
+            <Typography variant="body4">Graph View</Typography>
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>

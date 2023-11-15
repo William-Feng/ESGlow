@@ -105,7 +105,7 @@ function SingleOverview({ token }) {
           >
             <Box
               sx={{
-                flex: 1,
+                flex: 1.5,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
