@@ -180,7 +180,7 @@ function SingleView({ token }) {
               <SingleViewSearchbar token={token} />
             </Toolbar>
           </AppBar>
-          <Box sx={overviewStyle}>
+          <Box sx={overviewStyle(true)}>
             <OverviewAccordion
               isSingleView={true}
               isDisabled={!selectedCompany}

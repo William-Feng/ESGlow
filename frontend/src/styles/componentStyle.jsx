@@ -55,14 +55,29 @@ export const drawerBoxStyle = {
   overflowY: "auto",
 };
 
-export const overviewStyle = {
-  position: "fixed",
-  top: "128px",
-  width: "100%",
-  height: "calc(100vh - 128px)",
-  overflowY: "auto",
-  display: "flex",
-  flexDirection: "column",
+export const overviewStyle = (isSingleView) => {
+  const baseStyle = {
+    position: "fixed",
+    top: "128px",
+    width: "100%",
+    height: "calc(100vh - 128px)",
+    overflowY: "auto",
+    display: "flex",
+    flexDirection: "column",
+  };
+
+  if (isSingleView) {
+    baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
+      top: "300px",
+      height: "calc(100vh - 300px)",
+    };
+  } else {
+    baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
+      top: "200px",
+      height: "calc(100vh - 200px)",
+    };
+  }
+  return baseStyle;
 };
 
 export const toggleButtonStyle = {
@@ -74,7 +89,7 @@ export const toggleButtonStyle = {
     fontSize: "1rem",
   },
   [`@media (max-width: ${smallDashboard}px)`]: {
-    fontSize: "2.5vw",
+    fontSize: "4vw",
   },
 };
 
@@ -94,6 +109,6 @@ export const searchBarStyle = {
   backgroundColor: "white",
   borderRadius: 1,
   [`@media (max-width: ${mediumDashboard}px)`]: {
-    width: "70vw",
+    width: "80vw",
   },
 };

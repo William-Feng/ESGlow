@@ -78,7 +78,7 @@ function ComparisonView({ token }) {
             </Toolbar>
           </AppBar>
           <Box
-            sx={overviewStyle}
+            sx={overviewStyle(false)}
           >
             <OverviewAccordion
               isSingleView={false}
