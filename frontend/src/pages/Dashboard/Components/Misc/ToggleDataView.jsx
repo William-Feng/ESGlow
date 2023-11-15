@@ -5,7 +5,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 
-export default function ToggleDataView({ disabled, setDataView, dataView }) {
+export default function ToggleDataView({ disabled, setDataView, dataView, otherViewTitle }) {
   return (
     <>
       <Box
@@ -43,7 +43,7 @@ export default function ToggleDataView({ disabled, setDataView, dataView }) {
               backgroundColor: dataView === "other" ? "#B0C4DE !important" : "",
             }}
           >
-            <Typography variant='body4'>Graph View</Typography>
+            <Typography variant='body4'>{otherViewTitle}</Typography>
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>

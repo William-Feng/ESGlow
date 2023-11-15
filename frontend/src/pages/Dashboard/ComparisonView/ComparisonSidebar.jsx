@@ -69,6 +69,7 @@ function ComparisonSidebar({ token }) {
         disabled={!selectedCompanies.length}
         setDataView={setDataView}
         dataView={dataView}
+        otherViewTitle={"Graph View"}
       />
       {dataView === "graph" ? (
         <YearsRangeAccordion
