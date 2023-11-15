@@ -33,27 +33,6 @@ export const appBarStyle = (isSingleView) => {
   return baseStyle;
 };
 
-export const drawerStyle = (isCompanySelected) => {
-  return {
-    width: 360,
-    flexShrink: 0,
-    "& .MuiDrawer-paper": {
-      position: "static",
-      width: 360,
-      boxSizing: "border-box",
-      overflowY: "auto",
-      maxHeight: "100%",
-      backgroundColor: isCompanySelected ? "transparent" : "#f5f5f5",
-    },
-  };
-};
-
-export const drawerBoxStyle = {
-  flex: 1,
-  display: "flex",
-  flexDirection: "row",
-  overflowY: "auto",
-};
 
 export const overviewStyle = (isSingleView) => {
   const baseStyle = {
@@ -69,12 +48,11 @@ export const overviewStyle = (isSingleView) => {
   if (isSingleView) {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       top: "300px",
-      height: "calc(100vh - 300px)",
+      maxHeight: "calc(100vh - 300px)",
     };
   } else {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       top: "200px",
-      height: "calc(100vh - 200px)",
     };
   }
   return baseStyle;
@@ -89,7 +67,7 @@ export const toggleButtonStyle = {
     fontSize: "1rem",
   },
   [`@media (max-width: ${smallDashboard}px)`]: {
-    fontSize: "4vw",
+    fontSize: "3.2vw",
   },
 };
 
@@ -111,4 +89,39 @@ export const searchBarStyle = {
   [`@media (max-width: ${mediumDashboard}px)`]: {
     width: "80vw",
   },
+};
+
+// Below is the main display section (Sidebar + DataDisplay)
+
+export const mainDisplayBoxStyle = {
+  flex: 1,
+  display: "flex",
+  flexDirection: "row",
+  overflowY: "auto",
+  [`@media (max-width: ${mediumDashboard}px)`]: {
+    flexDirection: "column"
+  },
+};
+
+export const drawerStyle = (isCompanySelected) => {
+  return {
+    width: 360,
+    flexShrink: 0,
+    "& .MuiDrawer-paper": {
+      position: "static",
+      width: "100%",
+      boxSizing: "border-box",
+      overflowY: "auto",
+      maxHeight: "100%",
+      backgroundColor: isCompanySelected ? "transparent" : "#f5f5f5",
+    },
+    [`@media (max-width: ${mediumDashboard}px)`]: {
+      width: "100%",
+    },
+  };
+};
+
+export const sidebarBoxStyle = {
+  paddingBottom: 1,
+  width: "100%"
 };

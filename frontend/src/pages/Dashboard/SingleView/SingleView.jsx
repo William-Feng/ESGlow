@@ -12,7 +12,7 @@ import useYearsData from "../../../hooks/UseYearsData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
 import {
   appBarStyle,
-  drawerBoxStyle,
+  mainDisplayBoxStyle,
   drawerStyle,
   overviewStyle,
 } from "../../../styles/componentStyle";
@@ -188,7 +188,7 @@ function SingleView({ token }) {
               setOverviewExpanded={setOverviewExpanded}
               token={token}
             />
-            <Box sx={drawerBoxStyle}>
+            <Box sx={mainDisplayBoxStyle}>
               <Drawer
                 sx={drawerStyle(selectedCompany)}
                 variant='permanent'

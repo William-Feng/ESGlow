@@ -8,7 +8,7 @@ import { PageContext } from "../Dashboard";
 import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import useIndicatorData from "../../../hooks/UseIndicatorData";
 import useYearsData from "../../../hooks/UseYearsData";
-import { appBarStyle, drawerBoxStyle, drawerStyle, overviewStyle } from "../../../styles/componentStyle";
+import { appBarStyle, mainDisplayBoxStyle, drawerStyle, overviewStyle } from "../../../styles/componentStyle";
 
 export const ComparisonViewContext = createContext();
 
@@ -88,7 +88,7 @@ function ComparisonView({ token }) {
               token={token}
             />
             <Box
-              sx={drawerBoxStyle}
+              sx={mainDisplayBoxStyle}
             >
               <Drawer
                 sx={drawerStyle(selectedCompanies.length)}
