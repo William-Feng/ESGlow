@@ -9,6 +9,7 @@ import {
   dataDisplayPlaceholderStyle,
 } from "../../../styles/componentStyle";
 import SingleTable from "./SingleTable";
+import SingleBarChart from "./SingleBarChart";
 
 function SingleDataDisplay() {
   const {
@@ -17,6 +18,7 @@ function SingleDataDisplay() {
     allIndicators,
     filteredData,
     additionalIndicatorsData,
+    dataView,
   } = useContext(SingleViewContext);
 
   // Convert the indicator data into a format that can be displayed in the table
@@ -75,11 +77,15 @@ function SingleDataDisplay() {
 
   return (
     <Box sx={dataDisplayContainerStyle}>
-      <SingleTable
-        structuredData={structuredData}
-        structuredExtraData={structuredExtraData}
-        hasDataToShow={hasDataToShow}
-      />
+      {dataView === "table" ? (
+        <SingleTable
+          structuredData={structuredData}
+          structuredExtraData={structuredExtraData}
+          hasDataToShow={hasDataToShow}
+        />
+      ) : (
+        <SingleBarChart/>
+      )}
     </Box>
   );
 }
