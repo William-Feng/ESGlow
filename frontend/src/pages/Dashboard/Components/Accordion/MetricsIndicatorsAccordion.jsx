@@ -32,7 +32,11 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   } = useContext(SidebarContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
@@ -150,7 +154,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
             ))
           ) : (
             <Typography style={{ color: "red" }}>
-              Select a framework to see the associated metrics and indicators
+              Select a framework to see the associated metrics and indicators.
             </Typography>
           )}
         </Box>

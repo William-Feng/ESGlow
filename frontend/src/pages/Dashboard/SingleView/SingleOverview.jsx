@@ -1,4 +1,10 @@
-import { Box, Container, Typography, Tooltip, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Tooltip,
+  CircularProgress,
+} from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
@@ -21,7 +27,7 @@ function SingleOverview({ token }) {
     selectedIndustry,
     selectedCompany
   );
-  
+
   const { historicalEsgScores, EsgScoresYears } = useESGScoresData(
     token,
     selectedCompany
@@ -154,7 +160,7 @@ function SingleOverview({ token }) {
               <LineChart
                 width={300}
                 height={220}
-                series={[{ data: historicalEsgScores, label: "ESG Score" }]}
+                series={[{ data: historicalEsgScores, label: "ESG Rating" }]}
                 xAxis={[{ scaleType: "point", data: EsgScoresYears }]}
               />
             ) : (

@@ -172,9 +172,10 @@ function SingleDataDisplay() {
       </Box>
       <Box
         sx={{
-          pt: 3,
           display: "flex",
-          float: "left",
+          justifyContent: "space-between",
+          alignItems: "center",
+          pt: 3,
         }}
       >
         <Button
@@ -190,28 +191,29 @@ function SingleDataDisplay() {
         >
           Download
         </Button>
-      </Box>
-      <Box
-        sx={{
-          pt: 3,
-          display: "flex",
-          float: "right",
-        }}
-      >
-        {adjustedScore && adjustedScore !== "0.0" ? (
-          <>
-            <Typography variant='h5' color='text.secondary'>
-              Adjusted ESG Score:
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {adjustedScore && adjustedScore !== "0.0" ? (
+            <>
+              <Typography variant="h5" color="text.secondary">
+                Adjusted ESG Score:
+              </Typography>
+              <Typography variant="h5" fontWeight="bold" sx={{ ml: 2 }}>
+                {adjustedScore}
+              </Typography>
+            </>
+          ) : hasDataToShow ? (
+            <Typography variant="h6" color="text.secondary">
+              Please click the button located at the bottom of the sidebar to
+              refresh the Adjusted ESG Score.
             </Typography>
-            <Typography variant='h5' fontWeight='bold' sx={{ ml: 2 }}>
-              {adjustedScore}
-            </Typography>
-          </>
-        ) : hasDataToShow ? (
-          <Typography variant='h5' color='text.secondary'>
-            Please make sure the 'UPDATE SCORE' button is clicked.
-          </Typography>
-        ) : null}
+          ) : null}
+        </Box>
       </Box>
     </Box>
   );
