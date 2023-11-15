@@ -2,7 +2,7 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import React, { useMemo, useContext, useCallback } from "react";
+import { useMemo, useContext, useCallback } from "react";
 import { SingleViewContext } from "./SingleView";
 import {
   dataDisplayContainerStyle,
@@ -84,7 +84,10 @@ function SingleDataDisplay() {
           hasDataToShow={hasDataToShow}
         />
       ) : (
-        <SingleBarChart/>
+        <SingleBarChart
+          structuredData={structuredData}
+          structuredExtraData={structuredExtraData}
+        />
       )}
     </Box>
   );

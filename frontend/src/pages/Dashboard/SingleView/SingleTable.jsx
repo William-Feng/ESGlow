@@ -13,12 +13,13 @@ import { SingleViewContext } from "./SingleView";
 import DataRow from "../Components/Misc/DataRow";
 import { tableCellStyle, tableCellTitleStyle } from "../../../styles/fontStyle";
 
-export default function SingleTable({ structuredData, structuredExtraData, hasDataToShow }) {
-  const {
-    selectedCompany,
-    selectedYears,
-    adjustedScore,
-  } = useContext(SingleViewContext);
+export default function SingleTable({
+  structuredData,
+  structuredExtraData,
+  hasDataToShow,
+}) {
+  const { selectedCompany, selectedYears, adjustedScore } =
+    useContext(SingleViewContext);
 
   // Download data display table as CSV
   const handleDownloadCSV = () => {
@@ -130,5 +131,5 @@ export default function SingleTable({ structuredData, structuredExtraData, hasDa
         </Box>
       </Box>
     </>
-  )
+  );
 }
