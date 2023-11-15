@@ -32,7 +32,9 @@ def get_company_values(companies):
     """
     values = {}
     for company in companies:
-        values[company] = get_company_value(company)
+        res = get_company_value(company)
+        if res:
+            values[company] = res
     return values
 
 
@@ -106,8 +108,10 @@ def get_company_value(company):
             "score": calculate_framework(framework, metric_values),
         }
 
+    if not framework_values:
+        return {}
+
     return {
-        "message": "Values for company retrieved!",
         "value": {
             "id": company,
             "ESGscore": sum(
@@ -200,7 +204,7 @@ def get_industry_values(industry_id):
     existing_industry = Industry.query.filter_by(
         industry_id=industry_id).first()
     if not existing_industry:
-        return ({"message": "Invalid industry id provided"}, 400)
+        return ({"message": "Invalid industry id provided."}, 400)
 
     # Find all companies associated with the industry
     companies = [
@@ -384,7 +388,7 @@ def get_company_year_scores(company):
     )
 
     years = sorted([year[0] for year in years])
-    print(years)
+    # print(years)
     # Calculate the data values of each indicator, then the data values of all metrics.
     for year in years:
         metric_values = {}
