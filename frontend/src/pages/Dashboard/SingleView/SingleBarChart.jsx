@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { axisClasses } from '@mui/x-charts';
+import { axisClasses } from "@mui/x-charts";
 import { SingleViewContext } from "./SingleView";
 import { CircularProgress } from "@mui/material";
 
@@ -10,23 +10,26 @@ export default function SingleBarChart({
 }) {
   const { selectedYears } = useContext(SingleViewContext);
 
-  console.log("structured", structuredData);
-  console.log("extra", structuredExtraData);
-
   return (
     <>
-      {structuredData.length || structuredExtraData.length ?
+      {structuredData.length || structuredExtraData.length ? (
         <BarChart
-          dataset={structuredData}
-          xAxis={[{ scaleType: "band", dataKey: "name" }]}
-          yAxis={[
+          dataset={[...structuredData, ...structuredExtraData]}
+          xAxis={[
             {
-              label: "ESG Score",
+              scaleType: "band",
+              dataKey: "name",
+              tickLabelStyle: {
+                angle: 10,
+                textAnchor: "start",
+                fontSize: 9,
+              },
             },
           ]}
+          yAxis={[{ label: "ESG Score" }]}
           sx={{
             [`.${axisClasses.left} .${axisClasses.label}`]: {
-              transform: 'translate(-10px, 0)',
+              transform: "translate(-10px, 0)",
             },
           }}
           series={selectedYears.map((year) => ({
@@ -34,9 +37,9 @@ export default function SingleBarChart({
             label: `${year}`,
           }))}
         />
-        :
-        <CircularProgress/>
-      }
+      ) : (
+        <CircularProgress />
+      )}
     </>
   );
 }

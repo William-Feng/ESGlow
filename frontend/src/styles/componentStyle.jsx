@@ -180,10 +180,10 @@ export const sidebarBoxStyle = {
 };
 
 export const dataDisplayContainerStyle = {
-  padding: "0 20px 24px",
+  padding: "0 20px 20px",
   overflowX: "auto",
   width: "100%",
-  minHeight: "200px",
+  minHeight: "300px",
 };
 
 export const dataDisplayPlaceholderStyle ={
