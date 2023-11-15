@@ -17,6 +17,7 @@ import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 import SidebarSaveButtons from "../Components/Misc/SidebarSaveButtons";
 import useCustomFrameworksData from "../../../hooks/UseCustomFrameworksData";
+import { sidebarBoxStyle } from "../../../styles/componentStyle";
 
 export const SidebarContext = createContext();
 
@@ -556,7 +557,7 @@ function SingleSidebar({ token }) {
   };
 
   return (
-    <Box sx={{ paddingBottom: 3 }}>
+    <Box sx={sidebarBoxStyle}>
       <SnackBarManager
         position={"bottom"}
         successMessage={successMessage}

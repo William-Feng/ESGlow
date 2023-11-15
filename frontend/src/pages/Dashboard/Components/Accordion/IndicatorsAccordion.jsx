@@ -13,6 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function IndicatorsAccordion({
   multi,
@@ -46,12 +47,7 @@ function IndicatorsAccordion({
         }}
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           Indicators
         </Typography>

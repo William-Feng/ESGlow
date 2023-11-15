@@ -12,6 +12,12 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import {
+  tableCellStyle,
+  tableCellTitleStyle,
+  tableRowStyle,
+  tableRowTitleStyle,
+} from "../../../styles/fontStyle";
 
 function ComparisonTable({ token }) {
   const {
@@ -128,35 +134,12 @@ function ComparisonTable({ token }) {
           borderColor: "divider",
         }}
       >
-        <Table size="small">
+        <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: "1.25em",
-                  background: "#D1EFFF",
-                  borderRight: "1px solid",
-                  borderColor: "divider",
-                  padding: "15px",
-                  borderBottom: "2px solid",
-                }}
-              >
-                Indicator
-              </TableCell>
+              <TableCell sx={tableCellTitleStyle}>Indicator</TableCell>
               {selectedCompanies.map((company) => (
-                <TableCell
-                  key={company.company_id}
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: "1.25em",
-                    background: "#D1EFFF",
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    borderBottom: "2px solid",
-                    textAlign: "center",
-                  }}
-                >
+                <TableCell key={company.company_id} sx={tableCellStyle}>
                   {company.name}
                 </TableCell>
               ))}
@@ -174,16 +157,7 @@ function ComparisonTable({ token }) {
                   },
                 }}
               >
-                <TableCell
-                  sx={{
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    fontSize: "1.1em",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                <TableCell sx={tableRowTitleStyle}>
                   {row.name}
                   <Tooltip
                     title={
@@ -206,13 +180,13 @@ function ComparisonTable({ token }) {
                               }}
                             >
                               <Typography
-                                component="span"
+                                component='span'
                                 style={{ fontStyle: "italic" }}
                               >
                                 {sourceNumber.trim()}:
                               </Typography>{" "}
                               <Typography
-                                component="span"
+                                component='span'
                                 style={{ fontWeight: "bold" }}
                               >
                                 {sourceName.trim()}
@@ -229,15 +203,7 @@ function ComparisonTable({ token }) {
                   </Tooltip>
                 </TableCell>
                 {selectedCompanies.map((company) => (
-                  <TableCell
-                    key={company.company_id}
-                    sx={{
-                      borderRight: "1px solid",
-                      borderColor: "divider",
-                      textAlign: "center",
-                      fontSize: "1.1em",
-                    }}
-                  >
+                  <TableCell key={company.company_id} sx={tableRowStyle}>
                     {row[company.company_id] || null}
                   </TableCell>
                 ))}
@@ -253,8 +219,8 @@ function ComparisonTable({ token }) {
           }}
         >
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={handleDownloadCSV}
             sx={{
               width: "150px",

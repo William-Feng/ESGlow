@@ -9,7 +9,7 @@ import {
 import { useContext, useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
-
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 const minDistance = 1;  // constant for minimum slider range => ie.) minimum (n+1) years are shown
 
@@ -57,12 +57,7 @@ function YearsRangeAccordion({ disabled, expanded, onToggleDropdown }) {
         sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           Years
         </Typography>

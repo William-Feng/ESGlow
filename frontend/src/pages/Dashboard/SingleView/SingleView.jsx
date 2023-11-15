@@ -10,6 +10,12 @@ import useFrameworkData from "../../../hooks/UseFrameworksData";
 import useIndicatorData from "../../../hooks/UseIndicatorData";
 import useYearsData from "../../../hooks/UseYearsData";
 import ScoreCalculation from "../../../utils/ScoreCalculation";
+import {
+  appBarStyle,
+  mainDisplayBoxStyle,
+  drawerStyle,
+  overviewStyle,
+} from "../../../styles/componentStyle";
 
 export const SingleViewContext = createContext();
 
@@ -156,15 +162,8 @@ function SingleView({ token }) {
           <CssBaseline />
           <AppBar
             enableColorOnDark
-            position="fixed"
-            color="inherit"
-            elevation={0}
-            sx={{
-              background: "linear-gradient(45deg, #A7D8F0 30%, #89CFF0 90%)",
-              boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-              height: 128,
-              zIndex: (theme) => theme.zIndex.drawer + 1,
-            }}
+            color='inherit'
+            sx={appBarStyle(true)}
           >
             <Toolbar>
               <Header
@@ -179,17 +178,7 @@ function SingleView({ token }) {
               <SingleViewSearchbar token={token} />
             </Toolbar>
           </AppBar>
-          <Box
-            sx={{
-              position: "fixed",
-              top: "128px",
-              width: "100%",
-              height: "calc(100vh - 128px)",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
+          <Box sx={overviewStyle(true)}>
             <OverviewAccordion
               isSingleView={true}
               isDisabled={!selectedCompany}
@@ -197,31 +186,11 @@ function SingleView({ token }) {
               setOverviewExpanded={setOverviewExpanded}
               token={token}
             />
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "row",
-                overflowY: "auto",
-              }}
-            >
+            <Box sx={mainDisplayBoxStyle}>
               <Drawer
-                sx={{
-                  width: 360,
-                  flexShrink: 0,
-                  "& .MuiDrawer-paper": {
-                    position: "static",
-                    width: 360,
-                    boxSizing: "border-box",
-                    overflowY: "auto",
-                    maxHeight: "100%",
-                    backgroundColor: selectedCompany
-                      ? "transparent"
-                      : "#f5f5f5",
-                  },
-                }}
-                variant="permanent"
-                anchor="left"
+                sx={drawerStyle(selectedCompany)}
+                variant='permanent'
+                anchor='left'
               >
                 <SingleViewSidebar token={token} />
               </Drawer>

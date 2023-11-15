@@ -11,6 +11,7 @@ import {
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function YearsSingleAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
@@ -32,12 +33,7 @@ function YearsSingleAccordion({ disabled, expanded, onToggleDropdown }) {
         sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           Years
         </Typography>

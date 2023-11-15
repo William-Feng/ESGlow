@@ -8,6 +8,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SingleOverview from "../../SingleView/SingleOverview";
 import ComparisonOverview from "../../ComparisonView/ComparisonOverview";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function OverviewAccordion({
   isSingleView,
@@ -36,11 +37,7 @@ function OverviewAccordion({
         <Typography
           sx={{
             width: "20%",
-            flexShrink: 0,
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
+            ...accordionSummaryFont
           }}
         >
           Overview
@@ -50,7 +47,6 @@ function OverviewAccordion({
         <Box
           sx={{
             textAlign: "center",
-            maxHeight: "320px",
           }}
         >
           {isSingleView ? (

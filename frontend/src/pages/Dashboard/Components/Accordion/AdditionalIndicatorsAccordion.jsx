@@ -13,6 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
@@ -37,12 +38,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown })
         }}
       >
         <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
+          sx={accordionSummaryFont}
         >
           Additional Indicators
         </Typography>

@@ -11,6 +11,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import { searchBarBoxStyle, searchBarStyle, toggleButtonStyle } from "../../../styles/componentStyle";
 import { useCompanyList } from "../../../hooks/UseCompanyData";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -29,12 +30,7 @@ function ComparisonSearchbar({ token }) {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 5,
-      }}
+      sx={searchBarBoxStyle}
     >
       <Autocomplete
         disablePortal
@@ -59,11 +55,7 @@ function ComparisonSearchbar({ token }) {
           </li>
         )}
         noOptionsText={"No options available"}
-        sx={{
-          width: "340px",
-          backgroundColor: "white",
-          borderRadius: 1,
-        }}
+        sx={searchBarStyle}
         renderInput={(params) => <TextField {...params} label="Company" />}
       />
       <ToggleButtonGroup
@@ -84,15 +76,7 @@ function ComparisonSearchbar({ token }) {
           <Typography
             variant="body4"
             textAlign="center"
-            sx={{
-              fontSize: "14px",
-              "@media (min-width: 768px)": {
-                fontSize: "10px",
-              },
-              "@media (min-width: 1024px)": {
-                fontSize: "14px",
-              },
-            }}
+            sx={toggleButtonStyle}
           >
             Single Company View
           </Typography>
@@ -106,15 +90,7 @@ function ComparisonSearchbar({ token }) {
           <Typography
             variant="body4"
             textAlign="center"
-            sx={{
-              fontSize: "14px",
-              "@media (min-width: 768px)": {
-                fontSize: "10px",
-              },
-              "@media (min-width: 1024px)": {
-                fontSize: "14px",
-              },
-            }}
+            sx={toggleButtonStyle}
           >
             Comparison View
           </Typography>
