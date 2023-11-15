@@ -1,78 +1,16 @@
 import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import useESGData from "../../../hooks/UseESGData";
 
 function ComparisonOverview({ token }) {
   const { selectedCompanies } = useContext(ComparisonViewContext);
 
-  const [companyData, setCompanyData] = useState([]);
-  const [portfolioRating, setPortfolioRating] = useState([]);
-  const [bestPerformer, setBestPerformer] = useState(0);
-  const [worstPerformer, setWorstPerformer] = useState(0);
+  const { companyData, portfolioRating, bestPerformer, worstPerformer } =
+    useESGData(token, selectedCompanies);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (selectedCompanies.length === 0) {
-          return;
-        }
-
-        // Fetch portfolio overview values
-        let company_ids = selectedCompanies.map((c) => c.company_id).join(",");
-
-        const response = await fetch(`/api/values/company/${company_ids}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await response.json();
-
-        // Clear previous data before updating
-        setCompanyData([]);
-
-        const esgScores = selectedCompanies.map((company) => {
-          const esgScore = data[company.company_id].value.ESGscore;
-          const year = data[company.company_id].value.year;
-
-          // Update companyData only for the selected companies
-          setCompanyData((prevData) => [
-            ...prevData,
-            {
-              company_id: company.company_id,
-              name: company.name,
-              score: esgScore,
-              year: year,
-            },
-          ]);
-
-          return esgScore;
-        });
-
-        if (esgScores.length === 0) {
-          // No scores available
-          setPortfolioRating();
-          setBestPerformer();
-          setWorstPerformer();
-        } else {
-          // Calculate average ESG score
-          const totalScore = esgScores.reduce((sum, score) => sum + score, 0);
-          const averageScore = totalScore / esgScores.length;
-          setPortfolioRating(averageScore.toFixed(1));
-
-          // Find best and worst performers
-          setBestPerformer(Math.max(...esgScores));
-          setWorstPerformer(Math.min(...esgScores));
-        }
-      } catch (error) {
-        console.error("There was an error fetching the ESG scores.", error);
-      }
-    };
-
-    fetchData();
-  }, [token, selectedCompanies]);
-
-  const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG scores of the selected companies:`;
+  const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG ratings of the selected companies:`;
   const toolTipStringList = companyData.map((item, index) => (
     <span key={index}>
       - {item.name}: <strong>{Math.round(item.score)}</strong> ({item.year})

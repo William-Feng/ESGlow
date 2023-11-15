@@ -8,6 +8,15 @@ export const PageContext = createContext();
 function Dashboard({ token }) {
   const defaultTheme = createTheme({
     components: {
+      //   MuiAccordion: {
+      //     styleOverrides: {
+      //       root: {
+      //         "&.Mui-disabled": {
+      //           backgroundColor: "#D7D7D7",
+      //         },
+      //       },
+      //     },
+      //   },
       MuiTooltip: {
         defaultProps: {
           arrow: true,

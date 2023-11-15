@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import { useCompanyList } from "../../../hooks/UseCompanyData";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -23,29 +24,8 @@ function ComparisonSearchbar({ token }) {
     ComparisonViewContext
   );
 
-  const [companyList, setCompanyList] = useState([]);
-
   const isMaxSelectionReached = selectedCompanies.length >= maxSelection;
-
-  useEffect(() => {
-    fetch("/api/companies/all", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCompanyList(data.companies);
-      })
-      .catch((error) => {
-        if (error !== "No companies found") {
-          console.error(
-            "There was an error fetching the company information.",
-            error
-          );
-        }
-      });
-  }, [token]);
+  const companyList = useCompanyList(token);
 
   return (
     <Box
@@ -105,12 +85,12 @@ function ComparisonSearchbar({ token }) {
             variant="body4"
             textAlign="center"
             sx={{
-              fontSize: "14px", // Default font size
+              fontSize: "14px",
               "@media (min-width: 768px)": {
-                fontSize: "10px", // Adjust font size for screens wider than 768px
+                fontSize: "10px",
               },
               "@media (min-width: 1024px)": {
-                fontSize: "14px", // Adjust font size for screens wider than 1024px
+                fontSize: "14px",
               },
             }}
           >

@@ -1,6 +1,33 @@
 import { useEffect, useState } from "react";
 
-function useCompanyData(selectedIndustry, token) {
+export function useCompanyList(token) {
+  const [companyList, setCompanyList] = useState([]);
+
+  useEffect(() => {
+    const fetchAllCompanies = async () => {
+      try {
+        const response = await fetch("/api/companies/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setCompanyList(data.companies);
+      } catch (error) {
+        console.error(
+          "There was an error fetching the company information.",
+          error
+        );
+      }
+    };
+
+    fetchAllCompanies();
+  }, [token]);
+
+  return companyList;
+}
+
+export function useCompanyData(selectedIndustry, token) {
   const [companyList, setCompanyList] = useState([]);
 
   useEffect(() => {
@@ -47,5 +74,3 @@ function useCompanyData(selectedIndustry, token) {
 
   return companyList;
 }
-
-export default useCompanyData;
