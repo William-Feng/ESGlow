@@ -1,8 +1,8 @@
 import { AppBar, Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
 import Header from "../Components/Misc/Header";
-import SingleViewSearchbar from "./SingleSearchbar";
-import SingleViewSidebar from "./SingleSidebar";
-import SingleViewData from "./SingleDataDisplay";
+import SingleModeSearchbar from "./SingleSearchbar";
+import SingleModeSidebar from "./SingleSidebar";
+import SingleModeData from "./SingleDataDisplay";
 import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import { useEffect, useState, useContext, createContext } from "react";
 import { PageContext } from "../Dashboard";
@@ -17,10 +17,10 @@ import {
   overviewStyle,
 } from "../../../styles/componentStyle";
 
-export const SingleViewContext = createContext();
+export const SingleModeContext = createContext();
 
-function SingleView({ token }) {
-  const { view, setView } = useContext(PageContext);
+function SingleMode({ token }) {
+  const { mode, setMode } = useContext(PageContext);
   const [dataView, setDataView] = useState("table");
   const [overviewExpanded, setOverviewExpanded] = useState(false);
   const [yearsList, selectedYears, setSelectedYears] = useYearsData(token);
@@ -124,10 +124,10 @@ function SingleView({ token }) {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <SingleViewContext.Provider
+        <SingleModeContext.Provider
           value={{
-            view,
-            setView,
+            mode,
+            setMode,
             frameworksData,
             yearsList,
             filteredData,
@@ -159,15 +159,11 @@ function SingleView({ token }) {
             savedAdditionalIndicatorWeights,
             setSavedAdditionalIndicatorWeights,
             setDataView,
-            dataView
+            dataView,
           }}
         >
           <CssBaseline />
-          <AppBar
-            enableColorOnDark
-            color='inherit'
-            sx={appBarStyle(true)}
-          >
+          <AppBar enableColorOnDark color="inherit" sx={appBarStyle(true)}>
             <Toolbar>
               <Header
                 token={token}
@@ -178,12 +174,12 @@ function SingleView({ token }) {
               />
             </Toolbar>
             <Toolbar sx={{ margin: "auto" }}>
-              <SingleViewSearchbar token={token} />
+              <SingleModeSearchbar token={token} />
             </Toolbar>
           </AppBar>
           <Box sx={overviewStyle(true)}>
             <OverviewAccordion
-              isSingleView={true}
+              isSingleMode={true}
               isDisabled={!selectedCompany}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
@@ -192,18 +188,18 @@ function SingleView({ token }) {
             <Box sx={mainDisplayBoxStyle}>
               <Drawer
                 sx={drawerStyle(selectedCompany)}
-                variant='permanent'
-                anchor='left'
+                variant="permanent"
+                anchor="left"
               >
-                <SingleViewSidebar token={token} />
+                <SingleModeSidebar token={token} />
               </Drawer>
-              <SingleViewData />
+              <SingleModeData />
             </Box>
           </Box>
-        </SingleViewContext.Provider>
+        </SingleModeContext.Provider>
       </Box>
     </>
   );
 }
 
-export default SingleView;
+export default SingleMode;

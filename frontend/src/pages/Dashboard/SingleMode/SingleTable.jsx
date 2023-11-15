@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext } from "react";
-import { SingleViewContext } from "./SingleView";
+import { SingleModeContext } from "./SingleMode";
 import DataRow from "../Components/Misc/DataRow";
 import { tableCellStyle, tableCellTitleStyle } from "../../../styles/fontStyle";
 
@@ -19,7 +19,7 @@ export default function SingleTable({
   hasDataToShow,
 }) {
   const { selectedCompany, selectedYears, adjustedScore } =
-    useContext(SingleViewContext);
+    useContext(SingleModeContext);
 
   // Download data display table as CSV
   const handleDownloadCSV = () => {
@@ -51,7 +51,7 @@ export default function SingleTable({
           borderColor: "divider",
         }}
       >
-        <Table size='small'>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell sx={tableCellTitleStyle}>Indicator</TableCell>
@@ -68,8 +68,8 @@ export default function SingleTable({
                 key={index}
                 row={row}
                 backgroundColor={index % 2 === 0 ? "#FAFAFA" : "#F5F5F5"}
-                borderTopColor='#E0E0E0'
-                hoverColor='#E5E5E5'
+                borderTopColor="#E0E0E0"
+                hoverColor="#E5E5E5"
                 selectedYears={selectedYears}
               />
             ))}
@@ -77,9 +77,9 @@ export default function SingleTable({
               <DataRow
                 key={`extra-${index}`}
                 row={row}
-                backgroundColor='#F0E5FF'
-                borderTopColor='#D5C8FF'
-                hoverColor='#E8D6FF'
+                backgroundColor="#F0E5FF"
+                borderTopColor="#D5C8FF"
+                hoverColor="#E8D6FF"
                 selectedYears={selectedYears}
               />
             ))}
@@ -95,8 +95,8 @@ export default function SingleTable({
         }}
       >
         <Button
-          variant='contained'
-          color='primary'
+          variant="contained"
+          color="primary"
           onClick={handleDownloadCSV}
           sx={{
             width: "150px",
@@ -116,16 +116,16 @@ export default function SingleTable({
         >
           {adjustedScore && adjustedScore !== "0.0" ? (
             <>
-              <Typography variant='h5' color='text.secondary'>
+              <Typography variant="h5" color="text.secondary">
                 Adjusted ESG Score:
               </Typography>
-              <Typography variant='h5' fontWeight='bold' sx={{ ml: 2 }}>
+              <Typography variant="h5" fontWeight="bold" sx={{ ml: 2 }}>
                 {adjustedScore}
               </Typography>
             </>
           ) : hasDataToShow ? (
-            <Typography variant='h6' color='text.secondary'>
-              Please click 'UPDATE SCORE' to display Adjusted ESG Score.
+            <Typography variant="h6" color="text.secondary">
+              Please click 'UPDATE SCORE' to display the Adjusted ESG Score.
             </Typography>
           ) : null}
         </Box>

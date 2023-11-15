@@ -10,33 +10,31 @@ import {
 } from "@mui/material";
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ComparisonViewContext } from "../../ComparisonView/ComparisonView";
+import { ComparisonModeContext } from "../../ComparisonMode/ComparisonMode";
 import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function YearsSingleAccordion({ disabled, expanded, onToggleDropdown }) {
-  const {
-    yearsList,
-    selectedYear,
-    setSelectedYear
-  } = useContext(ComparisonViewContext);
-  
+  const { yearsList, selectedYear, setSelectedYear } = useContext(
+    ComparisonModeContext
+  );
+
   const handleYearSelect = (_, value) => {
     setSelectedYear([parseInt(value)]);
-  }
+  };
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
         sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
       >
-        <Typography
-          sx={accordionSummaryFont}
-        >
-          Years
-        </Typography>
+        <Typography sx={accordionSummaryFont}>Years</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box

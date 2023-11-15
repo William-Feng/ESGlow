@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { SidebarContext } from "../../SingleMode/SingleSidebar";
 import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function FrameworkAccordion({ disabled, expanded, onToggleDropdown }) {
@@ -43,18 +43,18 @@ function FrameworkAccordion({ disabled, expanded, onToggleDropdown }) {
   }, [frameworksData, customFrameworks]);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
         id="panel1bh-header"
         sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}
       >
-        <Typography
-          sx={accordionSummaryFont}
-        >
-          Frameworks
-        </Typography>
+        <Typography sx={accordionSummaryFont}>Frameworks</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <FormControl fullWidth>

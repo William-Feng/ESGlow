@@ -12,10 +12,14 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { SidebarContext } from "../../SingleMode/SingleSidebar";
 import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
-function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
+function AdditionalIndicatorsAccordion({
+  disabled,
+  expanded,
+  onToggleDropdown,
+}) {
   const {
     additionalIndicators,
     selectedAdditionalIndicators,
@@ -25,7 +29,11 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown })
   } = useContext(SidebarContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
@@ -37,11 +45,7 @@ function AdditionalIndicatorsAccordion({ disabled, expanded, onToggleDropdown })
           textTransform: "uppercase",
         }}
       >
-        <Typography
-          sx={accordionSummaryFont}
-        >
-          Additional Indicators
-        </Typography>
+        <Typography sx={accordionSummaryFont}>Additional Indicators</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>

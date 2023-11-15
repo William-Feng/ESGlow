@@ -15,10 +15,10 @@ import {
   overviewStyle,
 } from "../../../styles/componentStyle";
 
-export const ComparisonViewContext = createContext();
+export const ComparisonModeContext = createContext();
 
-function ComparisonView({ token }) {
-  const { view, setView } = useContext(PageContext);
+function ComparisonMode({ token }) {
+  const { mode, setMode } = useContext(PageContext);
   const [overviewExpanded, setOverviewExpanded] = useState(false);
   const [dataView, setDataView] = useState("table");
   const [selectedCompanies, setSelectedCompanies] = useState([]);
@@ -49,12 +49,12 @@ function ComparisonView({ token }) {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <ComparisonViewContext.Provider
+        <ComparisonModeContext.Provider
           value={{
             selectedCompanies,
             setSelectedCompanies,
-            view,
-            setView,
+            mode,
+            setMode,
             selectedYear,
             setSelectedYear,
             selectedYearRange,
@@ -70,7 +70,7 @@ function ComparisonView({ token }) {
           <CssBaseline />
           <AppBar
             enableColorOnDark
-            color='inherit'
+            color="inherit"
             elevation={0}
             sx={appBarStyle(false)}
           >
@@ -83,7 +83,7 @@ function ComparisonView({ token }) {
           </AppBar>
           <Box sx={overviewStyle(false)}>
             <OverviewAccordion
-              isSingleView={false}
+              isSingleMode={false}
               isDisabled={!selectedCompanies.length}
               overviewExpanded={overviewExpanded}
               setOverviewExpanded={setOverviewExpanded}
@@ -92,18 +92,18 @@ function ComparisonView({ token }) {
             <Box sx={mainDisplayBoxStyle}>
               <Drawer
                 sx={drawerStyle(selectedCompanies.length)}
-                variant='permanent'
-                anchor='left'
+                variant="permanent"
+                anchor="left"
               >
                 <ComparisonSidebar token={token} />
               </Drawer>
               <ComparisonDataDisplay token={token} />
             </Box>
           </Box>
-        </ComparisonViewContext.Provider>
+        </ComparisonModeContext.Provider>
       </Box>
     </>
   );
 }
 
-export default ComparisonView;
+export default ComparisonMode;

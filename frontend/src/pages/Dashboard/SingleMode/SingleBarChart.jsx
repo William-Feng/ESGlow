@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { axisClasses } from "@mui/x-charts";
-import { SingleViewContext } from "./SingleView";
+import { SingleModeContext } from "./SingleMode";
 import { CircularProgress } from "@mui/material";
 
 export default function SingleBarChart({
   structuredData,
   structuredExtraData,
 }) {
-  const { selectedYears } = useContext(SingleViewContext);
+  const { selectedYears } = useContext(SingleModeContext);
 
   return (
     <>
