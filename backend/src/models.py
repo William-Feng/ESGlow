@@ -198,7 +198,7 @@ class CustomFrameworkModels:
     
     @staticmethod
     def custom_preference_model(api):
-        return api.model('Preferences', {
+        return api.model('CustomPreferences', {
             'indicator_id': fields.Integer(required=True, description='Indicator ID', example=1),
             'weight': fields.Float(required=True, description='Chosen weight of the indicator', example=0.5)
         })
@@ -206,8 +206,9 @@ class CustomFrameworkModels:
     @staticmethod
     def custom_framework_model(api):
         return api.model('CustomFramework', {
-            'framework_name': fields.String(required=True, description='Custom framework name'),
-            'preferences': fields.List(fields.Nested(CustomFrameworkModels.preferences_model(api)), required=True, description='List of indicator preferences')
+            'name': fields.String(required=True, description='Custom framework name'),
+            'description': fields.String(required=True, description='Framework description'),
+            'preferences': fields.List(fields.Nested(CustomFrameworkModels.custom_preference_model(api)), required=True, description='List of indicator preferences')
         })
     
     @staticmethod
