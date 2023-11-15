@@ -23,6 +23,7 @@ export const appBarStyle = (isSingleView) => {
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
     height: 128,
     zIndex: (theme) => theme.zIndex.drawer + 1,
+    position: "fixed",
   };
 
   if (isSingleView) {
@@ -57,6 +58,7 @@ export const overviewStyle = (isSingleView) => {
   } else {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       top: "200px",
+      maxHeight: "calc(100vh - 200px)",
     };
   }
   return baseStyle;
@@ -88,15 +90,16 @@ export const overviewContentContainerStyle = {
   gap: 2,
   [`@media (max-width: ${maxWidthMedium}px)`]: {
     flexDirection: "row",
+    m: "10px",
   },
-}
+};
 
 export const overviewScoreContainerStyle = {
   flex: 1,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-}
+};
 
 export const toggleButtonStyle = {
   fontSize: "13px",
@@ -137,7 +140,9 @@ export const mainDisplayBoxStyle = {
   flex: 1,
   display: "flex",
   flexDirection: "row",
-  overflowY: "auto",
+  [`@media (min-width: ${mediumDashboard}px)`]: {
+    overflowY: "auto",
+  },
   [`@media (max-width: ${mediumDashboard}px)`]: {
     flexDirection: "column",
   },
@@ -165,3 +170,19 @@ export const sidebarBoxStyle = {
   paddingBottom: 1,
   width: "100%",
 };
+
+export const dataDisplayContainerStyle = {
+  padding: "0 20px 24px",
+  overflowX: "auto",
+  width: "100%",
+  minHeight: "200px",
+};
+
+export const dataDisplayPlaceholderStyle ={
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flex: 1,
+  bgcolor: "#f5f5f5",
+  minHeight: "200px",
+}

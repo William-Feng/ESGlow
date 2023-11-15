@@ -8,7 +8,12 @@ import { PageContext } from "../Dashboard";
 import OverviewAccordion from "../Components/Accordion/OverviewAccordion";
 import useIndicatorData from "../../../hooks/UseIndicatorData";
 import useYearsData from "../../../hooks/UseYearsData";
-import { appBarStyle, mainDisplayBoxStyle, drawerStyle, overviewStyle } from "../../../styles/componentStyle";
+import {
+  appBarStyle,
+  mainDisplayBoxStyle,
+  drawerStyle,
+  overviewStyle,
+} from "../../../styles/componentStyle";
 
 export const ComparisonViewContext = createContext();
 
@@ -65,8 +70,7 @@ function ComparisonView({ token }) {
           <CssBaseline />
           <AppBar
             enableColorOnDark
-            position="fixed"
-            color="inherit"
+            color='inherit'
             elevation={0}
             sx={appBarStyle(false)}
           >
@@ -77,9 +81,7 @@ function ComparisonView({ token }) {
               <ComparisonSearchbar token={token} />
             </Toolbar>
           </AppBar>
-          <Box
-            sx={overviewStyle(false)}
-          >
+          <Box sx={overviewStyle(false)}>
             <OverviewAccordion
               isSingleView={false}
               isDisabled={!selectedCompanies.length}
@@ -87,13 +89,11 @@ function ComparisonView({ token }) {
               setOverviewExpanded={setOverviewExpanded}
               token={token}
             />
-            <Box
-              sx={mainDisplayBoxStyle}
-            >
+            <Box sx={mainDisplayBoxStyle}>
               <Drawer
                 sx={drawerStyle(selectedCompanies.length)}
-                variant="permanent"
-                anchor="left"
+                variant='permanent'
+                anchor='left'
               >
                 <ComparisonSidebar token={token} />
               </Drawer>

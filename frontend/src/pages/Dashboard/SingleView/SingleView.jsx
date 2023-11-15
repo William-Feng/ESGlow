@@ -162,9 +162,7 @@ function SingleView({ token }) {
           <CssBaseline />
           <AppBar
             enableColorOnDark
-            position='fixed'
             color='inherit'
-            elevation={0}
             sx={appBarStyle(true)}
           >
             <Toolbar>

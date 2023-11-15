@@ -3,6 +3,10 @@ import { useContext } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
 import ComparisonTable from "./ComparisonTable";
 import ComparisonGraph from "./ComparisonGraph";
+import {
+  dataDisplayContainerStyle,
+  dataDisplayPlaceholderStyle,
+} from "../../../styles/componentStyle";
 
 function ComparisonDataDisplay({ token }) {
   const { dataView, selectedCompanies, selectedYear, selectedIndicators } =
@@ -14,16 +18,8 @@ function ComparisonDataDisplay({ token }) {
     (!selectedYear.length && dataView === "table")
   ) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1,
-          bgcolor: "#f5f5f5",
-        }}
-      >
-        <Typography variant="h6" color="text.secondary">
+      <Box sx={dataDisplayPlaceholderStyle}>
+        <Typography variant='h6' color='text.secondary'>
           {selectedCompanies.length === 0
             ? "Please select at least one company to view the ESG data."
             : dataView === "table" && selectedYear.length === 0
@@ -37,13 +33,7 @@ function ComparisonDataDisplay({ token }) {
   }
 
   return (
-    <Box
-      sx={{
-        padding: "0 20px 24px",
-        overflowX: "auto",
-        width: "100%",
-      }}
-    >
+    <Box sx={dataDisplayContainerStyle}>
       {dataView === "table" ? (
         <ComparisonTable token={token} />
       ) : (

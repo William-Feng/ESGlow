@@ -11,6 +11,10 @@ import {
 import React, { useMemo, useContext, useCallback } from "react";
 import { SingleViewContext } from "./SingleView";
 import DataRow from "../Components/Misc/DataRow";
+import {
+  dataDisplayContainerStyle,
+  dataDisplayPlaceholderStyle,
+} from "../../../styles/componentStyle";
 
 function SingleDataDisplay() {
   const {
@@ -67,16 +71,8 @@ function SingleDataDisplay() {
   // Display a prompt if the user has not selected a company or there is no data to show
   if (!selectedCompany || !hasDataToShow) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1,
-          bgcolor: "#f5f5f5",
-        }}
-      >
-        <Typography variant="h6" color="text.secondary">
+      <Box sx={dataDisplayPlaceholderStyle}>
+        <Typography variant='h6' color='text.secondary'>
           {selectedCompany
             ? "Please select a framework or at least one of the additional indicators to view the ESG data."
             : "Please select a company to view the ESG data."}
@@ -108,20 +104,14 @@ function SingleDataDisplay() {
   };
 
   return (
-    <Box
-      sx={{
-        padding: "0 20px 24px",
-        overflowX: "auto",
-        width: "100%",
-      }}
-    >
+    <Box sx={dataDisplayContainerStyle}>
       <Box
         sx={{
           border: "1px solid",
           borderColor: "divider",
         }}
       >
-        <Table size="small">
+        <Table size='small'>
           <TableHead>
             <TableRow>
               <TableCell
@@ -162,8 +152,8 @@ function SingleDataDisplay() {
                 key={index}
                 row={row}
                 backgroundColor={index % 2 === 0 ? "#FAFAFA" : "#F5F5F5"}
-                borderTopColor="#E0E0E0"
-                hoverColor="#E5E5E5"
+                borderTopColor='#E0E0E0'
+                hoverColor='#E5E5E5'
                 selectedYears={selectedYears}
               />
             ))}
@@ -171,9 +161,9 @@ function SingleDataDisplay() {
               <DataRow
                 key={`extra-${index}`}
                 row={row}
-                backgroundColor="#F0E5FF"
-                borderTopColor="#D5C8FF"
-                hoverColor="#E8D6FF"
+                backgroundColor='#F0E5FF'
+                borderTopColor='#D5C8FF'
+                hoverColor='#E8D6FF'
                 selectedYears={selectedYears}
               />
             ))}
@@ -188,8 +178,8 @@ function SingleDataDisplay() {
         }}
       >
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           onClick={handleDownloadCSV}
           sx={{
             width: "150px",
@@ -210,15 +200,15 @@ function SingleDataDisplay() {
       >
         {adjustedScore && adjustedScore !== "0.0" ? (
           <>
-            <Typography variant="h5" color="text.secondary">
+            <Typography variant='h5' color='text.secondary'>
               Adjusted ESG Score:
             </Typography>
-            <Typography variant="h5" fontWeight="bold" sx={{ ml: 2 }}>
+            <Typography variant='h5' fontWeight='bold' sx={{ ml: 2 }}>
               {adjustedScore}
             </Typography>
           </>
         ) : hasDataToShow ? (
-          <Typography variant="h5" color="text.secondary">
+          <Typography variant='h5' color='text.secondary'>
             Please make sure the 'UPDATE SCORE' button is clicked.
           </Typography>
         ) : null}
