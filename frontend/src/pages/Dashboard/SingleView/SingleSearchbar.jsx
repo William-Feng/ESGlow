@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useContext } from "react";
 import { SingleViewContext } from "./SingleView";
-import useCompanyData from "../../../hooks/UseCompanyData";
+import { useCompanyData } from "../../../hooks/UseCompanyData";
 import useIndustryData from "../../../hooks/UseIndustryData";
 
 function SingleSearchbar({ token }) {

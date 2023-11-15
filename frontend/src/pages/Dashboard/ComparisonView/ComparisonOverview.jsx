@@ -10,7 +10,7 @@ function ComparisonOverview({ token }) {
   const { companyData, portfolioRating, bestPerformer, worstPerformer } =
     useESGData(token, selectedCompanies);
 
-  const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG scores of the selected companies:`;
+  const toolTipStringIntro = `The Portfolio ESG Rating is calculated by averaging the most recent ESG ratings of the selected companies:`;
   const toolTipStringList = companyData.map((item, index) => (
     <span key={index}>
       - {item.name}: <strong>{Math.round(item.score)}</strong> ({item.year})
