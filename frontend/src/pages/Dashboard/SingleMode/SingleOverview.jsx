@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { SingleModeContext } from "./SingleMode";
 import useIndustryData from "../../../hooks/UseIndustryData";
 import RecentESGScores from "../../../utils/RecentESGScores";
-import { useESGScoresData } from "../../../hooks/UseGraphData";
+import { useESGScoresData } from "../../../hooks/UseComparisonData";
 import {
   overviewContainerStyle,
   overviewContentContainerStyle,

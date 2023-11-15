@@ -7,7 +7,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import {
   useIndicatorMeanScores,
   useComparisonGraphData,
-} from "../../../hooks/UseGraphData";
+} from "../../../hooks/UseComparisonData";
 
 function ComparisonGraph({ token }) {
   const {

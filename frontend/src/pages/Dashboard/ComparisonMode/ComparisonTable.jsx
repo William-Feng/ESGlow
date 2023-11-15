@@ -9,9 +9,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ComparisonModeContext } from "./ComparisonMode";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useComparisonTableData } from "../../../hooks/UseComparisonData";
 import {
   tableCellStyle,
   tableCellTitleStyle,
@@ -29,73 +30,15 @@ function ComparisonTable({ token }) {
     yearsList,
   } = useContext(ComparisonModeContext);
 
-  const [currentData, setCurrentData] = useState({});
-
-  useEffect(() => {
-    if (selectedCompanies.length === 0 || selectedIndicators.length === 0) {
-      return;
-    }
-    const indicatorIds = selectedIndicators.join(",");
-    let yearsListString = yearsList.join(",");
-    if (dataView === "table") {
-      yearsListString = selectedYear[0];
-    }
-    const newData = {};
-    const promisesList = [];
-
-    selectedCompanies.forEach((c) => {
-      promisesList.push(
-        fetch(
-          `/api/values/${c.company_id}/${indicatorIds}/${yearsListString}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            const dataValues = data.values;
-            dataValues.forEach((indicatorInfo) => {
-              if (!newData[indicatorInfo.indicator_id]) {
-                const indicator_source = indicatorsList.find(
-                  (indicator) =>
-                    indicator.indicator_id === indicatorInfo.indicator_id
-                )?.indicator_source;
-                newData[indicatorInfo.indicator_id] = {
-                  name: indicatorInfo.indicator_name,
-                  source: indicator_source,
-                };
-              }
-              newData[indicatorInfo.indicator_id][c.company_id] =
-                indicatorInfo.value;
-            });
-          })
-          .catch((error) => {
-            console.error(
-              "Error fetching indicator values for company:",
-              error
-            );
-          })
-      );
-    });
-
-    Promise.all(promisesList)
-      .then(() => {
-        setCurrentData(newData);
-      })
-      .catch((error) => {
-        console.error("Error fetching all indicator values:", error);
-      });
-  }, [
+  const currentData = useComparisonTableData(
     token,
     selectedCompanies,
     selectedIndicators,
     selectedYear,
     indicatorsList,
     yearsList,
-    dataView,
-  ]);
+    dataView
+  );
 
   // Download data display table as CSV
   const handleDownloadCSV = () => {
