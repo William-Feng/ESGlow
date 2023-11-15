@@ -47,7 +47,6 @@ function OverviewAccordion({
         <Box
           sx={{
             textAlign: "center",
-            maxHeight: "320px",
           }}
         >
           {isSingleView ? (

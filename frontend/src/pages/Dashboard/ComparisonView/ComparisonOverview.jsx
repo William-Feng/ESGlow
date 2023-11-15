@@ -2,6 +2,7 @@ import { Box, Container, Typography, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext, useEffect, useState } from "react";
 import { ComparisonViewContext } from "./ComparisonView";
+import { overviewContainerStyle } from "../../../styles/componentStyle";
 
 function ComparisonOverview({ token }) {
   const { selectedCompanies } = useContext(ComparisonViewContext);
@@ -84,7 +85,7 @@ function ComparisonOverview({ token }) {
       sx={{
         bgcolor: "background.paper",
         mx: "auto",
-        mt: -4,
+        mt: -3,
       }}
     >
       <Typography
@@ -104,18 +105,7 @@ function ComparisonOverview({ token }) {
           </span>
         ))}
       </Typography>
-      <Container
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "nowrap",
-          justifyContent: "space-between",
-          alignItems: "center",
-          border: 1,
-          borderRadius: 4,
-          padding: 2,
-        }}
-      >
+      <Container sx={overviewContainerStyle}>
         <Box
           sx={{
             flex: 2.5,

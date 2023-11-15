@@ -1,4 +1,9 @@
-import { bigDashboard, mediumDashboard, smallDashboard } from "./viewportSizes";
+import {
+  bigDashboard,
+  maxWidthMedium,
+  mediumDashboard,
+  smallDashboard,
+} from "./viewportSizes";
 
 // Below are Landing Page styles
 
@@ -33,7 +38,6 @@ export const appBarStyle = (isSingleView) => {
   return baseStyle;
 };
 
-
 export const overviewStyle = (isSingleView) => {
   const baseStyle = {
     position: "fixed",
@@ -57,6 +61,42 @@ export const overviewStyle = (isSingleView) => {
   }
   return baseStyle;
 };
+
+export const overviewContainerStyle = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "nowrap",
+  justifyContent: "space-between",
+  alignItems: "center",
+  border: 1,
+  borderRadius: 4,
+  padding: 2,
+  [`@media (max-width: ${maxWidthMedium}px)`]: {
+    flexDirection: "column",
+    width: "100%",
+    overflowY: "auto",
+  },
+};
+
+export const overviewContentContainerStyle = {
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  textAlign: "center",
+  gap: 2,
+  [`@media (max-width: ${maxWidthMedium}px)`]: {
+    flexDirection: "row",
+  },
+}
+
+export const overviewScoreContainerStyle = {
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+}
 
 export const toggleButtonStyle = {
   fontSize: "13px",
@@ -99,7 +139,7 @@ export const mainDisplayBoxStyle = {
   flexDirection: "row",
   overflowY: "auto",
   [`@media (max-width: ${mediumDashboard}px)`]: {
-    flexDirection: "column"
+    flexDirection: "column",
   },
 };
 
@@ -123,5 +163,5 @@ export const drawerStyle = (isCompanySelected) => {
 
 export const sidebarBoxStyle = {
   paddingBottom: 1,
-  width: "100%"
+  width: "100%",
 };
