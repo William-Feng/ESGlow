@@ -55,3 +55,50 @@ export const accordionSummaryFont = {
 export const landingPageLinkFont = {
   fontSize: "1rem",
 };
+
+// Below is table font size
+
+export const tableCellStyle = {
+  fontWeight: "bold",
+  fontSize: "1.25em",
+  background: "#D1EFFF",
+  borderRight: "1px solid",
+  borderColor: "divider",
+  borderBottom: "2px solid",
+  textAlign: "center",
+  [`@media (max-width: ${maxWidthSmall}px)`]: {
+    fontSize: "0.8em",
+  },
+}
+
+export const tableCellTitleStyle = {
+  fontWeight: "bold",
+  fontSize: "1.25em",
+  background: "#D1EFFF",
+  borderRight: "1px solid",
+  borderColor: "divider",
+  padding: "15px",
+  borderBottom: "2px solid",
+  [`@media (max-width: ${maxWidthSmall}px)`]: {
+    fontSize: "1em",
+  },
+};
+
+export const tableRowTitleStyle = {
+  borderRight: "1px solid",
+  borderColor: "divider",
+  fontSize: "1.1em",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  [`@media (max-width: ${maxWidthSmall}px)`]: {
+    fontSize: "0.7em",
+  },
+}
+
+export const tableRowStyle = {
+  borderRight: "1px solid",
+  borderColor: "divider",
+  textAlign: "center",
+  fontSize: "1.1em",
+}

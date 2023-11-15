@@ -15,6 +15,7 @@ import {
   dataDisplayContainerStyle,
   dataDisplayPlaceholderStyle,
 } from "../../../styles/componentStyle";
+import { tableCellStyle, tableCellTitleStyle } from "../../../styles/fontStyle";
 
 function SingleDataDisplay() {
   const {
@@ -114,33 +115,9 @@ function SingleDataDisplay() {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: "1.25em",
-                  background: "#D1EFFF",
-                  borderRight: "1px solid",
-                  borderColor: "divider",
-                  padding: "15px",
-                  borderBottom: "2px solid",
-                }}
-              >
-                Indicator
-              </TableCell>
+              <TableCell sx={tableCellTitleStyle}>Indicator</TableCell>
               {selectedYears.map((year) => (
-                <TableCell
-                  key={year}
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: "1.25em",
-                    background: "#D1EFFF",
-                    borderRight: "1px solid",
-                    borderColor: "divider",
-                    padding: "15px",
-                    borderBottom: "2px solid",
-                    textAlign: "center",
-                  }}
-                >
+                <TableCell key={year} sx={tableCellStyle}>
                   {year}
                 </TableCell>
               ))}
@@ -200,17 +177,16 @@ function SingleDataDisplay() {
         >
           {adjustedScore && adjustedScore !== "0.0" ? (
             <>
-              <Typography variant="h5" color="text.secondary">
+              <Typography variant='h5' color='text.secondary'>
                 Adjusted ESG Score:
               </Typography>
-              <Typography variant="h5" fontWeight="bold" sx={{ ml: 2 }}>
+              <Typography variant='h5' fontWeight='bold' sx={{ ml: 2 }}>
                 {adjustedScore}
               </Typography>
             </>
           ) : hasDataToShow ? (
-            <Typography variant="h6" color="text.secondary">
-              Please click the button located at the bottom of the sidebar to
-              refresh the Adjusted ESG Score.
+            <Typography variant='h6' color='text.secondary'>
+              Please click 'UPDATE SCORE' to display Adjusted ESG Score.
             </Typography>
           ) : null}
         </Box>

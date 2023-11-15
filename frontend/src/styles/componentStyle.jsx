@@ -34,6 +34,9 @@ export const appBarStyle = (isSingleView) => {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       height: "200px",
     };
+    baseStyle[`@media (max-width: ${smallDashboard}px)`] = {
+      height: "230px",
+    };
   }
 
   return baseStyle;
@@ -59,6 +62,10 @@ export const overviewStyle = (isSingleView) => {
     baseStyle[`@media (max-width: ${mediumDashboard}px)`] = {
       top: "200px",
       maxHeight: "calc(100vh - 200px)",
+    };
+    baseStyle[`@media (max-width: ${smallDashboard}px)`] = {
+      top: "230px",
+      maxHeight: "calc(100vh - 230px)",
     };
   }
   return baseStyle;
