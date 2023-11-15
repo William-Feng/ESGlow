@@ -69,6 +69,12 @@ function SidebarSaveButtons({
             variant="standard"
             value={customFrameworkName}
             onChange={handleCustomFrameworkNameChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSaveFramework();
+              }
+            }}
           />
           <TextField
             margin="dense"

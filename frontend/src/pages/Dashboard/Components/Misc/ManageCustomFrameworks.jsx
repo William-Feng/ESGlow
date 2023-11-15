@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -15,46 +15,21 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SnackBarManager from "./SnackBarManager";
+import useCustomFrameworksData from "../../../../hooks/UseCustomFrameworksData";
 
 function ManageCustomFrameworks({ open, onClose, token }) {
-  const [customFrameworks, setCustomFrameworks] = useState([]);
+  const { customFrameworks, deleteCustomFramework } = useCustomFrameworksData(
+    token,
+    open,
+    false
+  );
   const [successMessage, setSuccessMessage] = useState("");
 
-  useEffect(() => {
-    if (open) {
-      // Fetch custom frameworks when the dialog opens
-      fetch("/api/custom-frameworks", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setCustomFrameworks(data.custom_frameworks))
-        .catch((error) =>
-          console.error("Error fetching custom frameworks", error)
-        );
+  const handleDeleteFramework = async (frameworkId) => {
+    const { success } = await deleteCustomFramework(frameworkId);
+    if (success) {
+      setSuccessMessage("Framework deleted successfully.");
     }
-  }, [open, token]);
-
-  const handleDeleteFramework = (frameworkId) => {
-    // Send DELETE request to server
-    fetch(`/api/custom-frameworks/${frameworkId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          setCustomFrameworks(
-            customFrameworks.filter((f) => f.framework_id !== frameworkId)
-          );
-          setSuccessMessage("Framework deleted successfully.");
-        } else {
-          console.error("Failed to delete framework");
-        }
-      })
-      .catch((error) => console.error("Error deleting framework", error));
   };
 
   return (

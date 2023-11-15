@@ -482,7 +482,7 @@ function SingleSidebar({ token }) {
 
   // Update the user's custom frameworks on successful save or when the user manages/deletes them
   const [saveTrigger, setSaveTrigger] = useState(false);
-  const customFrameworks = useCustomFrameworksData(
+  const { customFrameworks } = useCustomFrameworksData(
     token,
     isCustomFrameworksDialogOpen,
     saveTrigger
@@ -636,7 +636,7 @@ function SingleSidebar({ token }) {
           onToggleDropdown={handleChange("panel3")}
         />
         <MultiSelectAccordion
-          title={'Years'}
+          title={"Years"}
           disabled={!selectedCompany}
           expanded={expanded.panel4}
           onToggleDropdown={handleChange("panel4")}

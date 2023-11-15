@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function useCustomFrameworksData(
   token,
@@ -25,7 +25,29 @@ function useCustomFrameworksData(
     fetchCustomFrameworks();
   }, [token, isManagingCustomFrameworks, saveTrigger]);
 
-  return customFrameworks;
+  const deleteCustomFramework = useCallback(
+    async (frameworkId) => {
+      try {
+        await fetch(`/api/custom-frameworks/${frameworkId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setCustomFrameworks((prevFrameworks) =>
+          prevFrameworks.filter((f) => f.framework_id !== frameworkId)
+        );
+        return { success: true };
+      } catch (error) {
+        console.error("Error deleting custom framework", error);
+        return { success: false, error };
+      }
+    },
+    [token]
+  );
+
+  return { customFrameworks, deleteCustomFramework };
 }
 
 export default useCustomFrameworksData;
