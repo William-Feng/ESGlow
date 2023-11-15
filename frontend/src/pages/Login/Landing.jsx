@@ -80,7 +80,6 @@ function Landing({ page, onSuccess }) {
         </Typography>
 
         <Box
-          container
           justifyContent="center"
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
