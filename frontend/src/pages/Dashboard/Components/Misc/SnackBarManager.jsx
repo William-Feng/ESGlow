@@ -1,7 +1,7 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
 
-function SnackBarManager({
+function SnackbarManager({
   position,
   successMessage,
   setSuccessMessage,
@@ -51,4 +51,4 @@ function SnackBarManager({
   );
 }
 
-export default SnackBarManager;
+export default SnackbarManager;

@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
+import SnackbarManager from "../../Dashboard/Components/Misc/SnackbarManager";
 import { landingPageBoxStyle } from "../../../styles/ComponentStyle";
 
 function ResetVerify({ email }) {
@@ -83,7 +83,7 @@ function ResetVerify({ email }) {
         >
           Verify
         </Button>
-        <SnackBarManager
+        <SnackbarManager
           position={"top"}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}

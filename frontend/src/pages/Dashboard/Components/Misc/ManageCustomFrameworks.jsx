@@ -14,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SnackBarManager from "./SnackBarManager";
+import SnackbarManager from "./SnackbarManager";
 import useCustomFrameworksData from "../../../../hooks/UseCustomFrameworksData";
 
 function ManageCustomFrameworks({ open, onClose, token }) {
@@ -93,7 +93,7 @@ function ManageCustomFrameworks({ open, onClose, token }) {
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
-      <SnackBarManager
+      <SnackbarManager
         position={"bottom"}
         successMessage={successMessage}
         setSuccessMessage={setSuccessMessage}

@@ -26,7 +26,7 @@ export default function SingleBarChart({
               },
             },
           ]}
-          yAxis={[{ label: "ESG Score" }]}
+          yAxis={[{ label: "Indicator Value" }]}
           sx={{
             [`.${axisClasses.left} .${axisClasses.label}`]: {
               transform: "translate(-10px, 0)",
