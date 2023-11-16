@@ -145,6 +145,7 @@ def get_framework_info_from_company(company_id: int):
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
 
+    # Query for all frameworks, metrics and indicators associated with the company
     result = (
         db.session.query(
             Framework.framework_id.label("framework_id"),
@@ -246,11 +247,13 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
 
+    # Query for the selected indicators
     existing_indicators = Indicator.query.filter(
         Indicator.indicator_id.in_(selected_indicators)).all()
     if len(existing_indicators) != len(selected_indicators):
         return {"message": "One or more provided indicator_ids do not exist."}, 400
 
+    # Get data values for those indicators in the specified years
     values = db.session.query(DataValue, Indicator.name).join(
         Indicator, DataValue.indicator_id == Indicator.indicator_id
     ).filter(
@@ -262,6 +265,7 @@ def get_indicator_values(company_id: int, selected_indicators: List[int], select
     if not values:
         return {"message": "No data values found for the provided criteria."}, 400
 
+    # Format data
     indicator_values = []
     for val, indicator_name in values:
         response_item = {
