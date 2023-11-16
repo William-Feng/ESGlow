@@ -2,6 +2,9 @@
 
 ## Code Structure
 
+- `public/`: Contains the static files for the frontend.
+- `src/`: Contains the main logic and is the heart of the React application.
+
 ## Setup
 
 _Note that if you are using Docker, you can skip the following steps and simply run `./start.sh` in the root directory._
@@ -20,4 +23,4 @@ _Note that if you are using Docker, you can skip the following steps and simply 
 - Navigate to the `frontend/` directory.
 - Start up the React frontend by running:
   `npm start`
-- The website should now be running on `localhost:3000`.
+- The website should now be running on `http://localhost:3000`.
