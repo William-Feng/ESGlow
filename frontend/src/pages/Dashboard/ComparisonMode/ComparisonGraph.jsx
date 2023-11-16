@@ -28,11 +28,12 @@ function ComparisonGraph({ token }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    // Update the average when the selected indicators change or if the switch is toggled
-    if (showAverage && selectedIndicators.length > 0) {
+    if (selectedIndicators.length > 0) {
       setSelectedIndicatorAverage([selectedIndicators[0]]);
+    } else {
+      setSelectedIndicatorAverage([]);
     }
-  }, [selectedIndicators, showAverage]);
+  }, [selectedIndicators]);
 
   const handleToggleAverage = () => {
     setShowAverage((prev) => !prev);
@@ -69,9 +70,10 @@ function ComparisonGraph({ token }) {
       pathElements.forEach((path, index) => {
         path.setAttribute("fill", "transparent");
         path.setAttribute("stroke", legendColors[index]);
+        path.setAttribute("stroke-width", "2");
       });
 
-      // Serialize the modified SVG document back to a string
+      // Serialise the modified SVG document back to a string
       let modifiedSvgData = new XMLSerializer().serializeToString(svgDoc);
 
       const blob = new Blob([modifiedSvgData], { type: "image/svg+xml" });
