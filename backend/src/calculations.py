@@ -418,6 +418,9 @@ def get_company_year_scores(company):
 
 
 def get_all_years():
+    """
+    Returns a list of all unique years for our stored data.
+    """
     years = db.session.query(DataValue.year.distinct()).all()
 
     return sorted([year[0] for year in years])
