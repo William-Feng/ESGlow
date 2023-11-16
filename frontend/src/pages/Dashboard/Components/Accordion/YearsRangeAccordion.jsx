@@ -9,7 +9,7 @@ import {
 import { useContext, useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonModeContext } from "../../ComparisonMode/ComparisonMode";
-import { accordionSummaryFont } from "../../../../styles/fontStyle";
+import { accordionSummaryFont } from "../../../../styles/FontStyle";
 
 const minDistance = 1; // constant for minimum slider range => ie.) minimum (n+1) years are shown
 

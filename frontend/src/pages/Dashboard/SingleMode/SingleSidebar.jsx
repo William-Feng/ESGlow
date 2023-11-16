@@ -17,7 +17,7 @@ import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
 import AdditionalIndicatorsAccordion from "../Components/Accordion/AdditionalIndicatorsAccordion";
 import SidebarSaveButtons from "../Components/Misc/SidebarSaveButtons";
 import useCustomFrameworksData from "../../../hooks/UseCustomFrameworksData";
-import { sidebarBoxStyle } from "../../../styles/componentStyle";
+import { sidebarBoxStyle } from "../../../styles/ComponentStyle";
 import ToggleDataView from "../Components/Misc/ToggleDataView";
 
 export const SidebarContext = createContext();

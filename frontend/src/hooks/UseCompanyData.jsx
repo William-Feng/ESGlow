@@ -27,7 +27,7 @@ export function useCompanyList(token) {
   return companyList;
 }
 
-export function useCompanyData(selectedIndustry, token) {
+export function useCompanyData(token, selectedIndustry) {
   const [companyList, setCompanyList] = useState([]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function useCompanyData(selectedIndustry, token) {
     };
 
     fetchCompanies();
-  }, [selectedIndustry, token]);
+  }, [token, selectedIndustry]);
 
   return companyList;
 }

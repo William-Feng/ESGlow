@@ -3,7 +3,7 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SnackBarManager from "../../Dashboard/Components/Misc/SnackBarManager";
-import { landingPageBoxStyle } from "../../../styles/componentStyle";
+import { landingPageBoxStyle } from "../../../styles/ComponentStyle";
 
 function ResetPassword({ email }) {
   const [newPassword, setNewPassword] = useState("");
@@ -39,9 +39,7 @@ function ResetPassword({ email }) {
   };
 
   return (
-    <Box
-      sx={landingPageBoxStyle}
-    >
+    <Box sx={landingPageBoxStyle}>
       <Typography variant="h4" gutterBottom>
         Set New Password
       </Typography>

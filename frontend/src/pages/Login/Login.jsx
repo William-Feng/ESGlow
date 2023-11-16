@@ -2,8 +2,8 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SnackBarManager from "../Dashboard/Components/Misc/SnackBarManager";
-import { landingPageBoxStyle } from "../../styles/componentStyle";
-import { landingPageLinkFont } from "../../styles/fontStyle";
+import { landingPageBoxStyle } from "../../styles/ComponentStyle";
+import { landingPageLinkFont } from "../../styles/FontStyle";
 
 function Login({ onSuccess }) {
   const [email, setEmail] = useState("");
@@ -39,9 +39,7 @@ function Login({ onSuccess }) {
   };
 
   return (
-    <Box
-      sx={landingPageBoxStyle}
-    >
+    <Box sx={landingPageBoxStyle}>
       <SnackBarManager
         position={"top"}
         errorMessage={errorMessage}
@@ -86,7 +84,7 @@ function Login({ onSuccess }) {
           autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
           variant="standard"
-          sx={{ height: '2em' }}
+          sx={{ height: "2em" }}
         />
         <Box mt={4}>
           <Link
@@ -103,14 +101,13 @@ function Login({ onSuccess }) {
           fullWidth
           variant="contained"
           color="primary"
-          sx={{ mt: 3, mb: 2, maxHeight: '10vh' }}
+          sx={{ mt: 3, mb: 2, maxHeight: "10vh" }}
         >
           Log In
         </Button>
         <Box mt={2} textAlign="center">
           <Typography variant="body1" color="textSecondary">
-            Don't have an account?{" "}
-            <br/>
+            Don't have an account? <br />
             <Link
               href="/register"
               color="primary"

@@ -4,7 +4,7 @@ import { SingleModeContext } from "./SingleMode";
 import {
   dataDisplayContainerStyle,
   dataDisplayPlaceholderStyle,
-} from "../../../styles/componentStyle";
+} from "../../../styles/ComponentStyle";
 import SingleTable from "./SingleTable";
 import SingleBarChart from "./SingleBarChart";
 

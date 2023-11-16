@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SidebarContext } from "../../SingleMode/SingleSidebar";
-import { accordionSummaryFont } from "../../../../styles/fontStyle";
+import { accordionSummaryFont } from "../../../../styles/FontStyle";
 
 function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   const {

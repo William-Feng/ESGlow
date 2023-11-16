@@ -15,7 +15,7 @@ import {
   searchBarBoxStyle,
   searchBarStyle,
   toggleButtonStyle,
-} from "../../../styles/componentStyle";
+} from "../../../styles/ComponentStyle";
 import { useCompanyList } from "../../../hooks/UseCompanyData";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;

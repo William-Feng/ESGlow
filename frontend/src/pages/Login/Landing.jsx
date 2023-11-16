@@ -11,7 +11,12 @@ import ResetInputEmail from "./ResetPassword/ResetInputEmail";
 import ResetVerify from "./ResetPassword/ResetVerify";
 import ResetNew from "./ResetPassword/ResetNew";
 import ResetSuccess from "./ResetPassword/ResetSuccess";
-import { headingFont, iconCaptionFont, logoFont, logoSizeStyle } from "../../styles/fontStyle";
+import {
+  headingFont,
+  iconCaptionFont,
+  logoFont,
+  logoSizeStyle,
+} from "../../styles/FontStyle";
 
 function Landing({ page, onSuccess }) {
   const [email, setEmail] = useState(localStorage.getItem("email"));
@@ -41,24 +46,11 @@ function Landing({ page, onSuccess }) {
           padding: "5rem",
         }}
       >
-        <Typography
-          variant="h1"
-          color="white"
-          sx={logoFont}
-        >
+        <Typography variant="h1" color="white" sx={logoFont}>
           ESGlow
         </Typography>
-        <Box
-          component="img"
-          src={Logo}
-          alt="ESGlow Logo"
-          sx={logoSizeStyle}
-        />
-        <Typography
-          sx={headingFont}
-          color="white"
-          mb={2}
-        >
+        <Box component="img" src={Logo} alt="ESGlow Logo" sx={logoSizeStyle} />
+        <Typography sx={headingFont} color="white" mb={2}>
           Empower Your Investments
         </Typography>
         <Typography
