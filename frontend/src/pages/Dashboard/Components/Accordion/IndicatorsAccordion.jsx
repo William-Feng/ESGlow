@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -28,10 +28,6 @@ function IndicatorsAccordion({
     indicatorsList,
     selectedIndicators,
   } = useContext(ComparisonModeContext);
-
-  useEffect(() => {
-    console.log("The value of multi is", multi);
-  }, [multi]);
 
   return (
     <Accordion

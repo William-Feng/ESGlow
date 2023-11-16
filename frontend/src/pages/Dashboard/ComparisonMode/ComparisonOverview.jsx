@@ -166,7 +166,13 @@ function ComparisonOverview({ token }) {
                     },
                   },
                 ]}
-                series={[{ data: companyData.map((c) => c.score.toFixed(1)) }]}
+                series={[
+                  {
+                    data: companyData.map((c) =>
+                      parseFloat(c.score.toFixed(1))
+                    ),
+                  },
+                ]}
                 width={420}
                 height={250}
               />
