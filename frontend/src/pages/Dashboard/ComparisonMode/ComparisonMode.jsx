@@ -13,7 +13,7 @@ import {
   mainDisplayBoxStyle,
   drawerStyle,
   overviewStyle,
-} from "../../../styles/componentStyle";
+} from "../../../styles/ComponentStyle";
 
 export const ComparisonModeContext = createContext();
 

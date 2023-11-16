@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { accordionSummaryFont } from "../../../../styles/fontStyle";
+import { accordionSummaryFont } from "../../../../styles/FontStyle";
 
 function MultiSelectAccordion({
   title,
@@ -18,10 +18,14 @@ function MultiSelectAccordion({
   valuesList,
   handleSelectChange,
   borderRequired,
-  allChecked
+  allChecked,
 }) {
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onToggleDropdown}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel3bh-content"
@@ -30,11 +34,7 @@ function MultiSelectAccordion({
           ...(borderRequired && { borderTop: "1px solid rgba(0, 0, 0, 0.12)" }),
         }}
       >
-        <Typography
-          sx={accordionSummaryFont}
-        >
-          {title}
-        </Typography>
+        <Typography sx={accordionSummaryFont}>{title}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box

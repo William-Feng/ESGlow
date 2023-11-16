@@ -6,7 +6,7 @@ import ComparisonGraph from "./ComparisonGraph";
 import {
   dataDisplayContainerStyle,
   dataDisplayPlaceholderStyle,
-} from "../../../styles/componentStyle";
+} from "../../../styles/ComponentStyle";
 
 function ComparisonDataDisplay({ token }) {
   const { dataView, selectedCompanies, selectedYear, selectedIndicators } =

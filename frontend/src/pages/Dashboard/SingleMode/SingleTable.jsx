@@ -11,7 +11,7 @@ import {
 import { useContext } from "react";
 import { SingleModeContext } from "./SingleMode";
 import DataRow from "../Components/Misc/DataRow";
-import { tableCellStyle, tableCellTitleStyle } from "../../../styles/fontStyle";
+import { tableCellStyle, tableCellTitleStyle } from "../../../styles/FontStyle";
 
 export default function SingleTable({
   structuredData,

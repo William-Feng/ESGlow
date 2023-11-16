@@ -18,7 +18,7 @@ import {
   tableCellTitleStyle,
   tableRowStyle,
   tableRowTitleStyle,
-} from "../../../styles/fontStyle";
+} from "../../../styles/FontStyle";
 
 function ComparisonTable({ token }) {
   const {

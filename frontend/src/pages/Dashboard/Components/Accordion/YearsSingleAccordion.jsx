@@ -11,7 +11,7 @@ import {
 import { useContext } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonModeContext } from "../../ComparisonMode/ComparisonMode";
-import { accordionSummaryFont } from "../../../../styles/fontStyle";
+import { accordionSummaryFont } from "../../../../styles/FontStyle";
 
 function YearsSingleAccordion({ disabled, expanded, onToggleDropdown }) {
   const { yearsList, selectedYear, setSelectedYear } = useContext(

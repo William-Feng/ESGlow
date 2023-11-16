@@ -8,7 +8,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SingleOverview from "../../SingleMode/SingleOverview";
 import ComparisonOverview from "../../ComparisonMode/ComparisonOverview";
-import { accordionSummaryFont } from "../../../../styles/fontStyle";
+import { accordionSummaryFont } from "../../../../styles/FontStyle";
 
 function OverviewAccordion({
   isSingleMode,

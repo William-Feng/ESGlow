@@ -1,7 +1,4 @@
-import {
-  maxWidthMedium,
-  maxWidthSmall,
-} from "./viewportSizes";
+import { maxWidthMedium, maxWidthSmall } from "./ViewportSizes";
 
 export const logoFont = {
   fontWeight: 700,
@@ -69,7 +66,7 @@ export const tableCellStyle = {
   [`@media (max-width: ${maxWidthSmall}px)`]: {
     fontSize: "0.8em",
   },
-}
+};
 
 export const tableCellTitleStyle = {
   fontWeight: "bold",
@@ -94,11 +91,11 @@ export const tableRowTitleStyle = {
   [`@media (max-width: ${maxWidthSmall}px)`]: {
     fontSize: "0.7em",
   },
-}
+};
 
 export const tableRowStyle = {
   borderRight: "1px solid",
   borderColor: "divider",
   textAlign: "center",
   fontSize: "1.1em",
-}
+};

@@ -3,7 +3,7 @@ import {
   maxWidthMedium,
   mediumDashboard,
   smallDashboard,
-} from "./viewportSizes";
+} from "./ViewportSizes";
 
 // Below are Landing Page styles
 

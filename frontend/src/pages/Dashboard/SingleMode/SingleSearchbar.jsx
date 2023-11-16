@@ -10,11 +10,11 @@ import { useContext } from "react";
 import { SingleModeContext } from "./SingleMode";
 import { useCompanyData } from "../../../hooks/UseCompanyData";
 import useIndustryData from "../../../hooks/UseIndustryData";
-import { toggleButtonStyle } from "../../../styles/componentStyle";
+import { toggleButtonStyle } from "../../../styles/ComponentStyle";
 import {
   searchBarBoxStyle,
   searchBarStyle,
-} from "../../../styles/componentStyle";
+} from "../../../styles/ComponentStyle";
 
 function SingleSearchbar({ token }) {
   const {
@@ -27,7 +27,7 @@ function SingleSearchbar({ token }) {
   } = useContext(SingleModeContext);
 
   const { industryList } = useIndustryData(token, null, null);
-  const companyList = useCompanyData(selectedIndustry, token);
+  const companyList = useCompanyData(token, selectedIndustry);
 
   return (
     <Box sx={searchBarBoxStyle}>

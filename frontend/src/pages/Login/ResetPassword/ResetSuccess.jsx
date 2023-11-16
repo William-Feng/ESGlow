@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { landingPageBoxStyle } from "../../../styles/componentStyle";
+import { landingPageBoxStyle } from "../../../styles/ComponentStyle";
 
 function ResetSuccess({ remover }) {
   const navigate = useNavigate();
@@ -12,9 +12,7 @@ function ResetSuccess({ remover }) {
   }
 
   return (
-    <Box
-      sx={landingPageBoxStyle}
-    >
+    <Box sx={landingPageBoxStyle}>
       <Typography variant="h4" gutterBottom>
         Password Reset Successful
       </Typography>

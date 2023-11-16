@@ -16,7 +16,7 @@ import {
   overviewContainerStyle,
   overviewContentContainerStyle,
   overviewScoreContainerStyle,
-} from "../../../styles/componentStyle";
+} from "../../../styles/ComponentStyle";
 
 function SingleOverview({ token }) {
   const {

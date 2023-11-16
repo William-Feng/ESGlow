@@ -8,7 +8,7 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
 import { ComparisonModeContext } from "./ComparisonMode";
-import { overviewContainerStyle } from "../../../styles/componentStyle";
+import { overviewContainerStyle } from "../../../styles/ComponentStyle";
 import useESGData from "../../../hooks/UseESGData";
 import { BarChart } from "@mui/x-charts";
 
