@@ -4,7 +4,7 @@ import ssl
 import string
 import textwrap
 
-from .config import VERIFICATION_CODE_LENGTH, SENDER_EMAIL_ADDRESS, SENDER_EMAIL_PASSWORD
+from .config import Config
 from .database import db, bcrypt, User
 
 
@@ -92,7 +92,7 @@ def generate_code(user):
     """
     alphabet = string.ascii_uppercase + string.digits
     code = ''.join(secrets.choice(alphabet)
-                   for _ in range(VERIFICATION_CODE_LENGTH))
+                   for _ in range(Config.VERIFICATION_CODE_LENGTH))
     user.verification_code = code
     db.session.commit()
     return code
@@ -111,7 +111,7 @@ def send_email(receiver_email_address, user):
     code = generate_code(user)
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(SENDER_EMAIL_ADDRESS, SENDER_EMAIL_PASSWORD)
+        server.login(Config.SENDER_EMAIL_ADDRESS, Config.SENDER_EMAIL_PASSWORD)
         subject = "ESGlow Password Reset Code"
         body = textwrap.dedent(f"""
         Hello {user.name},
@@ -128,8 +128,8 @@ def send_email(receiver_email_address, user):
         """)
 
         # Formatting message with headers.
-        message = f"Subject: {subject}\nFrom: {SENDER_EMAIL_ADDRESS}\nTo: {receiver_email_address}\n\n{body}"
+        message = f"Subject: {subject}\nFrom: {Config.SENDER_EMAIL_ADDRESS}\nTo: {receiver_email_address}\n\n{body}"
 
-        server.sendmail(SENDER_EMAIL_ADDRESS, receiver_email_address, message)
+        server.sendmail(Config.SENDER_EMAIL_ADDRESS, receiver_email_address, message)
 
     return {"message": "Password Reset Request Successful!"}, 200

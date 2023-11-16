@@ -79,7 +79,7 @@ def setup_db(start_docker): # start_docker must be passed in to ensure it's exec
 
 @pytest.fixture
 def access_token():
-    return create_access_token(identity="test_user")
+    return create_access_token(identity="test_user@example.com")
 
 @pytest.fixture
 def client():

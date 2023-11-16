@@ -3,8 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-from .config import VERIFICATION_CODE_LENGTH
-
+from .config import Config
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -18,7 +17,7 @@ class User(db.Model):
     name = db.Column(db.Text, nullable=False)
     email = db.Column(db.Text, unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
-    verification_code = db.Column(db.String(length=VERIFICATION_CODE_LENGTH))
+    verification_code = db.Column(db.String(length=Config.VERIFICATION_CODE_LENGTH))
 
 
 class Industry(db.Model):
@@ -103,25 +102,20 @@ class MetricIndicator(db.Model):
     predefined_weight = db.Column(db.Float)
 
 
-class UserMetricPreference(db.Model):
-    __tablename__ = 'user_metric_preferences'
+class CustomFrameworks(db.Model):
+    __tablename__ = 'custom_frameworks'
 
-    preference_id = db.Column(db.Integer, primary_key=True)
+    custom_framework_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
-    framework_id = db.Column(
-        db.Integer, db.ForeignKey('frameworks.framework_id'))
-    metric_id = db.Column(db.Integer, db.ForeignKey('metrics.metric_id'))
-    custom_weight = db.Column(db.Float)
-    saved_date = db.Column(db.Date)
+    name = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, default='Custom Framework')
 
 
-class UserIndicatorPreference(db.Model):
-    __tablename__ = 'user_indicator_preferences'
+class CustomFrameworkPreferences(db.Model):
+    __tablename__ = 'custom_framework_preferences'
 
-    preference_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.user_id'))
-    metric_id = db.Column(db.Integer, db.ForeignKey('metrics.metric_id'))
-    indicator_id = db.Column(
-        db.Integer, db.ForeignKey('indicators.indicator_id'))
-    custom_weight = db.Column(db.Float)
-    saved_date = db.Column(db.Date)
+    custom_framework_id = db.Column(db.Integer, db.ForeignKey(
+        'custom_frameworks.custom_framework_id'), primary_key=True)
+    indicator_id = db.Column(db.Integer, db.ForeignKey(
+        'indicators.indicator_id'), primary_key=True)
+    weight = db.Column(db.Float)

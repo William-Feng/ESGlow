@@ -12,9 +12,10 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { SidebarContext } from "../../SingleView/SingleViewSidebar";
+import { SidebarContext } from "../../SingleMode/SingleSidebar";
+import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
-function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
+function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
   const {
     selectedFramework,
     frameworkMetrics,
@@ -31,22 +32,17 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
   } = useContext(SidebarContext);
 
   return (
-    <Accordion disabled={disabled} expanded={expanded} onChange={onChange}>
+    <Accordion
+      disabled={disabled}
+      expanded={expanded}
+      onChange={onToggleDropdown}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel2bh-content"
         id="panel2bh-header"
       >
-        <Typography
-          sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
-        >
-          Metrics & Indicators
-        </Typography>
+        <Typography sx={accordionSummaryFont}>Metrics & Indicators</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
@@ -91,7 +87,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
                       label={`${metricWeights[metric.metric_id]}`}
                       color={determineChipColor(metric, null)}
                       onClick={(e) =>
-                        handleWeightChange(metric.metric_id, null, e)
+                        handleWeightChange(e, metric.metric_id, null, false)
                       }
                     />
                     <ExpandMoreIcon />
@@ -138,9 +134,10 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
                             color={determineChipColor(null, indicator)}
                             onClick={(e) =>
                               handleWeightChange(
+                                e,
                                 null,
                                 indicator.indicator_id,
-                                e
+                                false
                               )
                             }
                           />
@@ -153,7 +150,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onChange }) {
             ))
           ) : (
             <Typography style={{ color: "red" }}>
-              Select a framework to see the associated metrics and indicators
+              Select a framework to see the associated metrics and indicators.
             </Typography>
           )}
         </Box>
