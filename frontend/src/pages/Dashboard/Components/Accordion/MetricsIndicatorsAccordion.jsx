@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { SidebarContext } from "../../SingleView/SingleSidebar";
+import { SidebarContext } from "../../SingleMode/SingleSidebar";
 import { accordionSummaryFont } from "../../../../styles/fontStyle";
 
 function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
@@ -42,11 +42,7 @@ function MetricsIndicatorsAccordion({ disabled, expanded, onToggleDropdown }) {
         aria-controls="panel2bh-content"
         id="panel2bh-header"
       >
-        <Typography
-          sx={accordionSummaryFont}
-        >
-          Metrics & Indicators
-        </Typography>
+        <Typography sx={accordionSummaryFont}>Metrics & Indicators</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>

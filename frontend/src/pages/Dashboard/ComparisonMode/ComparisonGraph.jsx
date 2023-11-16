@@ -2,12 +2,12 @@ import { FormControlLabel, Switch } from "@mui/material";
 import * as React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useContext, useEffect, useState, useRef } from "react";
-import { ComparisonViewContext } from "./ComparisonView";
+import { ComparisonModeContext } from "./ComparisonMode";
 import { Box, Button, CircularProgress } from "@mui/material";
 import {
   useIndicatorMeanScores,
   useComparisonGraphData,
-} from "../../../hooks/UseGraphData";
+} from "../../../hooks/UseComparisonData";
 
 function ComparisonGraph({ token }) {
   const {
@@ -15,7 +15,7 @@ function ComparisonGraph({ token }) {
     yearsList,
     selectedYearRange,
     selectedIndicators,
-  } = useContext(ComparisonViewContext);
+  } = useContext(ComparisonModeContext);
 
   const { graphData, isLoading, setIsLoading } = useComparisonGraphData(
     token,

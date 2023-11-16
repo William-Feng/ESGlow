@@ -1,12 +1,19 @@
-import { Box, Container, Typography, Tooltip } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Tooltip,
+  CircularProgress,
+} from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useContext } from "react";
-import { ComparisonViewContext } from "./ComparisonView";
+import { ComparisonModeContext } from "./ComparisonMode";
 import { overviewContainerStyle } from "../../../styles/componentStyle";
 import useESGData from "../../../hooks/UseESGData";
+import { BarChart } from "@mui/x-charts";
 
 function ComparisonOverview({ token }) {
-  const { selectedCompanies } = useContext(ComparisonViewContext);
+  const { selectedCompanies } = useContext(ComparisonModeContext);
 
   const { companyData, portfolioRating, bestPerformer, worstPerformer } =
     useESGData(token, selectedCompanies);
@@ -133,15 +140,40 @@ function ComparisonOverview({ token }) {
           </Box>
         </Box>
 
-        <Box sx={{ flex: 1 }}>
-          <Typography
-            variant="h5"
-            color="text.secondary"
-            paragraph
-            textAlign="center"
-          >
-            Chart
-          </Typography>
+        <Box sx={{ flex: 1, position: "relative" }}>
+          {companyData.length ? (
+            <>
+              <Typography
+                variant="h6"
+                color="text.primary"
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                Portfolio Breakdown
+              </Typography>
+              <BarChart
+                xAxis={[
+                  {
+                    scaleType: "band",
+                    data: companyData.map((c) => c.name),
+                    tickLabelStyle: {
+                      fontSize: 8,
+                    },
+                  },
+                ]}
+                series={[{ data: companyData.map((c) => c.score.toFixed(1)) }]}
+                width={420}
+                height={250}
+              />
+            </>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Container>
     </Box>

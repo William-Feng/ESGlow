@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useContext } from "react";
-import { ComparisonViewContext } from "./ComparisonView";
+import { ComparisonModeContext } from "./ComparisonMode";
 import ComparisonTable from "./ComparisonTable";
 import ComparisonGraph from "./ComparisonGraph";
 import {
@@ -10,7 +10,7 @@ import {
 
 function ComparisonDataDisplay({ token }) {
   const { dataView, selectedCompanies, selectedYear, selectedIndicators } =
-    useContext(ComparisonViewContext);
+    useContext(ComparisonModeContext);
 
   if (
     selectedCompanies.length === 0 ||
@@ -19,7 +19,7 @@ function ComparisonDataDisplay({ token }) {
   ) {
     return (
       <Box sx={dataDisplayPlaceholderStyle}>
-        <Typography variant='h6' color='text.secondary'>
+        <Typography variant="h6" color="text.secondary">
           {selectedCompanies.length === 0
             ? "Please select at least one company to view the ESG data."
             : dataView === "table" && selectedYear.length === 0
