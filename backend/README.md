@@ -9,6 +9,8 @@
   - `database.py`: Sets up the database, ORM configurations, and user model.
   - `server.py`: Defines the main routes or endpoints for the application.
   - `user.py`: Contains all types of user functionality.
+  - `frameworks.py`: Contains functionality related to stored ESG data.
+  - `calculations.py`: Performs calculations related to entity metrics.
   - `reset.py`: Contains functionality for password reset and email verification.
 - `tests/`: Contains pytests for the backend.
 
@@ -27,9 +29,10 @@
 - Navigate to the `backend/` directory.
 - Start up the Python Flask backend by running:
   `python3 run.py`
+  This will start the backend on port 5001.
 
 ### Running the Tests
-
+- Ensure that Docker is running.
 - Navigate to the `backend/` directory.
 - Execute the pytests by running:
   `pytest`

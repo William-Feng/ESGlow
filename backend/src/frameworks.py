@@ -10,9 +10,10 @@ from .database import (
     FrameworkMetric,
     MetricIndicator,
     CustomFrameworks,
-    CustomFrameworkPreferences
+    CustomFrameworkPreferences,
+    User
 )
-from typing import List
+from typing import List, Dict
 
 
 def all_industries():
@@ -141,6 +142,7 @@ def get_company_info(company_ids: List[int]):
 
     companies_data = []
     for company_id in company_ids:
+        # Query for the company and add the data
         company = db.session.get(Company, company_id)
         if not company:
             return {"message": f"Company with ID {company_id} not found."}, 400
@@ -172,8 +174,10 @@ def get_framework_info_from_company(company_id: int):
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
 
+    # Query for all frameworks, metrics and indicators associated with the company
     result = (
         db.session.query(
+            # Frameworks
             Framework.framework_id.label("framework_id"),
             Framework.name.label("framework_name"),
             Framework.description.label("framework_description"),
@@ -278,12 +282,14 @@ def get_indicator_values(
     if not company:
         return {"message": f"Company with ID {company_id} not found."}, 400
 
+    # Query for all indicators with the given ids
     existing_indicators = Indicator.query.filter(
         Indicator.indicator_id.in_(selected_indicators)
     ).all()
     if len(existing_indicators) != len(selected_indicators):
         return {"message": "One or more provided indicator_ids do not exist."}, 400
 
+    # Query for all data values for the indicators in the selected years
     values = (
         db.session.query(DataValue, Indicator.name)
         .join(Indicator, DataValue.indicator_id == Indicator.indicator_id)
@@ -298,6 +304,7 @@ def get_indicator_values(
     if not values:
         return {"message": "No data values found for the provided criteria."}, 400
 
+    # Format data
     indicator_values = []
     for val, indicator_name in values:
         response_item = {
@@ -316,7 +323,17 @@ def get_indicator_values(
     return response, 200
 
 
-def create_custom_framework(data, user):
+def create_custom_framework(data: Dict, user: User):
+    """
+    Summary:
+        Creates a custom framework and stores it in the database.
+    Args:
+        data (Dict): Framework data as per the 'CustomFramework' Flask model.
+        user (User): The User creating the framework.
+    Returns:
+        Dictionary containing a status message.
+        HTTP status code
+    """
     # Check if the custom framework name is null
     if data['name'] == '':
         return {"message": "Custom framework name cannot be empty."}, 400
@@ -356,7 +373,17 @@ def create_custom_framework(data, user):
     return response, 200
 
 
-def get_custom_frameworks(user):
+def get_custom_frameworks(user: User):
+    """
+    Summary:
+        Get all custom frameworks associated with the given user.
+    Args:
+        user (User): The User who created the frameworks.
+    Returns:
+        Dictionary containing a status message and a list of info about
+        custom frameworks created by the user.
+        HTTP status code
+    """
     # Get all custom frameworks associated with the user
     custom_frameworks = CustomFrameworks.query.filter_by(
         user_id=user.user_id
@@ -390,7 +417,17 @@ def get_custom_frameworks(user):
     return response, 200
 
 
-def delete_custom_framework(user, framework_id):
+def delete_custom_framework(user: User, framework_id: int):
+    """
+    Summary:
+        Deletes a custom framework from the database.
+    Args:
+        user (User): The User who created the frameworks.
+        framework_id (int): ID of the framework to be deleted.
+    Returns:
+        Dictionary containing a status message.
+        HTTP status code
+    """
     # Fetch the specified custom framework
     custom_framework = CustomFrameworks.query.filter_by(
         custom_framework_id=framework_id,
