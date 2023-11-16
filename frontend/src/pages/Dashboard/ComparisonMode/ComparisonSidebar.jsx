@@ -56,8 +56,6 @@ function ComparisonSidebar({ token }) {
   };
 
   useEffect(() => {
-    console.log("The dataView is ", dataView);
-
     // When switching to graph view, select only the indicator with the smallest ID
     if (dataView !== "table" && selectedIndicators.length > 1) {
       const smallestIndicatorId = Math.min(...selectedIndicators);
