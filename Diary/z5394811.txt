@@ -45,3 +45,9 @@ Week 9
 Created the table and graph data visualisations for Comparison view page and the changed the sidebar accordingly.
 Refactored the Overview section into accordion so the data display takes up more space of the screen,
 as per last demo feedback from tutor. Implemented overdue UI fixes and tackling new feedback functionalities provided by client
+
+Week 10 
+Implemented new data visualisation tool: Bar Chart View for Single Mode. Added tutor's feedback of
+making the application responsive. The application is now responsive to different size viewports. Created the user guide
+for the final report & as per Client feedback. Performed the final demo as a team on Friday afternoon, in tutorial
+and in front of tutor.
