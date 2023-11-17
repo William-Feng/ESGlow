@@ -15,5 +15,8 @@ A detailed user guide can be found [here](./ESGlow%20User%20Guide.pdf).
 - The specific documentation for the **frontend** can be found in the README file of the [`frontend/` directory](./frontend/).
 
 ## Running the App
-Ensure you have the latest version of Docker desktop installed.
-Execute `./start.sh`
+
+- Ensure you have the latest version of Docker desktop installed on your machine. If not, visit [Docker Desktop's official page](https://www.docker.com/products/docker-desktop) to download it.
+- Run `git clone` to download this GitHub repository to your local machine, and navigate into the root directory.
+- Execute `./start.sh`
+- The website is now running on http://localhost:3000/.
