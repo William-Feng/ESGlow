@@ -1,4 +1,4 @@
-import { maxWidthMedium, maxWidthSmall } from "./ViewportSizes";
+import { maxWidthMedium, maxWidthSmall } from "./Viewport";
 
 export const logoFont = {
   fontWeight: 700,
