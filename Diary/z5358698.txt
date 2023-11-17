@@ -18,3 +18,36 @@ Week 3:
 This week we all worked together to finish, finalize and submit our project proposal, which was due this Friday.
 For my part, I helped work on the User Stories for each sprint/epic, writing both the primary User Story as well as all of the acceptance criteria.
 I also worked together to write up the novel features justification, as well as link our project outcomes with each of our user stories, to justify our project requirements are all being met.
+
+
+Week 4:
+
+This week is the week where we all started designing and coding up our individual sections, having worked beforehand to determine where each of us felt most comfortable starting. I settled on being backend with Sean, and in our first week of Sprint 1, began tackling setting up the Python flask backend and building the first initial set of endpoints and functionalities. I started the ticket and user story for resetting user passwords in case of forgotten password, finishing off the email send feature while still working on generating valid verification codes/verifying the codes sent out.
+
+
+Week 5:
+
+This week we presented together our first demo to the substitute tutor, as well as worked on the retrospective together which is due on saturday. In the presentation, I talked primarily about how the backend endpoints functioned, with JWT for authentication/authorisation, as well as how password resetting with verification codes worked.
+
+For work done on user stories, the password user stories were all fully finished, while metrics being sent off to the frontend, along with custom queries w/ company names are still being worked on.
+
+Week 6:
+For week 6 during flexi, the majority of work was done for sprint 2; My workload assigned was the continued generation of fake data, work on backend functionalities and changing existing tables to have extra columns. With the feedback we received from our client, we had to add some extra fields and data that was not originally covererd by the tables we had when we submitted our original project demo for review; as a result, we had to update not only just the PostGRESQL table, but also the Database.py we used with SQLAlchemy. 
+
+Week 7:
+In week 7, I continued creating more data for the frontend/backend, as well as to fit with the automated Pytests written by Sean. To help create data, I wrote extra Python programs to randomly generate relationships as well as weights for tables, in order to accomodate all of our new extra frameworks, metrics and indicators/companies. I'm also preparing to swap over to Frontend for Sprint 3, given the decreasing amount of backend tasks, tickets and user stories, as well as the fact that we have finished the majority of Sprint 2 already, and have been given permission to start Sprint 3 early.
+
+
+Week 8:
+Week 8 was our second project demonstration of the project, showing off the features and corresponding user stories we had assigned for the second sprint. In the demonstration, I talked about the way we generated data for our website to use, whether that be for the actual deployed frontend or backend testing with Pytest.
+
+Since we were officially starting Sprint 3 as well, we spent time in the tutorial going over what user stories and tickets were required for each members, assigning and distributing new child issues and branches for each member. For myself I continued to receive backend tickets, with the potential to swap over to frontend later on.
+
+
+Week 9:
+This week I worked on further backend functionalities, particularly the transferring of ESG Score calculations from Frontend to Backend, in order to find the average, maximum and minimum scores of industries, individual company scores and their rankings in their particular industries, as well as constructing Year-to-Score values for usage and display in the frontend comparison graphs. I also assisted in modifying existing endpoints and their functionalities when the occasion rose, including modifying the indicator endpoints to return extra content. Apart from that, I also began work on our final report.
+
+
+Week 10:
+
+This week was all report writing and presentation preparation, as all the backend tickets I had been assigned were all completed by myself in the last week. Working on the project report, a lot of the implementation challenges, technologies we used and system architecture was completed. In the final presentation, I took the beginning of the presentation introducing ESG, and going over the user registration/login/password resets.

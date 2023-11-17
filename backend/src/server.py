@@ -15,7 +15,7 @@ from .frameworks import (
     get_custom_frameworks,
     delete_custom_framework
 )
-from .models import(
+from .models import (
     AuthModels,
     PasswordResetModels,
     InfoModels,
@@ -154,7 +154,6 @@ class PasswordResetChange(Resource):
 # ===================================================================
 
 
-
 @api.route("/api/industries/all")
 class IndustriesAll(Resource):
     @api.response(200, "All industries retrieved!", model=InfoModels.industry_names_model(api))
@@ -273,7 +272,6 @@ class IndicatorValues(Resource):
 # ===================================================================
 
 
-
 @api.route("/api/values/company/<string:company_id>")
 class CompanyValues(Resource):
     @api.response(200, "Values for company retrieved!", model=InfoModels.company_values_model(api))
@@ -306,7 +304,7 @@ class CompanyRanking(Resource):
     @api.response(200, "Ranking in industry determined!", model=DataModels.company_ranking_model(api))
     @api.response(401, "Authentication required. Please log in.")
     @api.response(400, "Invalid company id supplied!")
-    @jwt_required() 
+    @jwt_required()
     def get(self, company_id):
         return get_company_industry_ranking(company_id)
 
@@ -336,7 +334,6 @@ class GraphIndicatorValues(Resource):
 # Custom Frameworks
 #
 # ===================================================================
-
 
 
 @api.route("/api/custom-frameworks")

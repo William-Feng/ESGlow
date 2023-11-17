@@ -23,3 +23,71 @@ I completed the System Architecture Diagram and provided descriptions, and also 
 I watched the Lecture recording on behalf of my team, noted down the key points that we had to investigate and led the administrative tasks.
 I was also heavily involved with the creation and modification of user stories & epics such that all requirements and novelty features were satisfied.
 Being the Scrum Master, I also ensured that the product and sprint backlogs were appropriate, feasible and optimal for this project.
+
+
+Week 4:
+
+Over Discord, our group members came up with some subtasks or child issues, so that we could better break up the user stories and allocate work.
+I setup the PostgreSQL database and created the users table, and tweaked a few attributes together with Sean & Richard as we worked on user registration.
+I managed to get Docker to containerise the datbase as I felt it provides great benefits in a team environment, and wrote up a guide on how to get started.
+As the Scrum Master, I continually monitored the Jira board, ensuring that the tickets had the correct status and everyone was on track.
+I also came up with some Git practices for our team, including having branch protection rules for PRs and commit messages prefixed with the ticket number.
+
+
+Week 5:
+
+As a team, we presented our Demo A at the conclusion of Sprint one, recorded a demo for our client and wrote up the Retrospective A.
+We managed to finish all of the Registration Epic, and began the Metric Selection Epic (which we couldn't finish before the deadline).
+Since the environment setup took much longer than expected in the previous week, I stressed the importance of completing the Register/Login/Reset Password user stories.
+Over the past week, I created the framework for the backend pytests, JWT tokens, created the entire database schema and generated all the dummy test data.
+Effective teamwork and communication throughout, as we all worked on connecting the backend and frontend together, and reviewed each other's PRs before merging.
+
+
+Week 6:
+
+Closely monitored the sprint burndown and set mini deadlines for the team after 1-1 chats, as suggested in the actions to try from the retrospective.
+During this flexibility week, I took initiative to grind out the project, finishing off the Metric Selection Epic and making great progress on epics in this new sprint.
+I spent a decent amount of time creating and designing the selection sidebar, then making the table and ensuring that it shows relevant data with varying selections.
+I decided to create an automated logout endpoint to prevent unexpected frontend crashes, as well as storing the user's name to display it in the profile icon.
+I also explored frontend from a UI perspective, overhauling the design of the home screen, refining all register/login/reset password pages, and the dashboard banner.
+Despite having a whopping 53 story points in total (we only managed to complete 12 in sprint one), we are more than half way complete (and there's two week left)!
+
+
+Week 7:
+
+I planned a Discord call for a progression demo and outlined some aspects from the client feedback to assign tasks and raised the idea of finishing this sprint earlier.
+Some of the client's suggestions were originally unplanned for, meaning that we had to account for additional tasks on top of the user stories that we had completed.
+Given that I was relatively free, I took initiative to work on these additional features and took screenshots/screen recordings to update my team on my outcomes.
+I added an industry table to the database, created relevant endpoints and ultimately incorporated an industry search bar feature (on top of company) into the frontend.
+I also made fullstack accomplishments with the inclusion of additional indicators in the selection sidebar, which gives users more flexibility when viewing data.
+Ultimately, we ended Sprint two on Friday, meaning that we finished an astronomical amount of work with high quality one week before the deadline (unlike sprint one).
+
+
+Week 8:
+
+I emphasised the need to modularise the frontend code given that some of the code was very long, and began the refactoring before passing it over to Carly and Mel.
+We presented Demo B as a team, which went smoothly since we completed everything nicely ahead of schedule, and received some feedback from the tutor which we'll tackle.
+I went on a short trip and fell sick early in the week, but quickly recovered and contributed to writing up Retrospective B along with planning out the upcoming tasks.
+I updated the tables for the custom frameworks user story to reflect our new understanding of the task, and made some heavy UI updates so there's a better design.
+This included creating a new ESGlow logo, adopting gradient backgrounds with better contrast, restyling the overview/table sections, incorporating more year data etc.
+
+
+Week 9:
+
+I coordinated the entirety of the frontend with Carly & Mel, planning/splitting up the work, providing suggestions for improvements and making code reviews for each other.
+I tackled the custom frameworks feature, which firstly involved creating GET/POST/DELETE endpoints for retrieving, adding and deleting them from the database.
+I incorporated a 'Save Custom Frameworks' button onto the Selection Sidebar, which immediately shows up in the Framework accordion together with a distinct style.
+I rewrote the ESG score calculation function as there were a series of complications that arose from this user story, where additional indicators now affect the score.
+I ensured the persistence of the data for users who were logged in, together with a sleek feature that allows them to view and delete their custom frameworks.
+I improved the Sean's project Docker file to enable hot reloading, fixed bugs with Richard's generated data, implemented UI revamps with new designs and refactored code.
+With our final demo due next week, we are making good progress and will soon focus on final touches, refactoring and documentation and writing up the final report.
+
+
+Week 10:
+
+Moving into the final week of the term where there were several deadlines, I coordinated the communication of outstanding tasks to my group to avoid last minute rushes.
+I helped resolve frontend bugs, continued to revamp the UI and refined certain features such as the addition of the toggle for indicators average for the line graph.
+I refactored the frontend heavily, abstracting out common logic and creating custom hooks to simplify the state management and fetch requests for modularity purposes.
+I added GitHub documentation, ensuring that both the installation guides and code structures were outlined, enabling other users to clearly understand and run our code.
+I contributed to the final report together with all my team members and we all worked diligently to describe all of our features, implement challenges and design.
+As a team, we smoothly presented the demo both to the tutor and client, and the positive feedback we received was a testment of our efforts to create a high quality project.

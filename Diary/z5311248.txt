@@ -11,3 +11,40 @@ Worked on the storyboard, designing the login/register pages and the
 main screen for data selection and visualisation. 
 Attended a meeting with the client and team leads on Friday to finalise 
 the proposal before submitting.
+
+Week 4
+Worked on setting up the frontend React app, and created the basic UI 
+framework for the registration page. Also got more familiar with using 
+Jira and GitHub.
+
+Week 5
+Worked on creating the basic UI framework for the dashboard page, 
+specifically the company summary and table sections.
+
+Week 6
+Worked on adjusting the sidebar to reflect user changes to metric and 
+indicator checkbox selection, and indicator weight modification. 
+
+Week 7
+Worked on saving the user selection of the sidebar elements and sending 
+it to the data display section of the dashboard to calculate the adjusted 
+ESG score. Also refactored the sidebar, modularising the accordion 
+components to make the code less cluttered.
+
+Week 8
+Worked on improving the UI for weight adjustments (changing the weight chip 
+colour depending on whether it is unedited, edited, or deselected),  
+implementing the sidebar in the comparison view, and implementing adjustable 
+weights for the additional indicators.
+
+Week 9
+Worked on fixing the weight validation to reflect the tutor's suggestion for 
+UI fixes, displaying the data source for indicators within the display 
+table, and implementing the industry/portfolio statistics within the 
+overview section.
+
+Week 10
+Worked on adding a download feature for the tables and charts, per our 
+client's feedback. Also worked on the final report, adding screenshots of 
+our app, describing functionalities, and justification for our design 
+choices.

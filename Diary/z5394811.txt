@@ -12,3 +12,42 @@ Sent emails between Ming and other team leads to better understand project requi
 Contributed in designing the project UI / UX and its storyboard by looking at other sites.
 Researched and wrote about current problems in ESG data usage and what our app aims to solve.
 Attended in a last meeting before proposal due date with Ming to understand sample dataset structure.
+
+Week 4
+I was assigned with Melanie to work on the frontend of the project.
+We worked closely together since the register page she has created needed to be visually consistent with login page I created.
+I made the login page and linked it to the register page. I also designed the logo for our website, which is featured in starting page.
+Our group is finalizing backend end points to see the fullstack functionality soon.
+
+Week 5
+I continued with frontend work for password reset and its 4 stages. There was a problem
+with my macOS not being able to run backend so functionality and connecting end points was done by Mel. Meanwhile, I took over
+dashboard frontend UI within my capacity; created a skeleton of components, rearranged the header, and created the
+nested accordion for framework / metric / indicator. I also recorded demo A to send to our client Ming for feedback.
+
+Week 6
+Fixed git commit authorship issue where previous commits (from week 1-5) were done under a different name :(
+Contribution graph reflects my work accurately now. Implemented autocomplete search by company, and the resultant
+population of sidebar choices based on user company selection. Smoothed out UX of sidebar, such as
+refreshing metric selections for change of framework, enabling "indeterminate" state for metric selection, etc.
+
+Week 7
+Continued the refactor from Mel's initial work and created/rearranged new components to start Comparison View.
+Wrote child tasks under sprint 3 tickets to break down into manageable tasks and assign between Mel and I.
+Created the skeleton for the Comparison View so there is a holistic view of the page.
+
+Week 8
+Presented Demo B to the tutor and gained feedback. Recorded demo B video on behalf of team to send to client.
+Planned with group members in the tutorial to organize the order of tasks in tackling our next few tickets.
+Implemented the multi-select searchbar for Comparison View and put in UI fixes such as overcrowding the input tab.
+
+Week 9
+Created the table and graph data visualisations for Comparison view page and the changed the sidebar accordingly.
+Refactored the Overview section into accordion so the data display takes up more space of the screen,
+as per last demo feedback from tutor. Implemented overdue UI fixes and tackling new feedback functionalities provided by client
+
+Week 10 
+Implemented new data visualisation tool: Bar Chart View for Single Mode. Added tutor's feedback of
+making the application responsive. The application is now responsive to different size viewports. Created the user guide
+for the final report & as per Client feedback. Performed the final demo as a team on Friday afternoon, in tutorial
+and in front of tutor.
