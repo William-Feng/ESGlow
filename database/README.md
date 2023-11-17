@@ -1,18 +1,21 @@
-# ESGlow Database Setup
+# ESGlow Database
 
-This provides a brief guide on how to set up the ESGlow PostgreSQL database using Docker.
+## Setup
+
+_Note that if you are using Docker, you can skip the following steps and simply run `./start.sh` in the root directory._
 
 ### Prerequisites
 
 If Docker is not installed on your machine, visit [Docker Desktop's official page](https://www.docker.com/products/docker-desktop) to download it.
 
-### Starting the Database
+- Navigate to the project's database directory from your terminal.
+- Run `chmod +x init_db.sh` to ensure the bash script has correct permissions.
 
-- Navigate to the project's directory from your terminal.
-- Run `chmod +x startup_db.sh` to ensure the bash script has correct permissions.
-- Execute the script to start up the database with the command **`./startup_db.sh`**
+### Starting up the Database
 
-If this is successful, you should see display logs indicating the status of the database. You should also see it as a running container in Docker Desktop.
+- Start up the PostgreSQL database by executing:
+  **`./init_db.sh`**
+- If this is successful, you should see display logs indicating the status of the database. You should also see it as a running container in Docker Desktop.
 
 ### Accessing the Database
 
@@ -25,5 +28,14 @@ If this is successful, you should see display logs indicating the status of the 
 
 ### Stopping the Database
 
-- To stop the PostgreSQL container, you can manually stop or delete it in Docker Desktop.
+- To stop the PostgreSQL container, you can manually delete it in Docker Desktop.
 - Alternatively, run `docker-compose down`.
+
+## Code Structure
+
+- `helpers/`: Contains helper functions for the database, yet are not used at all.
+  - `generate_data.py`: Generates random fake data for the database, which facilitated the creation of the `2_insert_data.sql` file.
+  - `helpers.sql`: Queries the database to get information about the tables, which facilitated the checking of the backend endpoints.
+- `1_create_tables.sql`: Creates the tables for the relational database, executed upon starting up the Docker container.
+- `2_insert_data.sql`: Inserts fake data into the relational database, executed upon starting up the Docker container.
+- `init_db.sh`: Executes the docker compose file to solely start up the PostgreSQL database as a script.

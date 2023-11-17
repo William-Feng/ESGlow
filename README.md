@@ -10,10 +10,15 @@ A detailed user guide can be found [here](./ESGlow%20User%20Guide.pdf).
 
 ## Documentation
 
-- The specific documentation for the **database** can be found in the README file of the [`database/` directory](./database/).
-- The specific documentation for the **backend** can be found in the README file of the [`backend/` directory](./backend/).
-- The specific documentation for the **frontend** can be found in the README file of the [`frontend/` directory](./frontend/).
+Documentation has been provided for each of the three components of the application, both for the installation instructions and the code structure. In particular:
 
-## Installation
+- The **database** README file of the [`database/` directory](./database/).
+- The **backend** README file of the [`backend/` directory](./backend/).
+- The **frontend** README file of the [`frontend/` directory](./frontend/).
 
-Docker instructions.
+## Running the App
+
+- Ensure you have the latest version of Docker desktop installed on your machine. If not, visit [Docker Desktop's official page](https://www.docker.com/products/docker-desktop) to download it.
+- Run `git clone` to download this GitHub repository to your local machine, and navigate into the root directory.
+- Execute `./start.sh`
+- The website should now be running at http://localhost:3000/.
