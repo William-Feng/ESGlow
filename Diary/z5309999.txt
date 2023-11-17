@@ -81,3 +81,13 @@ I rewrote the ESG score calculation function as there were a series of complicat
 I ensured the persistence of the data for users who were logged in, together with a sleek feature that allows them to view and delete their custom frameworks.
 I improved the Sean's project Docker file to enable hot reloading, fixed bugs with Richard's generated data, implemented UI revamps with new designs and refactored code.
 With our final demo due next week, we are making good progress and will soon focus on final touches, refactoring and documentation and writing up the final report.
+
+
+Week 10:
+
+Moving into the final week of the term where there were several deadlines, I coordinated the communication of outstanding tasks to my group to avoid last minute rushes.
+I helped resolve frontend bugs, continued to revamp the UI and refined certain features such as the addition of the toggle for indicators average for the line graph.
+I refactored the frontend heavily, abstracting out common logic and creating custom hooks to simplify the state management and fetch requests for modularity purposes.
+I added GitHub documentation, ensuring that both the installation guides and code structures were outlined, enabling other users to clearly understand and run our code.
+I contributed to the final report together with all my team members and we all worked diligently to describe all of our features, implement challenges and design.
+As a team, we smoothly presented the demo both to the tutor and client, and the positive feedback we received was a testment of our efforts to create a high quality project.
