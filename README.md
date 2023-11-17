@@ -16,4 +16,4 @@ A detailed user guide can be found [here](./ESGlow%20User%20Guide.pdf).
 
 ## Running the App
 Ensure you have the latest version of Docker desktop installed.
-Execute `docker-compose up --build`
+Execute `./start.sh`
