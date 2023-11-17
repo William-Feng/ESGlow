@@ -10,7 +10,7 @@ import {
   DialogContentText,
 } from "@mui/material";
 import { SingleModeContext } from "./SingleMode";
-import SnackBarManager from "../Components/Misc/SnackBarManager";
+import SnackbarManager from "../Components/Misc/SnackbarManager";
 import FrameworkAccordion from "../Components/Accordion/FrameworkAccordion";
 import MetricsIndicatorsAccordion from "../Components/Accordion/MetricsIndicatorsAccordion";
 import MultiSelectAccordion from "../Components/Accordion/MultiSelectAccordion";
@@ -561,7 +561,7 @@ function SingleSidebar({ token }) {
 
   return (
     <Box sx={sidebarBoxStyle}>
-      <SnackBarManager
+      <SnackbarManager
         position={"bottom"}
         successMessage={successMessage}
         setSuccessMessage={setSuccessMessage}

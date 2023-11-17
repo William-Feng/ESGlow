@@ -11,7 +11,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ComparisonModeContext } from "../../ComparisonMode/ComparisonMode";
 import { accordionSummaryFont } from "../../../../styles/FontStyle";
 
-const minDistance = 1; // constant for minimum slider range => ie.) minimum (n+1) years are shown
+// Constant for minimum slider range - minimum (n + 1) years are shown
+const minDistance = 1;
 
 function YearsRangeAccordion({ disabled, expanded, onToggleDropdown }) {
   const { yearsList, setSelectedYearRange } = useContext(ComparisonModeContext);
@@ -20,7 +21,7 @@ function YearsRangeAccordion({ disabled, expanded, onToggleDropdown }) {
   const [minMaxRange, setMinMaxRange] = useState([0, 0]);
 
   useEffect(() => {
-    // initializing the range of years available for slider
+    // Initialising the range of years available for slider
     if (yearsList) {
       setMinMaxRange([Math.min(...yearsList), Math.max(...yearsList)]);
       setYearRange([Math.min(...yearsList), Math.max(...yearsList)]);
@@ -28,7 +29,7 @@ function YearsRangeAccordion({ disabled, expanded, onToggleDropdown }) {
   }, [yearsList]);
 
   const handleSliderChange = (_, newRange, active) => {
-    // enforcing minimum slider distance, so no "overlap" nor single select
+    // Enforcing minimum slider distance, so no "overlap" nor single select
     if (active === 0) {
       const lower = Math.min(newRange[0], yearRange[1] - minDistance);
       setYearRange([lower, yearRange[1]]);
