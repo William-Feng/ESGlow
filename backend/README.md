@@ -1,5 +1,30 @@
 # ESGlow Backend
 
+## Setup
+
+_Note that if you are using Docker, you can skip the following steps and simply run `./start.sh` in the root directory._
+
+### Prerequisites
+
+- Ensure that you have downloaded and are currently using Python 3.11.0.
+- After you have cloned the Git repository, navigate to the `backend/` directory.
+- Install all the necessary dependencies by executing:
+  `pip install -r requirements.txt`
+
+### Starting the Backend
+
+- Ensure that you have started up the PostgreSQL database using Docker _(see the `database/` directory)_.
+- Start up the Python Flask backend by executing:
+  **`python3 run.py`**
+- The backend should now be running at `http://127.0.0.1:5001`.
+
+### Running the Tests
+
+- Ensure that Docker has spun up the PostgreSQL database.
+- Execute the pytests by executing:
+  **`pytest`**
+- This will start up a Docker container for a test database and run the provided tests within the tests, not affecting the production database.
+
 ## Code Structure
 
 - `run.py`: Entry point for the Python Flask application.
@@ -15,30 +40,3 @@
   - `user.py`: Contains all types of user functionality.
 - `tests/`: Contains pytests for the backend.
 - `requirements.txt`: Contains all the dependencies required for to run the backend.
-
-## Setup
-
-_Note that if you are using Docker, you can skip the following steps and simply run `./start.sh` in the root directory._
-
-### Prerequisites
-
-- Ensure that you have downloaded and are currently using Python 3.11.0.
-- After you have cloned the Git repository, navigate to the `backend/` directory.
-- Install all the necessary dependencies by running:
-  `pip install -r requirements.txt`
-
-### Startup the Backend
-
-- Ensure that you have started up the PostgreSQL database using Docker _(see the `database/` directory)_.
-- Navigate to the `backend/` directory.
-- Start up the Python Flask backend by running:
-  `python3 run.py`
-  This will start the backend on port 5001.
-
-### Running the Tests
-
-- Ensure that Docker is running.
-- Navigate to the `backend/` directory.
-- Execute the pytests by running:
-  `pytest`
-  This will start up a Docker container for a test database and run the provided tests within the tests, not affecting the production database.
