@@ -46,3 +46,8 @@ Since we were officially starting Sprint 3 as well, we spent time in the tutoria
 
 Week 9:
 This week I worked on further backend functionalities, particularly the transferring of ESG Score calculations from Frontend to Backend, in order to find the average, maximum and minimum scores of industries, individual company scores and their rankings in their particular industries, as well as constructing Year-to-Score values for usage and display in the frontend comparison graphs. I also assisted in modifying existing endpoints and their functionalities when the occasion rose, including modifying the indicator endpoints to return extra content. Apart from that, I also began work on our final report.
+
+
+Week 10:
+
+This week was all report writing and presentation preparation, as all the backend tickets I had been assigned were all completed by myself in the last week. Working on the project report, a lot of the implementation challenges, technologies we used and system architecture was completed. In the final presentation, I took the beginning of the presentation introducing ESG, and going over the user registration/login/password resets.
