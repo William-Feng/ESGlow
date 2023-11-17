@@ -253,16 +253,15 @@ def get_company_industry_ranking(company_id):
 
     """
 
-    # Grab Company Object
+    # Find the company
     company = db.session.query(Company).filter(
         Company.company_id == company_id).first()
     if not company:
         return {"message": "Invalid company id supplied!"}, 400
 
-    # Determine all industry rankings...
+    # Determine the company ranking within the industry
     company_scores = get_industry_company_values(company.industry_id)
 
-    # Brute Force Method
     ranking = -1
     company_score = -1
     for index, (id, score) in enumerate(company_scores):
@@ -300,8 +299,9 @@ def get_industry_company_values(industry_id):
     ]
 
     values = get_company_values(companies)
+
+    # Calculate value of all framework scores
     for company_key in values:
-        # Calculate value of all framework_scores
         company_value = values[company_key]["value"]
         framework_scores = sum(
             [framework["score"] for framework in company_value["frameworks"]]
@@ -375,7 +375,7 @@ def get_company_year_scores(company):
         .all()
     )
 
-    # For each year,find
+    # For each year, retrieve the raw company data values for each indicator.
     years = (
         db.session.query(DataValue.year.distinct())
         .filter(
@@ -388,7 +388,7 @@ def get_company_year_scores(company):
     )
 
     years = sorted([year[0] for year in years])
-    # print(years)
+
     # Calculate the data values of each indicator, then the data values of all metrics.
     for year in years:
         metric_values = {}
