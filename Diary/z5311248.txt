@@ -42,3 +42,9 @@ Worked on fixing the weight validation to reflect the tutor's suggestion for
 UI fixes, displaying the data source for indicators within the display 
 table, and implementing the industry/portfolio statistics within the 
 overview section.
+
+Week 10
+Worked on adding a download feature for the tables and charts, per our 
+client's feedback. Also worked on the final report, adding screenshots of 
+our app, describing functionalities, and justification for our design 
+choices.
