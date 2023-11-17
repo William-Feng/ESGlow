@@ -1,10 +1,12 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require("http-proxy-middleware");
+
+const target = process.env.REACT_APP_BACKEND_URL || "http://localhost:5001";
 
 module.exports = function (app) {
   app.use(
-    '/api', // Specify the route you want to proxy
+    "/api",
     createProxyMiddleware({
-      target: 'http://127.0.0.1:5000', // Specify your backend server
+      target: target,
       changeOrigin: true,
     })
   );

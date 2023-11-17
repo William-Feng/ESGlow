@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    container_name: postgres-test
+    restart: unless-stopped
+    volumes:
+      - ../../../database/1_create_tables.sql:/docker-entrypoint-initdb.d/1_create_tables.sql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "54322:5432"

@@ -1,14 +1,12 @@
-// import logo from './logo.svg';
-import "./App.css";
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useState } from "react";
 import CssBaseLine from "@mui/material/CssBaseline";
-import StartPage from "./components/StartPage";
-import Dashboard from "./components/Dashboard";
-import ResetMain from './components/ResetMain';
+import Landing from "./pages/Login/Landing";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
-  const [token, setToken] = React.useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   function manageTokenSet(token) {
     setToken(token);
@@ -22,17 +20,34 @@ function App() {
         <Route
           exact
           path="/"
-          element={<StartPage page={"login"} onSuccess={manageTokenSet} />}
+          element={<Landing page={"login"} onSuccess={manageTokenSet} />}
         />
         <Route
           path="/register"
-          element={<StartPage page={"register"} onSuccess={manageTokenSet} />}
+          element={<Landing page={"register"} onSuccess={manageTokenSet} />}
         />
-        <Route path="/resetPassword" element={<ResetMain page={ 'resetMain' }/>} />
-        <Route path="/resetPassword/verify" element={<ResetMain page={ 'resetVerify' }/>} />
-        <Route path="/resetPassword/setNewPassword" element={<ResetMain page={ 'resetNewPW' }/>} />
-        <Route path="/resetPassword/success" element={<ResetMain page={ 'resetSuccess' }/>} />
-        <Route path="/dashboard" element={<Dashboard token={token} />} />
+        <Route
+          path="/reset-password"
+          element={<Landing page={"reset-password"} />}
+        />
+        <Route
+          path="/reset-password/verify"
+          element={<Landing page={"reset-verify"} />}
+        />
+        <Route
+          path="/reset-password/set"
+          element={<Landing page={"reset-new-password"} />}
+        />
+        <Route
+          path="/reset-password/success"
+          element={<Landing page={"reset-success"} />}
+        />
+        <Route
+          path="/dashboard"
+          element={
+            token ? <Dashboard token={token} /> : <Navigate to="/" replace />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
