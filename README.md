@@ -14,6 +14,6 @@ A detailed user guide can be found [here](./ESGlow%20User%20Guide.pdf).
 - The specific documentation for the **backend** can be found in the README file of the [`backend/` directory](./backend/).
 - The specific documentation for the **frontend** can be found in the README file of the [`frontend/` directory](./frontend/).
 
-## Installation
-
-Docker instructions.
+## Running the App
+Ensure you have the latest version of Docker desktop installed.
+Execute `docker-compose up --build`
