@@ -44,3 +44,8 @@ Updated backend tests for the new database structure and endpoints.
 Week 9
 Packaged entire app with docker, such that all dependencies can be downloaded with one command without worrying about compatability issues.
 Slightly refactored backend.
+
+Week 10
+Mostly worked on the report.
+Improved testing suite to cover leftover functions.
+Improved backend code style and structure.
