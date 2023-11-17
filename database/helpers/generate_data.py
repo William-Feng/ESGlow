@@ -1,16 +1,17 @@
-import random
+# Note that this Python file is NOT used.
+# This simply generates random data that is inserted within the database.
 
-# Short Python Helper capable of generating random relations and data.
+import random
 
 COMPANIES = 10
 FRAMEWORKS = 10
 METRICS = 10
 INDICATORS = 30
 
+
 def framework_metrics():
-    
+    # framework_metrics (framework_id, metric_id, predefined_weight)
     filename = "framework_metrics"
-    print(filename)
     with open(filename, 'w') as file:
         for framework in range(1, FRAMEWORKS + 1):
             weight = 1
@@ -23,10 +24,8 @@ def framework_metrics():
                 else:
                     divisions.append(weight)
                     weight = 0
-            
-            
+
             used = set()
-            print(f"Sum: {sum(divisions)}")
             for val in divisions:
                 metric = random.randint(1, METRICS)
                 while metric == framework or metric in used:
@@ -34,14 +33,10 @@ def framework_metrics():
                 used.add(metric)
                 file.write(f"({framework}, {metric}, {round(val, 3)}),\n")
 
-# 10 Metrics
-# 11 Frameworks
-# 30 Indiciator
-# metric_indicators (metric_id, indicator_id, predefined_weight) VALUES 
+
 def metric_indicators():
-     
+    # metric_indicators (metric_id, indicator_id, predefined_weight) VALUES
     filename = "metric_indicators"
-    print(filename)
     with open(filename, 'w') as file:
         for metric in range(1, METRICS + 1):
             weight = 1
@@ -57,17 +52,15 @@ def metric_indicators():
                 else:
                     divisions.append(weight)
                     weight = 0
-            
+
             used = set()
-            print(f"Sum: {sum(divisions)}")
             for val in divisions:
                 indicator = random.randint(1, INDICATORS)
                 while indicator in used:
                     indicator = random.randint(1, INDICATORS)
-                used.add(indicator)    
-                
-                file.write(f"({metric}, {indicator}, {round(val, 3)}),\n")
+                used.add(indicator)
 
+                file.write(f"({metric}, {indicator}, {round(val, 3)}),\n")
 
 
 def generate_data_values():
@@ -81,8 +74,10 @@ def generate_data_values():
                     # Ensure indicator is linked to every company
                     for company in range(1, COMPANIES + 1):
                         rating = random.randint(50, 100)
-                        FILE.write(f"({indicator}, {company}, {year}, {rating}),\n")
-                        f.write(f"({indicator}, {company}, {year}, {rating}),\n")
+                        FILE.write(
+                            f"({indicator}, {company}, {year}, {rating}),\n")
+                        f.write(
+                            f"({indicator}, {company}, {year}, {rating}),\n")
 
 
 def companies_frameworks():
@@ -98,7 +93,8 @@ def companies_frameworks():
                 used.add(framework)
                 FILE.write(f"({company}, {framework}),\n")
 
-#framework_metrics()
-#metric_indicators()
-#generate_data_values()
-#companies_frameworks()
+
+# framework_metrics()
+# metric_indicators()
+# generate_data_values()
+# companies_frameworks()
