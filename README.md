@@ -16,6 +16,10 @@ This COMP3900 project is proudly developed by:
 
 A detailed user guide can be found [here](./ESGlow%20User%20Guide.pdf).
 
+## Report
+
+The project report can be found [here](./ESGlow%20Report.pdf).
+
 ## Documentation
 
 Documentation has been provided for each of the three components of the application, both for the installation instructions and the code structure. In particular:
